@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.6</ProductVersion>
+    <ProjectGuid>{b868d760-f8e6-4edd-ade0-b10f1964b0ba}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>hoReverse</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <Name>hoReverse_Setup</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+    <Folder Include="src" />
+    <Folder Include="src\Collect\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\Collect\hoHistoryGui.wxs" />
+    <Compile Include="src\Collect\hoReverseGui.wxs" />
+    <Compile Include="src\Collect\hoReverseRoot.wxs" />
+    <Compile Include="src\Directories.wxs" />
+    <Compile Include="src\Files.wxs" />
+    <Compile Include="src\hoHistoryGui.wxs" />
+    <Compile Include="src\Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.rtf" />
+    <Content Include="Scripts\getmsiversion.vbs" />
+    <Content Include="Scripts\Readme.md" />
+    <Content Include="Scripts\RenameMsi.bat" />
+    <Content Include="settings.json" />
+    <Content Include="src\Collect\Collect.bat" />
+    <Content Include="src\hoReverse_Setup.wixproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\hoHistoryGui\hoHistoryGui.csproj">
+      <Name>hoHistoryGui</Name>
+      <Project>{e6dde6ac-c08c-47e9-ba24-8e21a7bbb896}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\hoReverseGui\hoReverseGui.csproj">
+      <Name>hoReverseGui</Name>
+      <Project>{a479d38e-2d90-4b0d-9c0b-1f85dddbbd92}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\hoReverseRoot\hoReverseRoot.csproj">
+      <Name>hoReverseRoot</Name>
+      <Project>{7874da41-0f27-48ea-9c56-e4876a5262db}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\hoServices\hoServices.csproj">
+      <Name>hoServices</Name>
+      <Project>{dfbedf5e-fc7f-4269-a0a6-f9b9e86dac90}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\hoUtil\hoUtil.csproj">
+      <Name>hoUtil</Name>
+      <Project>{9376680e-9420-4fc1-8de8-4311fca18efc}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)\hoReverse_Setup\Scripts\renamemsi.bat" "$(targetPath)"</PostBuildEvent>
+  </PropertyGroup>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

@@ -1,0 +1,61 @@
+﻿{
+  'DiagramStyle':
+  //  Possible DiagramStyles:
+  //  PDATA:
+  //HideRel=0;ShowTags=0;ShowReqs=0;ShowCons=0;OpParams=2;ShowSN=0;ScalePI=1;PPgs.cx=1;PPgs.cy=1;PSize=9;ShowIcons=1;
+  //SuppCN=0;HideProps=0;HideParents=0;UseAlias=0;HideAtts=1;HideOps=1;HideStereo=0;
+  //HideEStereo=0;ShowShape=1;FormName=;
+  // StyleEx:
+  //ExcludeRTF=0;DocAll=0;HideQuals=1;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;
+  //KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;
+  // AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;ProfileData=;MDGDgm=;
+  //STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;
+  //ShowAsList=0;SuppressedCompartments=;Theme=:119;SaveTag=441E52FD;;
+  [
+    // List of Diagram Styles to assign to diagram types
+    // see:: https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/DiagramStyles
+    { 
+      "Name": "Default 1 (simple, with Notes)",
+      "Description": "Simple:\r\n-Notes\r\n- no Attributes\r\n- no Operations",
+      "Type": "",
+      "PDATA": "HideAtts=1, HideOps=1, HideQuals=0, PPgs.cx=1, PPgs.cy=1, ScalePI=1",
+      "StyleEX": "ShowNotes=1"
+    },
+    { 
+      "Name": "Default 2 (elaborate, without Notes)",
+      "Description": "No Attributes, Notes",
+      "Type": "",
+      "PDATA": "HideAtts=1, HideOps=1, OpParams=2, ShowOpRetType=1, PPgs.cx=1, PPgs.cy=1, ScalePI=1",
+      "StyleEX": "ShowNotes=0"
+    },
+    { 
+      "Name": "My Requirements",
+      "Description": "No Attributes, Notes",
+      "Type": "Cust=Requirements",
+      "PDATA": "HideAtts=0, HideOps=0, OpParams=2, ShowOpRetType=1, PPgs.cx=1, PPgs.cy=1, ScalePI=1",
+      "StyleEX": "ShowNotes=1"
+    },
+    {
+      "Name": "My Test Domain",
+      "Description": "Theme=Parchment: Font, Color, Background Image, Element Shadows\r\nNo Notes",
+      "Type": "Cust=Test",
+      "Pdata": "HideAtts=1, HideOps=1, PPgs.cx=1, PPgs.cy=1, ScalePI=1, Theme=Parchment:113",
+      "StyleEX": "ShowNotes=0"
+    },
+    {
+      "Name": "My special Diagrams (User, Documents)",
+      "Description": "My special Diagrams:\r\n-User\r\n-Documents",
+      "Type": "Cust=User, Cust=Document",
+      "Pdata": "HideAtts=1, HideOps=1, PPgs.cx=1, PPgs.cy=1, ScalePI=1",
+      "StyleEX": "ShowNotes=1"
+    },
+    {
+      "Name": "My special Diagrams (User, Documents)",
+      "Description": "My special Diagrams:\r\n-User\r\n-Documents",
+      "Type": "Cust=User, Cust=Document",
+      "Pdata": "HideAtts=1, HideOps=1, PPgs.cx=1, PPgs.cy=1, ScalePI=1",
+      "StyleEX": "ShowNotes=1"
+    }
+  ]
+}
+

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="EA.HistoryList.EaHistoryListEntry" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EABAAAAAADAAAABAAAAAAAAAAACAABAAAEBAAiAEQAA=</HashCode>
+      <FileName>SourceCode\EA_History.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EA.HistoryList.EaHistoryList">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAACOCAAAAAgAEAAAAAAAAQQAgAAAAAAAAAwIGAIA=</HashCode>
+      <FileName>SourceCode\EA_History.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EA.HistoryList.EaBookmark">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SourceCode\EA_History.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EA.HistoryList.EaHistory">
+    <Position X="1.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SourceCode\EA_History.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

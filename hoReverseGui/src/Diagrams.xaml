@@ -1,0 +1,137 @@
+﻿<Window x:Class="WpfDiagram.Diagram" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:custom="clr-namespace:WpfDiagram"
+        
+        Title="Diagram History &amp; Bookmarks" Height="350" Width="650" Closed="Window_Closed">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Save"    
+            CanExecute="SaveCanExecute"
+            Executed="SaveExecute" />
+        <CommandBinding Command="ApplicationCommands.Close"    
+            CanExecute="CloseCanExecute"
+            Executed="CloseExecute" />
+        <CommandBinding Command="ApplicationCommands.New"    
+            CanExecute="NewCanExecute"
+            Executed="NewExecute" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.Save"
+              Key="S" Modifiers="Ctrl"/>
+    </Window.InputBindings>
+
+ 
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" IsMainMenu="True">
+            <MenuItem Header="File" >
+                <MenuItem Header="Close"  Command="ApplicationCommands.Close" />
+                <MenuItem Header="Save"   Click="MenuItem_Click_1" />
+               
+            </MenuItem>
+        </Menu>
+
+
+
+        <Grid DockPanel.Dock="Top" >
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+         
+        <DataGrid Grid.Row="0" Grid.Column="0" Margin="3" Name="listBoxDiagrams" 
+                 MouseDoubleClick="listBoxDiagrams_MouseDoubleClick" 
+                  
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                 AutoGenerateColumns ="false"
+                 FontFamily="Courier New" SelectionMode="Single" Background="{x:Null}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Stretch="Uniform" 
+						 Source="{Binding Path=iconUri}" MaxHeight="13" MaxWidth="13">
+                                    <Image.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=eaDescription}" />
+                                        </StackPanel>
+                                    </Image.ToolTip>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Kind"  Binding="{Binding Path=eaTypeName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding Path=eaName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="GUID" Visibility="Hidden" Binding="{Binding Path=GUID}" IsReadOnly="True" />
+                </DataGrid.Columns>
+            <DataGrid.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold">Diagram History</TextBlock>
+                        <TextBlock>Doble click to open Diagram.</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </DataGrid.ToolTip>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Open" Click="DiagramsMenuItemOpen_Click" />
+                    <MenuItem Header="Goto" Click="DiagramsMenuItemGoto_Click" />
+                    <MenuItem Header="Delete" Command="ApplicationCommands.Delete"  />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <GridSplitter HorizontalAlignment="Right" 
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="0" Grid.Column="1" ResizeBehavior="PreviousAndNext"
+                  Width="5" Background="#FFBCBCBC"/>
+        <GridSplitter ResizeDirection="Columns" Margin="3" />
+
+        <DataGrid Grid.Row="0" Grid.Column="2" Margin="3" Name="listBoxBookmarks" 
+                 MouseDoubleClick="listBoxBookmarks_MouseDoubleClick" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                 AutoGenerateColumns ="false"
+                 FontFamily="Courier New" SelectionMode="Single" Background="{x:Null}" RowEditEnding="listBoxBookmarks_RowEditEnding" >
+            <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Stretch="Uniform" 
+						 Source="{Binding Path=iconUri}" MaxHeight="13" MaxWidth="13">
+                                    <Image.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=eaDescription}" />
+                                        </StackPanel>
+                                    </Image.ToolTip>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Bookmark"  Binding="{Binding Path=bookmarkName}" />
+                <DataGridTextColumn Header="Type"  Binding="{Binding Path=eaObjectTypeName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Kind"  Binding="{Binding Path=eaTypeName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Name"  Width="*" Binding="{Binding Path=eaName}" IsReadOnly="True" />
+                <DataGridTextColumn Visibility="Hidden" Binding="{Binding Path=GUID}" IsReadOnly="True" Width="0" />
+            </DataGrid.Columns>
+            <DataGrid.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold">Diagram History</TextBlock>
+                        <TextBlock>Doble click to open Diagram.</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </DataGrid.ToolTip>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Open" Click="BookmarksMenuItemOpen_Click" />
+                    <MenuItem Header="Goto" Click="BookmarksMenuItemGoto_Click" />
+                    <MenuItem Header="Delete" Command="ApplicationCommands.Delete"  />
+                    <MenuItem Header="Save"  Click="MenuItem_Click" InputGestureText="CTRL+S"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+    </Grid>
+    </DockPanel>
+</Window>

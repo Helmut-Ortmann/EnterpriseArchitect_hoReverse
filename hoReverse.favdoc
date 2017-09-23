@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Favorites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <folders />
+  <favorites>
+    <Favorite>
+      <name>hoReverseGui.cs [Design]</name>
+      <path>horeversegui\src\horeversegui.cs</path>
+      <absolutePath>d:\hodata\projects\00current\zf\horeverse\horeversegui\src\horeversegui.cs</absolutePath>
+      <viewKind>7651a702-06e5-11d1-8ebd-00a0c90f26ea</viewKind>
+      <position>
+        <line>1772</line>
+        <column>49</column>
+        <lineHash>2UVHwTRk5NGJLU2TvCt7El8z7q68nT+uwpaROOxMU3o=</lineHash>
+      </position>
+    </Favorite>
+    <Favorite>
+      <name>hoReverseGui.cs</name>
+      <path>horeversegui\src\horeversegui.cs</path>
+      <absolutePath>d:\hodata\projects\00current\zf\horeverse\horeversegui\src\horeversegui.cs</absolutePath>
+      <position>
+        <line>1772</line>
+        <column>49</column>
+        <lineHash>2UVHwTRk5NGJLU2TvCt7El8z7q68nT+uwpaROOxMU3o=</lineHash>
+      </position>
+    </Favorite>
+    <Favorite>
+      <name>hoServices.cs</name>
+      <path>hoServices\src\hoServices.cs</path>
+      <absolutePath>D:\hoData\Projects\00Current\ZF\hoReverse\hoServices\src\hoServices.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>AutoCpp.cs</name>
+      <path>hoServices\src\Auto\AutoCpp.cs</path>
+      <absolutePath>D:\hoData\Projects\00Current\ZF\hoReverse\hoServices\src\Auto\AutoCpp.cs</absolutePath>
+      <position>
+        <line>23</line>
+        <column>9</column>
+        <lineHash>QqKbj+5rvocuXtcf4j44LL8s8eXA5U069DrZfx/b/DI=</lineHash>
+      </position>
+    </Favorite>
+  </favorites>
+</Favorites>

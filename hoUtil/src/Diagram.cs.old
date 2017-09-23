@@ -1,0 +1,54 @@
+﻿using EA;
+
+namespace hoReverse.hoUtils
+{
+    public class EADiagram
+    {
+        private Repository _rep;
+        private Diagram _dia;
+        Collection selectedObjects;
+        Connector selectedConnector;
+        #region Constructor
+        public EADiagram(Repository rep)
+        {
+            _rep = rep;
+            _dia = _rep.GetCurrentDiagram();
+            if (_dia == null) return;
+            selectedObjects = _dia.SelectedObjects;
+            selectedConnector = _dia.SelectedConnector;
+
+        }
+        #endregion
+#region Properties
+        public Diagram Dia
+        {
+            get { return _dia; }
+        }
+        public int SelectedObjectsCount
+        {
+            get { return _dia.SelectedObjects.Count; }
+        }
+        
+#endregion  
+
+
+        public void ReloadSelectedObjectsAndConnector()
+        {
+            Save();
+            _rep.ReloadDiagram(_dia.DiagramID);
+            if (selectedConnector != null) _dia.SelectedConnector = selectedConnector;
+            foreach (DiagramObject dObject in selectedObjects)
+            {
+                //d.SelectedObjects.AddNew(el.ElementID.ToString(), el.Type);
+                _dia.SelectedObjects.AddNew(dObject.ElementID.ToString(), dObject.ObjectType.ToString());
+            }
+            //d.Update();
+            _dia.SelectedObjects.Refresh();
+
+        }
+        public void Save()
+        {
+            _rep.SaveDiagram(_dia.DiagramID);
+        }
+    }
+}

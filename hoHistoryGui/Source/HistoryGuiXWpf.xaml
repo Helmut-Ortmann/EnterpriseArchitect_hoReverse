@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="hoReverse.History.HistoryActiveXWpf"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Menu DockPanel.Dock="Left" IsMainMenu="True">
+                <MenuItem Header="File" >
+                    <MenuItem Header="Save"   Click="MenuItemSave_Click">
+                        <MenuItem.ToolTip>
+                            <ToolTip>
+                                Save bookmarks and diagramhistory to personal settings
+                            </ToolTip>
+                        </MenuItem.ToolTip>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <Image DockPanel.Dock="Right" 
+                   Source="/AddinControl;component/Resources/Images/BookmarkAdd.bmp" HorizontalAlignment="Center" MaxHeight="18"></Image>
+            <Button x:Name="btnBookmarkAdd" Padding="0" Width="18" Height="18" Click="btnBookmarkAdd_Click" Visibility="Visible">+
+                <Button.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock> Add the selected element, package or diagram to bookmark</TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+
+            </Button>
+            <Button x:Name="btnBookmarkRemove" Padding="0" Width="18" Height="18" Click="btnBookmarkRemove_Click" Visibility="Collapsed">
+                <Button.Background>
+                    <ImageBrush ImageSource="/hoReverseGui;component/Resources/Images/BookmarkRemove.bmp" />
+
+                </Button.Background>
+
+ 
+
+                <Button.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock> Remove the selected element, package or diagram to bookmark</TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+       
+            
+            <DockPanel DockPanel.Dock="Right"></DockPanel>
+        </DockPanel>
+
+        <DockPanel DockPanel.Dock="Right"></DockPanel>
+
+        <Grid DockPanel.Dock="Top" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Row="0" Grid.Column="0" Margin="3" Name="listBoxDiagrams" 
+                 MouseDoubleClick="listBoxDiagrams_MouseDoubleClick" 
+                 AutoGenerateColumns ="false"
+                      AllowDrop="True"
+                 FontFamily="Courier New" SelectionMode="Single" Background="{x:Null}" Drop="listBoxDiagrams_Drop" DragEnter="listBoxDiagrams_DragEnter">
+
+                <DataGrid.Columns>
+                    
+                    <DataGridTemplateColumn Header="" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Stretch="Uniform" 
+						 Source="{Binding Path=iconUri}" MaxHeight="13" MaxWidth="13">
+                                    <Image.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=eaDescription}" />
+                                        </StackPanel>
+                                    </Image.ToolTip>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Bookmark"  Binding="{Binding Path=bookmarkName}" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding Path=eaDescription}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Type"  Binding="{Binding Path=eaObjectTypeName}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Kind"  Binding="{Binding Path=eaTypeName}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Path=eaName}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding Path=eaDescription}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    
+                </DataGrid.Columns>
+                <DataGrid.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock FontWeight="Bold">Diagram History</TextBlock>
+                            <TextBlock>Doble click to open Diagram.</TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </DataGrid.ToolTip>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open" Click="DiagramsMenuItemOpen_Click" />
+                        <MenuItem Header="Goto" Click="DiagramsMenuItemGoto_Click" />
+                        <MenuItem Header="Delete" Command="ApplicationCommands.Delete"  />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+
+</UserControl>
