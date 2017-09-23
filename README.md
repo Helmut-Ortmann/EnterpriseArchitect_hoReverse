@@ -1,28 +1,24 @@
-# hoReverse
+hoReverse is a workbench to ease reverse Engineering of C/C++ into EA (Enterprise Architect). It helps you make a model out of existing C/C++ code. The major focus is to make Activity Diagrams of code and link it to static architecture.
 
-## General
-
-hoReverse is a workbench to ease reverse Engineering of C/C++ into EA (Enterprise Architect). It helps you make a model out of existing C/C++ code. The main focus is to make Activity Diagrams of code and link it to static architecture.
-
-In essence it helps you to produce a Functional Safety compliant detailed design on the basic of Activity Diagrams, Classes, Interfaces with Operations and Attributes. All the model elements are linked together to make maintainable models.
+In essence, it helps you to produce a Functional Safety compliant detailed design on the basic of Activity Diagrams, Classes, Interfaces with Operations and Attributes. All the model elements are linked together to make maintainable models.
 
 Because in embedded I like the concept of Ports there are a lot of features to boost the work.
 
 ## History
 
-In a lot of embedded C/C++ projects with EA I missed functionality to create amd maintain:
+In a lot of embedded C/C++ projects with EA I missed functionality to create and maintain:
 
 - Architecture
 - Detailed Design from Code
-- Activity Daigrams to model module behavour
+- Activity Diagrams to model module behaviour
 
 Especially the requirements of safety (ASIL D or SIL 3) projects forced my to do dull work with a lot of errors and frustrating reviews or to find something to make it run more smoothly.
 
-That was the start of hoReverse. By time it grows and in current projects I'm able to make a decent detailed design from Code with not to much manual work. 
+That was the start of hoReverse. By the time it grows and in current projects I'm able to make a decent detailed design from Code with not too much manual work. 
 
 Is this all according to theory or the processes? 
 
-Let's discuss it but it works.
+Let's discuss it, but it works.
 
 
 
@@ -33,7 +29,7 @@ Let's discuss it but it works.
 - Link static design and behavior together
 - Extensible
 
-## Q&A
+## FAQ
 
 ### Does everything run automatically
 
@@ -47,23 +43,23 @@ In essence, in my view, the interesting part of reverse engineering.
 
 ### Do I get an ASIL D or SIL 3 compliant detailed design?
 
-hoReverse helps you. Usually I have no greate issues with reviews or assessments. But to be honest hoReverse only helps in transforming code into Activity Diagrams. Making sense in Activity Diagrams is your responsibility.
+hoReverse helps you. Usually, I have no greate issues with reviews or assessments. But to be honest, hoReverse only helps in transforming code into Activity Diagrams. Making sense in Activity Diagrams is your responsibility.
 
 ### Can I change or enhance functionality?
 
-Of course, it's open source under the MIT license. You can participate in this project or do your own work.
+Of course, it's open source under the MIT license. You can participate in this project or do your work.
 
 ### Do you have a method?
 
-hoReverse doesn't stick to any method. It's just a workbench with different tools I found useful. But of course, I have a clear view of architecture of System and Software.
+hoReverse doesn't stick to any plan. It's just a workbench with different tools I found useful. But of course, I have a clear view of the architecture of System and Software.
 
-### Is't SPICE compliant?
+### Is it SPICE compliant?
 
-It's you work to make it SPICE compatible. In the past I had no issue with that.
+It's your work to make it SPICE compatible. In the past, I had no issue with that.
 
 ### Is it ISO 26262, IEC 61508, Functional Safety compliant?
 
-It's you work to make it compliant. In the past I had no issue with that.
+It's your work to make it compliant. In the past, I had no issue with that.
 
 ### What are the technical basics of hoReverse?
 
@@ -75,11 +71,7 @@ It's you work to make it compliant. In the past I had no issue with that.
 
 ### What do you think of AUTOSAR?
 
-I like the concepts of AUTOSAR. Usually I model Modules, Runnables, Ports the way AUTOSAR does it. hoReverse has no special AUTOSAR functionality but helps you with a lot of small helpers for everday tasks.
-
-
-
-
+I like the concepts of AUTOSAR. Usually, I model Modules, Runnables, Ports the way AUTOSAR does it. hoReverse has no special AUTOSAR functionality but helps you with a lot of small helpers for everyday tasks.
 
 
  
