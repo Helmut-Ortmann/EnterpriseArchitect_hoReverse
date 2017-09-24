@@ -4534,7 +4534,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Checkin");
+                MessageBox.Show(e11.ToString(), "Error Check-In");
             }
             finally
             {
@@ -4553,7 +4553,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Checkin");
+                MessageBox.Show(e11.ToString(), "Error Check-In");
             }
             finally
             {
@@ -4571,7 +4571,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             /// <param name="pkg">Package, default null</param>
             /// <param name="withGetLatest">false if you want to avoid a getLatest to update VC keywords
             /// Tagged Value "svnDoc" or "svnRevision" of package are true</param>
-            /// <param name="comment">A checkin comment, default="0" = aks for checkin comment</param>
+            /// <param name="comment">A checkin comment, default="0" = aks for check-in comment</param>
         private static void CheckIn(EA.Repository rep, EA.Package pkg=null, bool withGetLatest = false, string comment="0")
         {
                 
@@ -4581,16 +4581,14 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 pkg = HoUtil.GetFirstControlledPackage(rep, pkg);
                 if (pkg == null) return;
 
-                svn svnHandle = new svn(rep, pkg);
-                string userNameLockedPackage = svnHandle.getLockingUser();
-                if (userNameLockedPackage == "")
+                if ((Vc.EnumCheckOutStatus)pkg.VersionControlGetStatus() != Vc.EnumCheckOutStatus.CsCheckedOutToThisUser)
                 {
-                    MessageBox.Show("Package isn't checked out");
+                    MessageBox.Show(@"Package isn't checked out by you");
                     return;
                 }
 
 
-                if (InputBox("Checkin comment", "Checkin", ref comment) == DialogResult.OK)
+            if (InputBox("Check-In comment", "Check-In", ref comment) == DialogResult.OK)
                 {
 
                     //
@@ -4602,7 +4600,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e + "\n\n" + pkg.GetLastError(), "Error Checkin");
+                        MessageBox.Show(e + "\n\n" + pkg.GetLastError(), "Error Check-In");
                         return;
                     }
                     finally
