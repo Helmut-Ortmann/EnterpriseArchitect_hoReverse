@@ -299,6 +299,13 @@ empty                add '&lt;&lt;define&gt;&gt;'
 
 </value>
   </data>
+  <data name="_changeXmlPathToolStripMenuItem1.ToolTipText" xml:space="preserve">
+    <value>Set/Change the *.xml file path for a VC (Version Controlled) package
+1. Check-In the package
+2. Move the *.xml file to the new location and check it in
+3. Click on Set/Change VC *.xml file
+4. Enter new *.xml file path</value>
+  </data>
   <metadata name="_toolStrip6.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>572, 17</value>
   </metadata>

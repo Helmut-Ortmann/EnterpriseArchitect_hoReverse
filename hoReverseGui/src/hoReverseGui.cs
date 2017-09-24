@@ -610,6 +610,7 @@ namespace hoReverse.Reverse
             this.moveUsageToElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.sortAlphabeticToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this._codeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._insertAttributeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._insertTypedefStructToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -669,7 +670,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1570,6 +1570,11 @@ namespace hoReverse.Reverse
     "";
             this.sortAlphabeticToolStripMenuItem.Click += new System.EventHandler(this.sortAlphabeticToolStripMenuItem_Click);
             // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(257, 6);
+            // 
             // _codeToolStripMenuItem
             // 
             this._codeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1871,7 +1876,7 @@ namespace hoReverse.Reverse
             this._changeXmlPathToolStripMenuItem1.Name = "_changeXmlPathToolStripMenuItem1";
             this._changeXmlPathToolStripMenuItem1.Size = new System.Drawing.Size(291, 22);
             this._changeXmlPathToolStripMenuItem1.Text = "&ChangeXmlPath";
-            this._changeXmlPathToolStripMenuItem1.ToolTipText = "Change the *.xml path of a controlled package to a new location";
+            this._changeXmlPathToolStripMenuItem1.ToolTipText = resources.GetString("_changeXmlPathToolStripMenuItem1.ToolTipText");
             this._changeXmlPathToolStripMenuItem1.Click += new System.EventHandler(this.changeXmlPathToolStripMenuItem_Click);
             // 
             // _toolStripSeparator5
@@ -2094,11 +2099,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(257, 6);
             // 
             // HoReverseGui
             // 

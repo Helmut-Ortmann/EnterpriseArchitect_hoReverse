@@ -24,6 +24,7 @@ using Connector = hoReverse.Connectors.Connector;
 using File = System.IO.File;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using hoReverse.hoUtil.EaCollection;
+using hoReverse.hoUtilsVC;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services
@@ -4385,6 +4386,17 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 Assembly.GetAssembly(typeof(hoService)).CodeBase);
             
         }
+
+        
+        /// <summary>
+        /// Set/Change the *.xml file path for a VC(Version Controlled) package
+        /// 1. Check-In the package 
+        /// 2. Move the *.xml file to the new location and check it in
+        /// 3. Click on Set/Change VC *.xml file
+        /// 4. Enter new *.xml file path
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <returns></returns>
         public static bool SetNewXmlPath(EA.Repository rep)
         {
             if (rep.GetContextItemType().Equals(EA.ObjectType.otPackage))
@@ -4392,10 +4404,12 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 EA.Package pkg  = (EA.Package)rep.GetContextObject();
                 string guid = pkg.PackageGUID;
 
+                string fileName = HoUtil.GetVccFilePath(rep, pkg);
                 OpenFileDialog openFileDialogXml = new OpenFileDialog
                 {
                     Filter = "xml files (*.xml)|*.xml",
-                    FileName = HoUtil.GetVccFilePath(rep, pkg)
+                    FileName = Path.GetFileName(fileName),
+                    InitialDirectory = Path.GetDirectoryName(fileName)
                 };
                 if (openFileDialogXml.ShowDialog() == DialogResult.OK)
                 {
@@ -4422,7 +4436,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 
                         // checkout + checkin to make the change permanent
                         pkg.VersionControlCheckout();
-                        pkg.VersionControlCheckin("Reorganisation *.xml files");
+                        pkg.VersionControlCheckin("Re- organization *.xml files");
                     }
                     catch (Exception e1)
                     {
@@ -4487,11 +4501,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             pkg = HoUtil.GetFirstControlledPackage(rep, pkg);
             if (pkg == null) return;
 
-            svn svnHandle = new svn(rep, pkg);
-            string userNameLockedPackage = svnHandle.getLockingUser();
-            if (userNameLockedPackage != "")
+            if ((Vc.EnumCheckOutStatus)pkg.VersionControlGetStatus() != Vc.EnumCheckOutStatus.CsCheckedIn)
             {
-                MessageBox.Show("Package is checked out by " + userNameLockedPackage);
+                MessageBox.Show(@"Package isn't checked in");
                 return;
             }
 
