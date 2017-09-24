@@ -4,6 +4,10 @@ In essence, it helps you to produce a Functional Safety compliant detailed desig
 
 Because in embedded I like the concept of Ports there are a lot of features to boost the work.
 
+For details see the [WiKi](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki).
+
+![](ExampleGenerate.png)
+
 ## History
 
 In a lot of embedded C/C++ projects with EA I missed functionality to create and maintain:
@@ -24,7 +28,7 @@ Let's discuss it, but it works.
 
 ## Functions
 
-- A lot of hoTools functionality
+- A lot of [hoTools](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki) functionality
 - Make Activity diagrams from code
 - Link static design and behavior together
 - Extensible
