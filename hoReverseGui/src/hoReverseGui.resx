@@ -120,9 +120,6 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
-  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>130, 17</value>
-  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -148,6 +145,15 @@ Insert &amp; update  attributes from C-Code for selected element:</value>
   <metadata name="_contextMenuStripTextField.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>351, 17</value>
   </metadata>
+  <data name="_btnSplitNodes.ToolTip" xml:space="preserve">
+    <value>Split / disconnect the selected nodes from the last selected element.
+
+- Select some nodes you want to disconnect (sources)
+- Select the node you want to disconnect from the source nodes (target)
+- Click S (split disconnect node from previous selected)
+- hoReverse deletes th flows from sources to the target
+  (last selected element)</value>
+  </data>
   <data name="_btnWriteText.ToolTip" xml:space="preserve">
     <value>Writet text in selected Element / Connector
 
