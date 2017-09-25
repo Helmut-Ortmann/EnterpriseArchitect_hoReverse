@@ -2808,6 +2808,11 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
         }
+        /// <summary>
+        /// Put Text from input field into Notes, remove comments like '//','/*', '*/'
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="text"></param>
         public static void CreateNoteFromText(EA.Repository rep, string text)
         {
             if (rep.GetContextItemType().Equals(EA.ObjectType.otElement))

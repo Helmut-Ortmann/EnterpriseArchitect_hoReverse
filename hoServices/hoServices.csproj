@@ -111,6 +111,7 @@
     <Compile Include="src\Move\Move.cs" />
     <Compile Include="src\ServicesCall.cs" />
     <Compile Include="src\PortServices.cs" />
+    <Compile Include="src\WiKiRefs\WiKiRef.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\hoUtil\hoUtil.csproj">

@@ -11,6 +11,7 @@ using hoReverse.hoUtils.Cutils;
 using hoReverse.hoUtils.Diagrams;
 using hoReverse.Reverse.EaAddinShortcuts;
 using Diagram = WpfDiagram.Diagram;
+using hoReverse.hoUtils.WiKiRefs;
 
 using hoReverse.Services.AutoCpp;
 
@@ -203,6 +204,11 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem sortAlphabeticToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator11;
+        private ToolStripMenuItem readmeToolStripMenuItem;
+        private ToolStripMenuItem repoToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem hoToolsToolStripMenuItem;
+        private ToolStripMenuItem lineStyleToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -582,7 +588,6 @@ namespace hoReverse.Reverse
             this._btnFeatureDown = new System.Windows.Forms.Button();
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -670,6 +675,12 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.readmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hoToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lineStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1046,13 +1057,14 @@ namespace hoReverse.Reverse
             // 
             // _btnNoteFromText
             // 
-            this._btnNoteFromText.Location = new System.Drawing.Point(369, 226);
+            this._btnNoteFromText.Location = new System.Drawing.Point(247, 205);
             this._btnNoteFromText.Name = "_btnNoteFromText";
-            this._btnNoteFromText.Size = new System.Drawing.Size(23, 25);
+            this._btnNoteFromText.Size = new System.Drawing.Size(69, 25);
             this._btnNoteFromText.TabIndex = 45;
             this._btnNoteFromText.Text = "N";
-            this._toolTip.SetToolTip(this._btnNoteFromText, "Insert text into Element Note");
+            this._toolTip.SetToolTip(this._btnNoteFromText, "Insert text into Element Note.\r\n\r\nIt remove \"//\", \'/*\' and \'*/\'");
             this._btnNoteFromText.UseVisualStyleBackColor = true;
+            this._btnNoteFromText.Visible = false;
             this._btnNoteFromText.Click += new System.EventHandler(this.btnNoteFromText_Click);
             // 
             // _btnFinal
@@ -1220,7 +1232,8 @@ namespace hoReverse.Reverse
             this._btnSplitAll.Size = new System.Drawing.Size(29, 25);
             this._btnSplitAll.TabIndex = 55;
             this._btnSplitAll.Text = "SA";
-            this._toolTip.SetToolTip(this._btnSplitAll, "Split / disconnect all nodes from the last selected element.");
+            this._toolTip.SetToolTip(this._btnSplitAll, "Split / disconnect all nodes from the last selected element.\r\n\r\nSelect an Element" +
+        ". hoReverse disconnect all connectors from this element.");
             this._btnSplitAll.UseVisualStyleBackColor = true;
             this._btnSplitAll.Click += new System.EventHandler(this.btnSplitAll_Click);
             // 
@@ -1319,23 +1332,6 @@ namespace hoReverse.Reverse
             this._btnCopy.UseVisualStyleBackColor = true;
             this._btnCopy.Click += new System.EventHandler(this._btnCopy_Click);
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1347,7 +1343,8 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem,
             this._versionControlToolStripMenuItem,
             this._maintenanceToolStripMenuItem,
-            this._helpToolStripMenuItem});
+            this._helpToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this._menuStrip1.Location = new System.Drawing.Point(0, 0);
             this._menuStrip1.Name = "_menuStrip1";
             this._menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -1931,7 +1928,11 @@ namespace hoReverse.Reverse
             // 
             this._helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem,
-            this._helpF1ToolStripMenuItem});
+            this._helpF1ToolStripMenuItem,
+            this.readmeToolStripMenuItem,
+            this.repoToolStripMenuItem,
+            this.hoToolsToolStripMenuItem,
+            this.lineStyleToolStripMenuItem});
             this._helpToolStripMenuItem.Name = "_helpToolStripMenuItem";
             this._helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this._helpToolStripMenuItem.Text = "&Help";
@@ -1939,15 +1940,16 @@ namespace hoReverse.Reverse
             // _aboutToolStripMenuItem
             // 
             this._aboutToolStripMenuItem.Name = "_aboutToolStripMenuItem";
-            this._aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this._aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this._aboutToolStripMenuItem.Text = "&About";
             this._aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // _helpF1ToolStripMenuItem
             // 
             this._helpF1ToolStripMenuItem.Name = "_helpF1ToolStripMenuItem";
-            this._helpF1ToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this._helpF1ToolStripMenuItem.Text = "&Help";
+            this._helpF1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this._helpF1ToolStripMenuItem.Text = "&Help / WiKi";
+            this._helpF1ToolStripMenuItem.ToolTipText = "Show help / WiKi";
             this._helpF1ToolStripMenuItem.Click += new System.EventHandler(this.helpF1ToolStripMenuItem_Click);
             // 
             // _toolStripContainer1
@@ -2099,6 +2101,62 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
+            // readmeToolStripMenuItem
+            // 
+            this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.readmeToolStripMenuItem.Text = "Readme";
+            this.readmeToolStripMenuItem.ToolTipText = "Show readme";
+            this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
+            // 
+            // repoToolStripMenuItem
+            // 
+            this.repoToolStripMenuItem.Name = "repoToolStripMenuItem";
+            this.repoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.repoToolStripMenuItem.Text = "Repo";
+            this.repoToolStripMenuItem.ToolTipText = "Show GitHub repository";
+            this.repoToolStripMenuItem.Click += new System.EventHandler(this.repoToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(24, 20);
+            this.helpToolStripMenuItem.Text = "?";
+            this.helpToolStripMenuItem.ToolTipText = "WiKi";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // hoToolsToolStripMenuItem
+            // 
+            this.hoToolsToolStripMenuItem.Name = "hoToolsToolStripMenuItem";
+            this.hoToolsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hoToolsToolStripMenuItem.Text = "hoTools";
+            this.hoToolsToolStripMenuItem.ToolTipText = "Show WiKi hoTools";
+            // 
+            // lineStyleToolStripMenuItem
+            // 
+            this.lineStyleToolStripMenuItem.Name = "lineStyleToolStripMenuItem";
+            this.lineStyleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.lineStyleToolStripMenuItem.Text = "LineStyle";
+            this.lineStyleToolStripMenuItem.ToolTipText = "Show WiKi LineStyle";
+            this.lineStyleToolStripMenuItem.Click += new System.EventHandler(this.lineStyleToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -2609,7 +2667,8 @@ namespace hoReverse.Reverse
 
         private void helpF1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoUtil.StartFile(hoService.GetAssemblyPath() + "\\" + "hoReverse.chm");
+            // Open GitHub Wiki
+            WikiRef.Wiki();
         }
 
         private void deleteToolStripMenuItemTextField_Click(object sender, EventArgs e)
@@ -3453,6 +3512,26 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void sortAlphabeticToolStripMenuItem_Click(object sender, EventArgs e)
         {
             hoService.SortAlphabetic(_repository);
+        }
+
+        private void repoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.Repo();
+        }
+
+        private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.ReadMe();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.Wiki();
+        }
+
+        private void lineStyleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.WikiLineStyle();
         }
     }
 }
