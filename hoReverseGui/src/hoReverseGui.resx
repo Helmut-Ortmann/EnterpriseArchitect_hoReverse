@@ -120,6 +120,9 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
+  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>130, 17</value>
+  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -197,6 +200,79 @@ Always remember:
   <metadata name="_menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>226, 17</value>
   </metadata>
+  <data name="_insertAttributeToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Insert &amp; update  attributes from C-Code for selected element:
+- data definition
+- enum values
+- macros
+If attribute/stereotype is different a hoReverse detects a new atttribute.
+
+Macros are defined as:
+- readonly
+- stereotype 'define'
+- Use additional stereotypes
+- Add '#' at end of stereotype to say not the value
+
+hoReverse handles:
+#if ( name = stereotype)
+# define .....
+#else
+# define .....
+# define .....
+#endif
+</value>
+  </data>
+  <data name="_insertTypedefStructToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Generates a typedef struct/union/enum from code.
+
+If you select the typedef then it updates the typedef.
+
+If you select Interface/Class/Component hoReverse updates/creates the typedef beneath the selected element.
+
+
+</value>
+  </data>
+  <data name="_generateComponentPortsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Generate ports for selected component:
+- Interfaces of diagram
+- Scans code of all interfaces for additional interfaces (include)
+- Not private interfaces *_i
+
+Note: 
+- The link to code needs to be accurate!
+- Property filename</value>
+  </data>
+  <data name="_inserToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Select Class/Interface and generate Interfaces from code.
+
+hoReverse adds theInterfaces with:
+- 'Usage' dependency if inlude has a different name as the selected Class
+- 'Realisation' dependency if inlude has the name of the selected</value>
+  </data>
+  <data name="_setMacroToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Set the macro/stereotype according to the comma seperated text list.
+
+Textlist:
+- Delete all blanks, '(', ')'
+- If empty use macro "define"
+
+Examples:
+define, a = b     add '&lt;&lt;define&gt;&gt;,&lt;&lt; a=b&gt;&gt;'
+empty                add '&lt;&lt;define&gt;&gt;'</value>
+  </data>
+  <data name="_addMacroToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Add macros/stereotypes according to the comma seperated text list.
+
+Textlist:
+- Delete all blanks and '(', ')'
+- If empty add &lt;&lt;define&gt;&gt;
+
+Examples:
+define, a = b     add '&lt;&lt;define&gt;&gt;,&lt;&lt; a=b&gt;&gt;'
+empty                add '&lt;&lt;define&gt;&gt;'
+
+</value>
+  </data>
   <data name="settingsDiagramStylesToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Change settings 'Bulk change Diagram Style':
 - Opens the Settings.json file to edit it
@@ -244,69 +320,6 @@ It updates:
 - Connector updates source and target
 - Parent of object
 - Type of object</value>
-  </data>
-  <data name="_insertAttributeToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Insert &amp; update  attributes from C-Code for selected element:
-- data definition
-- enum values
-- macros
-If attribute/stereotype is different a hoReverse detects a new atttribute.
-
-Macros are defined as:
-- readonly
-- stereotype 'define'
-- Use additional stereotypes
-- Add '#' at end of stereotype to say not the value
-
-hoReverse handles:
-#if ( name = stereotype)
-# define .....
-#else
-# define .....
-# define .....
-#endif
-</value>
-  </data>
-  <data name="_insertTypedefStructToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Generates a typedef struct/union/enum from code.
-
-If you select the typedef then it updates the typedef.
-
-If you select Interface/Class/Component hoReverse updates/creates the typedef beneath the selected element.
-
-
-</value>
-  </data>
-  <data name="_inserToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Select Class/Interface and generate Interfaces from code.
-
-hoReverse adds theInterfaces with:
-- 'Usage' dependency if inlude has a different name as the selected Class
-- 'Realisation' dependency if inlude has the name of the selected</value>
-  </data>
-  <data name="_setMacroToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Set the macro/stereotype according to the comma seperated text list.
-
-Textlist:
-- Delete all blanks, '(', ')'
-- If empty use macro "define"
-
-Examples:
-define, a = b     add '&lt;&lt;define&gt;&gt;,&lt;&lt; a=b&gt;&gt;'
-empty                add '&lt;&lt;define&gt;&gt;'</value>
-  </data>
-  <data name="_addMacroToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Add macros/stereotypes according to the comma seperated text list.
-
-Textlist:
-- Delete all blanks and '(', ')'
-- If empty add &lt;&lt;define&gt;&gt;
-
-Examples:
-define, a = b     add '&lt;&lt;define&gt;&gt;,&lt;&lt; a=b&gt;&gt;'
-empty                add '&lt;&lt;define&gt;&gt;'
-
-</value>
   </data>
   <data name="_changeXmlPathToolStripMenuItem1.ToolTipText" xml:space="preserve">
     <value>Set/Change the *.xml file path for a VC (Version Controlled) package

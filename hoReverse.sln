@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoReverseRoot", "hoReverseRoot\hoReverseRoot.csproj", "{7874DA41-0F27-48EA-9C56-E4876A5262DB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{E7
 		hoServices\Properties\AssemblyInfo.cs = hoServices\Properties\AssemblyInfo.cs
 		hoUtil\Properties\AssemblyInfo.cs = hoUtil\Properties\AssemblyInfo.cs
 		hoReverse_Setup\src\Collect\Collect.bat = hoReverse_Setup\src\Collect\Collect.bat
-		hoReverse_Setup\bin\Release\hoReverse_Setup.msi = hoReverse_Setup\bin\Release\hoReverse_Setup.msi
+		hoReverse_Setup\bin\Release\hoReverse.msi = hoReverse_Setup\bin\Release\hoReverse.msi
 		hoReverseRoot\hoReverseGui.dll.config = hoReverseRoot\hoReverseGui.dll.config
 		hoReverseRemove.ps1 = hoReverseRemove.ps1
 		hoReverse_Setup\src\Product.wxs = hoReverse_Setup\src\Product.wxs
@@ -37,9 +37,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{E7
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5E1B63D-71C4-4018-96DF-CAFD07B15476}"
-	ProjectSection(SolutionItems) = preProject
-		hoReverse_Setup\bin\Release\hoReverse_Setup.msi = hoReverse_Setup\bin\Release\hoReverse_Setup.msi
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -180,5 +177,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F81CFC1-B3BB-4CC4-AD4E-3A0CC7E5F0B5}
 	EndGlobalSection
 EndGlobal

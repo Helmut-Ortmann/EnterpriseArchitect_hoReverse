@@ -1475,21 +1475,23 @@ namespace hoReverse.hoUtils
         #region visualizePortForDiagramobject
 
         /// <summary>
-        /// Visualize port with or without interface (required/provided) for diagramobject
+        /// Visualize port with or without interface (required/provided) for diagram object
+        /// return: true = port was newly shown
+        ///         false= part was already shown
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="pos"></param>
         /// <param name="dia"></param>
         /// <param name="diaObjSource"></param>
         /// <param name="port"></param>
-        /// <param name="interf"></param>
-        public static void VisualizePortForDiagramobject(EA.Repository rep, int pos, EA.Diagram dia,
-            EA.DiagramObject diaObjSource, EA.Element port, EA.Element interf)
+        /// <param name="portInterface"></param>
+        public static bool VisualizePortForDiagramobject(EA.Repository rep, int pos, EA.Diagram dia,
+            EA.DiagramObject diaObjSource, EA.Element port, EA.Element portInterface)
         {
             // check if port already exists
             foreach (EA.DiagramObject diaObjPort in dia.DiagramObjects)
             {
-                if (diaObjPort.ElementID == port.ElementID) return;
+                if (diaObjPort.ElementID == port.ElementID) return false;
             }
 
             // visualize ports
@@ -1513,7 +1515,7 @@ namespace hoReverse.hoUtils
 
             string position = "l=" + leftPort + ";r=" + rightPort + ";t=" + topPort + ";b=" + bottomPort + ";";
             EA.DiagramObject diaObjectPort =
-                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, EA.ObjectType.otElement.ToString());
+                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
             if (port.Type.Equals("Port"))
             {
                 // not showing label
@@ -1535,11 +1537,13 @@ namespace hoReverse.hoUtils
 
             //----------------------------------------------------------------------------
             // Show of port: Embedded Interface/Port
-            if (interf == null) return;
+            if (portInterface == null) return true;
 
             // visualize interface
-            EA.DiagramObject diaObject2 =
-                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, EA.ObjectType.otElement.ToString());
+            position = $"l={leftPort - 5};r={rightPort - 10};t={topPort};b={bottomPort};";
+            EA.DiagramObject diaObjectPortInterface =
+                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
+            //(EA.DiagramObject)dia.DiagramObjects.AddNew(position, EA.ObjectType.otElement.ToString());
 
             // diaObject2.Style = "LBL=CX=69:CY=13:OX=45:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;";
             // HDN=0 Label visible
@@ -1547,11 +1551,11 @@ namespace hoReverse.hoUtils
             // PType=1: Type Shown
             // CX = nn; Name Position
             // OX = nn; Label Position, -nn = Left, +nn = Right
-            diaObject2.Style = "LBL=CX=69:CY=13:OX=45:OY=0:HDN=1:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;";
-            diaObject2.ElementID = interf.ElementID;
+            diaObjectPortInterface.Style = "LBL=CX=69:CY=13:OX=45:OY=0:HDN=1:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;";
+            diaObjectPortInterface.ElementID = portInterface.ElementID;
             try
             {
-                diaObject2.Update();
+                diaObjectPortInterface.Update();
             }
             catch
             {
@@ -1564,6 +1568,7 @@ namespace hoReverse.hoUtils
 //                    "Error create embedded port with Interface on Diagram.");
             }
             dia.DiagramObjects.Refresh(); // first update element than refresh collection 
+            return true;
 
         }
 

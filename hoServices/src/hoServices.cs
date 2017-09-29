@@ -113,6 +113,7 @@ namespace hoReverse.Services
             EaCollectionDiagramObjects diaCol = new EaCollectionDiagramObjects(curDiagram);
             diaCol.SortAlphabetic();
             rep.ReloadDiagram(curDiagram.Dia.DiagramID);
+            curDiagram.ReloadSelectedObjectsAndConnector();
 
         }
 
@@ -1084,13 +1085,18 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #endregion
         /// <summary>
-        /// Delete the embedded element from Diagram (Port, Parameter, Pin)
+        /// Delete the embedded element from Diagram (Port, Parameter, Pin). It removes it recursive
         /// </summary>
         /// <param name="dia"></param>
         /// <param name="embeddedElement"></param>
         private static void RemoveEmbeddedElementFromDiagram(Diagram dia, EA.Element embeddedElement)
         {
-            if (!embeddedElement.IsEmbeddedElement()) return;
+            // delete recursive embedded elements
+            foreach (EA.Element el in embeddedElement.EmbeddedElements)
+            {
+                RemoveEmbeddedElementFromDiagram(dia, el);
+            }
+            // delete the embedded element from diagram
             for (int i = dia.DiagramObjects.Count - 1; i >= 0; i -= 1)
             {
                 var obj = (EA.DiagramObject)dia.DiagramObjects.GetAt((short)i);
@@ -1205,16 +1211,16 @@ Second Element: Target of move connections and appearances", "Select two element
                         if (elEmbedded.Type == "ActivityParameter" | elEmbedded.EmbeddedElements.Count==0)
                         {
                             // visualize only Activity Parameters
-                            HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObjSource, elEmbedded, null);
-                            pos = pos + 1;
+                            bool newPort = HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObjSource, elEmbedded, null);
+                            if (newPort) pos = pos + 1;
                         }
                         else
                         {
                             // Port: Visualize embedded Port + embedded Interface
                             foreach (EA.Element interf in elEmbedded.EmbeddedElements)
                             {
-                                HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObjSource, elEmbedded, interf);
-                                pos = pos + 1;
+                                bool newPort = HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObjSource, elEmbedded, interf);
+                                if (newPort) pos = pos + 1;
                             }
                         }
                     }
@@ -5272,6 +5278,12 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             return txtResult;
         }
+        /// <summary>
+        /// Generate component ports for selected component in diagram:
+        /// - Generate ports for all Classes/Interfaces in diagram
+        /// - They may be manually changed later
+        /// </summary>
+        /// <param name="rep"></param>
         #region generateComponentPortsService
         [ServiceOperation("{00602D5F-D581-4926-A31F-806F2D06691C}", "Generate ports for component", "Select Component", false)]
         public static void GenerateComponentPortsService(EA.Repository rep)
@@ -5325,12 +5337,12 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 var elTarget = rep.GetElementByID(obj.ElementID);
 
                 if (!("Interface".Contains(elTarget.Type))) continue;
-                if (!(elTarget.Name.ToUpper().EndsWith("_i", StringComparison.Ordinal)))
+                if (!(elTarget.Name.ToUpper().EndsWith("_I", StringComparison.Ordinal)))
                 {
                     AddNewPortToComponent(elSource, elTarget, isRequired);
                 }
             }
-            // if generate 'required interface' also generate dependent interfaces
+            // if generate 'required interface' also generate dependent interfaces from Code of the header files
             if (useDependantInterface)
             {
                 foreach (EA.DiagramObject obj in dia.DiagramObjects) {
@@ -5343,10 +5355,11 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                         foreach (EA.Element el in lEl)
                         {
                             if (el == null) continue;
+                            if (String.IsNullOrWhiteSpace(el.Name)) continue;
                             
 
                             // no internal interface, ends with '_i'
-                            if (!(el.Name.ToUpper().EndsWith("_i", StringComparison.Ordinal)))
+                            if (!(el.Name.ToUpper().EndsWith("_I", StringComparison.Ordinal)))
                             {
                                 AddNewPortToComponent(elSource, el, isRequired: true);
                             }
