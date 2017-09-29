@@ -1495,15 +1495,18 @@ namespace hoReverse.hoUtils
             }
 
             // visualize ports
-            int length = 12;
+            // visualize ports
+            int portPosDistance = 35;
+            int portPosStart = 35;
+            int portLength = 15;  // fix
+
             // calculate target position of port
-            int leftPort = diaObjSource.right - length / 2;
-            int rightPort = leftPort + length;
+            int leftPort = diaObjSource.right - portLength / 2;
+            int rightPort = leftPort + portLength;
+
             int top = diaObjSource.top;
-
-
-            int topPort = top - 20 - pos * 20;
-            int bottomPort = topPort - length;
+            int topPort = top - portPosStart - pos * portPosDistance;
+            int bottomPort = topPort - portLength;
 
             // diagram object can't host port (not tall enough)
             // make diagram object taller to host all ports
@@ -1513,9 +1516,9 @@ namespace hoReverse.hoUtils
                 diaObjSource.Update();
             }
 
-            string position = "l=" + leftPort + ";r=" + rightPort + ";t=" + topPort + ";b=" + bottomPort + ";";
+            string positionPort = $"l={leftPort};r={rightPort};t={topPort};b={bottomPort};";
             EA.DiagramObject diaObjectPort =
-                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
+                (EA.DiagramObject) dia.DiagramObjects.AddNew(positionPort, "");
             if (port.Type.Equals("Port"))
             {
                 // not showing label
@@ -1540,9 +1543,9 @@ namespace hoReverse.hoUtils
             if (portInterface == null) return true;
 
             // visualize interface
-            position = $"l={leftPort - 5};r={rightPort - 10};t={topPort};b={bottomPort};";
+            string positionInterface = $"l={rightPort - 2};r={rightPort + 40};t={topPort - 1};b={bottomPort - 1};";
             EA.DiagramObject diaObjectPortInterface =
-                (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
+                (EA.DiagramObject) dia.DiagramObjects.AddNew(positionInterface, "");
             //(EA.DiagramObject)dia.DiagramObjects.AddNew(position, EA.ObjectType.otElement.ToString());
 
             // diaObject2.Style = "LBL=CX=69:CY=13:OX=45:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;";
