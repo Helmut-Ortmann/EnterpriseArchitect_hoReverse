@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{E7
 		hoReverseRoot\hoReverseGui.dll.config = hoReverseRoot\hoReverseGui.dll.config
 		hoReverseRemove.ps1 = hoReverseRemove.ps1
 		hoReverse_Setup\src\Product.wxs = hoReverse_Setup\src\Product.wxs
+		README.md = README.md
 		hoReverseRoot\settings.json = hoReverseRoot\settings.json
 	EndProjectSection
 EndProject

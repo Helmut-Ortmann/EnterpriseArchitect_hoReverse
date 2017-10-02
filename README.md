@@ -33,6 +33,10 @@ Let's discuss it, but it works.
 - Link static design and behavior together
 - Extensible
 
+## News
+
+2.1.1 Sort Ports optimized
+
 ## FAQ
 
 ### Does everything run automatically
@@ -78,7 +82,8 @@ It's your work to make it compliant. In the past, I had no issue with that.
 I like the concepts of AUTOSAR. Usually, I model Modules, Runnables, Ports the way AUTOSAR does it. hoReverse has no special AUTOSAR functionality but helps you with a lot of small helpers for everyday tasks.
 
 
- 
+
+
 
 
 

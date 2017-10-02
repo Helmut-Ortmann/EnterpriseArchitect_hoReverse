@@ -4,7 +4,7 @@ namespace hoReverse.Reverse
 {
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("26B0849B-0B39-4D0F-9785-8DDFDBEA5531")]
+    [Guid("060EE9F6-8DE6-4553-BBAC-2191CD8132DF")]
     public interface IhoReverseGui
     {
         string getName();

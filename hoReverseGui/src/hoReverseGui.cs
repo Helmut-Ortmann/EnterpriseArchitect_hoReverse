@@ -27,7 +27,7 @@ namespace hoReverse.Reverse
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("B76FE85A-9D03-46A4-AB24-6B713D2B6908")]
+    [Guid("C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED")]
     [ProgId("hoReverse.ReverseGui")]
     [ComDefaultInterface(typeof(IhoReverseGui))]
 

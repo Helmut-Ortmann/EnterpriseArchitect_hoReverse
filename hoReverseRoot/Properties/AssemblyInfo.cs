@@ -21,7 +21,7 @@ using System.Resources;
 [assembly: ComVisible(true)]
 
 // Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
-[assembly: Guid("5E536F0C-175A-4CF1-A9D7-94FD6270062D")]
+[assembly: Guid("8F5099F5-08EE-4FF4-87C5-6EC4FB8112DC")]
 
 // Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
 //
@@ -33,6 +33,6 @@ using System.Resources;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.0")]     // don't change, otherwise you have to update the component information in Files.wxs
-[assembly: AssemblyFileVersion("1.0.46.0")] // make same as ProductVersion in Product.wxs
+[assembly: AssemblyVersion("2.1.1.0")]     // don't change, otherwise you have to update the component information in Files.wxs
+[assembly: AssemblyFileVersion("2.1.1.0")] // make same as ProductVersion in Product.wxs
 [assembly: NeutralResourcesLanguageAttribute("")]

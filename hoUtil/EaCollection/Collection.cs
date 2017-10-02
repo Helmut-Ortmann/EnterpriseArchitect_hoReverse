@@ -38,6 +38,7 @@ namespace hoReverse.hoUtil.EaCollection
         /// - Classifier
         /// - Port, Parameter, Pin
         /// - Packages
+        /// If it sorts for Ports, it ignores other element types.
         /// </summary>
         /// <returns></returns>
         public override bool SortAlphabetic()
@@ -50,9 +51,16 @@ namespace hoReverse.hoUtil.EaCollection
                 where temp.Type != "RequiredInterface"  && temp.Type != "ProvidedInterface"    
                 orderby temp.Name
                 select temp;
-            var llist = list.ToList();
-            // estimate the direction 
+            var llist = list.ToList();  // run query
+            // sort only Port, Pin, Parameter
+            if (llist.Count(t => t.Type == "Port" || t.Type == "Pin" || t.Type == "Parameter") > 0)
+            {
+                llist = llist.Where(t => t.Type == "Port" || t.Type == "Pin" || t.Type == "Parameter").ToList();
+            }
+            // nothing to sort
+            if (llist.Count() < 2) return false;
 
+            // estimate the direction 
             bool isVertical =
                 (Math.Abs(_eaDia.SelObjects[0].top - _eaDia.SelObjects[1].top)) >
                 (Math.Abs(_eaDia.SelObjects[0].left - _eaDia.SelObjects[1].left)) 

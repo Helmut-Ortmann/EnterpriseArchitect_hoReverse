@@ -6,7 +6,7 @@ namespace hoReverse.History
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("D7ED709D-E9C5-48BC-81E2-05C2A8C3A926")]
+    [Guid("507E9A7C-8B74-4DCB-9C6D-9EBCD4DA8ED1")]
     [ProgId("hoReverse.HistoryGui")]
     [ComDefaultInterface(typeof(IHistoryActiveX))]
     public partial class HistoryGui : UserControl, IHistoryActiveX

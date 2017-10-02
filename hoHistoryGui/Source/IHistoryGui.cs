@@ -5,7 +5,7 @@ namespace hoReverse.History
 {
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    [Guid("04E81036-2EF7-4F6A-AC28-F8F8B592F150")]
+    [Guid("5B09D1FF-EA07-40E1-B1E0-BC0947F4B527")]
     public interface IHistoryActiveX
     {
         //public void setRepository(EA.Repository rep);
