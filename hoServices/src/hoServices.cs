@@ -1190,7 +1190,8 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{678AD901-1D2F-4FB0-BAAD-AEB775EE18AC}", "Show all ports for Component", "Select Class, Interface or Component", isTextRequired: false)]
         public static void ShowEmbeddedElementsGui(EA.Repository rep, string embeddedElementType="Port Pin Parameter")
         {
-            var dia = rep.GetCurrentDiagram();
+            EaDiagram eaDia = new EaDiagram(rep);
+            var dia = eaDia.Dia;
             if (dia == null) return;
             rep.SaveDiagram(dia.DiagramID);
             // over all selected elements
@@ -1227,8 +1228,9 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
             }
             rep.ReloadDiagram(dia.DiagramID);
+            eaDia.ReloadSelectedObjectsAndConnector();
 
-            
+
         }
         #endregion
         public static void NavigateComposite(EA.Repository repository)
@@ -2709,7 +2711,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         if (id > 0)
                         {
                             el = rep.GetElementByID(id);
-                            rep.ShowInProjectView(el);
+                            if (el != null ) rep.ShowInProjectView(el);
                         }
                     }
                     break;
@@ -2721,14 +2723,17 @@ Second Element: Target of move connections and appearances", "Select two element
                     if (id > 0)
                     {
                         el = rep.GetElementByID(attr.ClassifierID);
-                        if (el.Type.Equals("Package"))
+                        if (el != null)
                         {
-                            EA.Package pkg = rep.GetPackageByID(Convert.ToInt32(el.MiscData[0]));
-                            rep.ShowInProjectView(pkg);
-                        }
-                        else
-                        {
-                            rep.ShowInProjectView(el);
+                            if (el.Type.Equals("Package"))
+                            {
+                                EA.Package pkg = rep.GetPackageByID(Convert.ToInt32(el.MiscData[0]));
+                                rep.ShowInProjectView(pkg);
+                            }
+                            else
+                            {
+                                rep.ShowInProjectView(el);
+                            }
                         }
                     }
                     break;
@@ -2759,7 +2764,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         if (guid.EndsWith("}", StringComparison.Ordinal))
                         {
                             el = rep.GetElementByGuid(guid);
-                            rep.ShowInProjectView(el);
+                            if (el != null) rep.ShowInProjectView(el);
                         }
                         else
                         {
@@ -2774,7 +2779,7 @@ Second Element: Target of move connections and appearances", "Select two element
                                         if (triggerGuid.StartsWith("{", StringComparison.Ordinal) && triggerGuid.EndsWith("}", StringComparison.Ordinal))
                                         {
                                             EA.Element trigger = rep.GetElementByGuid(triggerGuid);
-                                            rep.ShowInProjectView(trigger);
+                                            if (trigger != null) rep.ShowInProjectView(trigger);
                                             break;
                                         }
                                     }
@@ -2789,7 +2794,7 @@ Second Element: Target of move connections and appearances", "Select two element
                                 if (signalGuid.StartsWith("RefGUID={", StringComparison.Ordinal))
                                 {
                                     EA.Element signal = rep.GetElementByGuid(signalGuid.Substring(8, 38));
-                                    rep.ShowInProjectView(signal);
+                                    if (signal != null) rep.ShowInProjectView(signal);
                                 }
                             }
 
