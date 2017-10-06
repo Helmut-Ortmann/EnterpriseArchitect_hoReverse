@@ -1623,15 +1623,15 @@ namespace hoReverse.Reverse
             // _insertAttributeToolStripMenuItem
             // 
             this._insertAttributeToolStripMenuItem.Name = "_insertAttributeToolStripMenuItem";
-            this._insertAttributeToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
-            this._insertAttributeToolStripMenuItem.Text = "&Insert / update  attributes/macros/enums";
+            this._insertAttributeToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this._insertAttributeToolStripMenuItem.Text = "&Insert / update  attributes";
             this._insertAttributeToolStripMenuItem.ToolTipText = resources.GetString("_insertAttributeToolStripMenuItem.ToolTipText");
             this._insertAttributeToolStripMenuItem.Click += new System.EventHandler(this.insertAttributeToolStripMenuItem_Click);
             // 
             // _insertTypedefStructToolStripMenuItem
             // 
             this._insertTypedefStructToolStripMenuItem.Name = "_insertTypedefStructToolStripMenuItem";
-            this._insertTypedefStructToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._insertTypedefStructToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._insertTypedefStructToolStripMenuItem.Text = "Create typedef struct/union/enum";
             this._insertTypedefStructToolStripMenuItem.ToolTipText = resources.GetString("_insertTypedefStructToolStripMenuItem.ToolTipText");
             this._insertTypedefStructToolStripMenuItem.Click += new System.EventHandler(this.insertTypedefStructToolStripMenuItem_Click);

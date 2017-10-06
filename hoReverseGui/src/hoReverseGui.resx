@@ -202,9 +202,9 @@ Always remember:
   </metadata>
   <data name="_insertAttributeToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Insert &amp; update  attributes from C-Code for selected element:
-- data definition
-- enum values
-- macros
+- Class/Interface: Attribute (macros)
+- Enumearation: Eenum values
+
 If attribute/stereotype is different a hoReverse detects a new atttribute.
 
 Macros are defined as:
@@ -223,24 +223,26 @@ hoReverse handles:
 </value>
   </data>
   <data name="_insertTypedefStructToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Generates a typedef struct/union/enum from code.
+    <value>Generates a typedef
+- struct
+- union
+- enum
+from code.
 
-If you select the typedef then it updates the typedef.
-
-If you select Interface/Class/Component hoReverse updates/creates the typedef beneath the selected element.
-
-
+Select a class/interface to generate the typedef beneath.
+Select the typedef if you want to update it without changing the parent. 
+hoReverse deletes all old values.
 </value>
   </data>
   <data name="_generateComponentPortsToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Generate ports for selected component:
-- Interfaces of diagram
-- Scans code of all interfaces for additional interfaces (include)
-- Not private interfaces *_i
+- Interfaces/Classes of diagram give ProvidedInterfaces
+- Implementation of diagram Classes/Interfaces gives RequiredInterfaces
+-Extension '*_i': private Interface, no ProvidedInterface
 
 Note: 
-- The link to code needs to be accurate!
-- Property filename</value>
+- You have to specify the Implementation file in Propertie (fileName)
+- FileName, Extension and Modelelement have to consistent</value>
   </data>
   <data name="_inserToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Select Class/Interface and generate Interfaces from code.

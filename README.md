@@ -35,6 +35,7 @@ Let's discuss it, but it works.
 
 ## News
 
+2.1.3 Bug fixing, documentation, installation
 2.1.1 Sort Ports optimized
 
 ## FAQ

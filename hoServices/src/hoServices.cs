@@ -3742,7 +3742,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         [ServiceOperation("{BE4759E5-2E8D-454D-83F7-94AA2FF3D50A}",
             "Insert/Update Attributes in Class from Clipboard, Interface, Component",
-            "Insert text with variables, macros or enums", isTextRequired: false)]
+            "Select Class, Interface or enum", isTextRequired: false)]
         public static void InsertAttributeService(EA.Repository rep, string txt)
         {
             try
@@ -3764,8 +3764,8 @@ Second Element: Target of move connections and appearances", "Select two element
         #endregion
         /// <summary>
         /// Create for the selected element from text:
-        /// - Class/Interface Attributes
-        /// - Enum values
+        /// - Class/Interface: Attributes
+        /// - Enum: Enumeration values
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="txt"></param>
