@@ -1330,7 +1330,7 @@ namespace hoReverse.Reverse
             this._btnCopy.Size = new System.Drawing.Size(38, 26);
             this._btnCopy.TabIndex = 19;
             this._btnCopy.Text = "RT";
-            this._toolTip.SetToolTip(this._btnCopy, "Copy/Read Text name of selected thing:\r\n\r\n- Element\r\n- Connector Guard or Name");
+            this._toolTip.SetToolTip(this._btnCopy, resources.GetString("_btnCopy.ToolTip"));
             this._btnCopy.UseVisualStyleBackColor = true;
             this._btnCopy.Click += new System.EventHandler(this._btnCopy_Click);
             // 
@@ -1639,12 +1639,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(289, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(273, 6);
             // 
             // _insertFunctionToolStripMenuItem
             // 
             this._insertFunctionToolStripMenuItem.Name = "_insertFunctionToolStripMenuItem";
-            this._insertFunctionToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._insertFunctionToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._insertFunctionToolStripMenuItem.Text = "&Insert/ update function";
             this._insertFunctionToolStripMenuItem.ToolTipText = "Insert & updates C- functions from code\r\n\r\nIf the function exists hoReverse updat" +
     "es parameter and return value.";
@@ -1653,7 +1653,7 @@ namespace hoReverse.Reverse
             // insertFunctionMakeDuplicatesToolStripMenuItem
             // 
             this.insertFunctionMakeDuplicatesToolStripMenuItem.Name = "insertFunctionMakeDuplicatesToolStripMenuItem";
-            this.insertFunctionMakeDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this.insertFunctionMakeDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this.insertFunctionMakeDuplicatesToolStripMenuItem.Text = "Insert function (make duplicates)";
             this.insertFunctionMakeDuplicatesToolStripMenuItem.ToolTipText = "Insert C- functions from code\r\n\r\nIf the function exists hoReverse inserts a new f" +
     "unction.";
@@ -1662,12 +1662,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(289, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(273, 6);
             // 
             // _updateActionToolStripMenuItem
             // 
             this._updateActionToolStripMenuItem.Name = "_updateActionToolStripMenuItem";
-            this._updateActionToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._updateActionToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._updateActionToolStripMenuItem.Text = "UpdateOperationInAction";
             this._updateActionToolStripMenuItem.ToolTipText = "Update Operation for Action. Select Action.\r\n\r\nIt tries no link to an operation w" +
     "ith no \'extern\' stereotype. \r\nIf this doesn\'t work it link to operation regardle" +
@@ -1677,12 +1677,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator6
             // 
             this._toolStripSeparator6.Name = "_toolStripSeparator6";
-            this._toolStripSeparator6.Size = new System.Drawing.Size(289, 6);
+            this._toolStripSeparator6.Size = new System.Drawing.Size(273, 6);
             // 
             // _deleteInvisibleuseRealizationDependenciesToolStripMenuItem
             // 
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Name = "_deleteInvisibleuseRealizationDependenciesToolStripMenuItem";
-            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Text = "Delete invisible <<use> dependencies";
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.ToolTipText = "Delete for selected Class / Interface <<use>> dependencies which are not linked t" +
     "o diagramobjects on the current diagram.";
@@ -1691,12 +1691,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(289, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(273, 6);
             // 
             // _generateComponentPortsToolStripMenuItem
             // 
             this._generateComponentPortsToolStripMenuItem.Name = "_generateComponentPortsToolStripMenuItem";
-            this._generateComponentPortsToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._generateComponentPortsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._generateComponentPortsToolStripMenuItem.Text = "&GenerateComponentPorts";
             this._generateComponentPortsToolStripMenuItem.ToolTipText = resources.GetString("_generateComponentPortsToolStripMenuItem.ToolTipText");
             this._generateComponentPortsToolStripMenuItem.Click += new System.EventHandler(this.generateComponentPortsToolStripMenuItem_Click);
@@ -1704,7 +1704,7 @@ namespace hoReverse.Reverse
             // _hideAllPortsToolStripMenuItem
             // 
             this._hideAllPortsToolStripMenuItem.Name = "_hideAllPortsToolStripMenuItem";
-            this._hideAllPortsToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._hideAllPortsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._hideAllPortsToolStripMenuItem.Text = "Hide all ports";
             this._hideAllPortsToolStripMenuItem.ToolTipText = "Hide the ports of the selected element.";
             this._hideAllPortsToolStripMenuItem.Click += new System.EventHandler(this._hideAllPortsToolStripMenuItem_Click);
@@ -1712,7 +1712,7 @@ namespace hoReverse.Reverse
             // _showAllPortsActivityParametersToolStripMenuItem
             // 
             this._showAllPortsActivityParametersToolStripMenuItem.Name = "_showAllPortsActivityParametersToolStripMenuItem";
-            this._showAllPortsActivityParametersToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._showAllPortsActivityParametersToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._showAllPortsActivityParametersToolStripMenuItem.Text = "Show all ports / activity parameters";
             this._showAllPortsActivityParametersToolStripMenuItem.ToolTipText = "Show all ports/activity parameters  for classifier (Component, Activity)";
             this._showAllPortsActivityParametersToolStripMenuItem.Click += new System.EventHandler(this.showAllPortsActivityParametersToolStripMenuItem_Click);
@@ -1720,12 +1720,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator7
             // 
             this._toolStripSeparator7.Name = "_toolStripSeparator7";
-            this._toolStripSeparator7.Size = new System.Drawing.Size(289, 6);
+            this._toolStripSeparator7.Size = new System.Drawing.Size(273, 6);
             // 
             // _inserToolStripMenuItem
             // 
             this._inserToolStripMenuItem.Name = "_inserToolStripMenuItem";
-            this._inserToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._inserToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._inserToolStripMenuItem.Text = "Generate Include for classifier";
             this._inserToolStripMenuItem.ToolTipText = resources.GetString("_inserToolStripMenuItem.ToolTipText");
             this._inserToolStripMenuItem.Click += new System.EventHandler(this._generateIncludeForClassifierToolStripMenuItem_Click);
@@ -1733,12 +1733,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator8
             // 
             this._toolStripSeparator8.Name = "_toolStripSeparator8";
-            this._toolStripSeparator8.Size = new System.Drawing.Size(289, 6);
+            this._toolStripSeparator8.Size = new System.Drawing.Size(273, 6);
             // 
             // _setMacroToolStripMenuItem
             // 
             this._setMacroToolStripMenuItem.Name = "_setMacroToolStripMenuItem";
-            this._setMacroToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._setMacroToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._setMacroToolStripMenuItem.Text = "Set Macro";
             this._setMacroToolStripMenuItem.ToolTipText = resources.GetString("_setMacroToolStripMenuItem.ToolTipText");
             this._setMacroToolStripMenuItem.Click += new System.EventHandler(this.setMacroToolStripMenuItem_Click);
@@ -1746,7 +1746,7 @@ namespace hoReverse.Reverse
             // _addMacroToolStripMenuItem
             // 
             this._addMacroToolStripMenuItem.Name = "_addMacroToolStripMenuItem";
-            this._addMacroToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._addMacroToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._addMacroToolStripMenuItem.Text = "Add Macro";
             this._addMacroToolStripMenuItem.ToolTipText = resources.GetString("_addMacroToolStripMenuItem.ToolTipText");
             this._addMacroToolStripMenuItem.Click += new System.EventHandler(this.AddMacroToolStripMenuItem_Click);
@@ -1754,7 +1754,7 @@ namespace hoReverse.Reverse
             // _delMacroToolStripMenuItem
             // 
             this._delMacroToolStripMenuItem.Name = "_delMacroToolStripMenuItem";
-            this._delMacroToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._delMacroToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._delMacroToolStripMenuItem.Text = "Del Macro";
             this._delMacroToolStripMenuItem.ToolTipText = "Delete all macros/stereotypes for the selected item.";
             this._delMacroToolStripMenuItem.Click += new System.EventHandler(this.delMacroToolStripMenuItem_Click);
@@ -1762,12 +1762,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator
             // 
             this._toolStripSeparator.Name = "_toolStripSeparator";
-            this._toolStripSeparator.Size = new System.Drawing.Size(289, 6);
+            this._toolStripSeparator.Size = new System.Drawing.Size(273, 6);
             // 
             // _copyReleaseInformationToClipboardToolStripMenuItem
             // 
             this._copyReleaseInformationToClipboardToolStripMenuItem.Name = "_copyReleaseInformationToClipboardToolStripMenuItem";
-            this._copyReleaseInformationToClipboardToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this._copyReleaseInformationToClipboardToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._copyReleaseInformationToClipboardToolStripMenuItem.Text = "&Copy release information to Clipboard";
             this._copyReleaseInformationToClipboardToolStripMenuItem.ToolTipText = "Copy release information of *.c and *.h files to Clipboard:\r\n- Select Module\r\n- F" +
     "or all elements on the diagram the release information is printed";

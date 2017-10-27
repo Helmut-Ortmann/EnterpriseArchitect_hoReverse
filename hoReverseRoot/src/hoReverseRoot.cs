@@ -1108,8 +1108,8 @@ namespace hoReverse
         /// </summary>
         private void ShowWindow()
         {
-            
-            if (_hoReverseGui == null )
+
+            if (_hoReverseGui == null)
 
                 try
                 {
@@ -1126,8 +1126,8 @@ namespace hoReverse
                 {
                     MessageBox.Show(e.Message);
                 }
-            if (_hoReverseGui == null) MessageBox.Show($"Prog-id={_prog_id}",
-                "Addin hoReverse could not be instantiated");
+            if (_hoReverseGui == null) MessageBox.Show($"Prog-id='hoReverse.ReverseGui'",
+                "Addin hoReverseGUI could not be instantiated");
             else
             {
                 _hoReverseGui.Repository = _repository;

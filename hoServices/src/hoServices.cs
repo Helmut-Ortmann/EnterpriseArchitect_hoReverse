@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EA;
 using hoReverse.hoUtils.ODBC;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Cutils;
@@ -98,7 +97,7 @@ namespace hoReverse.Services
             isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void SortAlphabetic(Repository rep)
+        public static void SortAlphabetic(EA.Repository rep)
         {
             EaDiagram curDiagram = new EaDiagram(rep);
             if (curDiagram.Dia == null) return;
@@ -125,7 +124,7 @@ namespace hoReverse.Services
             "Copy FQ (Full Qualified) Name to Clipboard (Package, Element, Diagram, Attribute, Operation)", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyFqToClipboard(Repository rep)
+        public static void CopyFqToClipboard(EA.Repository rep)
         {
             string strFQ = "";
             object o;
@@ -181,7 +180,7 @@ namespace hoReverse.Services
             isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void MoveUsage(Repository rep)
+        public static void MoveUsage(EA.Repository rep)
         {
             EaDiagram curDiagram = new EaDiagram(rep);
             if (curDiagram.Dia == null) return;
@@ -213,7 +212,7 @@ Second Element: Target of move connections and appearances", "Select two element
             "Copy Stereotypes (FDStereotype+StereotypeEx) to ClipBoard", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyStereotypesToClipboard(Repository rep)
+        public static void CopyStereotypesToClipboard(EA.Repository rep)
         {
             EA.Element el;
             string strStereo = "";
@@ -261,7 +260,7 @@ Second Element: Target of move connections and appearances", "Select two element
             "Copy GUID to Clipboard (Package, Element, Diagram, Attribute, Operation, Connector, Parameter)", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyGuidToClipboard(Repository rep)
+        public static void CopyGuidToClipboard(EA.Repository rep)
         {
             string strGuid = "";
             object o;
@@ -419,84 +418,117 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <returns></returns>
         private static string GetNameFromContextItem(EA.Repository rep)
         {
-            string name = "";
-            switch (rep.GetContextItemType())
+            string names = "";
+            EA.ObjectType type = rep.GetContextItemType();
+            switch (type)
             {
-                case ObjectType.otElement:
-                    EA.Element el = (EA.Element) rep.GetContextObject();
-                    name = el.Name;
-                    // possible Action which contains a function
-                    if (el.Type == "Action" && el.Name.EndsWith(")") && el.Name.Contains("("))
-                    {
-                        // xxxxx( , , ) // extract function name
-                        Regex rx = new Regex(@"\s*(\w*)\s*\([^\)]*\)");
-                        Match match = rx.Match(name);
-                        if (match.Groups.Count == 2)
-                        {
-                            name = match.Groups[1].Value;
-                        }
-                    }
+                case EA.ObjectType.otElement:
+                    names = NamensFromSelectedElements(rep, type);
                     break;
-                case ObjectType.otDiagram:
-                    name = ((EA.Diagram) rep.GetContextObject()).Name;
+                case EA.ObjectType.otDiagram:
+                    names = ((EA.Diagram) rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otPackage:
-                    name = ((EA.Package) rep.GetContextObject()).Name;
+                case EA.ObjectType.otPackage:
+                    names = NamensFromSelectedElements(rep, type);
                     break;
-                case ObjectType.otAttribute:
-                    name = ((EA.Attribute) rep.GetContextObject()).Name;
+                case EA.ObjectType.otAttribute:
+                    names = ((EA.Attribute) rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otMethod:
-                    name = ((EA.Method) rep.GetContextObject()).Name;
+                case EA.ObjectType.otMethod:
+                    names = ((EA.Method) rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otParameter:
-                    name = ((EA.Parameter) rep.GetContextObject()).Name;
+                case EA.ObjectType.otParameter:
+                    names = ((EA.Parameter) rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otDatatype:
-                    name = ((EA.Datatype) rep.GetContextObject()).Name;
+                case EA.ObjectType.otDatatype:
+                    names = ((EA.Datatype) rep.GetContextObject()).Name;
                     break;
 
-                case ObjectType.otConnector:
+                case EA.ObjectType.otConnector:
                     EA.Connector con = (EA.Connector) rep.GetContextObject();
                     string guard = con.TransitionGuard.Trim();
-                    if ("ControlFlow ObjectFlow StateFlow".Contains(con.Type) && guard != "") name = guard;
-                    else name = con.Name;
+                    if ("ControlFlow ObjectFlow StateFlow".Contains(con.Type) && guard != "") names = guard;
+                    else names = con.Name;
                     break;
 
-                case ObjectType.otIssue:
-                    name = ((EA.Issue)rep.GetContextObject()).Name;
+                case EA.ObjectType.otIssue:
+                    names = ((EA.Issue)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otTest:
-                    name = ((EA.Test)rep.GetContextObject()).Name;
+                case EA.ObjectType.otTest:
+                    names = ((EA.Test)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otTask:
-                    name = ((EA.Task)rep.GetContextObject()).Name;
+                case EA.ObjectType.otTask:
+                    names = ((EA.Task)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otScenario:
-                    name = ((EA.Scenario)rep.GetContextObject()).Name;
+                case EA.ObjectType.otScenario:
+                    names = ((EA.Scenario)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otClient:
-                    name = ((EA.Client)rep.GetContextObject()).Name;
+                case EA.ObjectType.otClient:
+                    names = ((EA.Client)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otAuthor:
-                    name = ((EA.Author)rep.GetContextObject()).Name;
+                case EA.ObjectType.otAuthor:
+                    names = ((EA.Author)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otProjectResource:
-                    name = ((EA.ProjectResource)rep.GetContextObject()).Name;
+                case EA.ObjectType.otProjectResource:
+                    names = ((EA.ProjectResource)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otRequirement:
-                    name = ((EA.Requirement)rep.GetContextObject()).Name;
+                case EA.ObjectType.otRequirement:
+                    names = ((EA.Requirement)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otRisk:
-                    name = ((EA.Risk)rep.GetContextObject()).Name;
+                case EA.ObjectType.otRisk:
+                    names = ((EA.Risk)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otEffort:
-                    name = ((EA.Effort)rep.GetContextObject()).Name;
+                case EA.ObjectType.otEffort:
+                    names = ((EA.Effort)rep.GetContextObject()).Name;
                     break;
-                case ObjectType.otMetric:
-                    name = ((EA.Metric)rep.GetContextObject()).Name;
+                case EA.ObjectType.otMetric:
+                    names = ((EA.Metric)rep.GetContextObject()).Name;
                     break;
             }
+            return names;
+        }
+
+        private static string NamensFromSelectedElements(EA.Repository rep, EA.ObjectType type)
+        {
+            var eaDia = new EaDiagram(rep);
+            var names = "";
+            if (eaDia.SelectedObjectsCount > 1)
+            {
+                // sort names
+                var r = from o in eaDia.SelObjects
+                    orderby NameFromElement(rep.GetElementByID(o.ElementID))
+                    select NameFromElement(rep.GetElementByID(o.ElementID));
+                string delimiter = "";
+                foreach (var name in r)
+                {
+                    names = $"{names}{delimiter}{name}";
+                    delimiter = "\r\n";
+                }
+            }
+            else
+            {
+                names = type == EA.ObjectType.otElement 
+                    ? NameFromElement((EA.Element) rep.GetContextObject()) 
+                    : ((EA.Package)rep.GetContextObject()).Name;
+            }
+            return names;
+        }
+
+        private static string NameFromElement(EA.Element el)
+        {
+            // possible Action which contains a function
+            string name = el.Name;
+            if (el.Type == "Action" && el.Name.EndsWith(")") && el.Name.Contains("("))
+            {
+                // xxxxx( , , ) // extract function name
+                Regex rx = new Regex(@"\s*(\w*)\s*\([^\)]*\)");
+                Match match = rx.Match(name);
+                if (match.Groups.Count == 2)
+                {
+                    name = match.Groups[1].Value;
+                }
+            }
+
             return name;
         }
 
@@ -635,7 +667,7 @@ Second Element: Target of move connections and appearances", "Select two element
         // Set folder of package for easy access of implementation.
         [ServiceOperation("{B326B602-88F3-46E9-8EB5-9BF4F747FCB4}", "Set package folder of implementation",
             "Select package to set the implementation folder", isTextRequired: false)]
-        public static void SetFolder(Repository rep)
+        public static void SetFolder(EA.Repository rep)
         {
 
             switch (rep.GetContextItemType())
@@ -992,7 +1024,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{5ED3DABA-367E-4575-A161-D79F838A5A17}", "Hide Ports, Pins, Parameter",
             "Selected Diagram Objects or all", isTextRequired: false)]
         public static void HideEmbeddedElements(
-            Repository rep)
+            EA.Repository rep)
         {
             Cursor.Current = Cursors.WaitCursor;
             // remember Diagram data of current selected diagram
@@ -1038,7 +1070,7 @@ Second Element: Target of move connections and appearances", "Select two element
         #endregion
         #region UpdateEmbeddedElementStyle
 
-        private static void UpdateEmbeddedElementStyle(Repository rep, PortServices.LabelStyle style)
+        private static void UpdateEmbeddedElementStyle(EA.Repository rep, PortServices.LabelStyle style)
         {
             Cursor.Current = Cursors.WaitCursor;
             // remember Diagram data of current selected diagram
@@ -1089,7 +1121,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="dia"></param>
         /// <param name="embeddedElement"></param>
-        private static void RemoveEmbeddedElementFromDiagram(Diagram dia, EA.Element embeddedElement)
+        private static void RemoveEmbeddedElementFromDiagram(EA.Diagram dia, EA.Element embeddedElement)
         {
             // delete recursive embedded elements
             foreach (EA.Element el in embeddedElement.EmbeddedElements)
@@ -1122,7 +1154,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{FBEF4500-DD24-4D23-BC7F-08D70DDA2B57}", "Show Port, Pin Parameter Labels",
             "Selected Diagram Objects or all", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
-        public static void ShowEmbeddedElementsLabel(Repository rep)
+        public static void ShowEmbeddedElementsLabel(EA.Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsShown);
         }
@@ -1139,7 +1171,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         [ServiceOperation("{3493B9E6-F6DA-478E-A161-DD95D1D34B44}", "Hide Ports, Pins, Parameter Label",
             "Selected Diagram Objects or all", isTextRequired: false)]
-        public static void HideEmbeddedElementsLabel(Repository rep)
+        public static void HideEmbeddedElementsLabel(EA.Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsHidden);
         }
@@ -1156,7 +1188,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         [ServiceOperation("{CF59707B-35A3-4E0C-AA0D-16722DB61F7D}", "Hide Port Type",
             "Selected Diagram Objects or all", isTextRequired: false)]
-        public static void HideEmbeddedElementsType(Repository rep)
+        public static void HideEmbeddedElementsType(EA.Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsTypeHidden);
         }
@@ -1174,7 +1206,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{CF59707B-35A3-4E0C-AA0D-16722DB61F7D}", "Show Port Type",
             "Selected Diagram Objects or all", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
-        public static void ShowEmbeddedElementsType(Repository rep)
+        public static void ShowEmbeddedElementsType(EA.Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsTypeShown);
         }
@@ -3030,7 +3062,7 @@ Second Element: Target of move connections and appearances", "Select two element
         public static void CreateSharedMemoryFromText(EA.Repository rep, string txt) {
             EA.ObjectType oType = rep.GetContextItemType();
             if (! oType.Equals(EA.ObjectType.otPackage)) return;
-            Package pkg = (EA.Package)rep.GetContextObject();
+            EA.Package pkg = (EA.Package)rep.GetContextObject();
 
             string regexShm = @"#\s*define\sSP_SHM_(.*)_(START|END)\s*(0x[0-9ABCDEF]*)";
             Match matchShm = Regex.Match(txt, regexShm, RegexOptions.Multiline);
@@ -3312,7 +3344,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 string type = par;
 
  
-                Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
+                EA.Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
                 m.Parameters.Refresh();
                 elPar.IsConst = false;
                 elPar.Type = type;
@@ -3501,7 +3533,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
                 string name = lparElements[lparElements.Length - 1];
                 // parameter consists of two parts: type name
-                Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
+                EA.Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
                 m.Parameters.Refresh();
                 elPar.IsConst = isConst;
                 elPar.Kind = "in";
@@ -5966,7 +5998,7 @@ ElementType:{el.Type}",
                                   CallOperationAction.GetMethodFromMethodName(rep, methodName, isNoExtern: false);
                     if (m == null) return true;
 
-                    Diagram diaCurrent = rep.GetCurrentDiagram();
+                    EA.Diagram diaCurrent = rep.GetCurrentDiagram();
                     if (diaCurrent == null) return true;
                     var eaDia = new EaDiagram(rep);
                     rep.SaveDiagram(diaCurrent.DiagramID);
@@ -6068,27 +6100,27 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="elementType"></param>
         /// <param name="connectorLinkType"></param>
-        public static void AddElementsToDiagram(Repository rep,
+        public static void AddElementsToDiagram(EA.Repository rep,
             string elementType = "Note", string connectorLinkType = "Element Note")
 
         {
             // handle multiple selected elements
-            Diagram diaCurrent = rep.GetCurrentDiagram();
+            EA.Diagram diaCurrent = rep.GetCurrentDiagram();
             if (diaCurrent == null) return;
             var eaDia = new EaDiagram(rep);
             rep.SaveDiagram(diaCurrent.DiagramID);
 
             switch (rep.GetContextItemType())
             {
-                case ObjectType.otDiagram:
+                case EA.ObjectType.otDiagram:
                     AddDiagramNote(rep);
                     break;
-                case ObjectType.otConnector:
+                case EA.ObjectType.otConnector:
                     if (!String.IsNullOrWhiteSpace(connectorLinkType)) connectorLinkType = "Link Notes";
                     AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, connectorLinkType);
                     break;
-                case ObjectType.otPackage:
-                case ObjectType.otElement:
+                case EA.ObjectType.otPackage:
+                case EA.ObjectType.otElement:
                     // check for selected DiagramObjects
                     var diaCurrentSelectedObjects = diaCurrent.SelectedObjects;
                     if (diaCurrentSelectedObjects?.Count > 0)
@@ -6099,10 +6131,10 @@ ElementType:{el.Type}",
                         }
                     }
                     break;
-                case ObjectType.otMethod:
+                case EA.ObjectType.otMethod:
                     AddFeatureWithNoteLink(rep, (EA.Method)rep.GetContextObject(), connectorLinkType);
                     break;
-                case ObjectType.otAttribute:
+                case EA.ObjectType.otAttribute:
                     AddFeatureWithNoteLink(rep, (EA.Attribute)rep.GetContextObject(), connectorLinkType);
                     break;
             }
@@ -6119,7 +6151,7 @@ ElementType:{el.Type}",
         /// <param name="diaObj"></param>
         /// <param name="elementType">Default Note</param>
         /// <param name="connectorType">Default: null</param>
-        private static void AddElementWithLink(Repository rep, EA.DiagramObject diaObj,
+        private static void AddElementWithLink(EA.Repository rep, EA.DiagramObject diaObj,
             string elementType = @"Note", string connectorType = "Element Link")
         {
             EA.Element el = rep.GetElementByID(diaObj.ElementID);
@@ -6223,7 +6255,7 @@ ElementType:{el.Type}",
         /// <param name="featureId"></param>
         /// <param name="featureName"></param>
         /// <param name="connectorLinkType"></param>
-        private static void SetFeatureLink(Repository rep, EA.Element elNote,  string featureType,
+        private static void SetFeatureLink(EA.Repository rep, EA.Element elNote,  string featureType,
             int featureId, string featureName, string connectorLinkType = "")
         {
             string connectorType = "NoteLink";
@@ -6295,8 +6327,8 @@ ElementType:{el.Type}",
         private static void AddElementWithLinkToConnector(EA.Repository rep, EA.Connector con,
             string elementType = @"Note", string connectorLinkType = "Link Notes")
         {
-            Diagram dia = rep.GetCurrentDiagram();
-            Package pkg = rep.GetPackageByID(dia.PackageID);
+            EA.Diagram dia = rep.GetCurrentDiagram();
+            EA.Package pkg = rep.GetPackageByID(dia.PackageID);
             if (pkg.IsProtected || dia.IsLocked) return;
 
             EA.Element elNewElement;
