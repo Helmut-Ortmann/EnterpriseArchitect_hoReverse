@@ -389,7 +389,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         public static void SearchForName(EA.Repository rep)
         {
-            string name = GetNameFromContextItem(rep);
+            string name = GetNamesFromSelectedItems(rep);
             // run search if name found
             if (name != "")
             {
@@ -400,23 +400,24 @@ Second Element: Target of move connections and appearances", "Select two element
 
         }
 
-        [ServiceOperation("{A73A53B3-6D6D-46AF-B6F2-DA252870D998}", "Copy name of selected item or connector, if Action try to find operation.",
-            "Select Package, Element, Attribute, Operation. If Action it tries to extract a possible function name. If Connector use Guard (Flow, Transition)", isTextRequired: false)]
+        [ServiceOperation("{A73A53B3-6D6D-46AF-B6F2-DA252870D998}", "Copy sorted name(s) of selected items or connector, if Action try to find operation.",
+            "Select Package(s), Element(s), Attribute, Operation. If Action it tries to extract a possible function name. If Connector use Guard (Flow, Transition). Multiple selection is only possible on Diagrams.", isTextRequired: false)]
         public static string CopyContextNameToClipboard(EA.Repository rep)
         {
-            string txt = GetNameFromContextItem(rep);
+            string txt = GetNamesFromSelectedItems(rep);
             Clipboard.SetText(txt);
             return txt;
         }
 
         /// <summary>
-        /// Get name from context element
+        /// Get name from context element or the selected diagram items. 
+        /// If Diagram items (Element or Package) then sort them
         /// If Action try to extract the operation name.
         /// If Connector use Name or Guard if ControlFlow, DataFlow or transition
         /// </summary>
         /// <param name="rep"></param>
         /// <returns></returns>
-        private static string GetNameFromContextItem(EA.Repository rep)
+        private static string GetNamesFromSelectedItems(EA.Repository rep)
         {
             string names = "";
             EA.ObjectType type = rep.GetContextItemType();
@@ -488,6 +489,13 @@ Second Element: Target of move connections and appearances", "Select two element
             return names;
         }
 
+
+        /// <summary>
+        /// Get names from selected item(s) and sort them alphabetic
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private static string NamensFromSelectedElements(EA.Repository rep, EA.ObjectType type)
         {
             var eaDia = new EaDiagram(rep);
@@ -514,6 +522,11 @@ Second Element: Target of move connections and appearances", "Select two element
             return names;
         }
 
+        /// <summary>
+        /// Get name from Element. If Action it handles CallOperation action by not copying the braces
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
         private static string NameFromElement(EA.Element el)
         {
             // possible Action which contains a function
