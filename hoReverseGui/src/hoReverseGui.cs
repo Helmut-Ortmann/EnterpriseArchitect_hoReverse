@@ -1788,7 +1788,7 @@ namespace hoReverse.Reverse
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
             this.modulesToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
-            this.modulesToolStripMenuItem.Click += new System.EventHandler(this.modulesToolStripMenuItem_Click);
+            this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
             // 
             // inventoryToolStripMenuItem
             // 
@@ -3412,7 +3412,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
 
-        private void modulesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GenerateModulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
 

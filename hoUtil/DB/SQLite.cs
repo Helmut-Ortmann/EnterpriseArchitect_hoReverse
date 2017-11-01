@@ -6,6 +6,14 @@ using System.Windows.Forms;
 // ReSharper disable once CheckNamespace
 namespace hoReverse.hoUtils.DB
 {
+    /// <summary>
+    /// Access to SQL via ADODB SQLite driver. 
+    /// - Driver
+    /// -- https://system.data.sqlite.org
+    /// -- Supports ADODB, LINQ, EF6
+    /// - SQLiteBrowser
+    /// -- https://github.com/sqlitebrowser/
+    /// </summary>
     // ReSharper disable once InconsistentNaming
     public class SQLite
     {
@@ -13,11 +21,17 @@ namespace hoReverse.hoUtils.DB
         //private SQLiteDataReader _reader;
         private DbDataReader _reader;
         private readonly SQLiteCommand _command;
+        /// <summary>
+        /// Constructor to create an ADODB connection to SQL Lite
+        /// </summary>
+        /// <param name="dataSource"></param>
         public SQLite(string dataSource)
         {
             _dataSource = dataSource;
             try
             {
+                //  Run nugetPackage console: Install-Package System.Data.SQLite
+                //  Error: Can't load  ‘SQLite.Interop.dll’. 
                 SQLiteConnection connection = new SQLiteConnection
                 {
                     ConnectionString = "Data Source=" + dataSource

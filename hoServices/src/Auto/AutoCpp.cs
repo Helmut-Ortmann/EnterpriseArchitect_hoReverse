@@ -12,10 +12,15 @@ namespace hoReverse.Services.AutoCpp
 {
     public class AutoCpp
     {
-        private static string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
+        // VSCode SQLite Database for symbols to ease finding
+        // the folder name is a hash to the folder, it only changes when the folder name changes.
+        // Access by: 'Data Source=".."' // patch of the db
+        // - ADODB
+        // - LINQ (linq2db)
+        private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         //private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
 
-        private static string designRootPackageGuid = "{FB193821-8D09-438f-B63E-79BCA959C1CC}";
+        private static string designRootPackageGuid = "{0DEBD6C4-F4DE-4084-881F-4E19304B2B93}";
         private static string[] processFiles =
         {
             "Sens_pClu_Posn.c",
@@ -92,7 +97,17 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 {
                     // create function
                     FunctionItem functionItem = new FunctionItem(m.Name, m.ReturnType, m.IsStatic, new List<ParameterItem>(), ifItem, m);
-                    _designFunctions.FunctionList.Add(m.Name, functionItem);
+                    if (_designFunctions.FunctionList.ContainsKey(m.Name))
+                    {
+                       var function =  _designFunctions.FunctionList[m.Name];
+                        MessageBox.Show($"Interface:\t{function.Interface?.Name}\r\nModule:\t{function.Module?.Name}", 
+                            $"Duplicated Function {m.Name}, skipped!");
+                    }
+                    else
+                    {
+                        _designFunctions.FunctionList.Add(m.Name, functionItem);
+                    }
+
                     // update interface
                     ifItem.ProvidedFunctions.Add(functionItem);
                 }
