@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -212,6 +213,9 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem hoToolsToolStripMenuItem;
         private ToolStripMenuItem lineStyleToolStripMenuItem;
         private ToolStripMenuItem getToolStripMenuItem;
+        private ToolStripMenuItem makeRunnableToolStripMenuItem;
+        private ToolStripMenuItem makeServicePortToolStripMenuItem;
+        private ToolStripMenuItem makeCalloutToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -357,6 +361,9 @@ namespace hoReverse.Reverse
             {
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
+                // check for ZF
+                _autoToolStripMenuItem.Visible = _repository.ConnectionString.Contains("WLE") ? true : false;
+
             }
         }
 
@@ -591,7 +598,6 @@ namespace hoReverse.Reverse
             this._btnFeatureDown = new System.Windows.Forms.Button();
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -645,6 +651,7 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -684,7 +691,10 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.makeRunnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeServicePortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeCalloutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1338,23 +1348,6 @@ namespace hoReverse.Reverse
             this._btnCopy.UseVisualStyleBackColor = true;
             this._btnCopy.Click += new System.EventHandler(this._btnCopy_Click);
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1782,11 +1775,14 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.modulesToolStripMenuItem,
             this.inventoryToolStripMenuItem,
-            this.getToolStripMenuItem});
+            this.getToolStripMenuItem,
+            this.makeRunnableToolStripMenuItem,
+            this.makeServicePortToolStripMenuItem,
+            this.makeCalloutToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
-            this._autoToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
-            this._autoToolStripMenuItem.Text = "Auto";
-            this._autoToolStripMenuItem.ToolTipText = "Auto Reverseengineering";
+            this._autoToolStripMenuItem.Size = new System.Drawing.Size(32, 20);
+            this._autoToolStripMenuItem.Text = "ZF";
+            this._autoToolStripMenuItem.ToolTipText = "Tools für ZF\r\n- Ports (Runnable, Service)";
             // 
             // modulesToolStripMenuItem
             // 
@@ -1801,6 +1797,13 @@ namespace hoReverse.Reverse
             this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
+            // 
+            // getToolStripMenuItem
+            // 
+            this.getToolStripMenuItem.Name = "getToolStripMenuItem";
+            this.getToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.getToolStripMenuItem.Text = "GetExternalFunctions";
+            this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
             // 
@@ -2163,12 +2166,44 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
             // 
-            // getToolStripMenuItem
+            // TxtUserText
             // 
-            this.getToolStripMenuItem.Name = "getToolStripMenuItem";
-            this.getToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.getToolStripMenuItem.Text = "GetExternalFunctions";
-            this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
+            // makeRunnableToolStripMenuItem
+            // 
+            this.makeRunnableToolStripMenuItem.Name = "makeRunnableToolStripMenuItem";
+            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
+            this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
+            this.makeRunnableToolStripMenuItem.Click += new System.EventHandler(this.makeRunnableToolStripMenuItem_Click);
+            // 
+            // makeServicePortToolStripMenuItem
+            // 
+            this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
+            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
+            this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
+            // 
+            // makeCalloutToolStripMenuItem
+            // 
+            this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
+            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
+            this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -3572,6 +3607,59 @@ Please restart EA. During restart hoTools loads the default settings.",
                 }
             }
         }
+
+
+        /// <summary>
+        /// Set stereotype of Port to 'Runnable'
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void makeRunnableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetStereotype("Runnable");
+
+        }
+        private void makeServicePortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetStereotype("Service");
+        }
+
+        private void makeCalloutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetStereotype(@"Callout");
+        }
+
+        private void SetStereotype(string stereotype)
+        {
+            var eaDia = new EaDiagram(_repository);
+            if (eaDia.SelectedObjectsCount > 1)
+            {
+                foreach (var port in eaDia.SelElements)
+                {
+                    if (port.Type == "Port")
+                    {
+                        port.Stereotype = stereotype;
+                        port.Update();
+                    }
+                }
+            }
+            else
+            {
+                Object obj;
+                EA.ObjectType type = _repository.GetContextItem(out obj);
+                if (type == EA.ObjectType.otElement)
+                {
+                    EA.Element port = (EA.Element)obj;
+                    if (port.Type == "Port")
+                    {
+                        port.Stereotype = stereotype;
+                        port.Update();
+                    }
+                }
+            }
+        }
+
+
     }
 }
 
