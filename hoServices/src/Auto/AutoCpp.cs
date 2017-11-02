@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime;
 using EaServices.Files;
 using EaServices.Functions;
 using hoUtils.Package;
+using hoLinqToSql.LinqUtils;
+using LinqToDB.DataProvider;
 
 
 // ReSharper disable once CheckNamespace
@@ -28,6 +34,7 @@ namespace hoReverse.Services.AutoCpp
         };
         private readonly EA.Repository _rep;
         private readonly EA.Package _pkg;
+        private readonly EA.Element _component;
         private readonly string _designPackagedIds;
         readonly List<string> _functionsNotFound = new List<string>();
         readonly Files _files;
@@ -35,10 +42,39 @@ namespace hoReverse.Services.AutoCpp
         readonly Files _designFiles;
         readonly Functions _designFunctions;
 
+
+        string _connectionString = "";
+
         // statistics
         private int _deletedInterfaces = 0;
         private int _createdInterfaces = 0;
 
+        public AutoCpp(EA.Repository rep)
+        {
+            _rep = rep;
+            // inventory from VC Code Database
+            _files = new Files(rep);
+            _designFiles = new Files(rep);
+            _functions = new Functions(dataSource, Files, rep);
+            _designFunctions = new Functions(_designFiles, rep);
+
+
+
+        }
+
+        public AutoCpp(EA.Repository rep, EA.Element component)
+        {
+            _rep = rep;
+            _component = component;   
+            // inventory from VC Code Database
+            _files = new Files(rep);
+            _designFiles = new Files(rep);
+            _functions = new Functions(dataSource, Files, rep);
+            _designFunctions = new Functions(_designFiles, rep);
+
+           
+            
+        }
 
         /// <summary>
         /// Generate the modules. It updates the modules or put it into the selected package.
@@ -215,7 +251,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 if (fileItem is ModuleItem)
                 {
                     ModuleItem moduleItem = (ModuleItem)fileItem;
-                    moduleItem.Inventory();
+                    moduleItem.InventoryAddEaModuleReference();
                     moduleItem.InventoryRequiredFunctionsFromTextFile(moduleItem.FilePath, Functions, FunctionsNotFound);
 
 
@@ -264,6 +300,105 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         public int CreatedInterfaces
         {
             get { return _createdInterfaces; }
+        }
+
+        public string ConnectionString
+        {
+            get
+            {
+                _connectionString = "Data Source=" + dataSource;
+                    return _connectionString; }
+        }
+
+        /// <summary>
+        /// Generate External functions of component
+        /// </summary>
+        public void GenExternalFuntionsOfComponent()
+        {
+            // get connection string of repository
+            IDataProvider provider;  // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
+            {
+                // find all possible external functions
+
+                // find root folder
+                var files = from file in db.Files
+                    where file.LeafName.ToLower() == $"{_component.Name.ToLower()}.c"
+                    select new {file.Name, file.LeafName };
+
+                string fileName = files.FirstOrDefault()?.Name;
+                if (fileName == "")
+                {
+                    MessageBox.Show($"Component:\t{_component.Name}", "Can't find c-file for component");
+                    return;
+                }
+
+
+                // Find Files
+                Debug.Assert(fileName != null, nameof(fileName) + " != null");
+                var f = from file in Directory.GetFiles(Path.GetDirectoryName(fileName))
+                    where file.ToLower().EndsWith(".c")
+                    select file;
+                foreach (var file in f)
+                {
+                    
+                }
+
+
+
+            }
+
+             
+
+
+        }
+
+        /// <summary>
+        /// Example LINQ to SQL
+        /// - All object object types
+        /// - Count of object types
+        /// - Percentage of object types
+        /// - Total count
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        private static DataTable RunLinq2Db(IDataProvider provider, string connectionString)
+        {
+            //DataConnection.DefaultSettings = new hoLinq2DBSettings(provider, connectionString);
+            try
+            {
+                {
+
+                    using (var db = new DataModels.EaDataModel(provider, connectionString))
+                    {
+                        var count = db.t_object.Count();
+                        var q = (from c in db.t_object.AsEnumerable()
+                            group c by c.Object_Type into g
+                            orderby g.Key
+
+                            select new
+                            {
+                                Type = g.Key,
+                                Prozent = $"{ (float)g.Count() * 100 / count:00.00}%",
+                                Count = g.Count(),
+                                Total = count
+                            });
+
+                        return q.ToDataTable();
+
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Provider: {provider}\r\nConnection: {connectionString}\r\n\r\n{e}", "Error Linq2DB");
+                return new DataTable();
+            }
+
+
         }
     }
 }

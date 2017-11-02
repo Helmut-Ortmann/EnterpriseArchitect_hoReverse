@@ -23,7 +23,7 @@ namespace EaServices.Files
         /// <summary>
         /// Inventory a Module. It adds the EA Module reference if exists.
         /// </summary>
-        public void Inventory()
+        public void InventoryAddEaModuleReference()
         {
             // get module: Component, Stereotype: 'LE Modul'
             string sql = $@"select object_id 
@@ -121,7 +121,7 @@ namespace EaServices.Files
                 if (functions.FunctionList.TryGetValue(functionCode, out functionItem))
                 {
                     // function found
-                    RequiredAdd(functionItem);
+                    RequiredFunctionAdd(functionItem);
                 }
                 else
                 {

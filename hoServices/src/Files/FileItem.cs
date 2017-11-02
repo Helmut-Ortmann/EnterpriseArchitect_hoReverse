@@ -55,7 +55,7 @@ namespace EaServices.Files
             if (_providedFunctions.Contains(functionItem)) return;
             _providedFunctions.Add(functionItem);
         }
-        public void RequiredAdd(FunctionItem functionItem)
+        public void RequiredFunctionAdd(FunctionItem functionItem)
         {
             if (_requiredFunctions.Contains(functionItem)) return;
             _requiredFunctions.Add(functionItem);

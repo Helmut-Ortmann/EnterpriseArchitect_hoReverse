@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using EA;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
 using hoReverse.Services;
@@ -14,6 +15,7 @@ using Diagram = WpfDiagram.Diagram;
 using hoReverse.hoUtils.WiKiRefs;
 
 using hoReverse.Services.AutoCpp;
+using File = System.IO.File;
 
 // ReSharper disable RedundantDelegateCreation
 
@@ -209,6 +211,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem hoToolsToolStripMenuItem;
         private ToolStripMenuItem lineStyleToolStripMenuItem;
+        private ToolStripMenuItem getToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -681,6 +684,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1777,7 +1781,8 @@ namespace hoReverse.Reverse
             // 
             this._autoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.modulesToolStripMenuItem,
-            this.inventoryToolStripMenuItem});
+            this.inventoryToolStripMenuItem,
+            this.getToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
             this._autoToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
             this._autoToolStripMenuItem.Text = "Auto";
@@ -1786,14 +1791,14 @@ namespace hoReverse.Reverse
             // modulesToolStripMenuItem
             // 
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
-            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
             this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
             // 
             // inventoryToolStripMenuItem
             // 
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
-            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
             // 
@@ -2157,6 +2162,13 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
+            // 
+            // getToolStripMenuItem
+            // 
+            this.getToolStripMenuItem.Name = "getToolStripMenuItem";
+            this.getToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.getToolStripMenuItem.Text = "GetExternalFunctions";
+            this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -3539,6 +3551,26 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void lineStyleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiLineStyle();
+        }
+
+
+        /// <summary>
+        /// Get external function for selected Component, Class
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void getToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            object  eaObject = null;
+            if (_repository.GetContextItem(out eaObject) == ObjectType.otElement)
+            {
+                EA.Element component = (EA.Element) eaObject;
+                if (component.Type == "Component" || component.Type == "Class")
+                {
+                    var generator = new AutoCpp(_repository, component);
+                    generator.GenExternalFuntionsOfComponent();
+                }
+            }
         }
     }
 }

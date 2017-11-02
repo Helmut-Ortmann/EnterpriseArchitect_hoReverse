@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoReverseRoot", "hoReverseRoot\hoReverseRoot.csproj", "{7874DA41-0F27-48EA-9C56-E4876A5262DB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -28,16 +28,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{E7
 		hoReverseRoot\Properties\AssemblyInfo.cs = hoReverseRoot\Properties\AssemblyInfo.cs
 		hoServices\Properties\AssemblyInfo.cs = hoServices\Properties\AssemblyInfo.cs
 		hoUtil\Properties\AssemblyInfo.cs = hoUtil\Properties\AssemblyInfo.cs
-		hoReverse_Setup\src\Collect\Collect.bat = hoReverse_Setup\src\Collect\Collect.bat
 		hoReverse_Setup\bin\Release\hoReverse.msi = hoReverse_Setup\bin\Release\hoReverse.msi
 		hoReverseRoot\hoReverseGui.dll.config = hoReverseRoot\hoReverseGui.dll.config
 		hoReverseRemove.ps1 = hoReverseRemove.ps1
-		hoReverse_Setup\src\Product.wxs = hoReverse_Setup\src\Product.wxs
+		hoReverse_Setup\Wxs\Product.wxs = hoReverse_Setup\Wxs\Product.wxs
 		README.md = README.md
 		hoReverseRoot\settings.json = hoReverseRoot\settings.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5E1B63D-71C4-4018-96DF-CAFD07B15476}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoLinqToSql", "..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj", "{FED206AF-E583-48C6-9952-BAD2C41B3AA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +176,22 @@ Global
 		{9376680E-9420-4FC1-8DE8-4311FCA18EFC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9376680E-9420-4FC1-8DE8-4311FCA18EFC}.Release|x86.ActiveCfg = Release|x86
 		{9376680E-9420-4FC1-8DE8-4311FCA18EFC}.Release|x86.Build.0 = Release|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|ia64.ActiveCfg = Debug|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|ia64.Build.0 = Debug|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|x86.ActiveCfg = Debug|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Debug|x86.Build.0 = Debug|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|ia64.ActiveCfg = Release|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|ia64.Build.0 = Release|Any CPU
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|Mixed Platforms.Build.0 = Release|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|x86.ActiveCfg = Release|x86
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,17 +27,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Scripts\" />
-    <Folder Include="src" />
-    <Folder Include="src\Collect\" />
+    <Folder Include="Wxs" />
+    <Folder Include="Wxs\Collect" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Collect\hoHistoryGui.wxs" />
-    <Compile Include="src\Collect\hoReverseGui.wxs" />
-    <Compile Include="src\Collect\hoReverseRoot.wxs" />
-    <Compile Include="src\Directories.wxs" />
-    <Compile Include="src\Files.wxs" />
-    <Compile Include="src\hoHistoryGui.wxs" />
-    <Compile Include="src\Product.wxs" />
+    <Compile Include="Wxs\Collect\hoHistoryGui.wxs" />
+    <Compile Include="Wxs\Collect\hoReverseGui.wxs" />
+    <Compile Include="Wxs\Collect\hoReverseRoot.wxs" />
+    <Compile Include="Wxs\Directories.wxs" />
+    <Compile Include="Wxs\Files.wxs" />
+    <Compile Include="Wxs\Product.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.rtf" />
@@ -45,8 +44,8 @@
     <Content Include="Scripts\Readme.md" />
     <Content Include="Scripts\RenameMsi.bat" />
     <Content Include="settings.json" />
-    <Content Include="src\Collect\Collect.bat" />
-    <Content Include="src\hoReverse_Setup.wixproj" />
+    <Content Include="Wxs\Collect\Collect.bat" />
+    <Content Include="Wxs\hoReverse_Setup.wixproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\hoHistoryGui\hoHistoryGui.csproj">

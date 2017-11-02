@@ -173,6 +173,38 @@
         <RegistryValue Root="HKCR" Key="CLSID\{DD87A8BF-0F6C-347A-9C46-9DB1B1607A45}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{DD87A8BF-0F6C-347A-9C46-9DB1B1607A45}\InprocServer32" Name="CodeBase" Value="file:///[#fil02E0194699D3BBAAFAF95B9435C57812]" Type="string" Action="write" />
       </Component>
+       <!-- linq2db                   -->
+      <!-- Supported databases Access, MySQL, SqlServer, Oracle, Sybase, Postgres (tested: Access, MySQL, SqlServer) -->
+      <!-- Supported VC Code Symbol database '.BROWSE.VC.DB' -->
+      <Component Id="linq2db.dll" Guid="{7F7E0442-6625-451E-841E-E4D304EFBCBA}">
+        <File Id="linq2db.dll" KeyPath="yes" Name="linq2db.dll" Source="..\packages\linq2db.1.9.0\lib\net45\linq2db.dll" />
+      </Component>
+      <!-- Separate install MySql.Data.dll-->
+      <Component Id="MySql.Data.dll" Guid="{1D9AF997-5EFF-4F2A-9410-72EAA69473CC}">
+        <File Id="MySql.Data.dll" KeyPath="yes" Name="MySql.Data.dll" Source="..\packages\MySql.Data.6.10.4\lib\net452\MySql.Data.dll" />
+      </Component>
+      <Component Id="Microsoft.SqlServer.Types.dll" Guid="{EABD70B2-374E-4959-AB91-38863D06ABFA}">
+        <File Id="Microsoft.SqlServer.Types.dll" KeyPath="yes" Name="Microsoft.SqlServer.Types.dll" Source="..\packages\linq2db.SqlServer.1.9.0\tools\Microsoft.SqlServer.Types.dll" />
+      </Component>
+      <Component Id="Oracle.ManagedDataAccess.dll" Guid="{1BE3E59F-3CA1-4725-8FB6-086E0DAD8D03}">
+        <File Id="Oracle.ManagedDataAccess.dll" KeyPath="yes" Name="Oracle.ManagedDataAccess.dll" Source="..\packages\linq2db.Oracle.x86.1.9.0\tools\Oracle.ManagedDataAccess.dll" />
+      </Component>
+      <Component Id="Npgsql.dll" Guid="{B63E7AC0-5F42-49A3-8ABD-4B84B8C9160D}">
+        <File Id="Npgsql.dll" KeyPath="yes" Name="Npgsql.dll" Source="..\packages\linq2db.PostgreSQL.1.9.0\tools\Npgsql.dll" />
+      </Component>
+      <Component Id="Sybase.AdoNet2.AseClient.dll" Guid="{A3853976-5D6F-430E-AB0D-D87648B009D3}">
+        <File Id="Sybase.AdoNet2.AseClient.dll" KeyPath="yes" Name="Sybase.AdoNet2.AseClient.dll" Source="..\packages\linq2db.Sybase.1.9.0\tools\Sybase.AdoNet2.AseClient.dll" />
+      </Component>
+      <Component Id="sybdrvado20.dll" Guid="{66897A7E-5F3D-41CE-9E3F-F2F36CF4C50D}">
+        <File Id="sybdrvado20.dll" KeyPath="yes" Name="sybdrvado20.dll" Source="..\packages\linq2db.Sybase.1.9.0\tools\sybdrvado20.dll" />
+      </Component>
+
+      <Component Id="SQLite.Interop.dll" Guid="{79E2A960-0D27-4DB0-83F1-E16DB8C89540}">
+        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\linq2db.SQLite.1.9.0\tools\SQLite.Interop.dll" />
+      </Component>
+      <Component Id="System.Data.SQLite.dll" Guid="{D26DEA71-91E8-4432-BF13-220530123515}">
+        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\linq2db.SQLite.1.9.0\tools\System.Data.SQLite.dll" />
+      </Component>
       <!-- Settings.json                                            -->
       <Component Id="UserSearches.json" Guid="*">
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />

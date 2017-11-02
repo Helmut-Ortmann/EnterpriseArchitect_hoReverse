@@ -74,6 +74,12 @@
       <HintPath>C:\Program Files (x86)\Sparx Systems\EA\Interop.EA.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="linq2db">
+      <HintPath>..\..\EnterpriseArchitect_hoTools\packages\linq2db.1.9.0\lib\net45\linq2db.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.10.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.10.4\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data">
@@ -114,6 +120,10 @@
     <Compile Include="src\WiKiRefs\WiKiRef.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
+      <Project>{fed206af-e583-48c6-9952-bad2c41b3aa4}</Project>
+      <Name>hoLinqToSql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\hoUtil\hoUtil.csproj">
       <Project>{9376680E-9420-4FC1-8DE8-4311FCA18EFC}</Project>
       <Name>hoUtil</Name>
@@ -128,6 +138,19 @@
     <EmbeddedResource Include="src\dlgUser.resx">
       <DependentUpon>dlgUser.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="docs\MySqlCommand.xml" />
+    <Content Include="docs\MySqlCommandBuilder.xml" />
+    <Content Include="docs\MySqlConnection.xml" />
+    <Content Include="docs\MySqlConnectionStringBuilder.xml" />
+    <Content Include="docs\MySqlDataAdapter.xml" />
+    <Content Include="docs\MySqlDataReader.xml" />
+    <Content Include="docs\MySqlException.xml" />
+    <Content Include="docs\MySqlHelper.xml" />
+    <Content Include="docs\MySqlParameter.xml" />
+    <Content Include="docs\MySqlParameterCollection.xml" />
+    <Content Include="docs\MySqlTransaction.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.2\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.2\build\net451\System.Data.SQLite.Core.targets')" />
