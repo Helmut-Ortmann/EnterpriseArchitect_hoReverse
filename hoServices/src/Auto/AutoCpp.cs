@@ -5,11 +5,15 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using DataModels.VcSymbols;
 using EaServices.Files;
 using EaServices.Functions;
 using hoUtils.Package;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
+using hoReverse.Services;
+using File = System.IO.File;
 
 
 // ReSharper disable once CheckNamespace
@@ -350,10 +354,69 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
 
             }
+         }
 
-             
+
+        /// <summary>
+        /// Show all external functions for this Component/Class
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public bool ShowExternalFunctions(EA.Element el)
+        {
+            // get connection string of repository
+            IDataProvider provider; // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            using (var db = new BROWSEVCDB(provider, connectionString))
+            {
+                string fileNameOfClass = (from f in db.Files
+                    where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c"
+                    select f.Name).FirstOrDefault();
+                fileNameOfClass = Path.GetDirectoryName(fileNameOfClass);
+
+                // Component and Module implementation file names beneath folder
+                IQueryable<string> fileNamesOfClassTree = from f in db.Files
+                    where f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
+                    select f.LeafName;
+
+                // all possible external functions for component recursive
+                var functions = (from function in db.CodeItems
+                    join f in db.Files on function.FileId equals f.Id
+                    where function.Kind == 22 && f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
+                    orderby function.Name
+                    select new { FName = function.Name, RX = new Regex($@"{function.Name}\s*\(") }).ToList();
+
+                // over all files except Class/Component Tree (files not part of component/class/subfolder)
+                var fileNames = from f in db.Files
+                    where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
+                          f.LeafName.ToLower().EndsWith(".c")
+                    select f.Name;
+
+                // Estimate external functions and the files in which they are used
+                string lExternalFunction = "";
+                string delimiter = "";
+
+                foreach (var f in fileNames)
+                {
+                    string t = File.ReadAllText(f);
+                    t = hoService.DeleteComment(t);
+                    foreach (var f1 in functions)
+                    {
+                        if (f1.RX.IsMatch(t))
+                        {
+                            lExternalFunction = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(35)}{Path.GetFileName(f)}";
+                            delimiter = Environment.NewLine;
+                            continue;
+                        }
+                    }
 
 
+                }
+                Clipboard.SetText(lExternalFunction);
+                MessageBox.Show($"Copied to clipboard\r\n\r\n{lExternalFunction}", "External functions of {el.Name}");
+                return true;
+
+            }
         }
 
         /// <summary>
