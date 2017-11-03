@@ -39,6 +39,9 @@
       <Component Id="hoServices.dll" Guid="*">
         <File Id="hoServices.dll" Name="hoServices.dll" Source="$(var.hoServices.TargetPath)" KeyPath="yes" />
       </Component>
+      <Component Id="hoLinqToSql.dll" Guid="*">
+        <File Id="hoLinqToSql.dll" Name="hoLinqToSql.dll" Source="$(var.hoLinqToSql.TargetPath)" KeyPath="yes" />
+      </Component>
       <Component Id="RegisterEA" Guid="*">
         <RegistryKey Root="HKCU" Key="Software\Sparx Systems\EAAddins\hoReverse">
           <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
@@ -200,10 +203,10 @@
       </Component>
 
       <Component Id="SQLite.Interop.dll" Guid="{79E2A960-0D27-4DB0-83F1-E16DB8C89540}">
-        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\linq2db.SQLite.1.9.0\tools\SQLite.Interop.dll" />
+        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net451\x86\SQLite.Interop.dll" />
       </Component>
       <Component Id="System.Data.SQLite.dll" Guid="{D26DEA71-91E8-4432-BF13-220530123515}">
-        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\linq2db.SQLite.1.9.0\tools\System.Data.SQLite.dll" />
+        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\System.Data.SQLite.Core.1.0.106.0\lib\net451\System.Data.SQLite.dll" />
       </Component>
       <!-- Settings.json                                            -->
       <Component Id="UserSearches.json" Guid="*">

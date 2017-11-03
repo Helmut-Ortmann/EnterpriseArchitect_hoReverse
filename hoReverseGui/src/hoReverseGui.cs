@@ -2668,8 +2668,17 @@ namespace hoReverse.Reverse
                 "hoReverseGui.dll",
                 "hoReverseRoot.dll",
                 "hoServices.dll",
+                "hoLinqToSql.dll",
                 "hoUtils.dll",
-                "Newtonsoft.Json.dll"
+                "Newtonsoft.Json.dll",
+                "linq2db.dll",
+                "MySql.Data.dll",
+                "Microsoft.SqlServer.Types.dll",
+                "Oracle.ManagedDataAccess.dll",
+                "Npgsql.dll",
+                "Sybase.AdoNet2.AseClient.dll",
+                "SQLite.Interop.dll",
+                "System.Data.SQLite.dll"
             };
             HoUtil.AboutMessage("C - Reverse Engineering Workbench", "About hoReverse Workbench", dllNames);
 

@@ -370,9 +370,15 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             using (var db = new BROWSEVCDB(provider, connectionString))
             {
                 string fileNameOfClass = (from f in db.Files
-                    where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c"
-                    select f.Name).FirstOrDefault();
+                    where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
+                          f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
+                                          select f.Name).FirstOrDefault();
                 fileNameOfClass = Path.GetDirectoryName(fileNameOfClass);
+                if (fileNameOfClass == null)
+                {
+                    MessageBox.Show("Checked file extensions (*.c,*.h,*.hpp,*.cpp)", $"Cant't find source for '{el.Name}', Break!!");
+                    return false;
+                }
 
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
@@ -384,7 +390,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     join f in db.Files on function.FileId equals f.Id
                     where function.Kind == 22 && f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
                     orderby function.Name
-                    select new { FName = function.Name, RX = new Regex($@"{function.Name}\s*\(") }).ToList();
+                    select new { FName = function.Name, RX = new Regex($@"\b{function.Name}\s*\(") }).ToList();
 
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNames = from f in db.Files
@@ -392,12 +398,9 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                           f.LeafName.ToLower().EndsWith(".c")
                     select f.Name;
 
-                // Estimate external functions and the files in which they are used
-                string delimiter = Environment.NewLine;
-                string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
-                string lExternalFunctionDialog = lExternalFunction;
-
-
+                
+                // get FunctioName, c-File name
+                var lFunctions = new List<Tuple<string, string>>();
                 foreach (var f in fileNames)
                 {
                     string t = File.ReadAllText(f);
@@ -407,19 +410,36 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                         if (f1.RX.IsMatch(t))
                         {
                             string fileName = Path.GetFileName(f);
-                            EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileName));
-                            string guid = elComponent != null ? elComponent.ElementGUID : "";
-
-                            lExternalFunction = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(32)}\t\t{fileName}/{guid}";
-                            lExternalFunctionDialog = lExternalFunction;
-                            if (f1.FName.Length > 20) lExternalFunctionDialog = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(32)}\t{fileName}/{guid}";
-                            
-                            continue;
+                            lFunctions.Add(new Tuple<string, string>(f1.FName, fileName ));
+                      
                         }
                     }
-
-
                 }
+                // Sort: Function, FileName
+                var outputList = (from f in lFunctions
+                    orderby f.Item1, f.Item2
+                    select new {Function = f.Item1, File = f.Item2}).Distinct();
+
+                // Output Function, FileNme/GUID
+                string delimiter = Environment.NewLine;
+                string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
+                string lExternalFunctionDialog = lExternalFunction;
+                foreach (var row in outputList)
+                {
+                    string fileName = row.File;
+                    string functionName = row.Function;
+                    EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileName));
+                    string guid = elComponent != null ? elComponent.ElementGUID : "";
+
+                    lExternalFunction = $"{lExternalFunction}{delimiter}{functionName.PadRight(50)}\t{fileName}/{guid}";
+
+
+                    lExternalFunctionDialog = functionName.Length > 20
+                        ? $"{lExternalFunctionDialog}{delimiter}{functionName.PadRight(50)}\t{fileName}"
+                        : $"{lExternalFunctionDialog}{delimiter}{functionName.PadRight(50)}\t\t{fileName}";
+                }
+  
+
                 Clipboard.SetText(lExternalFunction);
                 MessageBox.Show($"hoReverse copied to clipboard:\r\n\r\n{lExternalFunctionDialog}", $"External functions of {el.Name}");
                 return true;
@@ -435,7 +455,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         {
             // get connection string of repository
             IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            string connectionString = LinqUtil.GetConnectionString(_rep, out provider);
             using (var db = new DataModels.EaDataModel(provider, connectionString))
             {
                 var elGuid = (from n in db.t_object

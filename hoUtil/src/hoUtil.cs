@@ -1751,9 +1751,20 @@ Helmut.Ortmann@hoModeler.de
 ";
             foreach (string dllName in lDllNames)
             {
-                string pathDll = Path.Combine(new[] {pathRoot, dllName});
-                description =
-                    $"{description}- {dllName,-26}\t: V{FileVersionInfo.GetVersionInfo(pathDll).FileVersion}{Environment.NewLine}";
+                try
+                {
+                    string pathDll = Path.Combine(new[] { pathRoot, dllName });
+                    description = dllName.Length > 20 
+                        ? $"{description}- {dllName,-26}\t: V{FileVersionInfo.GetVersionInfo(pathDll).FileVersion}{Environment.NewLine}" 
+                        : $"{description}- {dllName,-26}\t\t: V{FileVersionInfo.GetVersionInfo(pathDll).FileVersion}{Environment.NewLine}";
+                }
+                //
+                catch (Exception)
+                {
+                    description = dllName.Length > 20 
+                        ? $"{description}- {dllName,-26}\t: dll not found{Environment.NewLine}" 
+                        : $"{description}- {dllName,-26}\t\t: dll not found{Environment.NewLine}";
+                }
             }
             MessageBox.Show(description, caption);
         }
