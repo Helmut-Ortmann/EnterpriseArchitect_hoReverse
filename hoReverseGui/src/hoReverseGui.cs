@@ -218,6 +218,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem makeCalloutToolStripMenuItem;
         private ToolStripMenuItem showExternalComponentFunctionsToolStripMenuItem;
         private ToolStripMenuItem generatePublicComponentFunctionsToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator12;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -658,6 +659,8 @@ namespace hoReverse.Reverse
             this.makeRunnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeServicePortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCalloutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showExternalComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generatePublicComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -697,8 +700,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.showExternalComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generatePublicComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1800,6 +1802,7 @@ namespace hoReverse.Reverse
             this.makeRunnableToolStripMenuItem,
             this.makeServicePortToolStripMenuItem,
             this.makeCalloutToolStripMenuItem,
+            this.toolStripSeparator12,
             this.showExternalComponentFunctionsToolStripMenuItem,
             this.generatePublicComponentFunctionsToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
@@ -1812,6 +1815,7 @@ namespace hoReverse.Reverse
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
             this.modulesToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
+            this.modulesToolStripMenuItem.Visible = false;
             this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
             // 
             // inventoryToolStripMenuItem
@@ -1819,6 +1823,7 @@ namespace hoReverse.Reverse
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
             this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
+            this.inventoryToolStripMenuItem.Visible = false;
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
             // 
             // getToolStripMenuItem
@@ -1826,6 +1831,7 @@ namespace hoReverse.Reverse
             this.getToolStripMenuItem.Name = "getToolStripMenuItem";
             this.getToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.getToolStripMenuItem.Text = "GetExternalFunctions";
+            this.getToolStripMenuItem.Visible = false;
             this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
             // 
             // makeRunnableToolStripMenuItem
@@ -1849,6 +1855,19 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
+            // 
+            // showExternalComponentFunctionsToolStripMenuItem
+            // 
+            this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
+            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.showExternalComponentFunctionsToolStripMenuItem.Text = "ShowPublicComponentFunctions";
+            this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
+            // 
+            // generatePublicComponentFunctionsToolStripMenuItem
+            // 
+            this.generatePublicComponentFunctionsToolStripMenuItem.Name = "generatePublicComponentFunctionsToolStripMenuItem";
+            this.generatePublicComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.generatePublicComponentFunctionsToolStripMenuItem.Text = "GeneratePublicComponentFunctions";
             // 
             // _versionControlToolStripMenuItem
             // 
@@ -2211,18 +2230,10 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
             // 
-            // showExternalComponentFunctionsToolStripMenuItem
+            // toolStripSeparator12
             // 
-            this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
-            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
-            this.showExternalComponentFunctionsToolStripMenuItem.Text = "ShowPublicComponentFunctions";
-            this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
-            // 
-            // generatePublicComponentFunctionsToolStripMenuItem
-            // 
-            this.generatePublicComponentFunctionsToolStripMenuItem.Name = "generatePublicComponentFunctionsToolStripMenuItem";
-            this.generatePublicComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
-            this.generatePublicComponentFunctionsToolStripMenuItem.Text = "GeneratePublicComponentFunctions";
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(267, 6);
             // 
             // HoReverseGui
             // 
@@ -3678,8 +3689,14 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
         }
 
+        /// <summary>
+        /// Show external functions for selected Component / Class
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void showExternalComponentFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Object obj;
             EA.ObjectType type = _repository.GetContextItem(out obj);
             if (type == EA.ObjectType.otElement)
@@ -3691,6 +3708,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                     generator.ShowExternalFunctions(element);
                 }
             }
+            Cursor.Current = Cursors.Default;
 
         }
     }

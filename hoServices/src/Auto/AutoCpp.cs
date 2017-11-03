@@ -393,8 +393,10 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     select f.Name;
 
                 // Estimate external functions and the files in which they are used
-                string lExternalFunction = "";
-                string delimiter = "";
+                string delimiter = Environment.NewLine;
+                string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
+                string lExternalFunctionDialog = lExternalFunction;
+
 
                 foreach (var f in fileNames)
                 {
@@ -404,8 +406,14 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     {
                         if (f1.RX.IsMatch(t))
                         {
-                            lExternalFunction = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(35)}{Path.GetFileName(f)}";
-                            delimiter = Environment.NewLine;
+                            string fileName = Path.GetFileName(f);
+                            EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileName));
+                            string guid = elComponent != null ? elComponent.ElementGUID : "";
+
+                            lExternalFunction = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(32)}\t\t{fileName}/{guid}";
+                            lExternalFunctionDialog = lExternalFunction;
+                            if (f1.FName.Length > 20) lExternalFunctionDialog = $"{lExternalFunction}{delimiter}{f1.FName.PadRight(32)}\t{fileName}/{guid}";
+                            
                             continue;
                         }
                     }
@@ -413,8 +421,27 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
                 }
                 Clipboard.SetText(lExternalFunction);
-                MessageBox.Show($"Copied to clipboard\r\n\r\n{lExternalFunction}", "External functions of {el.Name}");
+                MessageBox.Show($"hoReverse copied to clipboard:\r\n\r\n{lExternalFunctionDialog}", $"External functions of {el.Name}");
                 return true;
+
+            }
+        }
+        /// <summary>
+        /// Get first Element from name. It's case insensitive. If it doesn't find a member it returns null
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private EA.Element GetElementFromName(string name)
+        {
+            // get connection string of repository
+            IDataProvider provider; // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            using (var db = new DataModels.EaDataModel(provider, connectionString))
+            {
+                var elGuid = (from n in db.t_object
+                    where n.Name.ToLower() == name.ToLower() && n.Object_Type == "Component"
+                    select n.ea_guid).FirstOrDefault();
+                return elGuid != null ? _rep.GetElementByGuid(elGuid) : null;
 
             }
         }
