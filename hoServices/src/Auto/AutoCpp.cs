@@ -13,6 +13,7 @@ using hoUtils.Package;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
 using hoReverse.Services;
+using hoReverse.Services.AutoCpp.Analyze;
 using File = System.IO.File;
 
 
@@ -420,6 +421,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     orderby f.Item1, f.Item2
                     select new {Function = f.Item1, File = f.Item2}).Distinct();
 
+                DataTable dt = outputList.ToDataTable();
+
                 // Output Function, FileNme/GUID
                 string delimiter = Environment.NewLine;
                 string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
@@ -441,7 +444,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
   
 
                 Clipboard.SetText(lExternalFunction);
-                MessageBox.Show($"hoReverse copied to clipboard:\r\n\r\n{lExternalFunctionDialog}", $"External functions of {el.Name}");
+                FrmComponentFunctions frm = new FrmComponentFunctions(el, dt);
+                //MessageBox.Show($"hoReverse copied to clipboard:\r\n\r\n{lExternalFunctionDialog}", $"External functions of {el.Name}");
                 return true;
 
             }

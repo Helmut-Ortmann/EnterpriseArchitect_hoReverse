@@ -17,6 +17,7 @@ using hoReverse.hoUtils.WiKiRefs;
 
 using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
+using hoReverse.Services.AutoCpp.Analyze;
 
 // ReSharper disable RedundantDelegateCreation
 

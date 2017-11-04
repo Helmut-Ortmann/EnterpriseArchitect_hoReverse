@@ -109,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Auto\Analyze\FrmComponentFunctions.Designer.cs">
+      <DependentUpon>FrmComponentFunctions.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Auto\AutoCpp.cs" />
     <Compile Include="src\Files\FileItem.cs" />
     <Compile Include="src\Files\Files.cs" />
@@ -175,6 +181,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="src\Auto\Analyze\FrmComponentFunctions.resx">
+      <DependentUpon>FrmComponentFunctions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\dlgUser.resx">
       <DependentUpon>dlgUser.cs</DependentUpon>
     </EmbeddedResource>
