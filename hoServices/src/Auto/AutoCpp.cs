@@ -394,11 +394,15 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 InventoryMacros();
 
                 // all possible external functions for component recursive
+                // Function, FunctionSolvedMacro, FilePath, Regex
                 var functions = (from function in db.CodeItems
                     join f in db.Files on function.FileId equals f.Id
                     where function.Kind == 22 && f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
                     orderby function.Name
-                    select new { FName = function.Name, FPath=f.Name, RX = new Regex($@"\b{function.Name}\s*\(") }).ToList();
+                    select new { FName = function.Name, // Function Name
+                                    FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after reslvin macro
+                                    FPath =f.Name, // file name
+                                    RX = new Regex($@"\b{function.Name}\s*\(") }).ToList(); // regex to find function
 
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNames = from f in db.Files
@@ -408,16 +412,16 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
                 
                 // get FunctioName, C-File name implementation, C-File name calling function
-                var lFunctions = new List<Tuple<string, string, string>>();
-                foreach (var f in fileNames)
+                var lFunctions = new List<Tuple<string, string, string, string>>();
+                foreach (var fileName in fileNames)
                 {
-                    string t = File.ReadAllText(f);
-                    t = hoService.DeleteComment(t);
+                    string code = File.ReadAllText(fileName);
+                    code = hoService.DeleteComment(code);
                     foreach (var f1 in functions)
                     {
-                        if (f1.RX.IsMatch(t))
+                        if (f1.RX.IsMatch(code))
                         {
-                            lFunctions.Add(new Tuple<string, string, string>(f1.FName, f1.FPath, f ));
+                            lFunctions.Add(new Tuple<string, string, string, string>(f1.FName, f1.FNameSolvedMacro, f1.FPath, fileName ));
                       
                         }
                     }
@@ -485,14 +489,22 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
                 // estimate root path
+                // Find: '\RTE\RTE.C' and go back
                 if (String.IsNullOrWhiteSpace(pathRoot))
                 {
                     pathRoot = (from f in db.Files
-                        orderby f.Name.Length
+                        where f.LeafName == "RTE.C"
                         select f.Name).FirstOrDefault();
+                    if (String.IsNullOrWhiteSpace(pathRoot))
+                    {
+                        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
+                        return false;
+                    }
+                    pathRoot = Path.GetDirectoryName(pathRoot);
+                    pathRoot = Directory.GetParent(pathRoot).FullName;
 
                 }
-
+                // Estimates macros which concerns functions
                 var macros = (from m in db.CodeItems
                 join file in db.Files on m.FileId equals file.Id
                 join f in db.CodeItems on m.Name equals f.Name
@@ -515,13 +527,19 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     Match match = rx.Match(code);
                     if (match.Success)
                     {
-                        _macros.Add(m.MacroName, match.Groups[1].Value );
+                        if (! _macros.ContainsKey(m.MacroName))
+                            _macros.Add(m.MacroName, match.Groups[1].Value );
                     }
                 }
 
 
             }
             return true;
+        }
+
+        private string GetFunctionMacroValue(string function)
+        {
+            return _macros.ContainsKey(function) ? _macros[function] : "";
         }
 
         /// <summary>

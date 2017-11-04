@@ -123,8 +123,8 @@
             this.grdFunctions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdFunctions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdFunctions.Location = new System.Drawing.Point(3, 123);
+            this.grdFunctions.MultiSelect = false;
             this.grdFunctions.Name = "grdFunctions";
-            this.grdFunctions.ReadOnly = true;
             this.grdFunctions.Size = new System.Drawing.Size(706, 269);
             this.grdFunctions.TabIndex = 2;
             // 
