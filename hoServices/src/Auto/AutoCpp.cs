@@ -49,6 +49,8 @@ namespace hoReverse.Services.AutoCpp
         readonly Files _designFiles;
         readonly Functions _designFunctions;
 
+        private Dictionary<string, string> _macros = new Dictionary<string, string>();
+
 
         string _connectionString = "";
 
@@ -370,6 +372,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
             using (var db = new BROWSEVCDB(provider, connectionString))
             {
+                // Estimate file name of component
                 string fileNameOfClass = (from f in db.Files
                     where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
                           f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
@@ -381,10 +384,14 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     return false;
                 }
 
+                // estimate file names of component
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
                     where f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
                     select f.LeafName;
+
+                // Inventory macros
+                InventoryMacros();
 
                 // all possible external functions for component recursive
                 var functions = (from function in db.CodeItems
@@ -462,6 +469,59 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 return elGuid != null ? _rep.GetElementByGuid(elGuid) : null;
 
             }
+        }
+        /// <summary>
+        /// Inventory paths
+        /// </summary>
+        /// <param name="pathRoot"></param>
+        /// <returns></returns>
+        public bool InventoryMacros(string pathRoot="")
+        {
+           
+
+            // get connection string of repository
+            IDataProvider provider; // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
+            {
+                // estimate root path
+                if (String.IsNullOrWhiteSpace(pathRoot))
+                {
+                    pathRoot = (from f in db.Files
+                        orderby f.Name.Length
+                        select f.Name).FirstOrDefault();
+
+                }
+
+                var macros = (from m in db.CodeItems
+                join file in db.Files on m.FileId equals file.Id
+                join f in db.CodeItems on m.Name equals f.Name
+                where m.Kind == 33 && f.Kind == 22 && file.Name.Contains(pathRoot) && (file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
+                orderby file.Name
+                select new { MacroName=m.Name, FilePath=file.Name, FileName=file.LeafName }).Distinct();
+
+                _macros.Clear();
+                string fileLast = "";
+                string code = "";
+                foreach (var m in macros)
+                {
+                    // get file content if file changed
+                    if (fileLast != m.FilePath)
+                    {
+                        fileLast = m.FilePath;
+                        code = File.ReadAllText(m.FilePath);
+                    }
+                    Regex rx = new Regex($@"#define\s+{m.MacroName}\s+(\w+)");
+                    Match match = rx.Match(code);
+                    if (match.Success)
+                    {
+                        _macros.Add(m.MacroName, match.Groups[1].Value );
+                    }
+                }
+
+
+            }
+            return true;
         }
 
         /// <summary>

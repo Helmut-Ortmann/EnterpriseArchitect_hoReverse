@@ -28,5 +28,15 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdFunctions.Columns[2].Width = 200;
             }
         }
+
+        private void btnOk_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
