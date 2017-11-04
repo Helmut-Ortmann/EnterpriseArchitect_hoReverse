@@ -67,7 +67,7 @@
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(712, 431);
             this.tableLayoutPanel1.TabIndex = 1;
@@ -125,7 +125,7 @@
             this.grdFunctions.Location = new System.Drawing.Point(3, 123);
             this.grdFunctions.Name = "grdFunctions";
             this.grdFunctions.ReadOnly = true;
-            this.grdFunctions.Size = new System.Drawing.Size(706, 294);
+            this.grdFunctions.Size = new System.Drawing.Size(706, 269);
             this.grdFunctions.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -133,7 +133,7 @@
             this.flowLayoutPanel1.Controls.Add(this.btnOk);
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 423);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 398);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(706, 30);
             this.flowLayoutPanel1.TabIndex = 3;
