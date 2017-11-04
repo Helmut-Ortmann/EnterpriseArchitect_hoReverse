@@ -402,7 +402,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     select new { FName = function.Name, // Function Name
                                     FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after reslvin macro
                                     FPath =f.Name, // file name
-                                    RX = new Regex($@"\b{function.Name}\s*\(") }).ToList(); // regex to find function
+                                    RX = new Regex($@"(?<!extern.*)\b{function.Name}\s*\(") }).ToList(); // regex to find function
 
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNames = from f in db.Files
