@@ -109,31 +109,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="src\EnterTextBox.cs">
+    <Compile Include="Gui\EnterTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\hoReverseGui.cs">
+    <Compile Include="Gui\hoReverseGui.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="src\Settings.cs" />
-    <Compile Include="src\EA_History.cs" />
-    <Compile Include="src\IhoReverseGui.cs" />
-    <Compile Include="src\ImagePathConverter.cs" />
-    <Compile Include="src\IObjectSafety.cs" />
-    <Compile Include="src\Diagrams.xaml.cs">
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Gui\EA_History.cs" />
+    <Compile Include="Gui\IhoReverseGui.cs" />
+    <Compile Include="Gui\ImagePathConverter.cs" />
+    <Compile Include="Gui\IObjectSafety.cs" />
+    <Compile Include="Gui\Diagrams.xaml.cs">
       <DependentUpon>Diagrams.xaml</DependentUpon>
     </Compile>
-    <Compile Include="src\Keys.cs" />
-    <Compile Include="src\Settings2Forms.cs">
+    <Compile Include="Gui\Keys.cs" />
+    <Compile Include="Settings\Settings2Forms.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Settings2Forms.Designer.cs">
+    <Compile Include="Settings\Settings2Forms.Designer.cs">
       <DependentUpon>Settings2Forms.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\SettingsForm.cs">
+    <Compile Include="Settings\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\SettingsForm.Designer.cs">
+    <Compile Include="Settings\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -168,27 +168,26 @@
     <None Include="LinqToDB.Templates\T4Model.ttinclude" />
     <None Include="LinqToDB.Templates\Validation.ttinclude" />
     <None Include="packages.config" />
-    <None Include="src\ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\hoReverseGui.resx">
+    <EmbeddedResource Include="Gui\hoReverseGui.resx">
       <DependentUpon>hoReverseGui.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Settings2Forms.resx">
+    <EmbeddedResource Include="Settings\Settings2Forms.resx">
       <DependentUpon>Settings2Forms.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\SettingsForm.resx">
+    <EmbeddedResource Include="Settings\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="src\Diagrams.xaml">
+    <Page Include="Gui\Diagrams.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
