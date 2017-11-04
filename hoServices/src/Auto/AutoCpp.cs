@@ -391,7 +391,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     join f in db.Files on function.FileId equals f.Id
                     where function.Kind == 22 && f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
                     orderby function.Name
-                    select new { FName = function.Name, RX = new Regex($@"\b{function.Name}\s*\(") }).ToList();
+                    select new { FName = function.Name, FPath=f.Name, RX = new Regex($@"\b{function.Name}\s*\(") }).ToList();
 
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNames = from f in db.Files
@@ -400,8 +400,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     select f.Name;
 
                 
-                // get FunctioName, c-File name
-                var lFunctions = new List<Tuple<string, string>>();
+                // get FunctioName, C-File name implementation, C-File name calling function
+                var lFunctions = new List<Tuple<string, string, string>>();
                 foreach (var f in fileNames)
                 {
                     string t = File.ReadAllText(f);
@@ -410,8 +410,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     {
                         if (f1.RX.IsMatch(t))
                         {
-                            string fileName = Path.GetFileName(f);
-                            lFunctions.Add(new Tuple<string, string>(f1.FName, fileName ));
+                            lFunctions.Add(new Tuple<string, string, string>(f1.FName, f1.FPath, f ));
                       
                         }
                     }
@@ -419,33 +418,28 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 // Sort: Function, FileName
                 var outputList = (from f in lFunctions
                     orderby f.Item1, f.Item2
-                    select new {Function = f.Item1, File = f.Item2}).Distinct();
+                    select new {Function = f.Item1, FileFunction= Path.GetFileName(f.Item2), FileFunctionCall = Path.GetFileName(f.Item3), FilePathFunction = f.Item2, FilePathFunctionCall = f.Item3}).Distinct();
 
                 DataTable dt = outputList.ToDataTable();
 
                 // Output Function, FileNme/GUID
                 string delimiter = Environment.NewLine;
                 string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
-                string lExternalFunctionDialog = lExternalFunction;
                 foreach (var row in outputList)
                 {
-                    string fileName = row.File;
+                    string fileName = row.FileFunctionCall;
                     string functionName = row.Function;
                     EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileName));
                     string guid = elComponent != null ? elComponent.ElementGUID : "";
 
                     lExternalFunction = $"{lExternalFunction}{delimiter}{functionName.PadRight(50)}\t{fileName}/{guid}";
-
-
-                    lExternalFunctionDialog = functionName.Length > 20
-                        ? $"{lExternalFunctionDialog}{delimiter}{functionName.PadRight(50)}\t{fileName}"
-                        : $"{lExternalFunctionDialog}{delimiter}{functionName.PadRight(50)}\t\t{fileName}";
+                    
                 }
   
 
                 Clipboard.SetText(lExternalFunction);
                 FrmComponentFunctions frm = new FrmComponentFunctions(el, dt);
-                //MessageBox.Show($"hoReverse copied to clipboard:\r\n\r\n{lExternalFunctionDialog}", $"External functions of {el.Name}");
+                frm.ShowDialog();
                 return true;
 
             }
