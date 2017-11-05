@@ -12,7 +12,6 @@ using EaServices.Functions;
 using hoUtils.Package;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
-using hoReverse.Services;
 using hoReverse.Services.AutoCpp.Analyze;
 using File = System.IO.File;
 
@@ -134,7 +133,6 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             EA.Collection interfaceList = _rep.GetElementSet(sql, 2);
             foreach (EA.Element el in interfaceList)
             {
-                string name = el.Name;
                 InterfaceItem ifItem = (InterfaceItem)_designFiles.Add($"{el.Name}.h");
                 ifItem.El = el;
 
@@ -377,30 +375,35 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
                           f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
                                           select f.Name).FirstOrDefault();
-                fileNameOfClass = Path.GetDirectoryName(fileNameOfClass);
-                if (fileNameOfClass == null)
+                string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
+                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower()) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+
+                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
                 {
-                    MessageBox.Show("Checked file extensions (*.c,*.h,*.hpp,*.cpp)", $"Cant't find source for '{el.Name}', Break!!");
+                    MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)\r\nLast checked:{folderNameOfClass}",
+                                    $"Cant't find source for '{el.Name}', Break!!");
                     return false;
                 }
 
                 // estimate file names of component
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
-                    where f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
+                    where f.Name.StartsWith(folderNameOfClass) && f.LeafName.EndsWith(".c")
                     select f.LeafName;
 
                 // Inventory macros
-                InventoryMacros();
+                InventoryMacros(folderNameOfClass);
 
                 // all possible external functions for component recursive
-                // Function, FunctionSolvedMacro, FilePath, Regex
                 var functions = (from function in db.CodeItems
                     join f in db.Files on function.FileId equals f.Id
-                    where function.Kind == 22 && f.Name.StartsWith(fileNameOfClass) && f.LeafName.ToLower().EndsWith(".c")
-                    orderby function.Name
+                    where function.Kind == 22  && f.LeafName.EndsWith(".c") && f.Name.StartsWith(folderNameOfClass)
+                                 // && function.Name.StartsWith(el.Name) 
+                                 orderby function.Name
                     select new { FName = function.Name, // Function Name
-                                    FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after reslvin macro
+                                    FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after resolving macro
                                     FPath =f.Name, // file name
                                     RX = new Regex($@"(?<!extern.*)\b{function.Name}\s*\(") }).ToList(); // regex to find function
 
@@ -428,8 +431,13 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 }
                 // Sort: Function, FileName
                 var outputList = (from f in lFunctions
-                    orderby f.Item1, f.Item2
-                    select new {Function = f.Item1, FileFunction= Path.GetFileName(f.Item2), FileFunctionCall = Path.GetFileName(f.Item3), FilePathFunction = f.Item2, FilePathFunctionCall = f.Item3}).Distinct();
+                    orderby f.Item1, f.Item3
+                    select new {Function = f.Item1,
+                        FunctionAfterMacro = f.Item2,
+                        FileFunction = Path.GetFileName(f.Item3),
+                        FileFunctionCall = Path.GetFileName(f.Item4),
+                        FilePathFunction = f.Item3,
+                        FilePathFunctionCall = f.Item4}).Distinct();
 
                 DataTable dt = outputList.ToDataTable();
 
@@ -449,7 +457,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
   
 
                 Clipboard.SetText(lExternalFunction);
-                FrmComponentFunctions frm = new FrmComponentFunctions(el, dt);
+                FrmComponentFunctions frm = new FrmComponentFunctions(el, folderNameOfClass, dt);
                 frm.ShowDialog();
                 return true;
 
@@ -479,7 +487,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         /// </summary>
         /// <param name="pathRoot"></param>
         /// <returns></returns>
-        public bool InventoryMacros(string pathRoot="")
+        public bool InventoryMacrosOld(string pathRoot="")
         {
            
 
@@ -536,11 +544,69 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             }
             return true;
         }
-
-        private string GetFunctionMacroValue(string function)
+        /// <summary>
+        /// Inventory paths
+        /// </summary>
+        /// <param name="pathRoot"></param>
+        /// <returns></returns>
+        public bool InventoryMacros(string pathRoot = "")
         {
-            return _macros.ContainsKey(function) ? _macros[function] : "";
+
+
+            // get connection string of repository
+            IDataProvider provider; // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
+            {
+                // estimate root path
+                // Find: '\RTE\RTE.C' and go back
+                if (String.IsNullOrWhiteSpace(pathRoot))
+                {
+                    pathRoot = (from f in db.Files
+                                where f.LeafName == "RTE.C"
+                                select f.Name).FirstOrDefault();
+                    if (String.IsNullOrWhiteSpace(pathRoot))
+                    {
+                        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
+                        return false;
+                    }
+                    pathRoot = Path.GetDirectoryName(pathRoot);
+                    pathRoot = Directory.GetParent(pathRoot).FullName;
+
+                }
+                // Estimates macros which concerns functions
+                var macros = (from m in db.CodeItems
+                              join file in db.Files on m.FileId equals file.Id
+                              where m.Kind == 33 && file.Name.Contains(pathRoot) && (file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
+                              orderby file.Name
+                              select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName }).Distinct();
+
+                _macros.Clear();
+                string fileLast = "";
+                string code = "";
+                foreach (var m in macros)
+                {
+                    // get file content if file changed
+                    if (fileLast != m.FilePath)
+                    {
+                        fileLast = m.FilePath;
+                        code = File.ReadAllText(m.FilePath);
+                    }
+                    Regex rx = new Regex($@"#define\s+{m.MacroName}\s+(\w+)");
+                    Match match = rx.Match(code);
+                    if (match.Success)
+                    {
+                        string key = match.Groups[1].Value;
+                        if (!_macros.ContainsKey(key))
+                            _macros.Add(key, m.MacroName );
+                    }
+                }
+
+
+            }
+            return true;
         }
+
 
         /// <summary>
         /// Example LINQ to SQL

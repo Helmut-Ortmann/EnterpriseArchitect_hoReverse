@@ -39,6 +39,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.txtFolderRoot = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdFunctions)).BeginInit();
@@ -49,7 +50,7 @@
             // 
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(712, 20);
+            this.menuStrip1.Size = new System.Drawing.Size(970, 20);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -69,11 +70,12 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(712, 431);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(970, 431);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtFolderRoot);
             this.panel1.Controls.Add(this.txtFq);
             this.panel1.Controls.Add(this.txtGuid);
             this.panel1.Controls.Add(this.txtComponent);
@@ -81,7 +83,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 23);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(706, 94);
+            this.panel1.Size = new System.Drawing.Size(964, 94);
             this.panel1.TabIndex = 1;
             // 
             // txtFq
@@ -89,12 +91,12 @@
             this.txtFq.Location = new System.Drawing.Point(84, 37);
             this.txtFq.Name = "txtFq";
             this.txtFq.ReadOnly = true;
-            this.txtFq.Size = new System.Drawing.Size(599, 20);
+            this.txtFq.Size = new System.Drawing.Size(859, 20);
             this.txtFq.TabIndex = 3;
             // 
             // txtGuid
             // 
-            this.txtGuid.Location = new System.Drawing.Point(269, 10);
+            this.txtGuid.Location = new System.Drawing.Point(529, 11);
             this.txtGuid.Name = "txtGuid";
             this.txtGuid.ReadOnly = true;
             this.txtGuid.Size = new System.Drawing.Size(414, 20);
@@ -125,7 +127,7 @@
             this.grdFunctions.Location = new System.Drawing.Point(3, 123);
             this.grdFunctions.MultiSelect = false;
             this.grdFunctions.Name = "grdFunctions";
-            this.grdFunctions.Size = new System.Drawing.Size(706, 269);
+            this.grdFunctions.Size = new System.Drawing.Size(964, 269);
             this.grdFunctions.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -135,7 +137,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 398);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(706, 30);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(964, 30);
             this.flowLayoutPanel1.TabIndex = 3;
             // 
             // btnOk
@@ -158,11 +160,19 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // txtFolderRoot
+            // 
+            this.txtFolderRoot.Location = new System.Drawing.Point(84, 64);
+            this.txtFolderRoot.Name = "txtFolderRoot";
+            this.txtFolderRoot.ReadOnly = true;
+            this.txtFolderRoot.Size = new System.Drawing.Size(859, 20);
+            this.txtFolderRoot.TabIndex = 4;
+            // 
             // FrmComponentFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 431);
+            this.ClientSize = new System.Drawing.Size(970, 431);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FrmComponentFunctions";
             this.Load += new System.EventHandler(this.FrmComponentFunctions_Load);
@@ -189,5 +199,6 @@
         private System.Windows.Forms.TextBox txtGuid;
         private System.Windows.Forms.TextBox txtComponent;
         private System.Windows.Forms.TextBox txtFq;
+        private System.Windows.Forms.TextBox txtFolderRoot;
     }
 }
