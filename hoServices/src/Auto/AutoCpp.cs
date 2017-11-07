@@ -383,7 +383,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                           f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
                                           select f.Name).FirstOrDefault();
                 string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
-                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+                if (Path.GetFileName(folderNameOfClass)?.ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
                 if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
                 if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower()) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
 
@@ -411,7 +411,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     select new { FName = function.Name, // Function Name
                                     FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after resolving macro
                                     FPath =f.Name, // file name
-                                    RX = new Regex($@"(?<!extern.*)\b{function.Name}\s*\(") }).ToList(); // regex to find function
+                                    RX = new Regex($@".*(?<!extern.*)\b{function.Name}\s*\(") }).ToList(); // regex to find function
 
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNames = from f in db.Files
@@ -428,8 +428,11 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     code = hoService.DeleteComment(code);
                     foreach (var f1 in functions)
                     {
-                        if (f1.RX.IsMatch(code))
+                        // Call function in code found, the function is a required interface
+                        Match match = f1.RX.Match(code);
+                        if (match.Success)
                         {
+                            string found = match.Groups[0].Value; 
                             lFunctions.Add(new Tuple<string, string, string, string>(f1.FName, f1.FNameSolvedMacro, f1.FPath, fileName ));
                       
                         }
@@ -590,12 +593,12 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                               select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName }).Distinct();
 
                 int step =1;
-                int count=1;
+                int count=0;
                 if (backgroundWorker != null)
                 {
                     step = macros.Count() / 50;
                     count = step;
-                    backgroundWorker.ReportProgress(count);
+                    backgroundWorker.ReportProgress(2);
                 }
                 _macros.Clear();
                 string fileLast = "";
@@ -604,8 +607,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 {
                     if (backgroundWorker != null)
                     {
-                        count += count;
-                        if (count % step == 0) backgroundWorker.ReportProgress(count);
+                        count += 1;
+                        if (count % step == 0) backgroundWorker.ReportProgress(count/step);
                     }
                     // get file content if file changed
                     if (fileLast != m.FilePath)

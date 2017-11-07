@@ -368,6 +368,7 @@ namespace hoReverse.Reverse
             {
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
+                progressBar1.Value = 0;
                 // check for ZF
                 _autoToolStripMenuItem.Visible = false;
                 progressBar1.Visible = false;
@@ -392,6 +393,11 @@ namespace hoReverse.Reverse
                         backgroundWorker.RunWorkerAsync();
                     }
 
+                }
+                else
+                {   // Not with ZF
+                    if (backgroundWorker.IsBusy) backgroundWorker.CancelAsync();
+                    _autoCppIsRequested = false;
                 }
 
             }
@@ -2249,11 +2255,12 @@ namespace hoReverse.Reverse
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(4, 436);
+            this.progressBar1.Location = new System.Drawing.Point(0, 21);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 10);
+            this.progressBar1.Size = new System.Drawing.Size(134, 4);
             this.progressBar1.TabIndex = 57;
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
+            this.progressBar1.Visible = false;
             // 
             // TxtUserText
             // 
@@ -3752,8 +3759,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                 EA.Element element = (EA.Element)obj;
                 if (element.Type == "Component"|| element.Type == "Class")
                 {
-                    var generator = new AutoCpp(_repository);
-                    generator.ShowExternalFunctions(element);
+                    _autoCpp.ShowExternalFunctions(element);
                 }
             }
             Cursor.Current = Cursors.Default;
@@ -3768,7 +3774,6 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             // it updates the progress by sending the percentage:
             // backgroundWorker.ReportProgress(percentage);
-            backgroundWorker.ReportProgress(10);
             _autoCpp.InventoryMacros(backgroundWorker);
             backgroundWorker.ReportProgress(100);
         }
