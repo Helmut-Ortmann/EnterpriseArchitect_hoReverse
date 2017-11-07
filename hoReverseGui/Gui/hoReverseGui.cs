@@ -369,13 +369,17 @@ namespace hoReverse.Reverse
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
                 // check for ZF
-                _autoToolStripMenuItem.Visible = true;
+                _autoToolStripMenuItem.Visible = false;
+                progressBar1.Visible = false;
                 if (_repository.ConnectionString.Contains("WLE") )
                 {
+                    _autoToolStripMenuItem.Visible = true;
+                    progressBar1.Visible = true;
+
                     // Create/Update autoCpp generator
                     if (_autoCpp == null) _autoCpp = new AutoCpp(_repository);
                     else _autoCpp.Rep = _repository;
-                    _autoToolStripMenuItem.Visible = true;
+
 
                     // initialize macros in background task
                     if (_autoCppIsRunning)
@@ -3762,6 +3766,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             // it updates the progress by sending the percentage:
             // backgroundWorker.ReportProgress(percentage);
             _autoCpp.InventoryMacros();
+            backgroundWorker.ReportProgress(100);
         }
         /// <summary>
         /// Completed capture macro task. Check if another request is pending and process is
