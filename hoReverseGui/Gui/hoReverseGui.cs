@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -12,12 +11,11 @@ using hoReverse.hoUtils;
 using hoReverse.hoUtils.Cutils;
 using hoReverse.hoUtils.Diagrams;
 using hoReverse.Reverse.EaAddinShortcuts;
-using Diagram = WpfDiagram.Diagram;
+//using Diagram = WpfDiagram.Diagram;
 using hoReverse.hoUtils.WiKiRefs;
 
 using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
-using hoReverse.Services.AutoCpp.Analyze;
 
 // ReSharper disable RedundantDelegateCreation
 
@@ -42,6 +40,10 @@ namespace hoReverse.Reverse
         private EaHistoryList _bookmark;
         private AddinSettings _addinSettings;
 
+        private AutoCpp _autoCpp = null;
+        private bool _autoCppIsRunning = false;
+        private bool _autoCppIsRequested = false;
+
 
         private const string JasonFile = @"Settings.json";
         private string _jasonFilePath;
@@ -58,7 +60,7 @@ namespace hoReverse.Reverse
         private SettingsForm _frmSettings;
         private Settings2.Settings2Forms _frmSettings2;
 
-        private Diagram _wpfDiagram;
+        private WpfDiagram.Diagram _wpfDiagram;
         private Button _btnLh;
         private Button _btnLv;
         private Button _btnTv;
@@ -213,12 +215,14 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem hoToolsToolStripMenuItem;
         private ToolStripMenuItem lineStyleToolStripMenuItem;
-        private ToolStripMenuItem getToolStripMenuItem;
+        private ToolStripMenuItem _getToolStripMenuItem;
         private ToolStripMenuItem makeRunnableToolStripMenuItem;
         private ToolStripMenuItem makeServicePortToolStripMenuItem;
         private ToolStripMenuItem makeCalloutToolStripMenuItem;
         private ToolStripMenuItem showExternalComponentFunctionsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator12;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private ProgressBar progressBar1;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -365,7 +369,26 @@ namespace hoReverse.Reverse
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
                 // check for ZF
-                _autoToolStripMenuItem.Visible = _repository.ConnectionString.Contains("WLE") ? true : false;
+                _autoToolStripMenuItem.Visible = true;
+                if (_repository.ConnectionString.Contains("WLE") )
+                {
+                    // Create/Update autoCpp generator
+                    if (_autoCpp == null) _autoCpp = new AutoCpp(_repository);
+                    else _autoCpp.Rep = _repository;
+                    _autoToolStripMenuItem.Visible = true;
+
+                    // initialize macros in background task
+                    if (_autoCppIsRunning)
+                    {
+                        _autoCppIsRequested = true;
+                        backgroundWorker.CancelAsync();
+                    }
+                    else
+                    {
+                        backgroundWorker.RunWorkerAsync();
+                    }
+
+                }
 
             }
         }
@@ -601,7 +624,6 @@ namespace hoReverse.Reverse
             this._btnFeatureDown = new System.Windows.Forms.Button();
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -655,7 +677,7 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeRunnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeServicePortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCalloutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -700,6 +722,9 @@ namespace hoReverse.Reverse
             this._toolStripBtn4 = new System.Windows.Forms.ToolStripButton();
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1353,23 +1378,6 @@ namespace hoReverse.Reverse
             this._btnCopy.UseVisualStyleBackColor = true;
             this._btnCopy.Click += new System.EventHandler(this._btnCopy_Click);
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1797,7 +1805,7 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.modulesToolStripMenuItem,
             this.inventoryToolStripMenuItem,
-            this.getToolStripMenuItem,
+            this._getToolStripMenuItem,
             this.makeRunnableToolStripMenuItem,
             this.makeServicePortToolStripMenuItem,
             this.makeCalloutToolStripMenuItem,
@@ -1824,13 +1832,13 @@ namespace hoReverse.Reverse
             this.inventoryToolStripMenuItem.Visible = false;
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
             // 
-            // getToolStripMenuItem
+            // _getToolStripMenuItem
             // 
-            this.getToolStripMenuItem.Name = "getToolStripMenuItem";
-            this.getToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.getToolStripMenuItem.Text = "GetExternalFunctions";
-            this.getToolStripMenuItem.Visible = false;
-            this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
+            this._getToolStripMenuItem.Name = "_getToolStripMenuItem";
+            this._getToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this._getToolStripMenuItem.Text = "GetExternalFunctions";
+            this._getToolStripMenuItem.Visible = false;
+            this._getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
             // 
             // makeRunnableToolStripMenuItem
             // 
@@ -2227,8 +2235,39 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Text = "5";
             this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(4, 436);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.TabIndex = 57;
+            // 
             // HoReverseGui
             // 
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this._btnWriteText);
             this.Controls.Add(this._toolStrip1);
             this.Controls.Add(this._btnFeatureDown);
@@ -2282,6 +2321,7 @@ namespace hoReverse.Reverse
             this.Controls.Add(this._btnTv);
             this.Name = "HoReverseGui";
             this.Size = new System.Drawing.Size(875, 468);
+            this._toolTip.SetToolTip(this, "Progress capture all C/C++-Macros");
             this.Load += new System.EventHandler(this.AddinControl_Load);
             this._contextMenuStripTextField.ResumeLayout(false);
             this._menuStrip1.ResumeLayout(false);
@@ -2534,14 +2574,14 @@ namespace hoReverse.Reverse
         {
             if (_wpfDiagram == null)
             {
-                _wpfDiagram = new Diagram(_repository, _history, _bookmark);
+                _wpfDiagram = new WpfDiagram.Diagram(_repository, _history, _bookmark);
                 _wpfDiagram.Show();
             }
             else
             {
                 if (!_wpfDiagram.IsLoaded)
                 {
-                    _wpfDiagram = new Diagram(_repository, _history, _bookmark);
+                    _wpfDiagram = new WpfDiagram.Diagram(_repository, _history, _bookmark);
                     _wpfDiagram.Show();
                 }
                 else _wpfDiagram.Activate();
@@ -3711,6 +3751,53 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
             Cursor.Current = Cursors.Default;
 
+        }
+        /// <summary>
+        /// Background worker to run capture macros task in background
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            // it updates the progress by sending the percentage:
+            // backgroundWorker.ReportProgress(percentage);
+            _autoCpp.InventoryMacros();
+        }
+        /// <summary>
+        /// Completed capture macro task. Check if another request is pending and process is
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            // Handle completed
+            //if (e.Cancelled)
+            //{
+            //    lblStatus.Text = "Process was cancelled";
+            //}
+            //else if (e.Error != null)
+            //{
+            //    lblStatus.Text = "There was an error running the process. The thread aborted";
+            //}
+            //else
+            //{
+            //    lblStatus.Text = "Process was completed";
+            //}
+
+            _autoCppIsRunning = false;
+            if (_autoCppIsRequested)
+            {
+                _autoCppIsRequested = false;
+                backgroundWorker.RunWorkerAsync();
+            }
+            else _autoCppIsRunning = false;
+
+
+        }
+        // Report progress bar changed
+        private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
         }
     }
 }

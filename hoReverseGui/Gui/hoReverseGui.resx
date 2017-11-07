@@ -120,6 +120,9 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
+  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>130, 17</value>
+  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -496,5 +499,8 @@ empty                add '&lt;&lt;define&gt;&gt;'
   </data>
   <metadata name="_toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>798, 17</value>
+  </metadata>
+  <metadata name="backgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>900, 17</value>
   </metadata>
 </root>

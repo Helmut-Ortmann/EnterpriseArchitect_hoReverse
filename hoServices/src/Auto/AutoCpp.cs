@@ -9,11 +9,12 @@ using System.Text.RegularExpressions;
 using DataModels.VcSymbols;
 using EaServices.Files;
 using EaServices.Functions;
-using hoUtils.Package;
+using EA;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
 using hoReverse.Services.AutoCpp.Analyze;
 using File = System.IO.File;
+using Package = hoUtils.Package.Package;
 
 
 // ReSharper disable once CheckNamespace
@@ -38,7 +39,7 @@ namespace hoReverse.Services.AutoCpp
             "Sens_pClu_Posn.c",
             "Sens_pCpu_T.c"
         };
-        private readonly EA.Repository _rep;
+        private EA.Repository _rep;
         private readonly EA.Package _pkg;
         private readonly EA.Element _component;
         private readonly string _designPackagedIds;
@@ -59,7 +60,7 @@ namespace hoReverse.Services.AutoCpp
 
         public AutoCpp(EA.Repository rep)
         {
-            _rep = rep;
+            Rep = rep;
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
@@ -72,7 +73,7 @@ namespace hoReverse.Services.AutoCpp
 
         public AutoCpp(EA.Repository rep, EA.Element component)
         {
-            _rep = rep;
+            Rep = rep;
             _component = component;   
             // inventory from VC Code Database
             _files = new Files(rep);
@@ -92,7 +93,7 @@ namespace hoReverse.Services.AutoCpp
         /// <returns></returns>
         public AutoCpp(EA.Repository rep, EA.Package pkg)
         {
-            _rep = rep;
+            Rep = rep;
             _pkg = pkg;   
             // inventory from VC Code Database
             _files = new Files(rep);
@@ -100,14 +101,14 @@ namespace hoReverse.Services.AutoCpp
             _functions = new Functions(dataSource, Files,rep);
             _designFunctions = new Functions(_designFiles, rep);
 
-            if (_rep.GetPackageByGuid(designRootPackageGuid) == null)
+            if (Rep.GetPackageByGuid(designRootPackageGuid) == null)
             {
                 MessageBox.Show($@"Root package of existing design isnt't valid.
 GUID={designRootPackageGuid}
 Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, invalid root package");
 
             }
-            _designPackagedIds = Package.GetBranch(_rep, "", _rep.GetPackageByGuid(designRootPackageGuid).PackageID);
+            _designPackagedIds = Package.GetBranch(Rep, "", Rep.GetPackageByGuid(designRootPackageGuid).PackageID);
             
         }
         /// <summary>
@@ -130,7 +131,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             where object_type = 'Interface' AND
             package_id in ( { _designPackagedIds} )
             order by 2";
-            EA.Collection interfaceList = _rep.GetElementSet(sql, 2);
+            EA.Collection interfaceList = Rep.GetElementSet(sql, 2);
             foreach (EA.Element el in interfaceList)
             {
                 InterfaceItem ifItem = (InterfaceItem)_designFiles.Add($"{el.Name}.h");
@@ -224,7 +225,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             {
                 GenerateFile(fileName);
             }
-            _rep.RefreshModelView(_pkg.PackageID);
+            Rep.RefreshModelView(_pkg.PackageID);
             return true;
             return true;
         }
@@ -315,6 +316,12 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             {
                 _connectionString = "Data Source=" + dataSource;
                     return _connectionString; }
+        }
+
+        public Repository Rep
+        {
+            get { return _rep; }
+            set { _rep = value; }
         }
 
         /// <summary>
@@ -472,13 +479,13 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         {
             // get connection string of repository
             IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(_rep, out provider);
+            string connectionString = LinqUtil.GetConnectionString(Rep, out provider);
             using (var db = new DataModels.EaDataModel(provider, connectionString))
             {
                 var elGuid = (from n in db.t_object
                     where n.Name.ToLower() == name.ToLower() && n.Object_Type == "Component"
                     select n.ea_guid).FirstOrDefault();
-                return elGuid != null ? _rep.GetElementByGuid(elGuid) : null;
+                return elGuid != null ? Rep.GetElementByGuid(elGuid) : null;
 
             }
         }
