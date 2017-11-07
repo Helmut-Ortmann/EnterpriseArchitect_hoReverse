@@ -400,8 +400,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     where f.Name.StartsWith(folderNameOfClass) && f.LeafName.EndsWith(".c")
                     select f.LeafName;
 
-                // Inventory macros
-                InventoryMacros(folderNameOfClass);
+               
 
                 // all possible external functions for component recursive
                 var functions = (from function in db.CodeItems
@@ -551,12 +550,14 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             }
             return true;
         }
+
         /// <summary>
         /// Inventory paths
         /// </summary>
-        /// <param name="pathRoot"></param>
+        /// <param name="backgroundWorker">Background worker to update progress or null</param>
+        /// <param name="pathRoot">The path of the root folder to inventory</param>
         /// <returns></returns>
-        public bool InventoryMacros(string pathRoot = "")
+        public bool InventoryMacros(System.ComponentModel.BackgroundWorker backgroundWorker, string pathRoot = "")
         {
 
 
@@ -588,11 +589,24 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                               orderby file.Name
                               select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName }).Distinct();
 
+                int step =1;
+                int count=1;
+                if (backgroundWorker != null)
+                {
+                    step = macros.Count() / 50;
+                    count = step;
+                    backgroundWorker.ReportProgress(count);
+                }
                 _macros.Clear();
                 string fileLast = "";
                 string code = "";
                 foreach (var m in macros)
                 {
+                    if (backgroundWorker != null)
+                    {
+                        count += count;
+                        if (count % step == 0) backgroundWorker.ReportProgress(count);
+                    }
                     // get file content if file changed
                     if (fileLast != m.FilePath)
                     {

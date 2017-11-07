@@ -727,8 +727,8 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2241,9 +2241,19 @@ namespace hoReverse.Reverse
             // 
             // backgroundWorker
             // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(4, 436);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 10);
+            this.progressBar1.TabIndex = 57;
+            this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             // 
             // TxtUserText
             // 
@@ -2261,13 +2271,6 @@ namespace hoReverse.Reverse
             this.TxtUserText.WordWrap = false;
             this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
             this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(4, 436);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
-            this.progressBar1.TabIndex = 57;
             // 
             // HoReverseGui
             // 
@@ -3765,7 +3768,8 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             // it updates the progress by sending the percentage:
             // backgroundWorker.ReportProgress(percentage);
-            _autoCpp.InventoryMacros();
+            backgroundWorker.ReportProgress(10);
+            _autoCpp.InventoryMacros(backgroundWorker);
             backgroundWorker.ReportProgress(100);
         }
         /// <summary>
@@ -3793,6 +3797,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             if (_autoCppIsRequested)
             {
                 _autoCppIsRequested = false;
+                backgroundWorker.ReportProgress(10);
                 backgroundWorker.RunWorkerAsync();
             }
             else _autoCppIsRunning = false;
@@ -3803,6 +3808,8 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
+            // Set the text.
+            this.Text = e.ProgressPercentage.ToString();
         }
     }
 }
