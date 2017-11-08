@@ -390,6 +390,7 @@ namespace hoReverse.Reverse
                     }
                     else
                     {
+                        _autoCppIsRunning = true;
                         backgroundWorker.RunWorkerAsync();
                     }
 
@@ -3751,20 +3752,28 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private void showExternalComponentFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Object obj;
-            EA.ObjectType type = _repository.GetContextItem(out obj);
-            if (type == EA.ObjectType.otElement)
+            if (_autoCppIsRunning)
             {
-                EA.Element element = (EA.Element)obj;
-                if (element.Type == "Component"|| element.Type == "Class")
-                {
-                    _autoCpp.ShowExternalFunctions(element);
-                }
-            }
-            Cursor.Current = Cursors.Default;
+                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
 
-        }
+            }
+            else
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Object obj;
+                EA.ObjectType type = _repository.GetContextItem(out obj);
+                if (type == EA.ObjectType.otElement)
+                {
+                    EA.Element element = (EA.Element) obj;
+                    if (element.Type == "Component" || element.Type == "Class")
+                    {
+                        _autoCpp.ShowExternalFunctions(element);
+                    }
+                }
+                Cursor.Current = Cursors.Default;
+            }
+
+    }
         /// <summary>
         /// Background worker to run capture macros task in background
         /// </summary>

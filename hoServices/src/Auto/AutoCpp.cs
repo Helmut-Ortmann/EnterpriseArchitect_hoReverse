@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Core.Common.CommandTrees;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,8 @@ using EA;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
 using hoReverse.Services.AutoCpp.Analyze;
+using LinqToDB;
+using LinqToDB.SqlQuery;
 using File = System.IO.File;
 using Package = hoUtils.Package.Package;
 
@@ -400,41 +403,64 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     where f.Name.StartsWith(folderNameOfClass) && f.LeafName.EndsWith(".c")
                     select f.LeafName;
 
-               
+                // Get all function implementation
+                var allFunctionsImpl = (from f in db.CodeItems
+                    join file in db.Files on f.FileId equals file.Id
+                    where f.Kind == 22 && file.LeafName.ToLower().EndsWith(".c")
+                   select new {Implementation = f.Name, FilePath = file.Name, FileName = file.LeafName}).ToList();
 
-                // all possible external functions for component recursive
-                var functions = (from function in db.CodeItems
-                    join f in db.Files on function.FileId equals f.Id
-                    where function.Kind == 22  && f.LeafName.EndsWith(".c") && f.Name.StartsWith(folderNameOfClass)
-                                 // && function.Name.StartsWith(el.Name) 
-                                 orderby function.Name
-                    select new { FName = function.Name, // Function Name
-                                    FNameSolvedMacro = _macros.ContainsKey(function.Name) ? _macros[function.Name] : "",// Function name after resolving macro
-                                    FPath =f.Name, // file name
-                                    RX = new Regex($@".*(?<!extern.*)\b{function.Name}\s*\(") }).ToList(); // regex to find function
 
-                // over all files except Class/Component Tree (files not part of component/class/subfolder)
-                var fileNames = from f in db.Files
+                //var function1 = db.CodeItems.ToList();
+                //var functions11 = (from f in function1
+                //    join m in _macros on f.Name equals m.Key
+                //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
+                //    select f.Name).ToList().ToDataTable();
+                var allImplementations =  (from m in _macros
+                    join f in allFunctionsImpl on m.Key equals f.Implementation
+                    where m.Value.StartsWith(el.Name)
+                    select new {Interface=m.Value, Implementation=m.Key, f.FilePath, f.FileName})
+                    .Union
+                    (from f in allFunctionsImpl
+
+                     where f.Implementation.StartsWith(el.Name)
+                    select new { Interface = f.Implementation, Implementation = f.Implementation, FilePath=f.FilePath, FileName= f.FileName });
+
+                var compImplementations = from f in allImplementations
+                            where f.FilePath.StartsWith(folderNameOfClass)
+                            select new
+                            {
+                                Implementation = f.Implementation,Interface=f.Interface,FilePath= f.FilePath, File = f.FileName,
+                                RX = new Regex($@"\b{f.Implementation}\s*\(")
+                            };
+                
+
+
+               // over all files except Class/Component Tree (files not part of component/class/subfolder)
+                var fileNamesCalledImplementation = (from f in db.Files
                     where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
                           f.LeafName.ToLower().EndsWith(".c")
-                    select f.Name;
+                    select f.Name).Distinct();
 
                 
                 // get FunctioName, C-File name implementation, C-File name calling function
                 var lFunctions = new List<Tuple<string, string, string, string>>();
-                foreach (var fileName in fileNames)
+                foreach (var fileName in fileNamesCalledImplementation)
                 {
                     string code = File.ReadAllText(fileName);
                     code = hoService.DeleteComment(code);
-                    foreach (var f1 in functions)
+                    int count = 0;
+                    foreach (var f1 in compImplementations)
                     {
                         // Call function in code found, the function is a required interface
-                        Match match = f1.RX.Match(code);
-                        if (match.Success)
-                        {
-                            string found = match.Groups[0].Value; 
-                            lFunctions.Add(new Tuple<string, string, string, string>(f1.FName, f1.FNameSolvedMacro, f1.FPath, fileName ));
-                      
+                        //Match match = f1.RX.Match(code);
+                        //if (match.Success)
+                        //{
+                        count += 1;
+                        if (f1.RX.IsMatch(code)) { 
+                            //string found = match.Groups[0].Value; 
+                            lFunctions.Add(new Tuple<string, string, string, string>(f1.Implementation, f1.Implementation, f1.FilePath, fileName ));
+                           // string test = found;
+
                         }
                     }
                 }
