@@ -407,7 +407,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 var allFunctionsImpl = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
                     where f.Kind == 22 && file.LeafName.ToLower().EndsWith(".c")
-                   select new {Implementation = f.Name, FilePath = file.Name, FileName = file.LeafName}).ToList();
+                    select new ImplFunctionItem("", f.Name, file.Name)).ToList();
+                   //select new {Implementation = f.Name, FilePath = file.Name, FileName = file.LeafName}).ToList();
 
 
                 //var function1 = db.CodeItems.ToList();
@@ -415,23 +416,24 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 //    join m in _macros on f.Name equals m.Key
                 //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
                 //    select f.Name).ToList().ToDataTable();
-                var allImplementations =  (from m in _macros
-                    join f in allFunctionsImpl on m.Key equals f.Implementation
-                    where m.Value.StartsWith(el.Name)
-                    select new {Interface=m.Value, Implementation=m.Key, f.FilePath, f.FileName})
+                var allImplementations = (from m in _macros
+                        join f in allFunctionsImpl on m.Key equals f.Implementation
+                        where m.Value.StartsWith(el.Name)
+                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath))
                     .Union
                     (from f in allFunctionsImpl
 
-                     where f.Implementation.StartsWith(el.Name)
-                    select new { Interface = f.Implementation, Implementation = f.Implementation, FilePath=f.FilePath, FileName= f.FileName });
+                        where f.Implementation.StartsWith(el.Name)
+                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath));
 
-                var compImplementations = from f in allImplementations
+
+                var compImplementations = (from f in allImplementations
                             where f.FilePath.StartsWith(folderNameOfClass)
                             select new
                             {
-                                Implementation = f.Implementation,Interface=f.Interface,FilePath= f.FilePath, File = f.FileName,
+                                Imp= new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
                                 RX = new Regex($@"\b{f.Implementation}\s*\(")
-                            };
+                            }).ToArray();
                 
 
 
@@ -442,8 +444,6 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     select f.Name).Distinct();
 
                 
-                // get FunctioName, C-File name implementation, C-File name calling function
-                var lFunctions = new List<Tuple<string, string, string, string>>();
                 foreach (var fileName in fileNamesCalledImplementation)
                 {
                     string code = File.ReadAllText(fileName);
@@ -458,21 +458,24 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                         count += 1;
                         if (f1.RX.IsMatch(code)) { 
                             //string found = match.Groups[0].Value; 
-                            lFunctions.Add(new Tuple<string, string, string, string>(f1.Implementation, f1.Implementation, f1.FilePath, fileName ));
-                           // string test = found;
+                            f1.Imp.IsCalled = true;
+                            f1.Imp.FilePathCallee = fileName;
+                            // string test = found;
 
                         }
                     }
                 }
                 // Sort: Function, FileName
-                var outputList = (from f in lFunctions
-                    orderby f.Item1, f.Item3
-                    select new {Function = f.Item1,
-                        FunctionAfterMacro = f.Item2,
-                        FileFunction = Path.GetFileName(f.Item3),
-                        FileFunctionCall = Path.GetFileName(f.Item4),
-                        FilePathFunction = f.Item3,
-                        FilePathFunctionCall = f.Item4}).Distinct();
+                var outputList = (from f in compImplementations
+                                  orderby f.Imp.Interface, f.Imp.Implementation
+                    select new {Interface = f.Imp.Interface,
+                        Implementation = f.Imp.Implementation,
+                        FileName = f.Imp.FileName,
+                        FileNameCalleee = f.Imp.FileNameCallee,
+                        FilePathImplementation = f.Imp.FilePath,
+                        FilePathCalle = f.Imp.FilePathCallee,
+                        isCalled = f.Imp.IsCalled
+                    }).Distinct();
 
                 DataTable dt = outputList.ToDataTable();
 
@@ -481,12 +484,11 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
                 foreach (var row in outputList)
                 {
-                    string fileName = row.FileFunctionCall;
-                    string functionName = row.Function;
-                    EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileName));
+                    string fileNameCalleee = row.FileNameCalleee;
+                    EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileNameCalleee));
                     string guid = elComponent != null ? elComponent.ElementGUID : "";
 
-                    lExternalFunction = $"{lExternalFunction}{delimiter}{functionName.PadRight(50)}\t{fileName}/{guid}";
+                    lExternalFunction = $"{lExternalFunction}{delimiter}{row.Interface}/{row.Implementation.PadRight(80)}\t{fileNameCalleee}/{guid}";
                     
                 }
   

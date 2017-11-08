@@ -24,18 +24,19 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtFq.Text = _component.FQName;
             txtFolderRoot.Text = _folderRoot;
             grdFunctions.DataSource = _dt;
-            if (grdFunctions.ColumnCount > 2)
+            if (grdFunctions.ColumnCount > 6)
             {
                 grdFunctions.Columns[0].Width = 250;
                 grdFunctions.Columns[1].Width = 200;
                 grdFunctions.Columns[2].Width = 200;
                 // set columns headings
-                grdFunctions.Columns[0].HeaderText = "C-Function";
-                grdFunctions.Columns[1].HeaderText = "Macro-Function";
-                grdFunctions.Columns[2].HeaderText = "Implementation";
-                grdFunctions.Columns[3].HeaderText = "Called in";
-                grdFunctions.Columns[4].HeaderText = "Implementation";
-                grdFunctions.Columns[5].HeaderText = "Called in";
+                grdFunctions.Columns[0].HeaderText = "Interfacer";
+                grdFunctions.Columns[1].HeaderText = "Implementation";
+                grdFunctions.Columns[2].HeaderText = "File implementation";
+                grdFunctions.Columns[3].HeaderText = "File calles";
+                grdFunctions.Columns[4].HeaderText = "Path implementation";
+                grdFunctions.Columns[5].HeaderText = "Path callee";
+                grdFunctions.Columns[6].HeaderText = "IsCalled";
 
             }
         }
