@@ -33,7 +33,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdFunctions.Columns[0].HeaderText = "Interfacer";
                 grdFunctions.Columns[1].HeaderText = "Implementation";
                 grdFunctions.Columns[2].HeaderText = "File implementation";
-                grdFunctions.Columns[3].HeaderText = "File calles";
+                grdFunctions.Columns[3].HeaderText = "File callee";
                 grdFunctions.Columns[4].HeaderText = "Path implementation";
                 grdFunctions.Columns[5].HeaderText = "Path callee";
                 grdFunctions.Columns[6].HeaderText = "IsCalled";
