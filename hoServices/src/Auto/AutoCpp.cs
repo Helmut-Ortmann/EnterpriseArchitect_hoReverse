@@ -416,18 +416,35 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 //    join m in _macros on f.Name equals m.Key
                 //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
                 //    select f.Name).ToList().ToDataTable();
-                var allImplementations = (from m in _macros
+                var allCompImplementations = (
+                        // Implemented Interfaces (Macro with Interface and implementation with different name)
+                        from m in _macros
                         join f in allFunctionsImpl on m.Key equals f.Implementation
-                        where m.Value.StartsWith(el.Name)
+                        where m.Value.ToLower().StartsWith(el.Name.ToLower())
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath))
                     .Union
                     (from f in allFunctionsImpl
 
                         where f.Implementation.StartsWith(el.Name)
-                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath));
+                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath))
+                    .Union
+                    // macros without implementation
+                    (from m in _macros
+                        where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
+                              allFunctionsImpl.All(f => m.Key != f.Implementation)
+                     select new ImplFunctionItem(m.Value, m.Key, ""));
+                   
+                var test1 = (from m in _macros
+                    where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
+                          allFunctionsImpl.All(f => m.Key != f.Implementation)
+                    select new ImplFunctionItem(m.Value, m.Key, "")).ToArray();
+
+                var test = (from m in _macros
+                    where m.Value.ToLower().StartsWith(el.Name.ToLower())
+                    select new {Interface = m.Value, Implementation = m.Key, Type = "Key"}).ToArray();
 
 
-                var compImplementations = (from f in allImplementations
+                var compImplementations = (from f in allCompImplementations
                             where f.FilePath.StartsWith(folderNameOfClass)
                             select new
                             {
@@ -618,7 +635,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                               join file in db.Files on m.FileId equals file.Id
                               where m.Kind == 33 && file.Name.Contains(pathRoot) && (file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
                               orderby file.Name
-                              select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName }).Distinct();
+                              select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName, m.StartLine, m.StartColumn, m.EndLine, m.EndColumn }).Distinct();
 
                 int step =1;
                 int count=0;
@@ -630,7 +647,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 }
                 _macros.Clear();
                 string fileLast = "";
-                string code = "";
+                string[] code = new string[] { "" };
                 foreach (var m in macros)
                 {
                     if (backgroundWorker != null)
@@ -642,13 +659,13 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     if (fileLast != m.FilePath)
                     {
                         fileLast = m.FilePath;
-                        code = File.ReadAllText(m.FilePath);
+                        code = File.ReadAllLines(m.FilePath);
                     }
-                    Regex rx = new Regex($@"#define\s+{m.MacroName}\s+(\w+)");
-                    Match match = rx.Match(code);
-                    if (match.Success)
+                    string text = code[m.StartLine - 1].Substring((int)m.StartColumn - 1);
+                    string[] lText = text.Split(' ');
+                    if (lText.Count() == 3)
                     {
-                        string key = match.Groups[1].Value;
+                        string key = lText[2];
                         if (!_macros.ContainsKey(key))
                             _macros.Add(key, m.MacroName );
                     }
