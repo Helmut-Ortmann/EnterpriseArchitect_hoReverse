@@ -434,19 +434,11 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                               allFunctionsImpl.All(f => m.Key != f.Implementation)
                      select new ImplFunctionItem(m.Value, m.Key, ""));
                    
-                var test1 = (from m in _macros
-                    where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
-                          allFunctionsImpl.All(f => m.Key != f.Implementation)
-                    select new ImplFunctionItem(m.Value, m.Key, "")).ToArray();
-
-                var test = (from m in _macros
-                    where m.Value.ToLower().StartsWith(el.Name.ToLower())
-                    select new {Interface = m.Value, Implementation = m.Key, Type = "Key"}).ToArray();
-
+               
 
                 var compImplementations = (from f in allCompImplementations
-                            where f.FilePath.StartsWith(folderNameOfClass)
-                            select new
+                            where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
+                                           select new
                             {
                                 Imp= new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
                                 RX = new Regex($@"\b{f.Implementation}\s*\(")
