@@ -29,7 +29,7 @@ namespace hoReverse.Services.AutoCpp
             // get connection string of repository
             // the provider to connect to database like Access, ..
             string connectionString = LinqUtil.GetConnectionString(ConnectionString, out IDataProvider provider);
-            using (var db = new BROWSEVCDB(provider, connectionString))
+            using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
                 var folderNameOfClass = GetFileNameOfComponent(el,  db);
@@ -52,7 +52,7 @@ namespace hoReverse.Services.AutoCpp
                 //    join m in _macros on f.Name equals m.Key
                 //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
                 //    select f.Name).ToList().ToDataTable();
-                var allCompImplementations = (
+                IEnumerable<ImplFunctionItem> allCompImplementations = (
                         // Implemented Interfaces (Macro with Interface and implementation with different name)
                         from m in _macros
                         join f in allFunctionsImpl on m.Key equals f.Implementation
@@ -69,69 +69,57 @@ namespace hoReverse.Services.AutoCpp
                         where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
                               allFunctionsImpl.All(f => m.Key != f.Implementation)
                         select new ImplFunctionItem(m.Value, m.Key, ""));
-                   
-               
 
-                var compImplementations = (from f in allCompImplementations
-                    where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
-                    select new
-                    {
-                        Imp= new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
-                        RX = new Regex($@"\b{f.Implementation}\s*\(")
-                    }).ToArray();
+
+                //-----------------------------------------
+
+                DataTable dt = GenInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
+                //var compImplementations = (from f in allCompImplementations
+                //    where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
+                //    select new
+                //    {
+                //        Imp= new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
+                //        RX = new Regex($@"\b{f.Implementation}\s*\(")
+                //    }).ToArray();
                 
 
 
-                // over all files except Class/Component Tree (files not part of component/class/subfolder)
-                var fileNamesCalledImplementation = (from f in db.Files
-                    where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
-                          (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
-                    select f.Name).Distinct();
+                //// over all files except Class/Component Tree (files not part of component/class/sub folder)
+                //IQueryable<string> fileNamesCalledImplementation = (from f in db.Files
+                //    where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
+                //          (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
+                //    select f.Name).Distinct();
 
                 
-                foreach (var fileName in fileNamesCalledImplementation)
-                {
-                    string code = File.ReadAllText(fileName);
-                    code = hoService.DeleteComment(code);
-                    foreach (var f1 in compImplementations)
-                    {
-                        if (f1.RX.IsMatch(code)) { 
-                            //string found = match.Groups[0].Value; 
-                            f1.Imp.IsCalled = true;
-                            f1.Imp.FilePathCallee = fileName;
+                //foreach (var fileName in fileNamesCalledImplementation)
+                //{
+                //    string code = File.ReadAllText(fileName);
+                //    code = hoService.DeleteComment(code);
+                //    foreach (var f1 in compImplementations)
+                //    {
+                //        if (f1.RX.IsMatch(code)) { 
+                //            //string found = match.Groups[0].Value; 
+                //            f1.Imp.IsCalled = true;
+                //            f1.Imp.FilePathCallee = fileName;
 
-                        }
-                    }
-                }
-                // Sort: Function, FileName
-                var outputList = (from f in compImplementations
-                    orderby f.Imp.Interface, f.Imp.Implementation
-                    select new {Interface = f.Imp.Interface,
-                        Implementation = f.Imp.Implementation,
-                        FileName = f.Imp.FileName,
-                        FileNameCalleee = f.Imp.FileNameCallee,
-                        FilePathImplementation = f.Imp.FilePath,
-                        FilePathCalle = f.Imp.FilePathCallee,
-                        isCalled = f.Imp.IsCalled
-                    }).Distinct();
+                //        }
+                //    }
+                //}
+                //// Sort: Function, FileName
+                //var outputList = (from f in compImplementations
+                //    orderby f.Imp.Interface, f.Imp.Implementation
+                //    select new {Interface = f.Imp.Interface,
+                //        Implementation = f.Imp.Implementation,
+                //        FileName = f.Imp.FileName,
+                //        FileNameCalleee = f.Imp.FileNameCallee,
+                //        FilePathImplementation = f.Imp.FilePath,
+                //        FilePathCalle = f.Imp.FilePathCallee,
+                //        isCalled = f.Imp.IsCalled
+                //    }).Distinct();
 
-                DataTable dt = outputList.ToDataTable();
+                //DataTable dt = outputList.ToDataTable();
 
-                // Output Function, FileNme/GUID
-                string delimiter = Environment.NewLine;
-                string lExternalFunction = $"GUID={el.ElementGUID}{delimiter}FQ={el.FQName}{delimiter}";
-                foreach (var row in outputList)
-                {
-                    string fileNameCalleee = row.FileNameCalleee;
-                    EA.Element elComponent = GetElementFromName(Path.GetFileNameWithoutExtension(fileNameCalleee));
-                    string guid = elComponent != null ? elComponent.ElementGUID : "";
-
-                    lExternalFunction = $"{lExternalFunction}{delimiter}{row.Interface}/{row.Implementation.PadRight(80)}\t{fileNameCalleee}/{guid}";
-                    
-                }
-  
-
-                Clipboard.SetText(lExternalFunction);
+                
                 // new component
                 if (_frm == null || _frm.IsDisposed)
                 {
@@ -149,6 +137,61 @@ namespace hoReverse.Services.AutoCpp
 
             }
         }
+
+        private static DataTable GenInterface(BROWSEVCDB db, 
+            string folderNameOfClass, 
+            IQueryable<string> fileNamesOfClassTree, 
+            IEnumerable<ImplFunctionItem> allCompImplementations)
+        {
+
+            var compImplementations = (from f in allCompImplementations
+                where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
+                select new
+                {
+                    Imp = new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
+                    RX = new Regex($@"\b{f.Implementation}\s*\(")
+                }).ToArray();
+
+            // over all files except Class/Component Tree (files not part of component/class/sub folder)
+            IQueryable<string> fileNamesCalledImplementation = (from f in db.Files
+                where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
+                      (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
+                select f.Name).Distinct();
+
+            foreach (var fileName in fileNamesCalledImplementation)
+            {
+                string code = File.ReadAllText(fileName);
+                code = hoService.DeleteComment(code);
+                foreach (var f1 in compImplementations)
+                {
+                    if (f1.RX.IsMatch(code))
+                    {
+                        //string found = match.Groups[0].Value; 
+                        f1.Imp.IsCalled = true;
+                        f1.Imp.FilePathCallee = fileName;
+
+                    }
+                }
+            }
+            // Sort: Function, FileName
+            var outputList = (from f in compImplementations
+                orderby f.Imp.Interface, f.Imp.Implementation
+                select new
+                {
+                    Interface = f.Imp.Interface,
+                    Implementation = f.Imp.Implementation,
+                    FileName = f.Imp.FileName,
+                    FileNameCalleee = f.Imp.FileNameCallee,
+                    FilePathImplementation = f.Imp.FilePath,
+                    FilePathCalle = f.Imp.FilePathCallee,
+                    isCalled = f.Imp.IsCalled
+                }).Distinct();
+
+            DataTable dt = outputList.ToDataTable();
+            return null;
+        }
+
+
         /// <summary>
         /// Get File name of component
         /// </summary>
