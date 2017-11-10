@@ -37,14 +37,14 @@ namespace hoReverse.Services.AutoCpp
                 // estimate file names of component
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
-                    where f.Name.StartsWith(folderNameOfClass) && ( f.LeafName.EndsWith(".c") || f.LeafName.EndsWith(".cpp"))
+                    where f.Name.StartsWith(folderNameOfClass) && ( f.LeafName.EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
                     select f.LeafName;
 
-                // Get all function implementation
+                // Get all functions of implementation
                 var allFunctionsImpl = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
-                    where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.EndsWith(".cpp"))
-                    select new ImplFunctionItem("", f.Name, file.Name)).ToList();
+                    where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
+                    select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, (int)f.EndColumn)).ToList() ;
 
 
                 //var function1 = db.CodeItems.ToList();
@@ -85,7 +85,7 @@ namespace hoReverse.Services.AutoCpp
                 // over all files except Class/Component Tree (files not part of component/class/subfolder)
                 var fileNamesCalledImplementation = (from f in db.Files
                     where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
-                          f.LeafName.ToLower().EndsWith(".c")
+                          (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
                     select f.Name).Distinct();
 
                 
@@ -93,19 +93,12 @@ namespace hoReverse.Services.AutoCpp
                 {
                     string code = File.ReadAllText(fileName);
                     code = hoService.DeleteComment(code);
-                    int count = 0;
                     foreach (var f1 in compImplementations)
                     {
-                        // Call function in code found, the function is a required interface
-                        //Match match = f1.RX.Match(code);
-                        //if (match.Success)
-                        //{
-                        count += 1;
                         if (f1.RX.IsMatch(code)) { 
                             //string found = match.Groups[0].Value; 
                             f1.Imp.IsCalled = true;
                             f1.Imp.FilePathCallee = fileName;
-                            // string test = found;
 
                         }
                     }
