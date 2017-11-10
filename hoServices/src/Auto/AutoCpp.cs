@@ -44,16 +44,12 @@ namespace hoReverse.Services.AutoCpp
         };
         private EA.Repository _rep;
         private readonly EA.Package _pkg;
-        private readonly EA.Element _component;
         private readonly string _designPackagedIds;
         readonly List<string> _functionsNotFound = new List<string>();
         readonly Files _files;
         readonly Functions _functions;
         readonly Files _designFiles;
         readonly Functions _designFunctions;
-        private FrmComponentFunctions _frm;
-
-        private Dictionary<string, string> _macros = new Dictionary<string, string>();
 
 
         string _connectionString = "";

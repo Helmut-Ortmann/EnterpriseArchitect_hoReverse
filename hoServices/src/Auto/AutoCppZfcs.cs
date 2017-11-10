@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DataModels.VcSymbols;
+using EA;
 using hoLinqToSql.LinqUtils;
 using hoReverse.Services.AutoCpp.Analyze;
 using LinqToDB.DataProvider;
@@ -25,47 +27,24 @@ namespace hoReverse.Services.AutoCpp
         public bool ShowExternalFunctions(EA.Element el)
         {
             // get connection string of repository
-            IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out IDataProvider provider);
             using (var db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
-                string fileNameOfClass = (from f in db.Files
-                    where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
-                          f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
-                    select f.Name).FirstOrDefault();
-                if (fileNameOfClass == null)
-                {
-                    MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
-                        $"Cant't find source for '{el.Name}', Break!!");
-                    return false;
-
-                }
-
-                string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
-                if (Path.GetFileName(folderNameOfClass)?.ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
-                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
-                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower()) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
-
-                if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
-                {
-                    MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)\r\nLast checked:{folderNameOfClass}",
-                        $"Cant't find source for '{el.Name}', Break!!");
-                    return false;
-                }
+                var folderNameOfClass = GetFileNameOfComponent(el,  db);
 
                 // estimate file names of component
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
-                    where f.Name.StartsWith(folderNameOfClass) && f.LeafName.EndsWith(".c")
+                    where f.Name.StartsWith(folderNameOfClass) && ( f.LeafName.EndsWith(".c") || f.LeafName.EndsWith(".cpp"))
                     select f.LeafName;
 
                 // Get all function implementation
                 var allFunctionsImpl = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
-                    where f.Kind == 22 && file.LeafName.ToLower().EndsWith(".c")
+                    where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.EndsWith(".cpp"))
                     select new ImplFunctionItem("", f.Name, file.Name)).ToList();
-                //select new {Implementation = f.Name, FilePath = file.Name, FileName = file.LeafName}).ToList();
 
 
                 //var function1 = db.CodeItems.ToList();
@@ -177,6 +156,41 @@ namespace hoReverse.Services.AutoCpp
 
             }
         }
+        /// <summary>
+        /// Get File name of component
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        private static string GetFileNameOfComponent(Element el, BROWSEVCDB db)
+        {
+            string fileNameOfClass = (from f in db.Files
+                where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
+                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
+                select f.Name).FirstOrDefault();
+            if (fileNameOfClass == null)
+            {
+                MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
+                    $"Cant't find source for '{el.Name}', Break!!");
+                return "";
+            }
+
+            string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
+            if (Path.GetFileName(folderNameOfClass)?.ToLower() != el.Name.ToLower())
+                folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+            if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
+                folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+            if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
+                folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
+
+            if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
+            {
+                MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)\r\nLast checked:{folderNameOfClass}",
+                    $"Cant't find source for '{el.Name}', Break!!");
+                return "";
+            }
+            return folderNameOfClass;
+        }
 
         /// <summary>
         /// Inventory paths
@@ -254,5 +268,9 @@ namespace hoReverse.Services.AutoCpp
             }
             return true;
         }
+
+        private readonly Dictionary<string, string> _macros = new Dictionary<string, string>();
+        private FrmComponentFunctions _frm;
+        private readonly EA.Element _component;
     }
 }
