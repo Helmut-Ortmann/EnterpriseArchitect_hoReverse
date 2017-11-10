@@ -33,6 +33,7 @@ namespace hoReverse.Services.AutoCpp
             {
                 // Estimate file name of component
                 var folderNameOfClass = GetFileNameOfComponent(el,  db);
+                if (folderNameOfClass == "") return false;
 
                 // estimate file names of component
                 // Component and Module implementation file names beneath folder
@@ -70,11 +71,30 @@ namespace hoReverse.Services.AutoCpp
                               allFunctionsImpl.All(f => m.Key != f.Implementation)
                         select new ImplFunctionItem(m.Value, m.Key, "",0,0,0,0));
 
+                //var function1 = db.CodeItems.ToList();
+                //var functions11 = (from f in function1
+                //    join m in _macros on f.Name equals m.Key
+                //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
+                //    select f.Name).ToList().ToDataTable();
+                IEnumerable<ImplFunctionItem> allImplementations = (
+                        // Implemented Interfaces (Macro with Interface and implementation with different name)
+                        from m in _macros
+                        join f in allFunctionsImpl on m.Key equals f.Implementation
+                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                    .Union
+                    (from f in allFunctionsImpl
+                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                    .Union
+                    // macros without implementation
+                    (from m in _macros
+                        where allFunctionsImpl.All(f => m.Key != f.Implementation)
+                        select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
+
 
                 //-----------------------------------------
 
                 DataTable dtProvidedInterface = GenProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
-                DataTable dtRequiredInterface = GenRequiredInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
+                DataTable dtRequiredInterface = GenRequiredInterface(db, folderNameOfClass, fileNamesOfClassTree, allImplementations);
 
 
 
@@ -101,12 +121,12 @@ namespace hoReverse.Services.AutoCpp
         /// <param name="db"></param>
         /// <param name="folderNameOfClass"></param>
         /// <param name="filesPathOfClassTree"></param>
-        /// <param name="allCompImplementations"></param>
+        /// <param name="allImplementations"></param>
         /// <returns></returns>
         private static DataTable GenRequiredInterface(BROWSEVCDB db,
             string folderNameOfClass,
             IQueryable<string> filesPathOfClassTree,
-            IEnumerable<ImplFunctionItem> allCompImplementations)
+            IEnumerable<ImplFunctionItem> allImplementations)
         {
             // Estimate all possible function calls of passed files
             Regex rx = new Regex(@"(\b[A-Z]\w*_\w*)\s*\(", RegexOptions.IgnoreCase);
@@ -120,6 +140,15 @@ namespace hoReverse.Services.AutoCpp
                     match = match.NextMatch();
                 }
             }
+            var t1 = (from t in allImplementations
+                where t.Implementation.StartsWith("Amm_StSoptPh3")
+                     select t).ToArray();
+
+            var functions1 = (from f in db.CodeItems
+                where f.Name.StartsWith("Amm_StSoptPh3")
+                select new { f.Name, f.FileId }).ToArray();
+
+
             // ignore the following function names (begging)
             string[] ignoreList = new string[] { "Rte_Read", "Rte_Write" };
 
@@ -127,8 +156,9 @@ namespace hoReverse.Services.AutoCpp
             // - not current folder/subfolder (current component, required)
             // - not ignore of ignore ist
             var filteredFunctions = (from f in lFunctionCalls
-                join fAll in allCompImplementations on f equals fAll.Implementation
-                where (!fAll.FileName.StartsWith(folderNameOfClass)) && ignoreList.All(l => !f.StartsWith(l))
+                join fAll in allImplementations on f.Function equals fAll.Implementation
+                where (!fAll.FilePath.StartsWith(folderNameOfClass)) 
+                      //&& ignoreList.All(l => !f.Function.StartsWith(l))  // handle ignore list
                 orderby fAll.Implementation
                 select new
                 {
@@ -159,7 +189,7 @@ namespace hoReverse.Services.AutoCpp
                     }
                 }
             }
-            return filteredImplemtedFunctions.ToDataTable();
+            return filteredFunctions.ToDataTable();
 
 
 
@@ -338,5 +368,16 @@ namespace hoReverse.Services.AutoCpp
         private readonly Dictionary<string, string> _macros = new Dictionary<string, string>();
         private FrmComponentFunctions _frm;
         private readonly EA.Element _component;
+
+        // VSCode SQLite Database for symbols to ease finding
+        // the folder name is a hash to the folder, it only changes when the folder name changes.
+        // Access by: 'Data Source=".."' // path of the db
+        // - ADODB
+        // - LINQ (linq2db)
+        // d:\hoData\Projects\00Current\ZF\Work\Source\
+        // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
+        // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
+        private static readonly string dataSource =
+            @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.DB";
     }
 }
