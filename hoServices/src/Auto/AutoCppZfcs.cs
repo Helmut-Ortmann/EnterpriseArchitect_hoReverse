@@ -95,12 +95,70 @@ namespace hoReverse.Services.AutoCpp
 
             }
         }
-
+        /// <summary>
+        /// Get all required Interfaces of Component (root folder of component)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="folderNameOfClass"></param>
+        /// <param name="fileNamesOfClassTree"></param>
+        /// <param name="allCompImplementations"></param>
+        /// <returns></returns>
         private static DataTable GenRequiredInterface(BROWSEVCDB db,
             string folderNameOfClass,
             IQueryable<string> fileNamesOfClassTree,
             IEnumerable<ImplFunctionItem> allCompImplementations)
         {
+            // Estimate all possible function calls
+            Regex rx = new Regex(@"(\b[A-Z]\w*_\w*)\s*\(", RegexOptions.IgnoreCase);
+            List<string> lFunctionCalls = new List<string>();
+            foreach (var file in fileNamesOfClassTree)
+            {
+                Match match = rx.Match(File.ReadAllText(file));
+                while (match.Success)
+                {
+                    lFunctionCalls.Add(match.Groups[1].Value);
+                    match = match.NextMatch();
+                }
+            }
+
+            string[] ignoreList = new string[] { "Rte_Read", "Rte_Write" };
+
+            // filter only available functions
+            var filteredFunctions = (from f in lFunctionCalls
+                join fAll in allCompImplementations on f equals fAll.Implementation
+                where (!fAll.FileName.StartsWith(folderNameOfClass)) && ignoreList.All(l => !f.StartsWith(l))
+                orderby fAll.Implementation
+                select new
+                {
+                    Interface = fAll.Interface,
+                    Implementation = fAll.Implementation,
+                    FileName = fAll.FileName,
+                    FileNameCalleee = fAll.FileNameCallee,
+                    FilePathImplementation = fAll.FilePath,
+                    FilePathCalle = fAll.FilePathCallee,
+                    isCalled = fAll.IsCalled,
+                    LineEnd = fAll.LineEnd,
+                    ColumnEnd = fAll.ColumnEnd
+                }).Distinct();
+
+            List<ImplFunctionItem> output = new List<ImplFunctionItem>();
+            foreach (var f in filteredFunctions)
+            {
+                string[] codeLines = File.ReadAllLines(f.FileName);
+                // declaration ends with ';'
+                // implementation ends with '}'
+                //codeLines[f.Line - 1].Dump();
+                if (codeLines[f.LineEnd - 1].Substring((int)f.ColumnEnd - 1, 1) != ";")
+                {
+                    output.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation, f.FileNameCalleee));
+                }
+            }
+            return output.ToDataTable();
+
+
+
+
+
             return null;
         }
 

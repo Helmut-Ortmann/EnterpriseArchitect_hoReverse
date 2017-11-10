@@ -24,6 +24,14 @@ namespace hoReverse.Services.AutoCpp
 
         }
         public bool IsCalled { get; set; }
+        public ImplFunctionItem(string @interface, string implementation, string filePath, string filePathCallee)
+        {
+            Interface = @interface;
+            Implementation = implementation;
+            FilePath = filePath;
+            IsCalled = false;
+            FilePathCallee = filePathCallee;
+        }
         public ImplFunctionItem(string @interface, string implementation, string filePath)
         {
             Interface = @interface;
