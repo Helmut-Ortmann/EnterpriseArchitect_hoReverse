@@ -11,13 +11,19 @@ namespace hoReverse.Services.AutoCpp.Analyze
         public FrmComponentFunctions(EA.Element component, string folderRoot, DataTable dt)
         {
             InitializeComponent();
-            _dt = dt;
-            _component = component;
-            _folderRoot = folderRoot;
+            InitComponent(component, folderRoot, dt);
 
         }
 
         private void FrmComponentFunctions_Load(object sender, System.EventArgs e)
+        {
+            ShowComponent();
+        }
+
+        /// <summary>
+        /// Show Form content
+        /// </summary>
+        private void ShowComponent()
         {
             txtComponent.Text = _component.Name;
             txtGuid.Text = _component.ElementGUID;
@@ -41,6 +47,32 @@ namespace hoReverse.Services.AutoCpp.Analyze
             }
         }
 
+        /// <summary>
+        /// Initialize component data for form
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="folderRoot"></param>
+        /// <param name="dt"></param>
+        private void InitComponent(EA.Element component, string folderRoot, DataTable dt)
+        {
+            _dt = dt;
+            _component = component;
+            _folderRoot = folderRoot;
+
+        }
+
+        /// <summary>
+        /// Change component
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="folderRoot"></param>
+        /// <param name="dt"></param>
+        public void ChangeComponent(EA.Element component, string folderRoot, DataTable dt)
+        {
+            InitComponent(component, folderRoot, dt);
+            ShowComponent();
+
+        }
         private void btnOk_Click(object sender, System.EventArgs e)
         {
             this.Close();

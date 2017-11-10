@@ -51,6 +51,7 @@ namespace hoReverse.Services.AutoCpp
         readonly Functions _functions;
         readonly Files _designFiles;
         readonly Functions _designFunctions;
+        private FrmComponentFunctions _frm;
 
         private Dictionary<string, string> _macros = new Dictionary<string, string>();
 
@@ -385,6 +386,14 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                     where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
                           f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
                                           select f.Name).FirstOrDefault();
+                if (fileNameOfClass == null)
+                {
+                    MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
+                        $"Cant't find source for '{el.Name}', Break!!");
+                    return false;
+
+                }
+
                 string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
                 if (Path.GetFileName(folderNameOfClass)?.ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
                 if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower() ) folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
@@ -503,8 +512,18 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
   
 
                 Clipboard.SetText(lExternalFunction);
-                FrmComponentFunctions frm = new FrmComponentFunctions(el, folderNameOfClass, dt);
-                frm.ShowDialog();
+                // new component
+                if (_frm == null)
+                {
+                    _frm = new FrmComponentFunctions(el, folderNameOfClass, dt);
+                    _frm.Show();
+                }
+                else
+                {
+                    _frm.ChangeComponent(el, folderNameOfClass, dt);
+                }
+                //frm.ShowDialog();
+               
                 return true;
 
             }

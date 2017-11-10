@@ -31,6 +31,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtFolderRoot = new System.Windows.Forms.TextBox();
             this.txtFq = new System.Windows.Forms.TextBox();
             this.txtGuid = new System.Windows.Forms.TextBox();
             this.txtComponent = new System.Windows.Forms.TextBox();
@@ -39,7 +40,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.txtFolderRoot = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdFunctions)).BeginInit();
@@ -85,6 +85,14 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(964, 94);
             this.panel1.TabIndex = 1;
+            // 
+            // txtFolderRoot
+            // 
+            this.txtFolderRoot.Location = new System.Drawing.Point(84, 64);
+            this.txtFolderRoot.Name = "txtFolderRoot";
+            this.txtFolderRoot.ReadOnly = true;
+            this.txtFolderRoot.Size = new System.Drawing.Size(859, 20);
+            this.txtFolderRoot.TabIndex = 4;
             // 
             // txtFq
             // 
@@ -160,14 +168,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // txtFolderRoot
-            // 
-            this.txtFolderRoot.Location = new System.Drawing.Point(84, 64);
-            this.txtFolderRoot.Name = "txtFolderRoot";
-            this.txtFolderRoot.ReadOnly = true;
-            this.txtFolderRoot.Size = new System.Drawing.Size(859, 20);
-            this.txtFolderRoot.TabIndex = 4;
-            // 
             // FrmComponentFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,6 +175,7 @@
             this.ClientSize = new System.Drawing.Size(970, 431);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FrmComponentFunctions";
+            this.Text = "Component Viewer";
             this.Load += new System.EventHandler(this.FrmComponentFunctions_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
