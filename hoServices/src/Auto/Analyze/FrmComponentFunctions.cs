@@ -59,7 +59,13 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdRequiredInterfaces.Columns[3].HeaderText = "File callee";
                 grdRequiredInterfaces.Columns[4].HeaderText = "Path implementation";
                 grdRequiredInterfaces.Columns[5].HeaderText = "Path callee";
-                grdRequiredInterfaces.Columns[6].HeaderText = "IsCalled";
+                grdRequiredInterfaces.Columns[6].Visible = false;
+                grdRequiredInterfaces.Columns[7].Visible = false;
+                grdRequiredInterfaces.Columns[8].Visible = false;
+                grdRequiredInterfaces.Columns[9].Visible = false;
+                grdRequiredInterfaces.Columns[10].Visible = false;
+
+
 
             }
         }
@@ -70,9 +76,11 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
+        /// <param name="dtRequiredInterfaces"></param>
         private void InitComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             _dtProvidedInterfaces = dtProvidedInterfaces;
+            _dtRequiredInterfaces = dtRequiredInterfaces;
             _component = component;
             _folderRoot = folderRoot;
 
@@ -84,6 +92,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
+        /// <param name="dtRequiredInterfaces"></param>
         public void ChangeComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitComponent(component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);

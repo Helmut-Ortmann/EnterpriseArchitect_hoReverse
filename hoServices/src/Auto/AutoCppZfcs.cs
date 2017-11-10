@@ -57,18 +57,18 @@ namespace hoReverse.Services.AutoCpp
                         from m in _macros
                         join f in allFunctionsImpl on m.Key equals f.Implementation
                         where m.Value.ToLower().StartsWith(el.Name.ToLower())
-                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath))
+                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
                     (from f in allFunctionsImpl
 
                         where f.Implementation.StartsWith(el.Name)
-                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath))
+                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath,f.LineStart,f.ColumnStart,f.LineEnd,f.ColumnEnd))
                     .Union
                     // macros without implementation
                     (from m in _macros
                         where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
                               allFunctionsImpl.All(f => m.Key != f.Implementation)
-                        select new ImplFunctionItem(m.Value, m.Key, ""));
+                        select new ImplFunctionItem(m.Value, m.Key, "",0,0,0,0));
 
 
                 //-----------------------------------------
@@ -132,8 +132,6 @@ namespace hoReverse.Services.AutoCpp
                 {
                     Interface = fAll.Interface,
                     Implementation = fAll.Implementation,
-                    FileName = fAll.FileName,
-                    FileNameCalleee = fAll.FileNameCallee,
                     FilePathImplementation = fAll.FilePath,
                     FilePathCalle = fAll.FilePathCallee,
                     isCalled = fAll.IsCalled,
@@ -148,9 +146,13 @@ namespace hoReverse.Services.AutoCpp
                 // declaration ends with ';'
                 // implementation ends with '}'
                 //codeLines[f.Line - 1].Dump();
-                if (codeLines[f.LineEnd - 1].Substring((int)f.ColumnEnd - 1, 1) != ";")
+                if (f.LineEnd > 0 && f.ColumnEnd > 0)
                 {
-                    output.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation, f.FileNameCalleee));
+                    if (codeLines[f.LineEnd - 1].Substring((int) f.ColumnEnd - 1, 1) != ";")
+                    {
+                        output.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation,
+                            f.FilePathCalle));
+                    }
                 }
             }
             return output.ToDataTable();

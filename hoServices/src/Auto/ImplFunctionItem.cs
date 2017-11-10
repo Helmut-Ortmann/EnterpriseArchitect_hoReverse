@@ -4,15 +4,8 @@ namespace hoReverse.Services.AutoCpp
 {
     public class ImplFunctionItem
     {
-        public string Implementation { get; set; }
         public string Interface { get; set; }
-        public string FilePath { get; set; }
-        public string FilePathCallee { get; set; }
-        public int LineStart { get; set; }
-        public int LineEnd { get; set; }
-        public int ColumnStart { get; set; }
-        public int ColumnEnd { get; set; }
-
+        public string Implementation { get; set; }
         public string FileName
         {
             get { return Path.GetFileName(FilePath); }
@@ -23,7 +16,14 @@ namespace hoReverse.Services.AutoCpp
             get { return Path.GetFileName(FilePathCallee); }
 
         }
+        public string FilePath { get; set; }
+        public string FilePathCallee { get; set; }
         public bool IsCalled { get; set; }
+        public int LineStart { get; set; }
+        public int LineEnd { get; set; }
+        public int ColumnStart { get; set; }
+        public int ColumnEnd { get; set; }
+
         public ImplFunctionItem(string @interface, string implementation, string filePath, string filePathCallee)
         {
             Interface = @interface;
