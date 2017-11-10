@@ -47,29 +47,34 @@ namespace hoReverse.Services.AutoCpp
                     where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
                     select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, (int)f.EndColumn)).ToList() ;
 
+                var t11 = (from t in allFunctionsImpl
+                    where t.Implementation.ToLower().StartsWith("test_")
+                    select t).ToArray();
+
 
                 //var function1 = db.CodeItems.ToList();
                 //var functions11 = (from f in function1
                 //    join m in _macros on f.Name equals m.Key
                 //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
                 //    select f.Name).ToList().ToDataTable();
-                IEnumerable<ImplFunctionItem> allCompImplementations = (
+                IEnumerable < ImplFunctionItem > allCompImplementations = (
                         // Implemented Interfaces (Macro with Interface and implementation with different name)
                         from m in _macros
                         join f in allFunctionsImpl on m.Key equals f.Implementation
-                        where m.Value.ToLower().StartsWith(el.Name.ToLower())
+                        where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_")
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
                     (from f in allFunctionsImpl
 
-                        where f.Implementation.StartsWith(el.Name)
-                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath,f.LineStart,f.ColumnStart,f.LineEnd,f.ColumnEnd))
+                     where f.Implementation.ToLower().StartsWith($"{el.Name.ToLower()}_")
+                     where _macros.All(m => m.Key != f.Implementation)
+                     select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
                     // macros without implementation
                     (from m in _macros
-                        where m.Value.ToLower().StartsWith(el.Name.ToLower()) &&
-                              allFunctionsImpl.All(f => m.Key != f.Implementation)
-                        select new ImplFunctionItem(m.Value, m.Key, "",0,0,0,0));
+                     where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_") &&
+                           allFunctionsImpl.All(f => m.Key != f.Implementation)
+                     select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
                 //var function1 = db.CodeItems.ToList();
                 //var functions11 = (from f in function1
@@ -83,7 +88,8 @@ namespace hoReverse.Services.AutoCpp
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
                     (from f in allFunctionsImpl
-                        select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                     where _macros.All(m => m.Key != f.Implementation)
+                     select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
                     // macros without implementation
                     (from m in _macros
@@ -189,7 +195,7 @@ namespace hoReverse.Services.AutoCpp
                     }
                 }
             }
-            return filteredFunctions.ToDataTable();
+            return filteredImplemtedFunctions.ToDataTable();
 
 
 
@@ -209,7 +215,8 @@ namespace hoReverse.Services.AutoCpp
                 select new
                 {
                     Imp = new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
-                    RX = new Regex($@"\b{f.Implementation}\s*\(")
+                    RxImplementation = new Regex($@"\b{f.Implementation}\s*\("),
+                    RxInterface = new Regex($@"\b{f.Interface}\s*\(")
                 }).ToArray();
 
             // over all files except Class/Component Tree (files not part of component/class/sub folder)
@@ -224,7 +231,7 @@ namespace hoReverse.Services.AutoCpp
                 code = hoService.DeleteComment(code);
                 foreach (var f1 in compImplementations)
                 {
-                    if (f1.RX.IsMatch(code))
+                    if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
                     {
                         //string found = match.Groups[0].Value; 
                         f1.Imp.IsCalled = true;

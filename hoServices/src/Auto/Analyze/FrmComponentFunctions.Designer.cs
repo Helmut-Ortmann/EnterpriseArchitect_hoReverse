@@ -190,6 +190,8 @@
             // 
             // grdProvidedInterfaces
             // 
+            this.grdProvidedInterfaces.AllowUserToAddRows = false;
+            this.grdProvidedInterfaces.AllowUserToDeleteRows = false;
             this.grdProvidedInterfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdProvidedInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdProvidedInterfaces.Location = new System.Drawing.Point(3, 3);

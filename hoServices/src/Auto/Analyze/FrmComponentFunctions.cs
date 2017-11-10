@@ -60,10 +60,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdRequiredInterfaces.Columns[4].HeaderText = "Path implementation";
                 grdRequiredInterfaces.Columns[5].HeaderText = "Path callee";
                 grdRequiredInterfaces.Columns[6].Visible = false;
-                //grdRequiredInterfaces.Columns[7].Visible = false;
-                //grdRequiredInterfaces.Columns[8].Visible = false;
-                //grdRequiredInterfaces.Columns[9].Visible = false;
-                //grdRequiredInterfaces.Columns[10].Visible = false;
+                grdRequiredInterfaces.Columns[7].Visible = false;
+                grdRequiredInterfaces.Columns[8].Visible = false;
+                grdRequiredInterfaces.Columns[9].Visible = false;
+                grdRequiredInterfaces.Columns[10].Visible = false;
 
 
 
