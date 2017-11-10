@@ -513,7 +513,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
                 Clipboard.SetText(lExternalFunction);
                 // new component
-                if (_frm == null)
+                if (_frm == null || _frm.IsDisposed)
                 {
                     _frm = new FrmComponentFunctions(el, folderNameOfClass, dt);
                     _frm.Show();
@@ -521,6 +521,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 else
                 {
                     _frm.ChangeComponent(el, folderNameOfClass, dt);
+                    _frm.Show();
                 }
                 //frm.ShowDialog();
                

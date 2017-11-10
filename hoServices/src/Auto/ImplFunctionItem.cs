@@ -15,7 +15,7 @@ namespace hoReverse.Services.AutoCpp
         }
         public string FileNameCallee
         {
-            get { return Path.GetFileName(FilePath); }
+            get { return Path.GetFileName(FilePathCallee); }
 
         }
         public bool IsCalled { get; set; }
