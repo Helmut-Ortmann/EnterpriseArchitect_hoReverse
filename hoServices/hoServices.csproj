@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="src\Auto\AutoCpp.cs" />
     <Compile Include="src\Auto\AutoCppZfcs.cs" />
+    <Compile Include="src\Auto\CallFunctiontem.cs" />
     <Compile Include="src\Auto\ImplFunctionItem.cs" />
     <Compile Include="src\Files\FileItem.cs" />
     <Compile Include="src\Files\Files.cs" />

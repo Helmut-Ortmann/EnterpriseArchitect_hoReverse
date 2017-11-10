@@ -100,30 +100,32 @@ namespace hoReverse.Services.AutoCpp
         /// </summary>
         /// <param name="db"></param>
         /// <param name="folderNameOfClass"></param>
-        /// <param name="fileNamesOfClassTree"></param>
+        /// <param name="filesPathOfClassTree"></param>
         /// <param name="allCompImplementations"></param>
         /// <returns></returns>
         private static DataTable GenRequiredInterface(BROWSEVCDB db,
             string folderNameOfClass,
-            IQueryable<string> fileNamesOfClassTree,
+            IQueryable<string> filesPathOfClassTree,
             IEnumerable<ImplFunctionItem> allCompImplementations)
         {
-            // Estimate all possible function calls
+            // Estimate all possible function calls of passed files
             Regex rx = new Regex(@"(\b[A-Z]\w*_\w*)\s*\(", RegexOptions.IgnoreCase);
-            List<string> lFunctionCalls = new List<string>();
-            foreach (var file in fileNamesOfClassTree)
+            List<CallFunctionItem> lFunctionCalls = new List<CallFunctionItem>();
+            foreach (var file in filesPathOfClassTree)
             {
                 Match match = rx.Match(File.ReadAllText(file));
                 while (match.Success)
                 {
-                    lFunctionCalls.Add(match.Groups[1].Value);
+                    lFunctionCalls.Add(new CallFunctionItem(match.Groups[1].Value, file));
                     match = match.NextMatch();
                 }
             }
-
+            // ignore the following function names (begging)
             string[] ignoreList = new string[] { "Rte_Read", "Rte_Write" };
 
-            // filter only available functions
+            // filter only function implementation
+            // - not current folder/subfolder (current component, required)
+            // - not ignore of ignore ist
             var filteredFunctions = (from f in lFunctionCalls
                 join fAll in allCompImplementations on f equals fAll.Implementation
                 where (!fAll.FileName.StartsWith(folderNameOfClass)) && ignoreList.All(l => !f.StartsWith(l))
@@ -133,13 +135,15 @@ namespace hoReverse.Services.AutoCpp
                     Interface = fAll.Interface,
                     Implementation = fAll.Implementation,
                     FilePathImplementation = fAll.FilePath,
-                    FilePathCalle = fAll.FilePathCallee,
-                    isCalled = fAll.IsCalled,
+                    FilePathCallee = f.FilePath, // no implementation available yet
+                    isCalled = false,
                     LineEnd = fAll.LineEnd,
                     ColumnEnd = fAll.ColumnEnd
                 }).Distinct();
 
-            List<ImplFunctionItem> output = new List<ImplFunctionItem>();
+
+            // check if filtered functions are implemented
+            List<ImplFunctionItem> filteredImplemtedFunctions = new List<ImplFunctionItem>();
             foreach (var f in filteredFunctions)
             {
                 string[] codeLines = File.ReadAllLines(f.FilePathImplementation);
@@ -150,12 +154,12 @@ namespace hoReverse.Services.AutoCpp
                 {
                     if (codeLines[f.LineEnd - 1].Substring((int) f.ColumnEnd - 1, 1) != ";")
                     {
-                        output.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation,
-                            f.FilePathCalle));
+                        filteredImplemtedFunctions.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation,
+                            f.FilePathCallee));
                     }
                 }
             }
-            return output.ToDataTable();
+            return filteredImplemtedFunctions.ToDataTable();
 
 
 
