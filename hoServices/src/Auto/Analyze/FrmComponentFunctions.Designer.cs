@@ -36,22 +36,22 @@
             this.txtGuid = new System.Windows.Forms.TextBox();
             this.txtComponent = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.grdFunctions = new System.Windows.Forms.DataGridView();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageProvided = new System.Windows.Forms.TabPage();
+            this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
-            this.dataGridViewRequired = new System.Windows.Forms.DataGridView();
+            this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdFunctions)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageProvided.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).BeginInit();
             this.tabPageRequired.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRequired)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdRequiredInterfaces)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -136,16 +136,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Component";
             // 
-            // grdFunctions
-            // 
-            this.grdFunctions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdFunctions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdFunctions.Location = new System.Drawing.Point(3, 3);
-            this.grdFunctions.MultiSelect = false;
-            this.grdFunctions.Name = "grdFunctions";
-            this.grdFunctions.Size = new System.Drawing.Size(950, 237);
-            this.grdFunctions.TabIndex = 2;
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.btnOk);
@@ -189,7 +179,7 @@
             // 
             // tabPageProvided
             // 
-            this.tabPageProvided.Controls.Add(this.grdFunctions);
+            this.tabPageProvided.Controls.Add(this.grdProvidedInterfaces);
             this.tabPageProvided.Location = new System.Drawing.Point(4, 22);
             this.tabPageProvided.Name = "tabPageProvided";
             this.tabPageProvided.Padding = new System.Windows.Forms.Padding(3);
@@ -198,9 +188,19 @@
             this.tabPageProvided.Text = "Provided";
             this.tabPageProvided.UseVisualStyleBackColor = true;
             // 
+            // grdProvidedInterfaces
+            // 
+            this.grdProvidedInterfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdProvidedInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdProvidedInterfaces.Location = new System.Drawing.Point(3, 3);
+            this.grdProvidedInterfaces.MultiSelect = false;
+            this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
+            this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 237);
+            this.grdProvidedInterfaces.TabIndex = 2;
+            // 
             // tabPageRequired
             // 
-            this.tabPageRequired.Controls.Add(this.dataGridViewRequired);
+            this.tabPageRequired.Controls.Add(this.grdRequiredInterfaces);
             this.tabPageRequired.Location = new System.Drawing.Point(4, 22);
             this.tabPageRequired.Name = "tabPageRequired";
             this.tabPageRequired.Padding = new System.Windows.Forms.Padding(3);
@@ -209,16 +209,16 @@
             this.tabPageRequired.Text = "Required";
             this.tabPageRequired.UseVisualStyleBackColor = true;
             // 
-            // dataGridViewRequired
+            // grdRequiredInterfaces
             // 
-            this.dataGridViewRequired.AllowUserToAddRows = false;
-            this.dataGridViewRequired.AllowUserToDeleteRows = false;
-            this.dataGridViewRequired.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRequired.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewRequired.Location = new System.Drawing.Point(3, 3);
-            this.dataGridViewRequired.Name = "dataGridViewRequired";
-            this.dataGridViewRequired.Size = new System.Drawing.Size(950, 237);
-            this.dataGridViewRequired.TabIndex = 0;
+            this.grdRequiredInterfaces.AllowUserToAddRows = false;
+            this.grdRequiredInterfaces.AllowUserToDeleteRows = false;
+            this.grdRequiredInterfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdRequiredInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdRequiredInterfaces.Location = new System.Drawing.Point(3, 3);
+            this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
+            this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 237);
+            this.grdRequiredInterfaces.TabIndex = 0;
             // 
             // FrmComponentFunctions
             // 
@@ -233,12 +233,12 @@
             this.tableLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdFunctions)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPageProvided.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).EndInit();
             this.tabPageRequired.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRequired)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdRequiredInterfaces)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -249,7 +249,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView grdFunctions;
+        private System.Windows.Forms.DataGridView grdProvidedInterfaces;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
@@ -260,6 +260,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageProvided;
         private System.Windows.Forms.TabPage tabPageRequired;
-        private System.Windows.Forms.DataGridView dataGridViewRequired;
+        private System.Windows.Forms.DataGridView grdRequiredInterfaces;
     }
 }

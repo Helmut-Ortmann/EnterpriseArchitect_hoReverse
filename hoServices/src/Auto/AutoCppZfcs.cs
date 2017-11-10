@@ -73,62 +73,20 @@ namespace hoReverse.Services.AutoCpp
 
                 //-----------------------------------------
 
-                DataTable dt = GenInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
-                //var compImplementations = (from f in allCompImplementations
-                //    where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
-                //    select new
-                //    {
-                //        Imp= new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
-                //        RX = new Regex($@"\b{f.Implementation}\s*\(")
-                //    }).ToArray();
-                
+                DataTable dtProvidedInterface = GenProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
+                DataTable dtRequiredInterface = GenRequiredInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
 
 
-                //// over all files except Class/Component Tree (files not part of component/class/sub folder)
-                //IQueryable<string> fileNamesCalledImplementation = (from f in db.Files
-                //    where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
-                //          (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
-                //    select f.Name).Distinct();
 
-                
-                //foreach (var fileName in fileNamesCalledImplementation)
-                //{
-                //    string code = File.ReadAllText(fileName);
-                //    code = hoService.DeleteComment(code);
-                //    foreach (var f1 in compImplementations)
-                //    {
-                //        if (f1.RX.IsMatch(code)) { 
-                //            //string found = match.Groups[0].Value; 
-                //            f1.Imp.IsCalled = true;
-                //            f1.Imp.FilePathCallee = fileName;
-
-                //        }
-                //    }
-                //}
-                //// Sort: Function, FileName
-                //var outputList = (from f in compImplementations
-                //    orderby f.Imp.Interface, f.Imp.Implementation
-                //    select new {Interface = f.Imp.Interface,
-                //        Implementation = f.Imp.Implementation,
-                //        FileName = f.Imp.FileName,
-                //        FileNameCalleee = f.Imp.FileNameCallee,
-                //        FilePathImplementation = f.Imp.FilePath,
-                //        FilePathCalle = f.Imp.FilePathCallee,
-                //        isCalled = f.Imp.IsCalled
-                //    }).Distinct();
-
-                //DataTable dt = outputList.ToDataTable();
-
-                
                 // new component
                 if (_frm == null || _frm.IsDisposed)
                 {
-                    _frm = new FrmComponentFunctions(el, folderNameOfClass, dt);
+                    _frm = new FrmComponentFunctions(el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 else
                 {
-                    _frm.ChangeComponent(el, folderNameOfClass, dt);
+                    _frm.ChangeComponent(el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 //frm.ShowDialog();
@@ -138,7 +96,15 @@ namespace hoReverse.Services.AutoCpp
             }
         }
 
-        private static DataTable GenInterface(BROWSEVCDB db, 
+        private static DataTable GenRequiredInterface(BROWSEVCDB db,
+            string folderNameOfClass,
+            IQueryable<string> fileNamesOfClassTree,
+            IEnumerable<ImplFunctionItem> allCompImplementations)
+        {
+            return null;
+        }
+
+        private static DataTable GenProvidedInterface(BROWSEVCDB db, 
             string folderNameOfClass, 
             IQueryable<string> fileNamesOfClassTree, 
             IEnumerable<ImplFunctionItem> allCompImplementations)
@@ -187,8 +153,8 @@ namespace hoReverse.Services.AutoCpp
                     isCalled = f.Imp.IsCalled
                 }).Distinct();
 
-            DataTable dt = outputList.ToDataTable();
-            return null;
+            return outputList.ToDataTable();
+
         }
 
 

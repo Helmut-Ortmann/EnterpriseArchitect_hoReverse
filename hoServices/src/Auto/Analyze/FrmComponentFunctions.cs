@@ -5,13 +5,14 @@ namespace hoReverse.Services.AutoCpp.Analyze
 {
     public partial class FrmComponentFunctions : Form
     {
-        private DataTable _dt;
+        private DataTable _dtProvidedInterfaces;
+        private DataTable _dtRequiredInterfaces;
         private EA.Element _component;
         private string _folderRoot;
-        public FrmComponentFunctions(EA.Element component, string folderRoot, DataTable dt)
+        public FrmComponentFunctions(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitializeComponent();
-            InitComponent(component, folderRoot, dt);
+            InitComponent(component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
 
         }
 
@@ -29,20 +30,36 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtGuid.Text = _component.ElementGUID;
             txtFq.Text = _component.FQName;
             txtFolderRoot.Text = _folderRoot;
-            grdFunctions.DataSource = _dt;
-            if (grdFunctions.ColumnCount > 6)
+            grdProvidedInterfaces.DataSource = _dtProvidedInterfaces;
+            grdRequiredInterfaces.DataSource = _dtRequiredInterfaces;
+            if (grdProvidedInterfaces.ColumnCount > 6)
             {
-                grdFunctions.Columns[0].Width = 250;
-                grdFunctions.Columns[1].Width = 200;
-                grdFunctions.Columns[2].Width = 200;
+                grdProvidedInterfaces.Columns[0].Width = 250;
+                grdProvidedInterfaces.Columns[1].Width = 200;
+                grdProvidedInterfaces.Columns[2].Width = 200;
                 // set columns headings
-                grdFunctions.Columns[0].HeaderText = "Interfacer";
-                grdFunctions.Columns[1].HeaderText = "Implementation";
-                grdFunctions.Columns[2].HeaderText = "File implementation";
-                grdFunctions.Columns[3].HeaderText = "File callee";
-                grdFunctions.Columns[4].HeaderText = "Path implementation";
-                grdFunctions.Columns[5].HeaderText = "Path callee";
-                grdFunctions.Columns[6].HeaderText = "IsCalled";
+                grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
+                grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";
+                grdProvidedInterfaces.Columns[2].HeaderText = "File implementation";
+                grdProvidedInterfaces.Columns[3].HeaderText = "File callee";
+                grdProvidedInterfaces.Columns[4].HeaderText = "Path implementation";
+                grdProvidedInterfaces.Columns[5].HeaderText = "Path callee";
+                grdProvidedInterfaces.Columns[6].HeaderText = "IsCalled";
+
+            }
+            if (grdRequiredInterfaces.ColumnCount > 6)
+            {
+                grdRequiredInterfaces.Columns[0].Width = 250;
+                grdRequiredInterfaces.Columns[1].Width = 200;
+                grdRequiredInterfaces.Columns[2].Width = 200;
+                // set columns headings
+                grdRequiredInterfaces.Columns[0].HeaderText = "Req. Interface";
+                grdRequiredInterfaces.Columns[1].HeaderText = "Implementation";
+                grdRequiredInterfaces.Columns[2].HeaderText = "File implementation";
+                grdRequiredInterfaces.Columns[3].HeaderText = "File callee";
+                grdRequiredInterfaces.Columns[4].HeaderText = "Path implementation";
+                grdRequiredInterfaces.Columns[5].HeaderText = "Path callee";
+                grdRequiredInterfaces.Columns[6].HeaderText = "IsCalled";
 
             }
         }
@@ -52,10 +69,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// </summary>
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
-        /// <param name="dt"></param>
-        private void InitComponent(EA.Element component, string folderRoot, DataTable dt)
+        /// <param name="dtProvidedInterfaces"></param>
+        private void InitComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            _dt = dt;
+            _dtProvidedInterfaces = dtProvidedInterfaces;
             _component = component;
             _folderRoot = folderRoot;
 
@@ -66,10 +83,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// </summary>
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
-        /// <param name="dt"></param>
-        public void ChangeComponent(EA.Element component, string folderRoot, DataTable dt)
+        /// <param name="dtProvidedInterfaces"></param>
+        public void ChangeComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            InitComponent(component, folderRoot, dt);
+            InitComponent(component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
             ShowComponent();
 
         }
