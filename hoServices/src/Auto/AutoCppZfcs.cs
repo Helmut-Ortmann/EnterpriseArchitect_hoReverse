@@ -38,7 +38,7 @@ namespace hoReverse.Services.AutoCpp
                 // Component and Module implementation file names beneath folder
                 IQueryable<string> fileNamesOfClassTree = from f in db.Files
                     where f.Name.StartsWith(folderNameOfClass) && ( f.LeafName.EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
-                    select f.LeafName;
+                    select f.Name;
 
                 // Get all functions of implementation
                 var allFunctionsImpl = (from f in db.CodeItems
@@ -144,7 +144,7 @@ namespace hoReverse.Services.AutoCpp
             List<ImplFunctionItem> output = new List<ImplFunctionItem>();
             foreach (var f in filteredFunctions)
             {
-                string[] codeLines = File.ReadAllLines(f.FileName);
+                string[] codeLines = File.ReadAllLines(f.FilePathImplementation);
                 // declaration ends with ';'
                 // implementation ends with '}'
                 //codeLines[f.Line - 1].Dump();
@@ -178,7 +178,7 @@ namespace hoReverse.Services.AutoCpp
 
             // over all files except Class/Component Tree (files not part of component/class/sub folder)
             IQueryable<string> fileNamesCalledImplementation = (from f in db.Files
-                where !fileNamesOfClassTree.Any(x => x == f.LeafName) &&
+                where !fileNamesOfClassTree.Any(x => x == f.Name) &&
                       (f.LeafName.ToLower().EndsWith(".c") || f.LeafName.ToLower().EndsWith(".cpp"))
                 select f.Name).Distinct();
 
