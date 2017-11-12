@@ -298,11 +298,20 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
         /// <summary>
         /// Get the connection string of VC Code SQLite database.
+        /// - Pass the root source file folder to find the right VC Code symbol database
         /// - Get the newest database
         /// - Access= ReadOnly
         /// - Returns empty string if can't find database
         /// </summary>
-        public string ConnectionString
+        private string ConnectionString => VcDbUtilities.GetConnectionString(rootSourceCodePath);
+
+        /// <summary>
+        /// Get the connection string of VC Code SQLite database.
+        /// - Get the newest database
+        /// - Access= ReadOnly
+        /// - Returns empty string if can't find database
+        /// </summary>
+        private string ConnectionStringxxx
         {
             get
             {

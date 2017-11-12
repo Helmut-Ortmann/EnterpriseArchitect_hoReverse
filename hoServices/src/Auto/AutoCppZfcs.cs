@@ -28,7 +28,7 @@ namespace hoReverse.Services.AutoCpp
         {
             // get connection string of repository
             // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out IDataProvider provider);
+            string connectionString = LinqUtil.GetConnectionString(rootSourceCodePath, out IDataProvider provider);
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
@@ -369,6 +369,7 @@ namespace hoReverse.Services.AutoCpp
         // d:\hoData\Projects\00Current\ZF\Work\Source\
         // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
+        private static readonly string rootSourceCodePath = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
         private static readonly string dataSource =
             @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.2.DB";
     }
