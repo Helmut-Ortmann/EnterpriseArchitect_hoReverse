@@ -5,13 +5,11 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using EaServices.Files;
 using EaServices.Functions;
 using EA;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
-using File = System.IO.File;
 using Package = hoUtils.Package.Package;
 
 
@@ -38,20 +36,21 @@ namespace hoReverse.Services.AutoCpp
         readonly Functions _designFunctions;
 
 
-        string _connectionString = "";
 
         // statistics
         private int _deletedInterfaces = 0;
         private int _createdInterfaces = 0;
 
+ 
         public AutoCpp(EA.Repository rep)
         {
             Rep = rep;
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            _functions = new Functions(dataSource, Files, rep);
-            _designFunctions = new Functions(_designFiles, rep);
+            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
+            //_functions = new Functions(dataSource, Files, rep);
+            //_designFunctions = new Functions(_designFiles, rep);
 
 
 
@@ -64,8 +63,9 @@ namespace hoReverse.Services.AutoCpp
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            _functions = new Functions(dataSource, Files, rep);
-            _designFunctions = new Functions(_designFiles, rep);
+            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
+            //_functions = new Functions(dataSource, Files, rep);
+            //_designFunctions = new Functions(_designFiles, rep);
 
            
             
@@ -84,8 +84,9 @@ namespace hoReverse.Services.AutoCpp
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            _functions = new Functions(dataSource, Files,rep);
-            _designFunctions = new Functions(_designFiles, rep);
+            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
+            //_functions = new Functions(dataSource, Files,rep);
+            //_designFunctions = new Functions(_designFiles, rep);
 
             if (Rep.GetPackageByGuid(designRootPackageGuid) == null)
             {
@@ -303,36 +304,9 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         /// - Access= ReadOnly
         /// - Returns empty string if can't find database
         /// </summary>
-        private string ConnectionString => VcDbUtilities.GetConnectionString(rootSourceCodePath);
+        private string ConnectionString => VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
 
-        /// <summary>
-        /// Get the connection string of VC Code SQLite database.
-        /// - Get the newest database
-        /// - Access= ReadOnly
-        /// - Returns empty string if can't find database
-        /// </summary>
-        private string ConnectionStringxxx
-        {
-            get
-            {
-                string folderSqlite = Path.GetDirectoryName(dataSource);
-                string sortedFiles = new DirectoryInfo(folderSqlite).GetFiles()
-                    .Where(n => n.Name.ToLower()
-                    .EndsWith(".db"))
-                    .OrderByDescending(t => t.LastWriteTime).FirstOrDefault()
-                    ?.FullName;
-                if (sortedFiles == null)
-                {
-                    MessageBox.Show($"Path: {dataSource}\r\nDB: '.BROWSE.VC.*.DB'\r\nUsually in: 'AppData\\Roaming\\Code\\User\\workspaceStorage'\\<hash folder>\\.BROWSE.VC.*.DB",
-                        "Can't find the SQLite VC Code database for symbols, break!!!");
-                    _connectionString = "";
-                    return "";
-                }
-
-                _connectionString = $"Data Source={sortedFiles };Read Only=True;";
-                    return _connectionString; }
-        }
-
+       
         public Repository Rep
         {
             get { return _rep; }
@@ -399,70 +373,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
 
             }
         }
-        /// <summary>
-        /// Inventory paths
-        /// </summary>
-        /// <param name="pathRoot"></param>
-        /// <returns></returns>
-        public bool InventoryMacrosOld(string pathRoot="")
-        {
-           
-
-            // get connection string of repository
-            IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
-            using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
-            {
-                // estimate root path
-                // Find: '\RTE\RTE.C' and go back
-                if (String.IsNullOrWhiteSpace(pathRoot))
-                {
-                    pathRoot = (from f in db.Files
-                        where f.LeafName == "RTE.C"
-                        select f.Name).FirstOrDefault();
-                    if (String.IsNullOrWhiteSpace(pathRoot))
-                    {
-                        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
-                        return false;
-                    }
-                    pathRoot = Path.GetDirectoryName(pathRoot);
-                    pathRoot = Directory.GetParent(pathRoot).FullName;
-
-                }
-                // Estimates macros which concerns functions
-                var macros = (from m in db.CodeItems
-                join file in db.Files on m.FileId equals file.Id
-                join f in db.CodeItems on m.Name equals f.Name
-                where m.Kind == 33 && f.Kind == 22 && file.Name.Contains(pathRoot) && (file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
-                orderby file.Name
-                select new { MacroName=m.Name, FilePath=file.Name, FileName=file.LeafName }).Distinct();
-
-                _macros.Clear();
-                string fileLast = "";
-                string code = "";
-                foreach (var m in macros)
-                {
-                    // get file content if file changed
-                    if (fileLast != m.FilePath)
-                    {
-                        fileLast = m.FilePath;
-                        code = File.ReadAllText(m.FilePath);
-                    }
-                    Regex rx = new Regex($@"#define\s+{m.MacroName}\s+(\w+)");
-                    Match match = rx.Match(code);
-                    if (match.Success)
-                    {
-                        if (! _macros.ContainsKey(m.MacroName))
-                            _macros.Add(m.MacroName, match.Groups[1].Value );
-                    }
-                }
-
-
-            }
-            return true;
-        }
-
-
+       
         /// <summary>
         /// Example LINQ to SQL
         /// - All object object types

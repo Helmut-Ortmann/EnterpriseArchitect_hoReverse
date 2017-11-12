@@ -37,6 +37,9 @@ Let's discuss it, but it works.
 
 2.1.3 Bug fixing, documentation, installation
 - Copy selected Elements to Clipboard and order them
+- Integrate LINQ for SQLite
+- Handle VC Code Symbol DB
+- 
 2.1.1 Sort Ports optimized
 
 ## FAQ

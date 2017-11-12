@@ -245,6 +245,16 @@ Note: The key + modifiers must not be used by EA</value>
 You can use a key with modifiers like Ctrl,Shif, Window Key, ALT to access a searches / queries.
 Note: The key + modifiers must not be used by EA</value>
   </data>
+  <data name="txtFolderPathCSourceCode.ToolTip" xml:space="preserve">
+    <value>C/C++ source folder used to analyze code with
+VS-Code symbol database. 
+You need to use VS Code at least once to use this feature.
+
+After every change of source code you have to open a file
+to let VS Code update the symbol database.
+
+After changing the source folder you have to chenge the project or restart EA.</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>25</value>
   </metadata>

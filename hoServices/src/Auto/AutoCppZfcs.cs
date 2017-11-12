@@ -11,6 +11,7 @@ using hoLinqToSql.LinqUtils;
 using hoReverse.Services.AutoCpp.Analyze;
 using LinqToDB.DataProvider;
 using File = System.IO.File;
+// ReSharper disable RedundantAnonymousTypePropertyName
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp
@@ -23,12 +24,14 @@ namespace hoReverse.Services.AutoCpp
         /// - Required
         /// </summary>
         /// <param name="el"></param>
+        /// <param name="folderPathCSourceCode">Root folder patch of C/C++ source code</param>
         /// <returns></returns>
-        public bool ShowExternalFunctions(EA.Element el)
+        public bool ShowExternalFunctions(EA.Element el, string folderPathCSourceCode)
         {
             // get connection string of repository
             // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(rootSourceCodePath, out IDataProvider provider);
+            _folderPathCSourceCode = folderPathCSourceCode;
+            string connectionString = LinqUtil.GetConnectionString(folderPathCSourceCode, out IDataProvider provider);
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
@@ -283,14 +286,16 @@ namespace hoReverse.Services.AutoCpp
         /// Inventory paths
         /// </summary>
         /// <param name="backgroundWorker">Background worker to update progress or null</param>
+        /// <param name="folderPathCSourceCode">The C/C++ root folder</param>
         /// <param name="pathRoot">The path of the root folder to inventory</param>
         /// <returns></returns>
-        public bool InventoryMacros(System.ComponentModel.BackgroundWorker backgroundWorker, string pathRoot = "")
+        public bool InventoryMacros(System.ComponentModel.BackgroundWorker backgroundWorker, string folderPathCSourceCode, string pathRoot = "")
         {
 
 
             // get connection string of repository
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out var provider);
+            _folderPathCSourceCode = folderPathCSourceCode;
+            string connectionString = LinqUtil.GetConnectionString(_folderPathCSourceCode, out var provider);
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
                 // estimate root path
@@ -326,9 +331,11 @@ namespace hoReverse.Services.AutoCpp
                 }
                 _macros.Clear();
                 string fileLast = "";
-                string[] code = new string[] { "" };
+                string[] code = { "" };
+
                 // capture the following macros
                 // #define <<interface>> <<implementation>>
+                Regex rxIsFunctioName = new Regex(@"^[A-Z_a-z]\w*$");
                 foreach (var m in macros)
                 {
                     if (backgroundWorker != null)
@@ -346,9 +353,13 @@ namespace hoReverse.Services.AutoCpp
                     string[] lText = text.Split(' ');
                     if (lText.Count() == 3)
                     {
-                        string key = lText[2];
-                        if (!_macros.ContainsKey(key))
-                            _macros.Add(key, m.MacroName );
+                        // check if functionName
+                        if (rxIsFunctioName.IsMatch(lText[2].Trim()))
+                        { 
+                            string key = lText[2];
+                            // add macro value as key
+                            if (!_macros.ContainsKey(key)) _macros.Add(key, m.MacroName);
+                        }
                     }
                 }
 
@@ -369,8 +380,8 @@ namespace hoReverse.Services.AutoCpp
         // d:\hoData\Projects\00Current\ZF\Work\Source\
         // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
-        private static readonly string rootSourceCodePath = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
-        private static readonly string dataSource =
-            @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.2.DB";
+        private static string _folderPathCSourceCode = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
+        //private static readonly string dataSource =
+        //    @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.2.DB";
     }
 }

@@ -202,9 +202,30 @@ namespace hoReverse.Settings
             }
 
         }
+        /// <summary>
+        /// Folder path to C/C++ source code, used to find the VS Code symbol database
+        /// Roaming\Code\User\workspaceStorage\hash\ms-vscode.cpptools\.BROWSE.VC.DB
+        /// </summary>
+        public string FolderPathCSourceCode
+        {
+            get
+            {
+                if (this.CurrentConfig.AppSettings.Settings["FolderPathCSourceCode"].Value == null)
+                {
+                    return @"d:\hoData\Projects\00Current\ZF\Work\Source\";
+                }
+                else
+                {
+                    return (this.CurrentConfig.AppSettings.Settings["FolderPathCSourceCode"].Value);
+                }
+            }
+            set
+            {
+                this.CurrentConfig.AppSettings.Settings["FolderPathCSourceCode"].Value = value;
 
-        
-        
+            }
+        }
+
         public string QuickSearchName
         {
             get

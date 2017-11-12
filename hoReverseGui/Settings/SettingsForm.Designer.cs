@@ -180,12 +180,14 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this._cbxWithHistory = new System.Windows.Forms.CheckBox();
             this._cbxWithBookmarks = new System.Windows.Forms.CheckBox();
+            this.txtFolderPathCSourceCode = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(468, 726);
+            this.btnOk.Location = new System.Drawing.Point(461, 773);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(56, 23);
             this.btnOk.TabIndex = 0;
@@ -195,7 +197,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(530, 726);
+            this.btnCancel.Location = new System.Drawing.Point(523, 773);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(55, 23);
             this.btnCancel.TabIndex = 1;
@@ -1657,11 +1659,30 @@
             this._cbxWithBookmarks.Text = "Show Bookmarks";
             this._cbxWithBookmarks.UseVisualStyleBackColor = true;
             // 
+            // txtFolderPathCSourceCode
+            // 
+            this.txtFolderPathCSourceCode.Location = new System.Drawing.Point(142, 722);
+            this.txtFolderPathCSourceCode.Name = "txtFolderPathCSourceCode";
+            this.txtFolderPathCSourceCode.Size = new System.Drawing.Size(808, 20);
+            this.txtFolderPathCSourceCode.TabIndex = 114;
+            this.toolTip1.SetToolTip(this.txtFolderPathCSourceCode, resources.GetString("txtFolderPathCSourceCode.ToolTip"));
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(5, 725);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(131, 13);
+            this.label26.TabIndex = 115;
+            this.label26.Text = "C/C++ Source code folder";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(974, 777);
+            this.ClientSize = new System.Drawing.Size(974, 808);
+            this.Controls.Add(this.label26);
+            this.Controls.Add(this.txtFolderPathCSourceCode);
             this.Controls.Add(this._cbxWithBookmarks);
             this.Controls.Add(this._cbxWithHistory);
             this.Controls.Add(this.cmbGlobalKeySearch5Tooltip);
@@ -1944,5 +1965,7 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox _cbxWithHistory;
         private System.Windows.Forms.CheckBox _cbxWithBookmarks;
+        private System.Windows.Forms.TextBox txtFolderPathCSourceCode;
+        private System.Windows.Forms.Label label26;
     }
 }

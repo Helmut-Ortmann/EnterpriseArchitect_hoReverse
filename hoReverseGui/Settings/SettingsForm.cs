@@ -28,6 +28,8 @@ namespace hoReverse.Settings
             string[] itemsState = new string[items.Length];
             items.CopyTo(itemsState, 0);
 
+
+            txtFolderPathCSourceCode.Text = settings.FolderPathCSourceCode;
             this.cboActivityLineStyle.DataSource = itemsActivity;
             this.cboStateLineStyle.DataSource = itemsState;
             this.cboActivityLineStyle.Text = settings.ActivityLineStyle;
@@ -478,6 +480,7 @@ namespace hoReverse.Settings
         {
             _settings.ActivityLineStyle = cboActivityLineStyle.Text;
             _settings.StatechartLineStyle = cboStateLineStyle.Text;
+            _settings.FolderPathCSourceCode = txtFolderPathCSourceCode.Text;
 
             // store shortcuts
             EaAddinShortcutSearch sh = _settings.ShortcutsSearch[0];

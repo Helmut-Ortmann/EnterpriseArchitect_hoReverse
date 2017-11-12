@@ -3767,7 +3767,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                     EA.Element element = (EA.Element) obj;
                     if (element.Type == "Component" || element.Type == "Class")
                     {
-                        _autoCpp.ShowExternalFunctions(element);
+                        _autoCpp.ShowExternalFunctions(element,_addinSettings.FolderPathCSourceCode);
                     }
                 }
                 Cursor.Current = Cursors.Default;
@@ -3783,7 +3783,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             // it updates the progress by sending the percentage:
             // backgroundWorker.ReportProgress(percentage);
-            _autoCpp.InventoryMacros(backgroundWorker);
+            _autoCpp.InventoryMacros(backgroundWorker, _addinSettings.FolderPathCSourceCode);
             backgroundWorker.ReportProgress(100);
         }
         /// <summary>
