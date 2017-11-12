@@ -44,6 +44,7 @@
             this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
+            this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -75,7 +76,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 135F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(970, 431);
@@ -83,6 +84,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtVcSymbolDb);
             this.panel1.Controls.Add(this.txtFolderRoot);
             this.panel1.Controls.Add(this.txtFq);
             this.panel1.Controls.Add(this.txtGuid);
@@ -91,7 +93,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 23);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(964, 94);
+            this.panel1.Size = new System.Drawing.Size(964, 129);
             this.panel1.TabIndex = 1;
             // 
             // txtFolderRoot
@@ -171,10 +173,10 @@
             this.tabControl1.Controls.Add(this.tabPageProvided);
             this.tabControl1.Controls.Add(this.tabPageRequired);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 123);
+            this.tabControl1.Location = new System.Drawing.Point(3, 158);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(964, 269);
+            this.tabControl1.Size = new System.Drawing.Size(964, 234);
             this.tabControl1.TabIndex = 4;
             // 
             // tabPageProvided
@@ -183,7 +185,7 @@
             this.tabPageProvided.Location = new System.Drawing.Point(4, 22);
             this.tabPageProvided.Name = "tabPageProvided";
             this.tabPageProvided.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProvided.Size = new System.Drawing.Size(956, 243);
+            this.tabPageProvided.Size = new System.Drawing.Size(956, 208);
             this.tabPageProvided.TabIndex = 0;
             this.tabPageProvided.Text = "Provided";
             this.tabPageProvided.UseVisualStyleBackColor = true;
@@ -197,7 +199,7 @@
             this.grdProvidedInterfaces.Location = new System.Drawing.Point(3, 3);
             this.grdProvidedInterfaces.MultiSelect = false;
             this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
-            this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 237);
+            this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 202);
             this.grdProvidedInterfaces.TabIndex = 2;
             // 
             // tabPageRequired
@@ -221,6 +223,14 @@
             this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 237);
             this.grdRequiredInterfaces.TabIndex = 0;
+            // 
+            // txtVcSymbolDb
+            // 
+            this.txtVcSymbolDb.Location = new System.Drawing.Point(84, 91);
+            this.txtVcSymbolDb.Name = "txtVcSymbolDb";
+            this.txtVcSymbolDb.ReadOnly = true;
+            this.txtVcSymbolDb.Size = new System.Drawing.Size(859, 20);
+            this.txtVcSymbolDb.TabIndex = 5;
             // 
             // FrmComponentFunctions
             // 
@@ -263,5 +273,6 @@
         private System.Windows.Forms.TabPage tabPageProvided;
         private System.Windows.Forms.TabPage tabPageRequired;
         private System.Windows.Forms.DataGridView grdRequiredInterfaces;
+        private System.Windows.Forms.TextBox txtVcSymbolDb;
     }
 }

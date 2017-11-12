@@ -47,10 +47,7 @@ namespace hoReverse.Services.AutoCpp
                     where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
                     select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, (int)f.EndColumn)).ToList() ;
 
-                var t11 = (from t in allFunctionsImpl
-                    where t.Implementation.ToLower().StartsWith("test_")
-                    select t).ToArray();
-
+                
 
                 //var function1 = db.CodeItems.ToList();
                 //var functions11 = (from f in function1
@@ -107,12 +104,12 @@ namespace hoReverse.Services.AutoCpp
                 // new component
                 if (_frm == null || _frm.IsDisposed)
                 {
-                    _frm = new FrmComponentFunctions(el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm = new FrmComponentFunctions(connectionString, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 else
                 {
-                    _frm.ChangeComponent(el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm.ChangeComponent(connectionString, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 //frm.ShowDialog();
@@ -146,25 +143,18 @@ namespace hoReverse.Services.AutoCpp
                     match = match.NextMatch();
                 }
             }
-            var t1 = (from t in allImplementations
-                where t.Implementation.StartsWith("Amm_StSoptPh3")
-                     select t).ToArray();
+           
 
-            var functions1 = (from f in db.CodeItems
-                where f.Name.StartsWith("Amm_StSoptPh3")
-                select new { f.Name, f.FileId }).ToArray();
-
-
-            // ignore the following function names (begging)
-            string[] ignoreList = new string[] { "Rte_Read", "Rte_Write" };
+            // ignore the following function names (beginning)
+            string[] ignoreList = { "Rte_Read", "Rte_Write"};
 
             // filter only function implementation
             // - not current folder/subfolder (current component, required)
-            // - not ignore of ignore ist
+            // - not to ignore according to ignore list
             var filteredFunctions = (from f in lFunctionCalls
                 join fAll in allImplementations on f.Function equals fAll.Implementation
                 where (!fAll.FilePath.StartsWith(folderNameOfClass)) 
-                      //&& ignoreList.All(l => !f.Function.StartsWith(l))  // handle ignore list
+                      && ignoreList.All(l => !f.Function.StartsWith(l))  // handle ignore list
                 orderby fAll.Implementation
                 select new
                 {
@@ -196,12 +186,6 @@ namespace hoReverse.Services.AutoCpp
                 }
             }
             return filteredImplemtedFunctions.ToDataTable();
-
-
-
-
-
-            return null;
         }
 
         private static DataTable GenProvidedInterface(BROWSEVCDB db, 
@@ -273,7 +257,7 @@ namespace hoReverse.Services.AutoCpp
                 select f.Name).FirstOrDefault();
             if (fileNameOfClass == null)
             {
-                MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
+                MessageBox.Show("Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
                     $"Cant't find source for '{el.Name}', Break!!");
                 return "";
             }
@@ -306,8 +290,7 @@ namespace hoReverse.Services.AutoCpp
 
 
             // get connection string of repository
-            IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out var provider);
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
                 // estimate root path
@@ -344,6 +327,8 @@ namespace hoReverse.Services.AutoCpp
                 _macros.Clear();
                 string fileLast = "";
                 string[] code = new string[] { "" };
+                // capture the following macros
+                // #define <<interface>> <<implementation>>
                 foreach (var m in macros)
                 {
                     if (backgroundWorker != null)
@@ -385,6 +370,6 @@ namespace hoReverse.Services.AutoCpp
         // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
         private static readonly string dataSource =
-            @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.DB";
+            @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.2.DB";
     }
 }

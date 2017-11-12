@@ -2,20 +2,15 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.Core.Common.CommandTrees;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DataModels.VcSymbols;
 using EaServices.Files;
 using EaServices.Functions;
 using EA;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
-using hoReverse.Services.AutoCpp.Analyze;
-using LinqToDB;
-using LinqToDB.SqlQuery;
 using File = System.IO.File;
 using Package = hoUtils.Package.Package;
 
@@ -301,11 +296,31 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             get { return _createdInterfaces; }
         }
 
+        /// <summary>
+        /// Get the connection string of VC Code SQLite database.
+        /// - Get the newest database
+        /// - Access= ReadOnly
+        /// - Returns empty string if can't find database
+        /// </summary>
         public string ConnectionString
         {
             get
             {
-                _connectionString = "Data Source=" + dataSource;
+                string folderSqlite = Path.GetDirectoryName(dataSource);
+                string sortedFiles = new DirectoryInfo(folderSqlite).GetFiles()
+                    .Where(n => n.Name.ToLower()
+                    .EndsWith(".db"))
+                    .OrderByDescending(t => t.LastWriteTime).FirstOrDefault()
+                    ?.FullName;
+                if (sortedFiles == null)
+                {
+                    MessageBox.Show($"Path: {dataSource}\r\nDB: '.BROWSE.VC.*.DB'\r\nUsually in: 'AppData\\Roaming\\Code\\User\\workspaceStorage'\\<hash folder>\\.BROWSE.VC.*.DB",
+                        "Can't find the SQLite VC Code database for symbols, break!!!");
+                    _connectionString = "";
+                    return "";
+                }
+
+                _connectionString = $"Data Source={sortedFiles };Read Only=True;";
                     return _connectionString; }
         }
 

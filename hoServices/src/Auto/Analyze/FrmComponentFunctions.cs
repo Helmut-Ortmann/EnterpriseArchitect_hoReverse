@@ -8,11 +8,12 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private DataTable _dtProvidedInterfaces;
         private DataTable _dtRequiredInterfaces;
         private EA.Element _component;
-        private string _folderRoot;
-        public FrmComponentFunctions(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        private string _folderCodeRoot;
+        private string _vcSymbolDataBase;
+        public FrmComponentFunctions(string vcSymbolDataBase, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitializeComponent();
-            InitComponent(component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
 
         }
 
@@ -29,7 +30,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtComponent.Text = _component.Name;
             txtGuid.Text = _component.ElementGUID;
             txtFq.Text = _component.FQName;
-            txtFolderRoot.Text = _folderRoot;
+            txtFolderRoot.Text = _folderCodeRoot;
+            txtVcSymbolDb.Text = _vcSymbolDataBase;
             grdProvidedInterfaces.DataSource = _dtProvidedInterfaces;
             grdRequiredInterfaces.DataSource = _dtRequiredInterfaces;
             if (grdProvidedInterfaces.ColumnCount > 6)
@@ -73,29 +75,32 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <summary>
         /// Initialize component data for form
         /// </summary>
+        /// <param name="vcSymbolDataBase"></param>
         /// <param name="component"></param>
-        /// <param name="folderRoot"></param>
+        /// <param name="folderCodeRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        private void InitComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        private void InitComponent(string vcSymbolDataBase, EA.Element component, string folderCodeRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             _dtProvidedInterfaces = dtProvidedInterfaces;
             _dtRequiredInterfaces = dtRequiredInterfaces;
             _component = component;
-            _folderRoot = folderRoot;
+            _folderCodeRoot = folderCodeRoot;
+            _vcSymbolDataBase = vcSymbolDataBase;
 
         }
 
         /// <summary>
         /// Change component
         /// </summary>
+        /// <param name="vcSymbolDataBase"></param>
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        public void ChangeComponent(EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        public void ChangeComponent(string vcSymbolDataBase, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            InitComponent(component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
             ShowComponent();
 
         }
