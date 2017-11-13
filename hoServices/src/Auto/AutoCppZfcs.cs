@@ -190,7 +190,14 @@ namespace hoReverse.Services.AutoCpp
             }
             return filteredImplemtedFunctions.ToDataTable();
         }
-
+        /// <summary>
+        /// Generate provided Interface
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="folderNameOfClass"></param>
+        /// <param name="fileNamesOfClassTree"></param>
+        /// <param name="allCompImplementations"></param>
+        /// <returns></returns>
         private static DataTable GenProvidedInterface(BROWSEVCDB db, 
             string folderNameOfClass, 
             IQueryable<string> fileNamesOfClassTree, 
@@ -283,7 +290,7 @@ namespace hoReverse.Services.AutoCpp
         }
 
         /// <summary>
-        /// Inventory paths
+        /// Inventory Macros like '#define AMM_MyFuntion AMM_MyImplementation' 
         /// </summary>
         /// <param name="backgroundWorker">Background worker to update progress or null</param>
         /// <param name="folderPathCSourceCode">The C/C++ root folder</param>
