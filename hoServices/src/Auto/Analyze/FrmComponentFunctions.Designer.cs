@@ -31,6 +31,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.txtFolderRoot = new System.Windows.Forms.TextBox();
             this.txtFq = new System.Windows.Forms.TextBox();
             this.txtGuid = new System.Windows.Forms.TextBox();
@@ -44,7 +45,6 @@
             this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
-            this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -95,6 +95,14 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(964, 129);
             this.panel1.TabIndex = 1;
+            // 
+            // txtVcSymbolDb
+            // 
+            this.txtVcSymbolDb.Location = new System.Drawing.Point(84, 91);
+            this.txtVcSymbolDb.Name = "txtVcSymbolDb";
+            this.txtVcSymbolDb.ReadOnly = true;
+            this.txtVcSymbolDb.Size = new System.Drawing.Size(859, 20);
+            this.txtVcSymbolDb.TabIndex = 5;
             // 
             // txtFolderRoot
             // 
@@ -208,7 +216,7 @@
             this.tabPageRequired.Location = new System.Drawing.Point(4, 22);
             this.tabPageRequired.Name = "tabPageRequired";
             this.tabPageRequired.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageRequired.Size = new System.Drawing.Size(956, 243);
+            this.tabPageRequired.Size = new System.Drawing.Size(956, 208);
             this.tabPageRequired.TabIndex = 1;
             this.tabPageRequired.Text = "Required";
             this.tabPageRequired.UseVisualStyleBackColor = true;
@@ -221,16 +229,8 @@
             this.grdRequiredInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdRequiredInterfaces.Location = new System.Drawing.Point(3, 3);
             this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
-            this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 237);
+            this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 202);
             this.grdRequiredInterfaces.TabIndex = 0;
-            // 
-            // txtVcSymbolDb
-            // 
-            this.txtVcSymbolDb.Location = new System.Drawing.Point(84, 91);
-            this.txtVcSymbolDb.Name = "txtVcSymbolDb";
-            this.txtVcSymbolDb.ReadOnly = true;
-            this.txtVcSymbolDb.Size = new System.Drawing.Size(859, 20);
-            this.txtVcSymbolDb.TabIndex = 5;
             // 
             // FrmComponentFunctions
             // 

@@ -635,6 +635,8 @@ namespace hoReverse.Reverse
             this._btnFeatureDown = new System.Windows.Forms.Button();
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -734,8 +736,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1389,6 +1389,32 @@ namespace hoReverse.Reverse
             this._btnCopy.UseVisualStyleBackColor = true;
             this._btnCopy.Click += new System.EventHandler(this._btnCopy_Click);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(0, 21);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(134, 4);
+            this.progressBar1.TabIndex = 57;
+            this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
+            this.progressBar1.Visible = false;
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1826,6 +1852,7 @@ namespace hoReverse.Reverse
             this._autoToolStripMenuItem.Size = new System.Drawing.Size(32, 20);
             this._autoToolStripMenuItem.Text = "ZF";
             this._autoToolStripMenuItem.ToolTipText = "Tools für ZF\r\n- Ports (Runnable, Service)";
+            this._autoToolStripMenuItem.Click += new System.EventHandler(this._autoToolStripMenuItem_Click);
             // 
             // modulesToolStripMenuItem
             // 
@@ -1857,6 +1884,7 @@ namespace hoReverse.Reverse
             this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
             this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
+            this.makeRunnableToolStripMenuItem.Visible = false;
             this.makeRunnableToolStripMenuItem.Click += new System.EventHandler(this.makeRunnableToolStripMenuItem_Click);
             // 
             // makeServicePortToolStripMenuItem
@@ -1864,6 +1892,7 @@ namespace hoReverse.Reverse
             this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
             this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
+            this.makeServicePortToolStripMenuItem.Visible = false;
             this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
             // 
             // makeCalloutToolStripMenuItem
@@ -1871,6 +1900,7 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
             this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
+            this.makeCalloutToolStripMenuItem.Visible = false;
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
             // 
             // toolStripSeparator12
@@ -2253,32 +2283,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(0, 21);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(134, 4);
-            this.progressBar1.TabIndex = 57;
-            this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
-            this.progressBar1.Visible = false;
-            // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
             // 
             // HoReverseGui
             // 
@@ -3767,7 +3771,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                     EA.Element element = (EA.Element) obj;
                     if (element.Type == "Component" || element.Type == "Class")
                     {
-                        _autoCpp.ShowExternalFunctions(element,_addinSettings.FolderPathCSourceCode);
+                        _autoCpp.ShowInterfacesOfElement(element,_addinSettings.FolderPathCSourceCode);
                     }
                 }
                 Cursor.Current = Cursors.Default;
@@ -3824,6 +3828,11 @@ Please restart EA. During restart hoTools loads the default settings.",
             progressBar1.Value = e.ProgressPercentage;
             // Set the text.
             this.Text = e.ProgressPercentage.ToString();
+        }
+
+        private void _autoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

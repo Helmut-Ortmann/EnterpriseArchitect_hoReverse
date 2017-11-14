@@ -42,9 +42,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 // set columns headings
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
                 grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";
-                grdProvidedInterfaces.Columns[2].HeaderText = "File implementation";
+                grdProvidedInterfaces.Columns[2].HeaderText = "File Declaration";
                 grdProvidedInterfaces.Columns[3].HeaderText = "File callee";
-                grdProvidedInterfaces.Columns[4].HeaderText = "Path implementation";
+                grdProvidedInterfaces.Columns[4].HeaderText = "Path Declaration";
                 grdProvidedInterfaces.Columns[5].HeaderText = "Path callee";
                 grdProvidedInterfaces.Columns[6].HeaderText = "IsCalled";
 

@@ -19,14 +19,18 @@ namespace hoReverse.Services.AutoCpp
     public partial class AutoCpp
     {
         /// <summary>
-        /// Show all external functions for this Component/Class
-        /// - Provided
+        /// Show all interfaces (provided/required) for this Component/Class
+        /// - Provided (declaration on in header file
+        /// -- Defined functions which start with Component-Name
+        /// -- Defined functions per macro (#define NAME_functionname implName)
         /// - Required
+        /// -- Called functions defined outside the component
+        /// -- Takes macros in account
         /// </summary>
         /// <param name="el"></param>
         /// <param name="folderPathCSourceCode">Root folder patch of C/C++ source code</param>
         /// <returns></returns>
-        public bool ShowExternalFunctions(EA.Element el, string folderPathCSourceCode)
+        public bool ShowInterfacesOfElement(EA.Element el, string folderPathCSourceCode)
         {
             // get connection string of repository
             // the provider to connect to database like Access, ..
@@ -76,11 +80,11 @@ namespace hoReverse.Services.AutoCpp
                            allFunctionsImpl.All(f => m.Key != f.Implementation)
                      select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
-                //var function1 = db.CodeItems.ToList();
-                //var functions11 = (from f in function1
-                //    join m in _macros on f.Name equals m.Key
-                //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
-                //    select f.Name).ToList().ToDataTable();
+
+                // get all implementations (C_Functions) 
+                // - Macro with Implementation 
+                // - Implementation without Macro
+                // - Macro without implementation
                 IEnumerable<ImplFunctionItem> allImplementations = (
                         // Implemented Interfaces (Macro with Interface and implementation with different name)
                         from m in _macros
@@ -99,8 +103,8 @@ namespace hoReverse.Services.AutoCpp
 
                 //-----------------------------------------
 
-                DataTable dtProvidedInterface = GenProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
-                DataTable dtRequiredInterface = GenRequiredInterface(db, folderNameOfClass, fileNamesOfClassTree, allImplementations);
+                DataTable dtProvidedInterface = ShowProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
+                DataTable dtRequiredInterface = ShowRequiredInterface(db, folderNameOfClass, fileNamesOfClassTree, allImplementations);
 
 
 
@@ -129,7 +133,7 @@ namespace hoReverse.Services.AutoCpp
         /// <param name="filesPathOfClassTree"></param>
         /// <param name="allImplementations"></param>
         /// <returns></returns>
-        private static DataTable GenRequiredInterface(BROWSEVCDB db,
+        private static DataTable ShowRequiredInterface(BROWSEVCDB db,
             string folderNameOfClass,
             IQueryable<string> filesPathOfClassTree,
             IEnumerable<ImplFunctionItem> allImplementations)
@@ -181,7 +185,7 @@ namespace hoReverse.Services.AutoCpp
                 //codeLines[f.Line - 1].Dump();
                 if (f.LineEnd > 0 && f.ColumnEnd > 0)
                 {
-                    if (codeLines[f.LineEnd - 1].Substring((int) f.ColumnEnd - 1, 1) != ";")
+                    if (codeLines[f.LineEnd - 1].Substring( f.ColumnEnd - 1, 1) != ";")
                     {
                         filteredImplemtedFunctions.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation,
                             f.FilePathCallee));
@@ -198,7 +202,7 @@ namespace hoReverse.Services.AutoCpp
         /// <param name="fileNamesOfClassTree"></param>
         /// <param name="allCompImplementations"></param>
         /// <returns></returns>
-        private static DataTable GenProvidedInterface(BROWSEVCDB db, 
+        private static DataTable ShowProvidedInterface(BROWSEVCDB db, 
             string folderNameOfClass, 
             IQueryable<string> fileNamesOfClassTree, 
             IEnumerable<ImplFunctionItem> allCompImplementations)

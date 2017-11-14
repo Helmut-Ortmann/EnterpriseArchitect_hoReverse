@@ -2,6 +2,7 @@
 using System.IO;
 
 // ReSharper disable once CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp
 {
     public class CallFunctionItem

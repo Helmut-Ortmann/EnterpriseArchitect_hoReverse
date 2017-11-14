@@ -115,9 +115,16 @@
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.Designer.cs">
       <DependentUpon>FrmComponentFunctions.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Auto\Analyze\FrmFunctions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Auto\Analyze\FrmFunctions.Designer.cs">
+      <DependentUpon>FrmFunctions.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Auto\AutoCpp.cs" />
-    <Compile Include="src\Auto\AutoCppZfcs.cs" />
+    <Compile Include="src\Auto\AutoCppZfInterface.cs" />
     <Compile Include="src\Auto\CallFunctiontem.cs" />
+    <Compile Include="src\Auto\AutoCppZfFunctions.cs" />
     <Compile Include="src\Auto\ImplFunctionItem.cs" />
     <Compile Include="src\Files\FileItem.cs" />
     <Compile Include="src\Files\Files.cs" />
@@ -186,6 +193,9 @@
   <ItemGroup>
     <EmbeddedResource Include="src\Auto\Analyze\FrmComponentFunctions.resx">
       <DependentUpon>FrmComponentFunctions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Auto\Analyze\FrmFunctions.resx">
+      <DependentUpon>FrmFunctions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\dlgUser.resx">
       <DependentUpon>dlgUser.cs</DependentUpon>
