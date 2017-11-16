@@ -153,7 +153,13 @@ namespace hoReverse.Services.AutoCpp
            
 
             // ignore the following function names (beginning)
-            string[] ignoreList = { "Rte_Read", "Rte_Write"};
+            string[] ignoreList =
+            {
+                "Rte_Read", "Rte_Write","Rte_Invalidate",
+                "L2A_Rte_Read", "L2A_Rte_Write","L2A_Rte_Invalidate",
+                "L2C_Rte_Read", "L2C_Rte_Write","L2C_Rte_Invalidate"
+
+            };
 
             // filter only function implementation
             // - not current folder/subfolder (current component, required)
