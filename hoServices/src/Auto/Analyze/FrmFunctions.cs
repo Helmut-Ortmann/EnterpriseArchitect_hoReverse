@@ -4,11 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EaServices.src.Auto.Analyze
+namespace hoReverse.Services.AutoCpp.Analyze
 {
     public partial class FrmFunctions : Form
     {
@@ -17,14 +18,35 @@ namespace EaServices.src.Auto.Analyze
         private string _folderRoot;
         private DataTable _dtFunctions;
 
+        readonly BindingSource _bsFunctions = new BindingSource();
+
+
         public FrmFunctions()
         {
             InitializeComponent();
         }
 
-        private void ShowFolder() { 
-        
-             
+        private void ShowFolder()
+        {
+
+            dataGridView1.DataSource = _bsFunctions;
+            txtSourceFolder.Text = _folderRoot;
+            dataGridView1.Columns[0].Width = 300;
+            dataGridView1.Columns[1].Width = 300;
+            dataGridView1.Columns[2].Width = 200;
+            dataGridView1.Columns[3].Visible = false;
+            dataGridView1.Columns[4].Width = 300;
+            dataGridView1.Columns[5].Visible = false;
+            dataGridView1.Columns[6].Visible = false;
+            dataGridView1.Columns[7].Width = 70;
+            dataGridView1.Columns[8].Visible = false;
+            dataGridView1.Columns[9].Visible = false;
+            dataGridView1.Columns[10].Visible = false;
+            dataGridView1.Columns[11].Visible = false;
+
+            //dataGridView1.Columns[6].Visible = false;
+            //dataGridView1.Columns[7].Visible = false;
+
         }
 
         private void InitFunctions(string vcSymbolDataBase, string folderRoot, DataTable dtFunctions)
@@ -32,6 +54,7 @@ namespace EaServices.src.Auto.Analyze
             _vcSymbolDataBase = vcSymbolDataBase;
             _folderRoot = folderRoot;
             _dtFunctions = dtFunctions;
+            _bsFunctions.DataSource = dtFunctions;  // Bind table to binding context
 
 
         }
@@ -49,9 +72,59 @@ namespace EaServices.src.Auto.Analyze
 
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        /// <summary>
+        /// Aggregates the filter list an aggregated filter or to null (no filter)
+        /// </summary>
+        /// <param name="lFilters"></param>
+        /// <returns></returns>
+        private static string AggregateFilter(List<string> lFilters)
         {
 
+            string delimiter = "";
+            string filters = "";
+            foreach (var filter in lFilters)
+            {
+                filters = $@"{filters} {delimiter} {filter}";
+                delimiter = " And ";
+            }
+            if (delimiter == "") return null;
+            return filters;
+        }
+        /// <summary>
+        /// Filter the form
+        /// </summary>
+        private void FilterGrid(bool startAtBeginning = false)
+        {
+            string firstWildCard = "";
+            if (startAtBeginning) firstWildCard = "%";
+            // Filters to later aggregate to string
+            List<string> lFilters = new List<string>();
+
+           
+            //----------------------------------
+            // Handle Event Name
+            if (txtFilterFunction.Text.Trim() != "" )
+            {
+                lFilters.Add($"Interface LIKE '{firstWildCard}{txtFilterFunction.Text}%'");
+            }
+
+            // Handle Module Name (fileName)
+            if (chkOnlyMacros.Checked)
+            {
+                lFilters.Add($"Macro LIKE '{firstWildCard}true%'");
+            }
+
+            string filter = AggregateFilter(lFilters);
+            _bsFunctions.Filter = filter;
+        }
+
+        private void txtFilterFunction_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                FilterGrid();
+                e.Handled = true;
+            }
         }
     }
 }

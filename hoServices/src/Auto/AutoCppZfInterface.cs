@@ -49,6 +49,7 @@ namespace hoReverse.Services.AutoCpp
                     select f.Name;
 
                 // Get all functions of implementation
+                // store it to list to avoid SQL with something not possible via SQL
                 var allFunctionsImpl = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
                     where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
@@ -56,11 +57,6 @@ namespace hoReverse.Services.AutoCpp
 
                 
 
-                //var function1 = db.CodeItems.ToList();
-                //var functions11 = (from f in function1
-                //    join m in _macros on f.Name equals m.Key
-                //    where f.Name.ToLower().StartsWith(el.Name.ToLower())
-                //    select f.Name).ToList().ToDataTable();
                 IEnumerable < ImplFunctionItem > allCompImplementations = (
                         // Implemented Interfaces (Macro with Interface and implementation with different name)
                         from m in _macros
@@ -157,6 +153,7 @@ namespace hoReverse.Services.AutoCpp
             {
                 "Rte_Read", "Rte_Write","Rte_Invalidate",
                 "L2A_Rte_Read", "L2A_Rte_Write","L2A_Rte_Invalidate",
+                "L2B_Rte_Read", "L2B_Rte_Write","L2B_Rte_Invalidate",
                 "L2C_Rte_Read", "L2C_Rte_Write","L2C_Rte_Invalidate"
 
             };

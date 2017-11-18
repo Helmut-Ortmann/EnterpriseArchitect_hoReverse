@@ -223,6 +223,7 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator12;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private ProgressBar progressBar1;
+        private ToolStripMenuItem showFunctionsToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -696,6 +697,7 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.showExternalComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1847,12 +1849,12 @@ namespace hoReverse.Reverse
             this.makeServicePortToolStripMenuItem,
             this.makeCalloutToolStripMenuItem,
             this.toolStripSeparator12,
-            this.showExternalComponentFunctionsToolStripMenuItem});
+            this.showExternalComponentFunctionsToolStripMenuItem,
+            this.showFunctionsToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
             this._autoToolStripMenuItem.Size = new System.Drawing.Size(32, 20);
             this._autoToolStripMenuItem.Text = "ZF";
             this._autoToolStripMenuItem.ToolTipText = "Tools für ZF\r\n- Ports (Runnable, Service)";
-            this._autoToolStripMenuItem.Click += new System.EventHandler(this._autoToolStripMenuItem_Click);
             // 
             // modulesToolStripMenuItem
             // 
@@ -1914,6 +1916,13 @@ namespace hoReverse.Reverse
             this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.showExternalComponentFunctionsToolStripMenuItem.Text = "ShowPublicComponentFunctions";
             this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
+            // 
+            // showFunctionsToolStripMenuItem
+            // 
+            this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
+            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showFunctionsToolStripMenuItem.Text = "ShowFunctions";
+            this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showFunctionsToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
             // 
@@ -3830,9 +3839,27 @@ Please restart EA. During restart hoTools loads the default settings.",
             this.Text = e.ProgressPercentage.ToString();
         }
 
-        private void _autoToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Show functions of Source code
+        /// - Functions
+        /// - Macros which refer to functions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_autoCppIsRunning)
+            {
+                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
 
+            }
+            else
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Object obj;
+                _autoCpp.ShowFunctions(_addinSettings.FolderPathCSourceCode);
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }

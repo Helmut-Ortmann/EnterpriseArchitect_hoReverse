@@ -16,9 +16,13 @@ namespace hoReverse.Services.AutoCpp
             get { return Path.GetFileName(FilePathCallee); }
 
         }
+
         public string FilePath { get; set; }
         public string FilePathCallee { get; set; }
         public bool IsCalled { get; set; }
+        // true = is defined by macro
+        // false = isn't defined by macro
+        public bool Macro { get; set; }
         public int LineStart { get; set; }
         public int LineEnd { get; set; }
         public int ColumnStart { get; set; }
@@ -51,6 +55,20 @@ namespace hoReverse.Services.AutoCpp
             LineEnd = lineEnd;
             ColumnStart = columnStart;
             ColumnEnd = columnEnd;
+
+        }
+        public ImplFunctionItem(string @interface, string implementation, string filePath, int lineStart, int columnStart, int lineEnd, int columnEnd, bool macro)
+        {
+            Interface = @interface;
+            Implementation = implementation;
+            FilePath = filePath;
+            IsCalled = false;
+            FilePathCallee = "";
+            LineStart = lineStart;
+            LineEnd = lineEnd;
+            ColumnStart = columnStart;
+            ColumnEnd = columnEnd;
+            Macro = macro;
 
         }
 
