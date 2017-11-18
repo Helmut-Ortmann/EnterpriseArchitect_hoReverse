@@ -120,4 +120,38 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>132, 17</value>
+  </metadata>
+  <data name="txtFilterFile.ToolTip" xml:space="preserve">
+    <value>Filter File-Name, non case sensitive. 
+
+You can use Wildcards at the string end and beginning.
+
+All filteres are added with an 'AND' expression.
+
+Example:
+'ADC_' filters alls trings which begins with 'ADC_'
+</value>
+  </data>
+  <data name="txtFilterImplementation.ToolTip" xml:space="preserve">
+    <value>Filter Implementation, C-Function-Name, non case sensitive. 
+
+You can use Wildcards at the string end and beginning.
+
+All filteres are added with an 'AND' expression.
+
+Example:
+'ADC_' filters alls trings which begins with 'ADC_'</value>
+  </data>
+  <data name="txtFilterFunction.ToolTip" xml:space="preserve">
+    <value>Filter Interface, C-Function Name or Macro-Name, non case sensitive. 
+
+You can use Wildcards at the string end and beginning.
+
+All filteres are added with an 'AND' expression.
+
+Example:
+'ADC_' filters alls trings which begins with 'ADC_'</value>
+  </data>
 </root>

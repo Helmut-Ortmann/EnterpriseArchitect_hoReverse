@@ -32,7 +32,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             dataGridView1.DataSource = _bsFunctions;
             txtSourceFolder.Text = _folderRoot;
             dataGridView1.Columns[0].Width = 300;
-            dataGridView1.Columns[1].Width = 300;
+            dataGridView1.Columns[1].Width = 250;
             dataGridView1.Columns[2].Width = 200;
             dataGridView1.Columns[3].Visible = false;
             dataGridView1.Columns[4].Width = 300;
@@ -43,6 +43,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             dataGridView1.Columns[9].Visible = false;
             dataGridView1.Columns[10].Visible = false;
             dataGridView1.Columns[11].Visible = false;
+            chkOnlyImplementations.Checked = true;
 
             //dataGridView1.Columns[6].Visible = false;
             //dataGridView1.Columns[7].Visible = false;
@@ -102,16 +103,31 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
            
             //----------------------------------
-            // Handle Event Name
+            // Handle FunctionName
             if (txtFilterFunction.Text.Trim() != "" )
             {
                 lFilters.Add($"Interface LIKE '{firstWildCard}{txtFilterFunction.Text}%'");
             }
+            // Handle ImplementationName
+            if (txtFilterImplementation.Text.Trim() != "")
+            {
+                lFilters.Add($"Implementation LIKE '{firstWildCard}{txtFilterImplementation.Text}%'");
+            }
+            // Handle File name
+            if (txtFilterFile.Text.Trim() != "")
+            {
+                lFilters.Add($"FileName LIKE '{firstWildCard}{txtFilterFile.Text}%'");
+            }
 
-            // Handle Module Name (fileName)
+            // Handle Macro checked
             if (chkOnlyMacros.Checked)
             {
-                lFilters.Add($"Macro LIKE '{firstWildCard}true%'");
+                lFilters.Add($"Macro = true");
+            }
+            // Handle Implemented by C-Function
+            if (chkOnlyMacros.Checked)
+            {
+                lFilters.Add($"FileName LIKE '%.C'");
             }
 
             string filter = AggregateFilter(lFilters);
@@ -125,6 +141,12 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 FilterGrid();
                 e.Handled = true;
             }
+        }
+
+        private void chkOnlyMacros_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterGrid();
+
         }
     }
 }

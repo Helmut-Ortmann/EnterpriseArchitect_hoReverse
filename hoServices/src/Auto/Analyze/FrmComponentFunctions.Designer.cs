@@ -207,6 +207,7 @@
             this.grdProvidedInterfaces.Location = new System.Drawing.Point(3, 3);
             this.grdProvidedInterfaces.MultiSelect = false;
             this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
+            this.grdProvidedInterfaces.RowHeadersVisible = false;
             this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 202);
             this.grdProvidedInterfaces.TabIndex = 2;
             // 

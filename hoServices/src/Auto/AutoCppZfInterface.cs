@@ -331,7 +331,8 @@ namespace hoReverse.Services.AutoCpp
                 // Estimates macros which concerns functions
                 var macros = (from m in db.CodeItems
                     join file in db.Files on m.FileId equals file.Id
-                    where m.Kind == 33 && file.Name.Contains(pathRoot) && (file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
+                    where m.Kind == 33 && file.Name.Contains(pathRoot) && ( file.LeafName.EndsWith(".h") || file.LeafName.EndsWith(".hpp"))
+                          &&  ! ( m.Name.StartsWith("_") || m.Name.EndsWith("_H") || m.Name.Contains("_SEC_" ) )
                     orderby file.Name
                     select new { MacroName = m.Name, FilePath = file.Name, FileName = file.LeafName, m.StartLine, m.StartColumn, m.EndLine, m.EndColumn }).Distinct();
 
