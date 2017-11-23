@@ -21,28 +21,30 @@
     Name="FindAndReplace.dll" Source="$(var.FindAndReplace.TargetPath)" />
   4. A component for every file
   
+
+  
   -->
   
  
   <Fragment>
     <ComponentGroup Id="ProductComponents"
-                    Directory="APPLICATIONFOLDER">
-      <Component Id="LicenceRTF" Guid="*">
+                    Directory="ProgramFilesFolder">
+      <Component Id="LicenceRTF" Guid="{46FBFC37-700A-4211-976E-6C46CDDB9CAC}">
         <File Id="LicenseFile" Name="license.rtf" Source="license.rtf"  KeyPath="yes" />
       </Component>
-      <Component Id="hoReverseGui.dll.config" Guid="*">
+      <Component Id="hoReverseGui.dll.config" Guid="{C6DEC4D3-5338-495E-9AF5-974FF40299D9}">
         <File Id="hoReverseGui.dll.config" Name="hoReverseGui.dll.config" Source="..\hoReverseRoot\hoReverseGui.dll.config" KeyPath="yes" />
       </Component>
-      <Component Id="hoUtils" Guid="*">
+      <Component Id="hoUtils" Guid="{61791FFB-B487-4C38-BF7B-2081CA4570C7}">
         <File Id="hoUtils" Name="hoUtils.dll" Source="$(var.hoUtil.TargetPath)" KeyPath="yes" />
       </Component>
-      <Component Id="hoServices.dll" Guid="*">
+      <Component Id="hoServices.dll" Guid="{8583A70A-4B5F-4117-9310-5A8882D5BA33}">
         <File Id="hoServices.dll" Name="hoServices.dll" Source="$(var.hoServices.TargetPath)" KeyPath="yes" />
       </Component>
-      <Component Id="hoLinqToSql.dll" Guid="*">
+      <Component Id="hoLinqToSql.dll" Guid="{F9B4E660-E56E-45D3-A7B7-E4903216EBCB}">
         <File Id="hoLinqToSql.dll" Name="hoLinqToSql.dll" Source="$(var.hoLinqToSql.TargetPath)" KeyPath="yes" />
       </Component>
-      <Component Id="RegisterEA" Guid="*">
+      <Component Id="RegisterEA" Guid="{048B4FD1-C227-4418-B188-3EFDD0674CB9}">
         <RegistryKey Root="HKCU" Key="Software\Sparx Systems\EAAddins\hoReverse">
           <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
         </RegistryKey>
@@ -51,7 +53,7 @@
       Name="hoReverseRoot.dll" Source="$(var.hoReverseRoot.TargetPath)" />
       Update if Assembly, Visual Studio Version changed
       -->
-      <Component Id="hoReverseRoot.dll" Guid="*">
+      <Component Id="hoReverseRoot.dll" Guid="{BDC229B3-DE8B-433C-82F5-BF1FAFEB6C3D}">
         <Class Id="{0FFD0915-021D-3717-A97F-FD690DAA47F2}" Context="InprocServer32" Description="hoReverse.hoReverseRoot" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="hoReverse.hoReverseRoot" Description="hoReverse.hoReverseRoot" />
         </Class>
@@ -82,7 +84,7 @@
       Name="hoReverseGui.dll" Source="$(var.hoReverseGui.TargetPath)" />
       Update if Assembly, Visual Studio Version changed
       -->
-      <Component Id="hoReverseGui.dll" Guid="*">
+      <Component Id="hoReverseGui.dll" Guid="{5E12F7E2-2718-46FF-95B5-40A77B027CB9}">
         <Class Id="{32C75582-1A09-379B-A4C1-A18118747210}" Context="InprocServer32" Description="hoReverse.Settings.AddinSettings" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="hoReverse.Settings.AddinSettings" Description="hoReverse.Settings.AddinSettings" />
         </Class>
@@ -137,7 +139,7 @@
       Name="hoHistoryGui.dll" Source="$(var.hoHistoryGui.TargetPath)" />
       Update if Assembly, Visual Studio Version changed
       -->
-      <Component Id="hoHistoryGui.dll" Guid="*">
+      <Component Id="hoHistoryGui.dll" Guid="{183FAF61-979A-447E-B175-DB2A988A3682}">
         <Class Id="{30956223-B7F6-3A65-910E-5D049E9681A3}" Context="InprocServer32" Description="hoReverse.DataBinding.ImagePathConverter" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="hoReverse.DataBinding.ImagePathConverter" Description="hoReverse.DataBinding.ImagePathConverter" />
         </Class>
@@ -209,10 +211,10 @@
         <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\System.Data.SQLite.Core.1.0.106.0\lib\net451\System.Data.SQLite.dll" />
       </Component>
       <!-- Settings.json                                            -->
-      <Component Id="UserSearches.json" Guid="*">
+      <Component Id="UserSearches.json" Guid="{1FD90E6F-33A0-4E68-8E9E-FA919554D3D6}">
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />
       </Component>
-      <Component Id="Newtonsoft.Json" Guid="*">
+      <Component Id="Newtonsoft.Json" Guid="{8062C079-8ED3-427F-B0AA-6A7BBC159B62}">
         <File Id="Newtonsoft.Json" KeyPath="yes" Name="Newtonsoft.Json.dll"  Source="..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll" />
       </Component>
        <!-- Delete all files, in theory WIX/Installer should do this by their one, but it doesn't work 

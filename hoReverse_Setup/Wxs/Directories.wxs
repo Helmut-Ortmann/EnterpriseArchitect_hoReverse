@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
       <Directory Id="TARGETDIR" Name="SourceDir">
-        <Directory Id="ProgramFilesFolder">
+        <Directory Id="ProgramFilesFolder"> <!--LocalAppDataFolder ProgramFilesFolder-->
             <Directory Id="APPLICATIONFOLDER" Name="hoReverse"  >
             </Directory>
         </Directory>
@@ -17,7 +17,8 @@
          -->
       </Directory>
     <Property Id="ApplicationFolderName" Value="hoReverse" />
-    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />    
+    <Property Id="WixAppFolder" Value="WixPerUserFolder"  />
+	  <!--<SetProperty Id="ProgramFilesFolder" Value="[LocalAppDataFolder]" Before="CostFinalize"><![CDATA[NOT Privileged]]></SetProperty>-->
 	</Fragment>
   
   

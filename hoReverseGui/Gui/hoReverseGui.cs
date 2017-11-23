@@ -1852,14 +1852,15 @@ namespace hoReverse.Reverse
             this.showExternalComponentFunctionsToolStripMenuItem,
             this.showFunctionsToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
-            this._autoToolStripMenuItem.Size = new System.Drawing.Size(32, 20);
-            this._autoToolStripMenuItem.Text = "ZF";
-            this._autoToolStripMenuItem.ToolTipText = "Tools für ZF\r\n- Ports (Runnable, Service)";
+            this._autoToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this._autoToolStripMenuItem.Text = "C-DB";
+            this._autoToolStripMenuItem.ToolTipText = "Tools to use the C/C++ Database supported by Microsoft VS Code.\r\n- Provided and r" +
+    "equired Interfaces\r\n- Functions and Macros";
             // 
             // modulesToolStripMenuItem
             // 
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
-            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
             this.modulesToolStripMenuItem.Visible = false;
             this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
@@ -1867,7 +1868,7 @@ namespace hoReverse.Reverse
             // inventoryToolStripMenuItem
             // 
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
-            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Visible = false;
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
@@ -1875,7 +1876,7 @@ namespace hoReverse.Reverse
             // _getToolStripMenuItem
             // 
             this._getToolStripMenuItem.Name = "_getToolStripMenuItem";
-            this._getToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this._getToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this._getToolStripMenuItem.Text = "GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
             this._getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
@@ -1883,7 +1884,7 @@ namespace hoReverse.Reverse
             // makeRunnableToolStripMenuItem
             // 
             this.makeRunnableToolStripMenuItem.Name = "makeRunnableToolStripMenuItem";
-            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
             this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
             this.makeRunnableToolStripMenuItem.Visible = false;
@@ -1892,7 +1893,7 @@ namespace hoReverse.Reverse
             // makeServicePortToolStripMenuItem
             // 
             this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
-            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
             this.makeServicePortToolStripMenuItem.Visible = false;
             this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
@@ -1900,7 +1901,7 @@ namespace hoReverse.Reverse
             // makeCalloutToolStripMenuItem
             // 
             this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
-            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Visible = false;
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
@@ -1908,20 +1909,24 @@ namespace hoReverse.Reverse
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(258, 6);
             // 
             // showExternalComponentFunctionsToolStripMenuItem
             // 
             this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
-            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showExternalComponentFunctionsToolStripMenuItem.Text = "ShowPublicComponentFunctions";
+            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show provided / required functions";
+            this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = "Show the provided and required functions for each EA Component.\r\n\r\nSelect Compone" +
+    "nt. The function requires an implementation to work (*.c or *.cpp)";
             this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
             // 
             // showFunctionsToolStripMenuItem
             // 
             this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
-            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showFunctionsToolStripMenuItem.Text = "ShowFunctions";
+            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.showFunctionsToolStripMenuItem.Text = "Show Functions";
+            this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
+    "+ Code with up to date VC Code symbol database";
             this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showFunctionsToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem

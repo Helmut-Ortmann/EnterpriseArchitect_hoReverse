@@ -309,7 +309,8 @@ namespace hoReverse.Services.AutoCpp
 
             // get connection string of repository
             _folderPathCSourceCode = folderPathCSourceCode;
-            string connectionString = LinqUtil.GetConnectionString(_folderPathCSourceCode, out var provider);
+            string connectionString = LinqUtil.GetConnectionString(_folderPathCSourceCode, out var provider, withErrorMessage:true);
+            if (connectionString == "") return false;
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
                 // estimate root path

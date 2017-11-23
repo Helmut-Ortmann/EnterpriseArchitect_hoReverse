@@ -87,14 +87,19 @@
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     -->
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
-    <UIRef Id="WixUI_Advanced" />
+    <UIRef Id="WixUI_MySetup" /> <!--WixUI_Advanced WixUI_MySetup -->
+    
     <UIRef Id="WixUI_ErrorProgressText" />
-
     
 
-    <MajorUpgrade Schedule="afterInstallInitialize"
-                DowngradeErrorMessage="A later version of hoReverse is already installed"
-                AllowSameVersionUpgrades="yes" />
+
+
+
+
+      <MajorUpgrade Schedule="afterInstallInitialize"
+                  DowngradeErrorMessage="A later version of hoReverse is already installed"
+                  AllowSameVersionUpgrades="yes" />
+
 
   </Product>
 

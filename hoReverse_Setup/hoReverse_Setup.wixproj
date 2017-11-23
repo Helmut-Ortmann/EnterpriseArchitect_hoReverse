@@ -38,6 +38,7 @@
     <Compile Include="Wxs\Directories.wxs" />
     <Compile Include="Wxs\Files.wxs" />
     <Compile Include="Wxs\Product.wxs" />
+    <Compile Include="Wxs\WixUI_Advanced.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.rtf" />

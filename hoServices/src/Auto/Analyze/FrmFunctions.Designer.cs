@@ -34,14 +34,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chkOnlyImplementations = new System.Windows.Forms.CheckBox();
             this.chkOnlyMacros = new System.Windows.Forms.CheckBox();
+            this.txtFilterFile = new System.Windows.Forms.TextBox();
+            this.txtFilterImplementation = new System.Windows.Forms.TextBox();
             this.txtFilterFunction = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSourceFolder = new System.Windows.Forms.TextBox();
-            this.txtFilterImplementation = new System.Windows.Forms.TextBox();
-            this.txtFilterFile = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.chkOnlyImplementations = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -71,6 +71,8 @@
             this.menuStrip1.Size = new System.Drawing.Size(929, 20);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.toolTip1.SetToolTip(this.menuStrip1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
+        "pp\r\n- Macros from *.h or *.hpp");
             // 
             // dataGridView1
             // 
@@ -86,6 +88,8 @@
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(923, 587);
             this.dataGridView1.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.dataGridView1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
+        "pp\r\n- Macros from *.h or *.hpp");
             // 
             // panel1
             // 
@@ -101,6 +105,20 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(923, 74);
             this.panel1.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.panel1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
+        "pp\r\n- Macros from *.h or *.hpp");
+            // 
+            // chkOnlyImplementations
+            // 
+            this.chkOnlyImplementations.AutoSize = true;
+            this.chkOnlyImplementations.Location = new System.Drawing.Point(705, 49);
+            this.chkOnlyImplementations.Name = "chkOnlyImplementations";
+            this.chkOnlyImplementations.Size = new System.Drawing.Size(143, 17);
+            this.chkOnlyImplementations.TabIndex = 3;
+            this.chkOnlyImplementations.Text = "Implented  by C-Function";
+            this.toolTip1.SetToolTip(this.chkOnlyImplementations, "If checked only Implementations are shown");
+            this.chkOnlyImplementations.UseVisualStyleBackColor = true;
+            this.chkOnlyImplementations.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
             // 
             // chkOnlyMacros
             // 
@@ -113,6 +131,24 @@
             this.toolTip1.SetToolTip(this.chkOnlyMacros, "If checked only Macros are shown");
             this.chkOnlyMacros.UseVisualStyleBackColor = true;
             this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            // 
+            // txtFilterFile
+            // 
+            this.txtFilterFile.Location = new System.Drawing.Point(557, 49);
+            this.txtFilterFile.Name = "txtFilterFile";
+            this.txtFilterFile.Size = new System.Drawing.Size(129, 20);
+            this.txtFilterFile.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.txtFilterFile, resources.GetString("txtFilterFile.ToolTip"));
+            this.txtFilterFile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
+            // 
+            // txtFilterImplementation
+            // 
+            this.txtFilterImplementation.Location = new System.Drawing.Point(321, 51);
+            this.txtFilterImplementation.Name = "txtFilterImplementation";
+            this.txtFilterImplementation.Size = new System.Drawing.Size(129, 20);
+            this.txtFilterImplementation.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.txtFilterImplementation, resources.GetString("txtFilterImplementation.ToolTip"));
+            this.txtFilterImplementation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
             // 
             // txtFilterFunction
             // 
@@ -138,36 +174,7 @@
             this.txtSourceFolder.Name = "txtSourceFolder";
             this.txtSourceFolder.Size = new System.Drawing.Size(846, 20);
             this.txtSourceFolder.TabIndex = 0;
-            // 
-            // txtFilterImplementation
-            // 
-            this.txtFilterImplementation.Location = new System.Drawing.Point(321, 51);
-            this.txtFilterImplementation.Name = "txtFilterImplementation";
-            this.txtFilterImplementation.Size = new System.Drawing.Size(129, 20);
-            this.txtFilterImplementation.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.txtFilterImplementation, resources.GetString("txtFilterImplementation.ToolTip"));
-            this.txtFilterImplementation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
-            // 
-            // txtFilterFile
-            // 
-            this.txtFilterFile.Location = new System.Drawing.Point(557, 49);
-            this.txtFilterFile.Name = "txtFilterFile";
-            this.txtFilterFile.Size = new System.Drawing.Size(129, 20);
-            this.txtFilterFile.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.txtFilterFile, resources.GetString("txtFilterFile.ToolTip"));
-            this.txtFilterFile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
-            // 
-            // chkOnlyImplementations
-            // 
-            this.chkOnlyImplementations.AutoSize = true;
-            this.chkOnlyImplementations.Location = new System.Drawing.Point(705, 49);
-            this.chkOnlyImplementations.Name = "chkOnlyImplementations";
-            this.chkOnlyImplementations.Size = new System.Drawing.Size(143, 17);
-            this.chkOnlyImplementations.TabIndex = 3;
-            this.chkOnlyImplementations.Text = "Implented  by C-Function";
-            this.toolTip1.SetToolTip(this.chkOnlyImplementations, "If checked only Implementations are shown");
-            this.chkOnlyImplementations.UseVisualStyleBackColor = true;
-            this.chkOnlyImplementations.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            this.toolTip1.SetToolTip(this.txtSourceFolder, "The C source folder where the *.c and *.h files are.");
             // 
             // FrmFunctions
             // 
@@ -178,6 +185,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmFunctions";
             this.Text = "FrmFunctions";
+            this.toolTip1.SetToolTip(this, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
+        "pp\r\n- Macros from *.h or *.hpp");
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

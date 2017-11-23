@@ -125,7 +125,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 lFilters.Add($"Macro = true");
             }
             // Handle Implemented by C-Function
-            if (chkOnlyMacros.Checked)
+            if (chkOnlyImplementations.Checked)
             {
                 lFilters.Add($"FileName LIKE '%.C'");
             }

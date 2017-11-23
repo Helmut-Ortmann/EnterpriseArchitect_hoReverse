@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Windows.Forms;
 using DataModels.VcSymbols;
 using hoReverse.Services.AutoCpp.Analyze;
 using hoLinqToSql.LinqUtils;
@@ -21,7 +22,8 @@ namespace hoReverse.Services.AutoCpp
             // get connection string of repository
             // the provider to connect to database like Access, ..
             _folderPathCSourceCode = folderPathCSourceCode;
-            string connectionString = LinqUtil.GetConnectionString(folderPathCSourceCode, out IDataProvider provider);
+            string connectionString = LinqUtil.GetConnectionString(folderPathCSourceCode, out IDataProvider provider, withErrorMessage:true);
+            if (connectionString == "") return false;
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
 
