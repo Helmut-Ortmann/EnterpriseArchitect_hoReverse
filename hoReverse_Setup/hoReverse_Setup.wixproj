@@ -77,6 +77,7 @@
     <Content Include="settings.json" />
     <Content Include="Wxs\Collect\Collect.bat" />
     <Content Include="Wxs\hoReverse_Setup.wixproj" />
+    <Content Include="Wxs\WixUI_Advanced.wxs.default" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">

@@ -3,20 +3,15 @@
 	<Fragment>
       <Directory Id="TARGETDIR" Name="SourceDir">
         <Directory Id="ProgramFilesFolder"> <!--LocalAppDataFolder ProgramFilesFolder-->
-            <Directory Id="APPLICATIONFOLDER" Name="hoReverse"  >
-            </Directory>
-        </Directory>
-         <!-- Preparation for Roaming folder
-          <Directory Id="AppDataFolder">
-              <Directory Id="ho" Name="ho">
-                     <Directory Id="hoReverseData" Name="hoReverse" >
-                     </Directory>
-         
-             </Directory>
+            <Directory Id="APPLICATIONFOLDER" Name="hoReverse"  > <!--APPLICATIONFOLDER-->
           </Directory>
-         -->
+        </Directory>
       </Directory>
-    <Property Id="ApplicationFolderName" Value="hoReverse" />
+	 
+    
+    
+    <!--<Property Id="ApplicationFolderName"  Value="hoReverse"  /> -->
+
     <Property Id="WixAppFolder" Value="WixPerUserFolder"  />
 	  <!--<SetProperty Id="ProgramFilesFolder" Value="[LocalAppDataFolder]" Before="CostFinalize"><![CDATA[NOT Privileged]]></SetProperty>-->
 	</Fragment>

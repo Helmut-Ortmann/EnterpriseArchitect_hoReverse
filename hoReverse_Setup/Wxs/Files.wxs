@@ -28,9 +28,11 @@
  
   <Fragment>
     <ComponentGroup Id="ProductComponents"
-                    Directory="ProgramFilesFolder">
+                    Directory="APPLICATIONFOLDER">
+
       <Component Id="LicenceRTF" Guid="{46FBFC37-700A-4211-976E-6C46CDDB9CAC}">
-        <File Id="LicenseFile" Name="license.rtf" Source="license.rtf"  KeyPath="yes" />
+        <!--<CreateFolder Directory="APPLICATIONFOLDER" /> -->
+          <File Id="LicenseFile" Name="license.rtf" Source="license.rtf"  KeyPath="yes" />
       </Component>
       <Component Id="hoReverseGui.dll.config" Guid="{C6DEC4D3-5338-495E-9AF5-974FF40299D9}">
         <File Id="hoReverseGui.dll.config" Name="hoReverseGui.dll.config" Source="..\hoReverseRoot\hoReverseGui.dll.config" KeyPath="yes" />
