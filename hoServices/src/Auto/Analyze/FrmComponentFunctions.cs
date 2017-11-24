@@ -66,6 +66,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdRequiredInterfaces.Columns[8].Visible = false;
                 grdRequiredInterfaces.Columns[9].Visible = false;
                 grdRequiredInterfaces.Columns[10].Visible = false;
+                grdRequiredInterfaces.Columns[11].Visible = false;
 
 
 
