@@ -637,7 +637,6 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -738,6 +737,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1400,23 +1400,6 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1551,15 +1534,15 @@ namespace hoReverse.Reverse
             // _createActivityForOperationToolStripMenuItem
             // 
             this._createActivityForOperationToolStripMenuItem.Name = "_createActivityForOperationToolStripMenuItem";
-            this._createActivityForOperationToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this._createActivityForOperationToolStripMenuItem.Text = "&Create Activity for Operation";
+            this._createActivityForOperationToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._createActivityForOperationToolStripMenuItem.Text = "&Create/Update Activity for Operation";
             this._createActivityForOperationToolStripMenuItem.ToolTipText = resources.GetString("_createActivityForOperationToolStripMenuItem.ToolTipText");
             this._createActivityForOperationToolStripMenuItem.Click += new System.EventHandler(this.createActivityForOperationToolStripMenuItem_Click);
             // 
             // _updateMethodParametersToolStripMenuItem
             // 
             this._updateMethodParametersToolStripMenuItem.Name = "_updateMethodParametersToolStripMenuItem";
-            this._updateMethodParametersToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this._updateMethodParametersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._updateMethodParametersToolStripMenuItem.Text = "&Update Activity from Method";
             this._updateMethodParametersToolStripMenuItem.ToolTipText = "Updates the Activities according to selected contexts by:\r\n- Activity Name\r\n- Act" +
     "ivity Parameter\r\n";
@@ -1568,12 +1551,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator3
             // 
             this._toolStripSeparator3.Name = "_toolStripSeparator3";
-            this._toolStripSeparator3.Size = new System.Drawing.Size(257, 6);
+            this._toolStripSeparator3.Size = new System.Drawing.Size(265, 6);
             // 
             // _showFolderToolStripMenuItem
             // 
             this._showFolderToolStripMenuItem.Name = "_showFolderToolStripMenuItem";
-            this._showFolderToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this._showFolderToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._showFolderToolStripMenuItem.Text = "&Show folder";
             this._showFolderToolStripMenuItem.ToolTipText = "Show folder (sourse file, controled package)";
             this._showFolderToolStripMenuItem.Click += new System.EventHandler(this.showFolderToolStripMenuItem_Click);
@@ -1581,7 +1564,7 @@ namespace hoReverse.Reverse
             // setFolderToolStripMenuItem
             // 
             this.setFolderToolStripMenuItem.Name = "setFolderToolStripMenuItem";
-            this.setFolderToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.setFolderToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.setFolderToolStripMenuItem.Text = "Set Folder";
             this.setFolderToolStripMenuItem.ToolTipText = "Set the Folder of a package  to easily access code.\r\n\r\nThe folder is used for imp" +
     "lementations. \r\nSo make sure you have assigned a Package language like \r\nC,C++.";
@@ -1590,19 +1573,19 @@ namespace hoReverse.Reverse
             // _toolStripSeparator4
             // 
             this._toolStripSeparator4.Name = "_toolStripSeparator4";
-            this._toolStripSeparator4.Size = new System.Drawing.Size(257, 6);
+            this._toolStripSeparator4.Size = new System.Drawing.Size(265, 6);
             // 
             // _copyGuidSqlToClipboardToolStripMenuItem
             // 
             this._copyGuidSqlToClipboardToolStripMenuItem.Name = "_copyGuidSqlToClipboardToolStripMenuItem";
-            this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._copyGuidSqlToClipboardToolStripMenuItem.Text = "&Copy GUID + SQL to clipboard";
             this._copyGuidSqlToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyGuidSqlToClipboardToolStripMenuItem_Click);
             // 
             // _createSharedMemoryToolStripMenuItem
             // 
             this._createSharedMemoryToolStripMenuItem.Name = "_createSharedMemoryToolStripMenuItem";
-            this._createSharedMemoryToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this._createSharedMemoryToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._createSharedMemoryToolStripMenuItem.Text = "&Create Shared Memory for Package";
             this._createSharedMemoryToolStripMenuItem.ToolTipText = "Create shared memory from:\r\n#define SP_SHM_HW_MIC_START     0x40008000u\r\n#define " +
     "SP_SHM_HW_MIC_END       0x400083FFu\r\nas class+interface shared memory and:\r\nthe " +
@@ -1612,12 +1595,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(257, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(265, 6);
             // 
             // standardDiagramToolStripMenuItem
             // 
             this.standardDiagramToolStripMenuItem.Name = "standardDiagramToolStripMenuItem";
-            this.standardDiagramToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.standardDiagramToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.standardDiagramToolStripMenuItem.Text = "StandardDiagram (recursive)";
             this.standardDiagramToolStripMenuItem.ToolTipText = "Sets the diagram standards for selected:\r\n- Diagram\r\n- Element, recursive\r\n- Pack" +
     "age, recursive,\r\n\r\nParameters:\r\n- Diagram fit to one page\r\n- No qualifiers\r\n- Ou" +
@@ -1627,12 +1610,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(257, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(265, 6);
             // 
             // moveUsageToElementToolStripMenuItem
             // 
             this.moveUsageToElementToolStripMenuItem.Name = "moveUsageToElementToolStripMenuItem";
-            this.moveUsageToElementToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.moveUsageToElementToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.moveUsageToElementToolStripMenuItem.Text = "Move usage to element";
             this.moveUsageToElementToolStripMenuItem.ToolTipText = resources.GetString("moveUsageToElementToolStripMenuItem.ToolTipText");
             this.moveUsageToElementToolStripMenuItem.Click += new System.EventHandler(this.moveUsageToElementToolStripMenuItem_Click);
@@ -1640,12 +1623,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(257, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(265, 6);
             // 
             // sortAlphabeticToolStripMenuItem
             // 
             this.sortAlphabeticToolStripMenuItem.Name = "sortAlphabeticToolStripMenuItem";
-            this.sortAlphabeticToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.sortAlphabeticToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.sortAlphabeticToolStripMenuItem.Text = "Sort alphabetic";
             this.sortAlphabeticToolStripMenuItem.ToolTipText = "Sort the selected diagram elements in alphabetic order:\r\n- Ports, Pins, Parameter" +
     "s\r\n- Elements, Packages\r\n\r\nIt ignores:\r\n- ProvidedInterface\r\n- RequiredInterface" +
@@ -1655,7 +1638,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(257, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(265, 6);
             // 
             // _codeToolStripMenuItem
             // 
@@ -2298,6 +2281,23 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
             // HoReverseGui
             // 
             this.Controls.Add(this.progressBar1);
@@ -2787,33 +2787,7 @@ namespace hoReverse.Reverse
 
         private void updateMethodParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateMethodParameterWrapper();
-        }
-
-        /// <summary>
-        /// Update parameter and linkage
-        /// </summary>
-        private void UpdateMethodParameterWrapper()
-        {
-            try
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                // if action update link to operation
-                hoService.UpdateAction(_repository);
-
-                hoService.ReconcileOperationTypesWrapper(_repository);
-                hoService.UpdateActivityParameter(_repository);
-                Cursor.Current = Cursors.Default;
-            }
-            catch (Exception e10)
-            {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }
+            hoService.UpdateActivityMethodParameterWrapper(_repository);
         }
 
         private void helpF1ToolStripMenuItem_Click(object sender, EventArgs e)

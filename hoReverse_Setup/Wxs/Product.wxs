@@ -11,6 +11,7 @@
       2. Update File-Version of hoReverse.DLL File (Properties Assembly) but not Assembly-Version 
          (new registry of Assembly required)
          A new Assembly Version requires a new DLL-Registration
+         You may change the registration by editor (that's the way I do it)
       3. Product ID is handled by WIX
       4. Check hoReverseGui.dll.config (configuration) in:
          - hoReverseRoot\hoReverseGui.dll.config
@@ -22,11 +23,11 @@
   // Change AssemblyFileVersion accordingly
   -->
   <!-- The post processing of the WIX Setup projects changes the *.msi file name to:
-       'hoReverse 3.1.7.msi' (3.1.7=ProductVersion)
+       'hoReverse 2.1.4.msi' (2.1.4=ProductVersion)
        The Scripts you find in: Setup\Script\..
        see also: http://kentie.net/article/wixnameversion/index.htm
   -->
-  <?define ProductVersion="2.1.3" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
+  <?define ProductVersion="2.1.4" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
   <?define UpgradeCode="F098804C-0151-46DC-9924-76688804EC45" ?>
   <?define Manufacturer="hoModeler.de" ?>
   <?define ProductName="hoReverse Workbench" ?>
@@ -91,9 +92,7 @@
     <!--
       Guidelines Single Package Authoring (per user/per machine install)
       https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
-
-    <Property Id="ALLUSERS" Value="2"/>
-    <Property Id="MSIINSTALLPERUSER" Value="1"/>
+      http://uvinw.com/per-machine-and-per-user-without-UAC-in-WiX/
         -->
     <Property Id="WixAppFolder" Value= "WixPerUserFolder" />
 

@@ -1,7 +1,9 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using EA;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Diagrams;
+using DiagramObject = EA.DiagramObject;
 
 
 // ReSharper disable once CheckNamespace
@@ -15,7 +17,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{7D3B03FD-399B-4D39-9F54-5E7CB2CDBBBF}", "Bulk change Diagram to 'Style 1'",
             "Select Package, Element, Diagram (see Settings.Json, 1. entry)", isTextRequired: false)]
-        public static void DiagramStyle1(EA.Repository rep)
+        public static void DiagramStyle1(Repository rep)
         {
             DiagramStyleWrapper(rep, 0);
         }
@@ -24,7 +26,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{FD79F3ED-1345-4CF6-AB43-9EF34571CA52}", "Bulk change Diagram to 'Style 2'",
             "Select Package, Element, Diagram (see Settings.Json, 2. entry)", isTextRequired: false)]
-        public static void DiagramStyle2(EA.Repository rep)
+        public static void DiagramStyle2(Repository rep)
         {
             DiagramStyleWrapper(rep, 1);
         }
@@ -56,7 +58,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{B1227872-4968-439A-A926-7FE70F022F09}", "Change DiagramLinks to 'Style 1'",
             "Select Diagram, Diagram Objects or Diagram link (see Settings.Json, 1. entry)", isTextRequired: false)]
-        public static void DiagramLinkStyle1(EA.Repository rep)
+        public static void DiagramLinkStyle1(Repository rep)
         {
             DiagramLinkStyleWrapper(rep, 0, ChangeScope.Package);
         }
@@ -68,7 +70,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{FF7B370C-8D64-4919-9121-3571AA433B7C}", "Change DiagramLinks to 'Style 2'",
             "Select Diagram, Diagram Objects or Diagram link (see Settings.Json, 2. entry)", isTextRequired: false)]
-        public static void DiagramLinkStyle2(EA.Repository rep)
+        public static void DiagramLinkStyle2(Repository rep)
         {
             DiagramLinkStyleWrapper(rep, 1, ChangeScope.Package);
         }
@@ -77,7 +79,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{6AA996AD-640D-4615-886F-EC29062B2695}", "Change DiagramLinks to 'Style 3'",
             "Select Diagram, Diagram Objects or Diagram link (see Settings.Json, 3. entry)", isTextRequired: false)]
-        public static void DiagramLinkStyle3(EA.Repository rep)
+        public static void DiagramLinkStyle3(Repository rep)
         {
             DiagramLinkStyleWrapper(rep, 2, ChangeScope.Package);
         }
@@ -86,7 +88,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{1D838C4B-634C-490B-8CFE-2CC418133984}", "Change DiagramLinks to 'Style 4'",
             "Select Diagram, Diagram Objects or Diagram link (see Settings.Json, 4. entry)", isTextRequired: false)]
-        public static void DiagramLinkStyle4(EA.Repository rep)
+        public static void DiagramLinkStyle4(Repository rep)
         {
             DiagramLinkStyleWrapper(rep, 3, ChangeScope.Package);
         }
@@ -98,7 +100,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{7FBCA44B-5DEA-4BFA-8948-EAFD17D60D83}", "Change DiagramObjects to 'Style 1'",
             "Select Diagram or Diagram Objects (see Settings.Json, 1. entry)", isTextRequired: false)]
-        public static void DiagramObjectStyle1(EA.Repository rep)
+        public static void DiagramObjectStyle1(Repository rep)
         {
             DiagramObjectStyleWrapper(rep, 0, ChangeScope.Package);
         }
@@ -108,7 +110,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{94F8855F-22BB-4BD7-BCEE-FC8D64E63B83}", "Change DiagramObjects to 'Style 2'",
             "Select Diagram or Diagram Objects (see Settings.Json, 2. entry)", isTextRequired: false)]
-        public static void DiagramObjectStyle2(EA.Repository rep)
+        public static void DiagramObjectStyle2(Repository rep)
         {
             DiagramObjectStyleWrapper(rep, 1, ChangeScope.Package);
         }
@@ -117,7 +119,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{98B0661C-DEB0-453D-BD30-3FB900228B38}", "Change DiagramObjects to 'Style 3'",
             "Select Diagram or Diagram Objects (see Settings.Json, 3. entry)", isTextRequired: false)]
-        public static void DiagramObjectStyle3(EA.Repository rep)
+        public static void DiagramObjectStyle3(Repository rep)
         {
             DiagramObjectStyleWrapper(rep, 2, ChangeScope.Package);
         }
@@ -126,7 +128,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{BFD60FFD-2244-4320-8AB2-57858DA6817F}", "Change DiagramObjects to 'Style 4'",
             "Select Diagram or Diagram Objects (see Settings.Json, 4. entry)", isTextRequired: false)]
-        public static void DiagramObjectStyle4(EA.Repository rep)
+        public static void DiagramObjectStyle4(Repository rep)
         {
             DiagramObjectStyleWrapper(rep, 3, ChangeScope.Package);
         }
@@ -135,7 +137,7 @@ namespace hoReverse.Services
         /// </summary>
         [ServiceOperation("{DD52FE95-51DB-4619-AF5E-39EE7AA2CF4A}", "Change DiagramObjects to 'Style 5'",
             "Select Diagram or Diagram Objects (see Settings.Json, 5. entry)", isTextRequired: false)]
-        public static void DiagramObjectStyle5(EA.Repository rep)
+        public static void DiagramObjectStyle5(Repository rep)
         {
             DiagramStyleWrapper(rep, 4);
         }
@@ -180,7 +182,7 @@ namespace hoReverse.Services
                 foreach (var diaObj in eaDia.SelObjects)
                 {
 
-                    var a = new hoReverse.hoUtils.Diagrams.DiagramObjectStyle(rep, diaObj, type, style, property);
+                    var a = new DiagramObjectStyle(rep, diaObj, type, style, property);
                     var objectStyle = new DiagramObjectStyle(rep, diaObj, type, style, property);
                     if (objectStyle.IsToProcess())
                     {
@@ -202,15 +204,15 @@ namespace hoReverse.Services
 
                 switch (rep.GetContextItemType())
                 {
-                    case EA.ObjectType.otPackage:
-                        EA.Package pkg = (EA.Package)rep.GetContextObject();
+                    case ObjectType.otPackage:
+                        Package pkg = (Package)rep.GetContextObject();
                         RecursivePackages.DoRecursivePkg(rep, pkg, null, null,
                             SetDiagramObjectStyle,
                             liParameter,
                             changeScope);
                         break;
-                    case EA.ObjectType.otElement:
-                        EA.Element el = (EA.Element)rep.GetContextObject();
+                    case ObjectType.otElement:
+                        Element el = (Element)rep.GetContextObject();
                         RecursivePackages.DoRecursiveEl(rep, el, null,
                             SetDiagramObjectStyle,
                             liParameter,
@@ -282,15 +284,15 @@ namespace hoReverse.Services
 
                 switch (rep.GetContextItemType())
                 {
-                    case EA.ObjectType.otPackage:
-                        EA.Package pkg = (EA.Package)rep.GetContextObject();
+                    case ObjectType.otPackage:
+                        Package pkg = (Package)rep.GetContextObject();
                         RecursivePackages.DoRecursivePkg(rep, pkg, null, null,
                             SetDiagramLinkStyle,
                             liParameter,
                             changeScope);
                         break;
-                    case EA.ObjectType.otElement:
-                        EA.Element el = (EA.Element)rep.GetContextObject();
+                    case ObjectType.otElement:
+                        Element el = (Element)rep.GetContextObject();
                         RecursivePackages.DoRecursiveEl(rep, el, null,
                             SetDiagramLinkStyle,
                             liParameter,
@@ -308,14 +310,14 @@ namespace hoReverse.Services
         /// <param name="rep"></param>
         /// <param name="dia"></param>
         /// <param name="liParameter"></param>
-        private static void SetDiagramLinkStyle(EA.Repository rep, EA.Diagram dia, string[] liParameter)
+        private static void SetDiagramLinkStyle(Repository rep, Diagram dia, string[] liParameter)
         {
             rep.SaveDiagram(dia.DiagramID);
 
             string types = liParameter[0];
             string styles = liParameter[1];
             string properties = liParameter[2];
-            foreach (EA.DiagramLink link in dia.DiagramLinks)
+            foreach (DiagramLink link in dia.DiagramLinks)
             {
                 var linkStyle = new DiagramLinkStyle(rep, link, types, styles, properties);
                 if (linkStyle.IsToProcess())
@@ -337,14 +339,14 @@ namespace hoReverse.Services
         /// <param name="rep"></param>
         /// <param name="dia"></param>
         /// <param name="liParameter"></param>
-        private static void SetDiagramObjectStyle(EA.Repository rep, EA.Diagram dia, string[] liParameter)
+        private static void SetDiagramObjectStyle(Repository rep, Diagram dia, string[] liParameter)
         {
             rep.SaveDiagram(dia.DiagramID);
 
             string types = liParameter[0];
             string styles = liParameter[1];
             string properties = liParameter[2];
-            foreach (EA.DiagramObject obj in dia.DiagramObjects)
+            foreach (DiagramObject obj in dia.DiagramObjects)
             {
                 var objStyle = new DiagramObjectStyle(rep, obj, types, styles, properties);
                 if (objStyle.IsToProcess())
@@ -372,22 +374,22 @@ namespace hoReverse.Services
         /// <param name="rep"></param>
         /// <param name="liParameter"></param>
         /// <param name="changeScope"></param>
-        public static void ChangeDiagramStyle(EA.Repository rep, string[] liParameter, ChangeScope changeScope = ChangeScope.PackageRecursive)
+        public static void ChangeDiagramStyle(Repository rep, string[] liParameter, ChangeScope changeScope = ChangeScope.PackageRecursive)
         {
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otDiagram:
-                    EA.Diagram dia = (EA.Diagram)rep.GetContextObject();
+                case ObjectType.otDiagram:
+                    Diagram dia = (Diagram)rep.GetContextObject();
                     SetDiagramStyle(rep, dia, liParameter);
                     break;
-                case EA.ObjectType.otPackage:
-                    EA.Package pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    Package pkg = (Package)rep.GetContextObject();
                     RecursivePackages.DoRecursivePkg(rep, pkg, null, null, SetDiagramStyle,
                         liParameter,
                         changeScope);
                     break;
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     RecursivePackages.DoRecursiveEl(rep, el, null, SetDiagramStyle, liParameter,
                         changeScope);
                     break;
@@ -411,7 +413,7 @@ namespace hoReverse.Services
         /// <param name="rep"></param>
         /// <param name="dia"></param>
         /// <param name="par">par[] </param>
-        private static void SetDiagramStyle(Repository rep, EA.Diagram dia, string[] par)
+        private static void SetDiagramStyle(Repository rep, Diagram dia, string[] par)
         {
             EaDiagram eaDia = new EaDiagram(rep, getAllDiagramObject: false);
             if (eaDia.Dia == null) return;
@@ -435,6 +437,32 @@ namespace hoReverse.Services
             eaDia.ReloadSelectedObjectsAndConnector(saveDiagram: false);
 
 
+        }
+
+        /// <summary>
+        /// Update Activity parameter and linkage
+        /// </summary>
+        public static void UpdateActivityMethodParameterWrapper(EA.Repository rep)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                // if action update link to operation
+                hoService.UpdateAction(rep);
+
+                hoService.ReconcileOperationTypesWrapper(rep);
+                hoService.UpdateActivityParameter(rep);
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception e10)
+            {
+                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }

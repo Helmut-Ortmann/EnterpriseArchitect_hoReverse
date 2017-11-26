@@ -222,12 +222,13 @@ One Click, and you have the Diagram Styles according to your selection changed.
 </value>
   </data>
   <data name="_createActivityForOperationToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Create Activity for Method according to selected context:
+    <value>Create/Update Activity for Method according to selected context:
 
 Select:
 - Method/Operation
 - Class/Interface
 - Package
+- Activity (only update Activity parameter)
 
 It creates:
 - Package with name of Method
@@ -235,7 +236,12 @@ It creates:
 - Activity Parameter
 - Link Method to Behavior (Activity)
 - Activity Diagram with name of Method (Activity, ...)
-- 
+
+It updates Activities:
+- Name, Stereotype
+- Parameter and type
+
+Because the Activity is possible visualized in more than one diagram you have to take care of the different diagrams.
 
 </value>
   </data>

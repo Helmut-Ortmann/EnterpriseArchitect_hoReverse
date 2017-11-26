@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EaServices.MOVE;
+using EA;
 using hoReverse.hoUtils.ODBC;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Cutils;
@@ -24,6 +26,8 @@ using File = System.IO.File;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using hoReverse.hoUtil.EaCollection;
 using hoReverse.hoUtilsVC;
+using CustomProperty = EA.CustomProperty;
+using DiagramObject = EA.DiagramObject;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services
@@ -71,7 +75,7 @@ namespace hoReverse.Services
 
         //---------------------------------------------------------------------------------------------------------------
         // Search for Elements, Operation, Attributes, GUID
-        public static void RunQuickSearch(EA.Repository rep, string searchName, string searchString)
+        public static void RunQuickSearch(Repository rep, string searchName, string searchString)
         {
             // get the search vom setting
             try
@@ -97,7 +101,7 @@ namespace hoReverse.Services
             isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void SortAlphabetic(EA.Repository rep)
+        public static void SortAlphabetic(Repository rep)
         {
             EaDiagram curDiagram = new EaDiagram(rep);
             if (curDiagram.Dia == null) return;
@@ -124,29 +128,29 @@ namespace hoReverse.Services
             "Copy FQ (Full Qualified) Name to Clipboard (Package, Element, Diagram, Attribute, Operation)", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyFqToClipboard(EA.Repository rep)
+        public static void CopyFqToClipboard(Repository rep)
         {
             string strFQ = "";
             object o;
-            EA.ObjectType type = rep.GetContextItem(out o);
+            ObjectType type = rep.GetContextItem(out o);
             switch (type)
             {
-                case EA.ObjectType.otElement:
-                    strFQ = ((EA.Element)o).FQName;
+                case ObjectType.otElement:
+                    strFQ = ((Element)o).FQName;
                     break;
 
-                case EA.ObjectType.otModel:
-                    strFQ = ((EA.Package)o).Name;
+                case ObjectType.otModel:
+                    strFQ = ((Package)o).Name;
                     break;
 
-                case EA.ObjectType.otPackage:
-                    EA.Element el = rep.GetElementByGuid(((EA.Package)o).PackageGUID);
-                    if (el == null) strFQ = ((EA.Package)o).Name;
+                case ObjectType.otPackage:
+                    Element el = rep.GetElementByGuid(((Package)o).PackageGUID);
+                    if (el == null) strFQ = ((Package)o).Name;
                     else strFQ = el.FQName;
                     break;
 
-                case EA.ObjectType.otDiagram:
-                    EA.Diagram dia = (EA.Diagram)o;
+                case ObjectType.otDiagram:
+                    Diagram dia = (Diagram)o;
                     if (dia.ParentID != 0)
                     {
                         strFQ = $"{rep.GetElementByID(dia.ParentID).FQName}.{dia.Name}";
@@ -157,12 +161,12 @@ namespace hoReverse.Services
                         strFQ = $"{rep.GetElementByGuid(guid).FQName}.{dia.Name}";
                     }
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute a = (EA.Attribute)o;
                     strFQ = $"{rep.GetElementByID(a.ParentID).FQName}.{a.Name}";
                     break;
-                case EA.ObjectType.otMethod:
-                    EA.Method m = (EA.Method)o;
+                case ObjectType.otMethod:
+                    Method m = (Method)o;
                     strFQ = $"{rep.GetElementByID(m.ParentID).FQName}.{m.Name}";
                     break;
             }
@@ -180,7 +184,7 @@ namespace hoReverse.Services
             isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void MoveUsage(EA.Repository rep)
+        public static void MoveUsage(Repository rep)
         {
             EaDiagram curDiagram = new EaDiagram(rep);
             if (curDiagram.Dia == null) return;
@@ -193,12 +197,12 @@ namespace hoReverse.Services
 Second Element: Target of move connections and appearances", "Select two elements on the diagram!");
                 return;
             }
-            EA.Element source = curDiagram.SelElements[1];
-            EA.Element target = curDiagram.SelElements[0];
+            Element source = curDiagram.SelElements[1];
+            Element target = curDiagram.SelElements[0];
 
             Odbc odbc = new Odbc(rep);
 
-            EaServices.MOVE.Move.MoveClassifier(rep, curDiagram.Dia, source, target);
+            Move.MoveClassifier(rep, curDiagram.Dia, source, target);
             odbc.Close();
             // update current diagram
             rep.ReloadDiagram(curDiagram.Dia.DiagramID);
@@ -212,37 +216,37 @@ Second Element: Target of move connections and appearances", "Select two element
             "Copy Stereotypes (FDStereotype+StereotypeEx) to ClipBoard", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyStereotypesToClipboard(EA.Repository rep)
+        public static void CopyStereotypesToClipboard(Repository rep)
         {
-            EA.Element el;
+            Element el;
             string strStereo = "";
-            EA.ObjectType type = rep.GetContextItem(out object o);
+            ObjectType type = rep.GetContextItem(out object o);
             switch (type)
             {
-                case EA.ObjectType.otElement:
-                    el = (EA.Element)o;
+                case ObjectType.otElement:
+                    el = (Element)o;
                     strStereo = el.FQStereotype + "\r\n" + el.StereotypeEx;
                     break;
 
-                case EA.ObjectType.otModel:
-                    strStereo = ((EA.Package)o).StereotypeEx;
+                case ObjectType.otModel:
+                    strStereo = ((Package)o).StereotypeEx;
                     break;
 
-                case EA.ObjectType.otPackage:
-                    el = rep.GetElementByGuid(((EA.Package)o).PackageGUID);
-                    strStereo = el == null ? ((EA.Package)o).StereotypeEx : el.FQStereotype + "\r\n" + el.StereotypeEx;
+                case ObjectType.otPackage:
+                    el = rep.GetElementByGuid(((Package)o).PackageGUID);
+                    strStereo = el == null ? ((Package)o).StereotypeEx : el.FQStereotype + "\r\n" + el.StereotypeEx;
                     break;
-                case EA.ObjectType.otDiagram:
-                    strStereo = ((EA.Diagram)o).StereotypeEx;
+                case ObjectType.otDiagram:
+                    strStereo = ((Diagram)o).StereotypeEx;
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     strStereo = ((EA.Attribute)o).FQStereotype + "\r\n" + ((EA.Attribute)o).StereotypeEx;
                     break;
-                case EA.ObjectType.otMethod:
-                    strStereo = ((EA.Method)o).FQStereotype + "\r\n" + ((EA.Method)o).StereotypeEx;
+                case ObjectType.otMethod:
+                    strStereo = ((Method)o).FQStereotype + "\r\n" + ((Method)o).StereotypeEx;
                     break;
 
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     EA.Connector con = (EA.Connector)o;
                     strStereo = con.FQStereotype + "\r\n" + con.StereotypeEx; 
                     break;
@@ -260,37 +264,37 @@ Second Element: Target of move connections and appearances", "Select two element
             "Copy GUID to Clipboard (Package, Element, Diagram, Attribute, Operation, Connector, Parameter)", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
         // dynamical usage as configurable service by reflection
-        public static void CopyGuidToClipboard(EA.Repository rep)
+        public static void CopyGuidToClipboard(Repository rep)
         {
             string strGuid = "";
             object o;
-            EA.ObjectType type = rep.GetContextItem(out o);
+            ObjectType type = rep.GetContextItem(out o);
             switch (type)
             {
-                case EA.ObjectType.otElement:
-                    strGuid = ((EA.Element)o).ElementGUID;
+                case ObjectType.otElement:
+                    strGuid = ((Element)o).ElementGUID;
                     break;
-                case EA.ObjectType.otPackage:
-                    strGuid = ((EA.Package)o).PackageGUID;
+                case ObjectType.otPackage:
+                    strGuid = ((Package)o).PackageGUID;
                     break;
-                case EA.ObjectType.otDiagram:
-                    strGuid = ((EA.Diagram)o).DiagramGUID;
+                case ObjectType.otDiagram:
+                    strGuid = ((Diagram)o).DiagramGUID;
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     strGuid = ((EA.Attribute)o).AttributeGUID;
                     break;
-                case EA.ObjectType.otMethod:
-                    strGuid = ((EA.Method)o).MethodGUID;
+                case ObjectType.otMethod:
+                    strGuid = ((Method)o).MethodGUID;
                     break;
 
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     strGuid = ((EA.Connector)o).ConnectorGUID;
                     break;
-                case EA.ObjectType.otModel:
-                    strGuid = ((EA.Package)o).PackageGUID;
+                case ObjectType.otModel:
+                    strGuid = ((Package)o).PackageGUID;
                     break;
-                case EA.ObjectType.otParameter:
-                    strGuid = ((EA.Parameter)o).ParameterGUID;
+                case ObjectType.otParameter:
+                    strGuid = ((Parameter)o).ParameterGUID;
                     break;
 
             }
@@ -301,22 +305,22 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region addDiagramNote
 
-        public static void AddDiagramNote(EA.Repository rep)
+        public static void AddDiagramNote(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            ObjectType oType = rep.GetContextItemType();
+            if (oType.Equals(ObjectType.otDiagram))
             {
-                EA.Diagram dia = rep.GetCurrentDiagram();
-                EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+                Diagram dia = rep.GetCurrentDiagram();
+                Package pkg = rep.GetPackageByID(dia.PackageID);
                 if (pkg.IsProtected || dia.IsLocked) return;
 
                 // save diagram
                 rep.SaveDiagram(dia.DiagramID);
 
-                EA.Element elNote;
+                Element elNote;
                 try
                 {
-                    elNote = (EA.Element) pkg.Elements.AddNew("", "Note");
+                    elNote = (Element) pkg.Elements.AddNew("", "Note");
                     elNote.Update();
                     pkg.Update();
                 }
@@ -339,7 +343,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 string position = "l=" + left.ToString() + ";r=" + right.ToString() + ";t=" + top.ToString() + ";b=" +
                                   bottom.ToString() + ";";
 
-                EA.DiagramObject diaObject = (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
+                DiagramObject diaObject = (DiagramObject) dia.DiagramObjects.AddNew(position, "");
                 dia.Update();
                 diaObject.ElementID = elNote.ElementID;
                 diaObject.Update();
@@ -355,9 +359,9 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region ChangeAuthorPackage
 
-        private static void ChangeAuthorPackage(EA.Repository rep, EA.Package pkg, string[] args)
+        private static void ChangeAuthorPackage(Repository rep, Package pkg, string[] args)
         {
-            EA.Element el = rep.GetElementByGuid(pkg.PackageGUID);
+            Element el = rep.GetElementByGuid(pkg.PackageGUID);
             el.Author = args[0];
             el.Update();
         }
@@ -366,7 +370,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region changeAuthorElement
 
-        private static void ChangeAuthorElement(EA.Repository rep, EA.Element el, string[] args)
+        private static void ChangeAuthorElement(Repository rep, Element el, string[] args)
         {
             el.Author = args[0];
             el.Update();
@@ -376,7 +380,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region changeAuthorDiagram
 
-        private static void ChangeAuthorDiagram(EA.Repository rep, EA.Diagram dia, string[] args)
+        private static void ChangeAuthorDiagram(Repository rep, Diagram dia, string[] args)
         {
             dia.Author = args[0];
             dia.Update();
@@ -387,7 +391,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{8704186B-665F-4E4A-95B4-31E1232A63FE}", "Search for + Copy to Clipboard selected item name, if Action try to find operation",
             "Select Package, Element, Attribute, Operation. If Action it tries to extract a possible function name", isTextRequired: false)]
 
-        public static void SearchForName(EA.Repository rep)
+        public static void SearchForName(Repository rep)
         {
             string name = GetNamesFromSelectedItems(rep);
             // run search if name found
@@ -402,7 +406,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         [ServiceOperation("{A73A53B3-6D6D-46AF-B6F2-DA252870D998}", "Copy sorted name(s) of selected items or connector, if Action try to find operation.",
             "Select Package(s), Element(s), Attribute, Operation. If Action it tries to extract a possible function name. If Connector use Guard (Flow, Transition). Multiple selection is only possible on Diagrams.", isTextRequired: false)]
-        public static string CopyContextNameToClipboard(EA.Repository rep)
+        public static string CopyContextNameToClipboard(Repository rep)
         {
             string txt = GetNamesFromSelectedItems(rep);
             Clipboard.SetText(txt);
@@ -417,73 +421,73 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <returns></returns>
-        private static string GetNamesFromSelectedItems(EA.Repository rep)
+        private static string GetNamesFromSelectedItems(Repository rep)
         {
             string names = "";
-            EA.ObjectType type = rep.GetContextItemType();
+            ObjectType type = rep.GetContextItemType();
             switch (type)
             {
-                case EA.ObjectType.otElement:
+                case ObjectType.otElement:
                     names = NamensFromSelectedElements(rep, type);
                     break;
-                case EA.ObjectType.otDiagram:
-                    names = ((EA.Diagram) rep.GetContextObject()).Name;
+                case ObjectType.otDiagram:
+                    names = ((Diagram) rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otPackage:
+                case ObjectType.otPackage:
                     names = NamensFromSelectedElements(rep, type);
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     names = ((EA.Attribute) rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otMethod:
-                    names = ((EA.Method) rep.GetContextObject()).Name;
+                case ObjectType.otMethod:
+                    names = ((Method) rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otParameter:
-                    names = ((EA.Parameter) rep.GetContextObject()).Name;
+                case ObjectType.otParameter:
+                    names = ((Parameter) rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otDatatype:
-                    names = ((EA.Datatype) rep.GetContextObject()).Name;
+                case ObjectType.otDatatype:
+                    names = ((Datatype) rep.GetContextObject()).Name;
                     break;
 
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     EA.Connector con = (EA.Connector) rep.GetContextObject();
                     string guard = con.TransitionGuard.Trim();
                     if ("ControlFlow ObjectFlow StateFlow".Contains(con.Type) && guard != "") names = guard;
                     else names = con.Name;
                     break;
 
-                case EA.ObjectType.otIssue:
-                    names = ((EA.Issue)rep.GetContextObject()).Name;
+                case ObjectType.otIssue:
+                    names = ((Issue)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otTest:
-                    names = ((EA.Test)rep.GetContextObject()).Name;
+                case ObjectType.otTest:
+                    names = ((Test)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otTask:
-                    names = ((EA.Task)rep.GetContextObject()).Name;
+                case ObjectType.otTask:
+                    names = ((Task)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otScenario:
-                    names = ((EA.Scenario)rep.GetContextObject()).Name;
+                case ObjectType.otScenario:
+                    names = ((Scenario)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otClient:
-                    names = ((EA.Client)rep.GetContextObject()).Name;
+                case ObjectType.otClient:
+                    names = ((Client)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otAuthor:
-                    names = ((EA.Author)rep.GetContextObject()).Name;
+                case ObjectType.otAuthor:
+                    names = ((Author)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otProjectResource:
-                    names = ((EA.ProjectResource)rep.GetContextObject()).Name;
+                case ObjectType.otProjectResource:
+                    names = ((ProjectResource)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otRequirement:
-                    names = ((EA.Requirement)rep.GetContextObject()).Name;
+                case ObjectType.otRequirement:
+                    names = ((Requirement)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otRisk:
-                    names = ((EA.Risk)rep.GetContextObject()).Name;
+                case ObjectType.otRisk:
+                    names = ((Risk)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otEffort:
-                    names = ((EA.Effort)rep.GetContextObject()).Name;
+                case ObjectType.otEffort:
+                    names = ((Effort)rep.GetContextObject()).Name;
                     break;
-                case EA.ObjectType.otMetric:
-                    names = ((EA.Metric)rep.GetContextObject()).Name;
+                case ObjectType.otMetric:
+                    names = ((Metric)rep.GetContextObject()).Name;
                     break;
             }
             return names;
@@ -496,7 +500,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static string NamensFromSelectedElements(EA.Repository rep, EA.ObjectType type)
+        private static string NamensFromSelectedElements(Repository rep, ObjectType type)
         {
             var eaDia = new EaDiagram(rep);
             var names = "";
@@ -515,9 +519,9 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             else
             {
-                names = type == EA.ObjectType.otElement 
-                    ? NameFromElement((EA.Element) rep.GetContextObject()) 
-                    : ((EA.Package)rep.GetContextObject()).Name;
+                names = type == ObjectType.otElement 
+                    ? NameFromElement((Element) rep.GetContextObject()) 
+                    : ((Package)rep.GetContextObject()).Name;
             }
             return names;
         }
@@ -527,7 +531,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="el"></param>
         /// <returns></returns>
-        private static string NameFromElement(EA.Element el)
+        private static string NameFromElement(Element el)
         {
             // possible Action which contains a function
             string name = el.Name;
@@ -549,30 +553,30 @@ Second Element: Target of move connections and appearances", "Select two element
 
         [ServiceOperation("{F0038D4B-CCAA-4F05-9401-AAAADF431ECB}", "Change user of package/element recursive",
             "Select package or element", isTextRequired: false)]
-        public static void ChangeUserRecursive(EA.Repository rep)
+        public static void ChangeUserRecursive(Repository rep)
         {
             // get the user
             string[] s = {""};
             string oldAuthor;
-            EA.Element el = null;
-            EA.Package pkg = null;
-            EA.Diagram dia = null;
-            EA.ObjectType oType = rep.GetContextItemType();
+            Element el = null;
+            Package pkg = null;
+            Diagram dia = null;
+            ObjectType oType = rep.GetContextItemType();
 
             // get the element
             switch (oType)
             {
-                case EA.ObjectType.otPackage:
-                    pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    pkg = (Package)rep.GetContextObject();
                     el = rep.GetElementByGuid(pkg.PackageGUID);
                     oldAuthor = el.Author;
                     break;
-                case EA.ObjectType.otElement:
-                    el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    el = (Element)rep.GetContextObject();
                     oldAuthor = el.Author;
                     break;
-                case EA.ObjectType.otDiagram:
-                    dia = (EA.Diagram)rep.GetContextObject();
+                case ObjectType.otDiagram:
+                    dia = (Diagram)rep.GetContextObject();
                     oldAuthor = dia.Author;
                     break;
                 default:
@@ -589,16 +593,16 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             switch (oType)
             {
-                case EA.ObjectType.otPackage:
+                case ObjectType.otPackage:
                     RecursivePackages.DoRecursivePkg(rep, pkg, ChangeAuthorPackage, ChangeAuthorElement,
                         ChangeAuthorDiagram, s, ChangeScope.PackageRecursive);
                     MessageBox.Show("New author:'" + s[0] + "'", "Author changed for packages/elements (recursive)");
                     break;
-                case EA.ObjectType.otElement:
+                case ObjectType.otElement:
                     RecursivePackages.DoRecursiveEl(rep, el, ChangeAuthorElement, ChangeAuthorDiagram, s, ChangeScope.PackageRecursive);
                     MessageBox.Show("New author:'" + s[0] + "'", "Author changed for elements (recursive)");
                     break;
-                case EA.ObjectType.otDiagram:
+                case ObjectType.otDiagram:
                     ChangeAuthorDiagram(rep, dia, s);
                     MessageBox.Show("New author:'" + s[0] + "'", "Author changed for diagram");
                     break;
@@ -615,30 +619,30 @@ Second Element: Target of move connections and appearances", "Select two element
 
         [ServiceOperation("{4161D769-825F-494A-9389-962CC1C16E4F}", "Change Author of package/element",
             "Select package or element", isTextRequired: false)]
-        public static void ChangeAuthor(EA.Repository rep)
+        public static void ChangeAuthor(Repository rep)
         {
 
             string[] args = {""};
             string oldAuthor;
-            EA.Element el = null;
-            EA.Package pkg = null;
-            EA.Diagram dia = null;
-            EA.ObjectType oType = rep.GetContextItemType();
+            Element el = null;
+            Package pkg = null;
+            Diagram dia = null;
+            ObjectType oType = rep.GetContextItemType();
 
             // get the element
             switch (oType)
             {
-                case EA.ObjectType.otPackage:
-                    pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    pkg = (Package)rep.GetContextObject();
                     el = rep.GetElementByGuid(pkg.PackageGUID);
                     oldAuthor = el.Author;
                     break;
-                case EA.ObjectType.otElement:
-                    el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    el = (Element)rep.GetContextObject();
                     oldAuthor = el.Author;
                     break;
-                case EA.ObjectType.otDiagram:
-                    dia = (EA.Diagram)rep.GetContextObject();
+                case ObjectType.otDiagram:
+                    dia = (Diagram)rep.GetContextObject();
                     oldAuthor = dia.Author;
                     break;
                 default:
@@ -655,15 +659,15 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             switch (oType)
             {
-                case EA.ObjectType.otPackage:
+                case ObjectType.otPackage:
                     ChangeAuthorPackage(rep, pkg, args);
                     MessageBox.Show("New author:'" + args[0] + "'", "Author changed for package");
                     break;
-                case EA.ObjectType.otElement:
+                case ObjectType.otElement:
                     ChangeAuthorElement(rep, el, args);
                     MessageBox.Show("New author:'" + args[0] + "'", "Author changed for element");
                     break;
-                case EA.ObjectType.otDiagram:
+                case ObjectType.otDiagram:
                     ChangeAuthorDiagram(rep, dia, args);
                     MessageBox.Show("New author:'" + args[0] + "'", "Author changed for element");
                     break;
@@ -680,19 +684,19 @@ Second Element: Target of move connections and appearances", "Select two element
         // Set folder of package for easy access of implementation.
         [ServiceOperation("{B326B602-88F3-46E9-8EB5-9BF4F747FCB4}", "Set package folder of implementation",
             "Select package to set the implementation folder", isTextRequired: false)]
-        public static void SetFolder(EA.Repository rep)
+        public static void SetFolder(Repository rep)
         {
 
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otPackage:
+                case ObjectType.otPackage:
 
-                    EA.Package pkg = (EA.Package)rep.GetContextObject();
+                    Package pkg = (Package)rep.GetContextObject();
                     string folderPath = pkg.CodePath;
                     // try to infer the right folder from package class/interfaces
                     if (folderPath.Trim() == "")
                     {
-                        foreach (EA.Element el in pkg.Elements)
+                        foreach (Element el in pkg.Elements)
                         {
                             if ("Interface Component Class".Contains(el.Type))
                             {
@@ -710,7 +714,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         fbd.SelectedPath = folderPath;
                         DialogResult result = fbd.ShowDialog();
 
-                        if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                        if (result == DialogResult.OK && !String.IsNullOrWhiteSpace(fbd.SelectedPath))
                         {
 
                             pkg.CodePath = fbd.SelectedPath;
@@ -729,18 +733,18 @@ Second Element: Target of move connections and appearances", "Select two element
         // - file
         [ServiceOperation("{C007C59A-FABA-4280-9B66-5AD10ACB4B13}", "Show folder of *.xml, *.h,*.c",
             "Select VC controlled package or element with file path", isTextRequired: false)]
-        public static void ShowFolder(EA.Repository rep, bool isTotalCommander = false)
+        public static void ShowFolder(Repository rep, bool isTotalCommander = false)
         {
             string path = "";
-            EA.ObjectType oType = rep.GetContextItemType();
+            ObjectType oType = rep.GetContextItemType();
             switch (oType)
             {
-                case EA.ObjectType.otPackage:
-                    EA.Package pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    Package pkg = (Package)rep.GetContextObject();
                     if (pkg.CodePath.Trim() != "")
                     {
                         // consider gentype (C,C++,..)
-                        EA.Element el1 = rep.GetElementByGuid(pkg.PackageGUID);
+                        Element el1 = rep.GetElementByGuid(pkg.PackageGUID);
                         if (el1.Gentype == "")
                         {
                             MessageBox.Show("Package has no language configured. Please select a language!");
@@ -766,8 +770,8 @@ Second Element: Target of move connections and appearances", "Select two element
                         HoUtil.StartApp(@"Explorer.exe", "/e, " + path);
                     break;
 
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     path = HoUtil.GetGenFilePathElement(rep, el);
                     // remove filename
                     path = Regex.Replace(path, @"[a-zA-Z0-9\s_:.]*\.[a-zA-Z0-9]{0,4}$", "");
@@ -785,19 +789,19 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region CreateActivityForOperation
 
-        [ServiceOperation("{17D09C06-8FAE-4D76-B808-5EC2362B1953}", "Create Activity for Operation, Class/Interface",
-            "Select Package, Class/Interface or operation", isTextRequired: false)]
-        public static void CreateActivityForOperation(EA.Repository rep)
+        [ServiceOperation("{17D09C06-8FAE-4D76-B808-5EC2362B1953}", "Create/Update Activity for Operation, Class/Interface",
+            "Select Package, Class/Interface, Activity (only update) or operation", isTextRequired: false)]
+        public static void CreateActivityForOperation(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
+            ObjectType oType = rep.GetContextItemType();
             switch (oType)
             {
-                case EA.ObjectType.otMethod:
-                    EA.Method m = (EA.Method) rep.GetContextObject();
+                case ObjectType.otMethod:
+                    Method m = (Method) rep.GetContextObject();
 
                     // Create Activity at the end
-                    EA.Element el = rep.GetElementByID(m.ParentID);
-                    EA.Package pkg = rep.GetPackageByID(el.PackageID);
+                    Element el = rep.GetElementByID(m.ParentID);
+                    Package pkg = rep.GetPackageByID(el.PackageID);
                     int pos = pkg.Packages.Count + 1;
                     ActivityPar.CreateActivityForOperation(rep, m, pos);
                     rep.Models.Refresh();
@@ -805,18 +809,27 @@ Second Element: Target of move connections and appearances", "Select two element
                     rep.ShowInProjectView(m);
                     break;
 
-                case EA.ObjectType.otElement:
-                    el = (EA.Element) rep.GetContextObject();
+                case ObjectType.otElement:
+                    el = (Element) rep.GetContextObject();
                     if (el.Locked) return;
 
-                    CreateActivityForOperationsInElement(rep, el);
-                    rep.Models.Refresh();
-                    rep.RefreshModelView(0);
-                    rep.ShowInProjectView(el);
+                    if (el.Type == "Activity")
+                    {
+                        UpdateActivityMethodParameterWrapper(rep);
+
+                    }
+                    else
+                    {
+
+                        CreateActivityForOperationsInElement(rep, el);
+                        rep.Models.Refresh();
+                        rep.RefreshModelView(0);
+                        rep.ShowInProjectView(el);
+                    }
                     break;
 
-                case EA.ObjectType.otPackage:
-                    pkg = (EA.Package) rep.GetContextObject();
+                case ObjectType.otPackage:
+                    pkg = (Package) rep.GetContextObject();
                     CreateActivityForOperationsInPackage(rep, pkg);
                     // update sort order of packages
                     rep.Models.Refresh();
@@ -828,12 +841,12 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #endregion
 
-        private static void CreateActivityForOperationsInElement(EA.Repository rep, EA.Element el)
+        private static void CreateActivityForOperationsInElement(Repository rep, Element el)
         {
             if (el.Locked) return;
-            EA.Package pkg = rep.GetPackageByID(el.PackageID);
+            Package pkg = rep.GetPackageByID(el.PackageID);
             int treePos = pkg.Packages.Count + 1;
-            foreach (EA.Method m1 in el.Methods)
+            foreach (Method m1 in el.Methods)
             {
                 // Create Activity
                 ActivityPar.CreateActivityForOperation(rep, m1, treePos);
@@ -842,7 +855,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
 
         }
-        public static void CreateCompositeActivityFromText(EA.Repository rep, string s)
+        public static void CreateCompositeActivityFromText(Repository rep, string s)
         {
             s = DeleteCommentStrings(s);
             string name = CallOperationAction.RemoveUnwantedStringsFromText(s);
@@ -866,28 +879,28 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="s">Comma separated stereotypes</param>
-        public static void AddMacroFromText(EA.Repository rep, string s)
+        public static void AddMacroFromText(Repository rep, string s)
         {
             s = s.Replace(" ", "").Replace("(", "").Replace(")", "");
             if (s == "") s = "define";
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otElement:
+                case ObjectType.otElement:
                     EA.Attribute el = (EA.Attribute)rep.GetContextObject();
                     el.StereotypeEx = UpdateStereotype(s, el.StereotypeEx);
                     el.Update();
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute a = (EA.Attribute)rep.GetContextObject();
                     a.StereotypeEx = UpdateStereotype(s, a.StereotypeEx);
                     a.Update();
                     break;
-                case EA.ObjectType.otMethod:
-                    EA.Method o = (EA.Method)rep.GetContextObject();
+                case ObjectType.otMethod:
+                    Method o = (Method)rep.GetContextObject();
                     o.StereotypeEx = UpdateStereotype(s, o.StereotypeEx);
                     o.Update();
                     break;
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     EA.Connector c = (EA.Connector)rep.GetContextObject();
                     c.StereotypeEx = UpdateStereotype(s, c.StereotypeEx);
                     c.Update();
@@ -903,33 +916,33 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="s">Comma separated stereotypes</param>
-        public static void SetMacroFromText(EA.Repository rep, string s)
+        public static void SetMacroFromText(Repository rep, string s)
         {
             s = s.Replace(" ", "").Replace("(","").Replace(")", "");
 
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia != null)
             {
                 rep.SaveDiagram(dia.DiagramID);
             }
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     el.StereotypeEx = s;
                     el.Update();
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute a = (EA.Attribute)rep.GetContextObject();
                     a.StereotypeEx = s;
                     a.Update();
                     break;
-                case EA.ObjectType.otMethod:
-                    EA.Method o = (EA.Method)rep.GetContextObject();
+                case ObjectType.otMethod:
+                    Method o = (Method)rep.GetContextObject();
                     o.StereotypeEx = s;
                     o.Update();
                     break;
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     EA.Connector c = (EA.Connector)rep.GetContextObject();
                     c.StereotypeEx = s;
                     c.Update();
@@ -967,7 +980,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="s"></param>
-        public static void CreateActivityFromText(EA.Repository rep, string s)
+        public static void CreateActivityFromText(Repository rep, string s)
         {
             s = DeleteComment(s);
             string activityName = CallOperationAction.RemoveBody(s);
@@ -992,26 +1005,26 @@ Second Element: Target of move connections and appearances", "Select two element
             InsertInActivtyDiagram(rep, activityBody);
         }
 
-        private static void CreateActivityForOperationsInPackage(EA.Repository rep, EA.Package pkg)
+        private static void CreateActivityForOperationsInPackage(Repository rep, Package pkg)
         {
-            foreach (EA.Element el in pkg.Elements)
+            foreach (Element el in pkg.Elements)
             {
                 CreateActivityForOperationsInElement(rep, el);
 
             }
-            foreach (EA.Package pkg1 in pkg.Packages)
+            foreach (Package pkg1 in pkg.Packages)
             {
                 CreateActivityForOperationsInPackage(rep, pkg1);
             }
             
         }
-        private static bool LocateTextOrFrame(EA.Repository rep, EA.Element el)
+        private static bool LocateTextOrFrame(Repository rep, Element el)
         {
             if (el.Type == "Text")
             {
                 string s = el.MiscData[0];
                 int id = Convert.ToInt32(s);
-                EA.Diagram dia = rep.GetDiagramByID(id);
+                Diagram dia = rep.GetDiagramByID(id);
                 rep.ShowInProjectView(dia);
                 return true;
             }
@@ -1019,7 +1032,7 @@ Second Element: Target of move connections and appearances", "Select two element
             if (el.Type == "UMLDiagram")
             {
                 int id = Convert.ToInt32(el.MiscData[0]);
-                EA.Diagram dia = rep.GetDiagramByID(id);
+                Diagram dia = rep.GetDiagramByID(id);
                 rep.ShowInProjectView(dia);
                 return true;
 
@@ -1037,7 +1050,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{5ED3DABA-367E-4575-A161-D79F838A5A17}", "Hide Ports, Pins, Parameter",
             "Selected Diagram Objects or all", isTextRequired: false)]
         public static void HideEmbeddedElements(
-            EA.Repository rep)
+            Repository rep)
         {
             Cursor.Current = Cursors.WaitCursor;
             // remember Diagram data of current selected diagram
@@ -1049,7 +1062,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             // over all selected elements, simulation for loop by foreach
             int count = -1;
-            foreach (EA.DiagramObject unused in eaDia.SelObjects)
+            foreach (DiagramObject unused in eaDia.SelObjects)
             {
                 count = count + 1;
                 var elSource = eaDia.SelElements[count];
@@ -1061,7 +1074,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 else
                 {
                     // selected element was "Element"
-                    foreach (EA.Element embeddedElement in elSource.EmbeddedElements)
+                    foreach (Element embeddedElement in elSource.EmbeddedElements)
                     {
                         if (embeddedElement.IsEmbeddedElement())
                         {
@@ -1083,7 +1096,7 @@ Second Element: Target of move connections and appearances", "Select two element
         #endregion
         #region UpdateEmbeddedElementStyle
 
-        private static void UpdateEmbeddedElementStyle(EA.Repository rep, PortServices.LabelStyle style)
+        private static void UpdateEmbeddedElementStyle(Repository rep, PortServices.LabelStyle style)
         {
             Cursor.Current = Cursors.WaitCursor;
             // remember Diagram data of current selected diagram
@@ -1094,7 +1107,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             // over all selected elements
             int count = -1;
-            foreach (EA.DiagramObject diaObj in eaDia.SelObjects)
+            foreach (DiagramObject diaObj in eaDia.SelObjects)
             {
                 count = count + 1;
                 var elSource = eaDia.SelElements[count];
@@ -1107,7 +1120,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 else
                 {
                     // selected element was "Element"
-                    foreach (EA.Element embeddedElement in elSource.EmbeddedElements)
+                    foreach (Element embeddedElement in elSource.EmbeddedElements)
                     {
                         if (embeddedElement.IsEmbeddedElement())
                         {
@@ -1134,17 +1147,17 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="dia"></param>
         /// <param name="embeddedElement"></param>
-        private static void RemoveEmbeddedElementFromDiagram(EA.Diagram dia, EA.Element embeddedElement)
+        private static void RemoveEmbeddedElementFromDiagram(Diagram dia, Element embeddedElement)
         {
             // delete recursive embedded elements
-            foreach (EA.Element el in embeddedElement.EmbeddedElements)
+            foreach (Element el in embeddedElement.EmbeddedElements)
             {
                 RemoveEmbeddedElementFromDiagram(dia, el);
             }
             // delete the embedded element from diagram
             for (int i = dia.DiagramObjects.Count - 1; i >= 0; i -= 1)
             {
-                var obj = (EA.DiagramObject)dia.DiagramObjects.GetAt((short)i);
+                var obj = (DiagramObject)dia.DiagramObjects.GetAt((short)i);
                 if (obj.ElementID == embeddedElement.ElementID)
                 {
                     dia.DiagramObjects.Delete((short)i);
@@ -1167,7 +1180,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{FBEF4500-DD24-4D23-BC7F-08D70DDA2B57}", "Show Port, Pin Parameter Labels",
             "Selected Diagram Objects or all", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
-        public static void ShowEmbeddedElementsLabel(EA.Repository rep)
+        public static void ShowEmbeddedElementsLabel(Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsShown);
         }
@@ -1184,7 +1197,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         [ServiceOperation("{3493B9E6-F6DA-478E-A161-DD95D1D34B44}", "Hide Ports, Pins, Parameter Label",
             "Selected Diagram Objects or all", isTextRequired: false)]
-        public static void HideEmbeddedElementsLabel(EA.Repository rep)
+        public static void HideEmbeddedElementsLabel(Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsHidden);
         }
@@ -1201,7 +1214,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         [ServiceOperation("{CF59707B-35A3-4E0C-AA0D-16722DB61F7D}", "Hide Port Type",
             "Selected Diagram Objects or all", isTextRequired: false)]
-        public static void HideEmbeddedElementsType(EA.Repository rep)
+        public static void HideEmbeddedElementsType(Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsTypeHidden);
         }
@@ -1219,7 +1232,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{CF59707B-35A3-4E0C-AA0D-16722DB61F7D}", "Show Port Type",
             "Selected Diagram Objects or all", isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
-        public static void ShowEmbeddedElementsType(EA.Repository rep)
+        public static void ShowEmbeddedElementsType(Repository rep)
         {
             UpdateEmbeddedElementStyle(rep, PortServices.LabelStyle.IsTypeShown);
         }
@@ -1233,14 +1246,14 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="embeddedElementType"></param>
         [ServiceOperation("{678AD901-1D2F-4FB0-BAAD-AEB775EE18AC}", "Show all ports for Component", "Select Class, Interface or Component", isTextRequired: false)]
-        public static void ShowEmbeddedElementsGui(EA.Repository rep, string embeddedElementType="Port Pin Parameter")
+        public static void ShowEmbeddedElementsGui(Repository rep, string embeddedElementType="Port Pin Parameter")
         {
             EaDiagram eaDia = new EaDiagram(rep);
             var dia = eaDia.Dia;
             if (dia == null) return;
             rep.SaveDiagram(dia.DiagramID);
             // over all selected elements
-            foreach (EA.DiagramObject diaObj in dia.SelectedObjects)
+            foreach (DiagramObject diaObj in dia.SelectedObjects)
             {
                 var elSource = rep.GetElementByID(diaObj.ElementID);
                 // find object on Diagram
@@ -1248,7 +1261,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 if (diaObjSource == null) return;
                 
                 int pos = 0;
-                foreach (EA.Element elEmbedded in elSource.EmbeddedElements)
+                foreach (Element elEmbedded in elSource.EmbeddedElements)
                 {
 
                     if (embeddedElementType == "" | embeddedElementType.Contains(elEmbedded.Type))
@@ -1263,7 +1276,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         else
                         {
                             // Port: Visualize embedded Port + embedded Interface
-                            foreach (EA.Element interf in elEmbedded.EmbeddedElements)
+                            foreach (Element interf in elEmbedded.EmbeddedElements)
                             {
                                 bool newPort = HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObjSource, elEmbedded, interf);
                                 if (newPort) pos = pos + 1;
@@ -1278,13 +1291,13 @@ Second Element: Target of move connections and appearances", "Select two element
 
         }
         #endregion
-        public static void NavigateComposite(EA.Repository repository)
+        public static void NavigateComposite(Repository repository)
         {
-            EA.ObjectType oType = repository.GetContextItemType();
+            ObjectType oType = repository.GetContextItemType();
             // find composite element of diagram
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            if (oType.Equals(ObjectType.otDiagram))
             {
-                EA.Diagram d = (EA.Diagram)repository.GetContextObject();
+                Diagram d = (Diagram)repository.GetContextObject();
                 string guid = HoUtil.GetElementFromCompositeDiagram(repository, d.DiagramGUID);
                 if (guid != "")
                 {
@@ -1293,36 +1306,36 @@ Second Element: Target of move connections and appearances", "Select two element
 
             }
             // find composite diagram of element of element
-            if (oType.Equals(EA.ObjectType.otElement))
+            if (oType.Equals(ObjectType.otElement))
             {
-                EA.Element e = (EA.Element)repository.GetContextObject();
+                Element e = (Element)repository.GetContextObject();
                 // locate text or frame
                 if (LocateTextOrFrame(repository, e)) return;
 
                 repository.ShowInProjectView(e.CompositeDiagram);
             }
         }
-        public static void FindUsage(EA.Repository rep)
+        public static void FindUsage(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (oType.Equals(EA.ObjectType.otElement))
+            ObjectType oType = rep.GetContextItemType();
+            if (oType.Equals(ObjectType.otElement))
             {
                 // locate text or frame
-                var el = (EA.Element)rep.GetContextObject();
+                var el = (Element)rep.GetContextObject();
                 if (LocateTextOrFrame(rep, el)) return;
                 rep.RunModelSearch("Element usage", el.ElementGUID, "", "");
             }
-            if (oType.Equals(EA.ObjectType.otMethod))
+            if (oType.Equals(ObjectType.otMethod))
             {
-                EA.Method method = (EA.Method)rep.GetContextObject();
+                Method method = (Method)rep.GetContextObject();
                 rep.RunModelSearch("Method usage", method.MethodGUID, "", "");
             }
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            if (oType.Equals(ObjectType.otDiagram))
             {
-                EA.Diagram dia = (EA.Diagram)rep.GetContextObject();
+                Diagram dia = (Diagram)rep.GetContextObject();
                 rep.RunModelSearch("Diagram usage", dia.DiagramGUID, "", "");
             }
-            if (oType.Equals(EA.ObjectType.otConnector))
+            if (oType.Equals(ObjectType.otConnector))
             {
                 EA.Connector con = (EA.Connector)rep.GetContextObject();
                 rep.RunModelSearch("Connector is visible in Diagrams",
@@ -1330,12 +1343,12 @@ Second Element: Target of move connections and appearances", "Select two element
             }
         }
 
-        public static void ShowSpecification(EA.Repository rep)
+        public static void ShowSpecification(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (oType.Equals(EA.ObjectType.otElement))
+            ObjectType oType = rep.GetContextItemType();
+            if (oType.Equals(ObjectType.otElement))
             {
-                var el = (EA.Element)rep.GetContextObject();
+                var el = (Element)rep.GetContextObject();
                 //over all file
                 foreach (EA.File f in el.Files)
                 {
@@ -1350,54 +1363,54 @@ Second Element: Target of move connections and appearances", "Select two element
         #region setLineStyleLV
         [ServiceOperation("{5F5CB088-1DDD-4A00-B641-273CAC017AE5}", "Set line style LV(Lateral Vertical)", "Select Diagram, connector, nodes", isTextRequired: false)]
         #endregion
-        public static void SetLineStyleLv(EA.Repository rep)
+        public static void SetLineStyleLv(Repository rep)
         {
             SetLineStyle(rep, "LV");
         }
          [ServiceOperation("{9F1E7448-3B3B-4058-83AB-CBA97F24B90B}", "Set line style LH(Lateral Horizontal)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleLh(EA.Repository rep)
+         public static void SetLineStyleLh(Repository rep)
          {
              SetLineStyle(rep, "LH");
          }
          [ServiceOperation("{A8199FFF-A9BA-4875-9529-45B2801F0DB3}", "Set line style TV(Tree Vertical)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleTv(EA.Repository rep)
+         public static void SetLineStyleTv(Repository rep)
          {
              SetLineStyle(rep, "TV");
          }
          [ServiceOperation("{5E481745-C684-431D-BD02-AD22EE39C252}", "Set line style TH(Tree Horizontal)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleTh(EA.Repository rep)
+         public static void SetLineStyleTh(Repository rep)
          {
              SetLineStyle(rep, "TH");
          }
          [ServiceOperation("{A8199FFF-A9BA-4875-9529-45B2801F0DB3}", "Set line style OS(Orthogonal Square)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleOs(EA.Repository rep)
+         public static void SetLineStyleOs(Repository rep)
          {
              SetLineStyle(rep, "OS");
          }
          [ServiceOperation("{D7B75725-60B7-4C73-913F-164E6EE847D3}", "Set line style OR(Orthogonal Round)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleOr(EA.Repository rep)
+         public static void SetLineStyleOr(Repository rep)
          {
              SetLineStyle(rep, "OR");
          }
          [ServiceOperation("{99F31FC7-8326-468B-B1D8-2542BBC8D4EB}", "Set line style B(Bezier)", "Select Diagram, connector, nodes", isTextRequired: false)]
-         public static void SetLineStyleB(EA.Repository rep)
+         public static void SetLineStyleB(Repository rep)
          {
              SetLineStyle(rep, "B");
          }
 
-        public static void SetLineStyle(EA.Repository repository, string lineStyle)
+        public static void SetLineStyle(Repository repository, string lineStyle)
         {
           EA.Connector con = null;
-            EA.Collection objCol = null;
-            EA.ObjectType oType = repository.GetContextItemType();
-            EA.Diagram diaCurrent = repository.GetCurrentDiagram();
+            Collection objCol = null;
+            ObjectType oType = repository.GetContextItemType();
+            Diagram diaCurrent = repository.GetCurrentDiagram();
             if (diaCurrent != null)
             {
                 con = diaCurrent.SelectedConnector;
                 objCol = diaCurrent.SelectedObjects;
             }
             // all connections of diagram
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            if (oType.Equals(ObjectType.otDiagram))
             {
                 HoUtil.SetLineStyleDiagram(repository, diaCurrent, lineStyle);
             }
@@ -1413,24 +1426,24 @@ Second Element: Target of move connections and appearances", "Select two element
         #region DisplayOperationForSelectedElement
         // display behavior or definition for selected element
         // displayMode: "Behavior" or "Method"
-        public static void DisplayOperationForSelectedElement(EA.Repository repository, DisplayMode showBehavior)
+        public static void DisplayOperationForSelectedElement(Repository repository, DisplayMode showBehavior)
         {
-            EA.ObjectType oType = repository.GetContextItemType();
+            ObjectType oType = repository.GetContextItemType();
             // Method found
-            if (oType.Equals(EA.ObjectType.otMethod))
+            if (oType.Equals(ObjectType.otMethod))
             {
                 // display behavior for method
-                Appl.DisplayBehaviorForOperation(repository, (EA.Method)repository.GetContextObject());
+                Appl.DisplayBehaviorForOperation(repository, (Method)repository.GetContextObject());
 
             }
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            if (oType.Equals(ObjectType.otDiagram))
             {
                 // find parent element
-                EA.Diagram dia = (EA.Diagram)repository.GetContextObject();
+                Diagram dia = (Diagram)repository.GetContextObject();
                 if (dia.ParentID > 0)
                 {
                     // find parent element
-                    EA.Element parentEl = repository.GetElementByID(dia.ParentID);
+                    Element parentEl = repository.GetElementByID(dia.ParentID);
                     //
                     LocateOperationFromBehavior(repository, parentEl, showBehavior);
                 }
@@ -1443,13 +1456,13 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
             // Connector / Message found
-            if (oType.Equals(EA.ObjectType.otConnector))
+            if (oType.Equals(ObjectType.otConnector))
             {
                 EA.Connector con = (EA.Connector)repository.GetContextObject();
                 if (con.Type.Equals("StateFlow"))
                 {
 
-                    EA.Method m = HoUtil.GetOperationFromConnector(repository, con);
+                    Method m = HoUtil.GetOperationFromConnector(repository, con);
                     if (m != null)
                     {
                         if (showBehavior.Equals(DisplayMode.Behavior))
@@ -1475,9 +1488,9 @@ Second Element: Target of move connections and appearances", "Select two element
                         // extract the name
                         int pos = opName.IndexOf("(", StringComparison.Ordinal);
                         opName = opName.Substring(0, pos);
-                        EA.Element el = repository.GetElementByID(con.SupplierID);
+                        Element el = repository.GetElementByID(con.SupplierID);
                         // find operation by name
-                        foreach (EA.Method op in el.Methods)
+                        foreach (Method op in el.Methods)
                         {
                             if (op.Name == opName)
                             {
@@ -1489,7 +1502,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         if ((el.Type.Equals("Sequence") || el.Type.Equals("Object")) && el.ClassfierID > 0)
                         {
                             el = repository.GetElementByID(el.ClassifierID);
-                            foreach (EA.Method op in el.Methods)
+                            foreach (Method op in el.Methods)
                             {
                                 if (op.Name == opName)
                                 {
@@ -1511,9 +1524,9 @@ Second Element: Target of move connections and appearances", "Select two element
             }
 
             // Element
-            if (oType.Equals(EA.ObjectType.otElement))
+            if (oType.Equals(ObjectType.otElement))
             {
-                EA.Element el = (EA.Element)repository.GetContextObject();
+                Element el = (Element)repository.GetContextObject();
                 // locate text or frame
                 if (LocateTextOrFrame(repository, el)) return;
 
@@ -1527,7 +1540,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 if (el.Type.Equals("State"))
                 {
                     // get operations
-                    foreach (EA.Method m in el.Methods)
+                    foreach (Method m in el.Methods)
                     {
                         // display behaviors for methods
                         Appl.DisplayBehaviorForOperation(repository, m);
@@ -1536,7 +1549,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
                 if (el.Type.Equals("Action"))
                 {
-                    foreach (EA.CustomProperty custproperty in el.CustomProperties)
+                    foreach (CustomProperty custproperty in el.CustomProperties)
                     {
                         if (custproperty.Name.Equals("kind") && custproperty.Value.Equals("CallOperation"))
                         {
@@ -1558,9 +1571,9 @@ Second Element: Target of move connections and appearances", "Select two element
             }
         }
         #endregion
-        private static void ShowFromElement(EA.Repository repository, EA.Element el, DisplayMode showBehavior)
+        private static void ShowFromElement(Repository repository, Element el, DisplayMode showBehavior)
         {
-            EA.Method method = HoUtil.GetOperationFromAction(repository, el);
+            Method method = HoUtil.GetOperationFromAction(repository, el);
             if (method != null)
             {
                 if (showBehavior.Equals(DisplayMode.Behavior))
@@ -1574,9 +1587,9 @@ Second Element: Target of move connections and appearances", "Select two element
             }
         }
 
-        private static void LocateOperationFromBehavior(EA.Repository repository, EA.Element el, DisplayMode showBehavior)
+        private static void LocateOperationFromBehavior(Repository repository, Element el, DisplayMode showBehavior)
         {
-            EA.Method method = HoUtil.GetOperationFromBrehavior(repository, el);
+            Method method = HoUtil.GetOperationFromBrehavior(repository, el);
             if (method != null)
             {
                 if (showBehavior.Equals(DisplayMode.Behavior))
@@ -1590,13 +1603,13 @@ Second Element: Target of move connections and appearances", "Select two element
             }
         }
         // ReSharper disable once UnusedMember.Local
-        private static void BehaviorForOperation(EA.Repository repository, EA.Method method)
+        private static void BehaviorForOperation(Repository repository, Method method)
         {
             string behavior = method.Behavior;
             if (behavior.StartsWith("{", StringComparison.Ordinal) & behavior.EndsWith("}", StringComparison.Ordinal))
             {
                 // get object according to behavior
-                EA.Element el = repository.GetElementByGuid(behavior);
+                Element el = repository.GetElementByGuid(behavior);
                 // Activity
                 if (el == null) { }
                 else
@@ -1614,8 +1627,8 @@ Second Element: Target of move connections and appearances", "Select two element
         // extension: "CallOperation" ,"101"=StateNode, Final, "no"= else/no Merge
         //             comp=yes:  Activity with composite Diagram
         //----------------------------------------------------------------------------------------
-        public static EA.DiagramObject  CreateDiagramObjectFromContext(EA.Repository rep, string name, string type,
-            string extension, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", EA.Element srcEl=null)
+        public static DiagramObject  CreateDiagramObjectFromContext(Repository rep, string name, string type,
+            string extension, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", Element srcEl=null)
         {
             int WidthPerCharacter = 60;
             // filter out linefeed, tab
@@ -1626,13 +1639,13 @@ Second Element: Target of move connections and appearances", "Select two element
                 MessageBox.Show(type + ": '" + name + "' has more than 255 characters.", "Name is to long");
                 return null;
             }
-            EA.Element elParent = null;
-            EA.Element elTarget;
+            Element elParent = null;
+            Element elTarget;
 
             string basicType = type;
             if (type == "CallOperation") basicType = "Action";
 
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return null;
 
             rep.SaveDiagram(dia.DiagramID);
@@ -1655,7 +1668,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 {
                     if (elSource.ParentID > 0 ) {
                         elParent = rep.GetElementByID(elSource.ParentID);
-                        elTarget = (EA.Element)elParent.Elements.AddNew(name, basicType);
+                        elTarget = (Element)elParent.Elements.AddNew(name, basicType);
                         if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
                         elParent.Elements.Refresh();
                        
@@ -1663,7 +1676,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     else 
                     {
                         var pkg = rep.GetPackageByID(elSource.PackageID);
-                        elTarget = (EA.Element)pkg.Elements.AddNew(name, basicType);
+                        elTarget = (Element)pkg.Elements.AddNew(name, basicType);
                         if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
                         pkg.Elements.Refresh();
                     }
@@ -1672,7 +1685,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     // make a Composite Element which is refined by Activity Diagram
                     if (basicType == "Activity" & extension.ToLower() == "comp=yes")
                     {
-                        EA.Diagram actDia = ActivityPar.CreateActivityCompositeDiagram(rep, elTarget);
+                        Diagram actDia = ActivityPar.CreateActivityCompositeDiagram(rep, elTarget);
                         HoUtil.SetActivityCompositeDiagram(rep, elTarget, actDia.DiagramID.ToString());
                         //elTarget.
                     }
@@ -1746,7 +1759,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 // end note
                 if ( elParent != null && elParent.Type == "Activity" && extension == "101")
                 {
-                    EA.DiagramObject diaObj = dia.GetDiagramObjectByID(elParent.ElementID,"");
+                    DiagramObject diaObj = dia.GetDiagramObjectByID(elParent.ElementID,"");
                     if (diaObj != null)
                     {
                         diaObj.bottom = bottom - 40;
@@ -1756,7 +1769,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
                 HoUtil.AddSequenceNumber(rep, dia);
-                var diaObjTarget = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+                var diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
                 diaObjTarget.ElementID = elTarget.ElementID;
                 diaObjTarget.Sequence = 1;
                 diaObjTarget.Update();
@@ -1793,7 +1806,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 var con = DrawConnectorBetweenElements(elSource, elTarget,"ControlFlow","");
 
             // set line style LV
-                foreach (EA.DiagramLink link in dia.DiagramLinks)
+                foreach (DiagramLink link in dia.DiagramLinks)
                 {
                     if (link.ConnectorID == con.ConnectorID)
                     {
@@ -1834,7 +1847,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 if (type == "CallOperation")
                 {
 
-                    EA.Method method = CallOperationAction.GetMethodFromMethodName(rep, extension);
+                    Method method = CallOperationAction.GetMethodFromMethodName(rep, extension);
                     if (method != null)
                     {
                         CallOperationAction.CreateCallAction(rep, elTarget, method);
@@ -1848,7 +1861,7 @@ Second Element: Target of move connections and appearances", "Select two element
             // set selected object
             rep.SaveDiagram(dia.DiagramID);
             rep.ReloadDiagram(dia.DiagramID);
-            EA.Element elT = rep.GetElementByID(diaObjTarget.ElementID);
+            Element elT = rep.GetElementByID(diaObjTarget.ElementID);
             dia.SelectedObjects.AddNew(diaObjTarget.ElementID.ToString(),elT.ObjectType.ToString());
             dia.SelectedObjects.Refresh();
             return diaObjTarget;
@@ -1864,7 +1877,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="type">Connector type</param>
         /// <param name="stereotype"></param>
         /// <returns></returns>
-        private static EA.Connector DrawConnectorBetweenElements(EA.Element elSource, EA.Element elTarget, string type, string stereotype)
+        private static EA.Connector DrawConnectorBetweenElements(Element elSource, Element elTarget, string type, string stereotype)
         {
             // check if connector already exists
             foreach (EA.Connector con1 in elSource.Connectors)
@@ -1894,16 +1907,16 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="lineStyle"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMember.Local
-        private static EA.Connector DrawConnectorBetweenNodes(EA.Repository rep, 
-            EA.DiagramObject nodeSource,
-            EA.DiagramObject nodeTarget, 
+        private static EA.Connector DrawConnectorBetweenNodes(Repository rep, 
+            DiagramObject nodeSource,
+            DiagramObject nodeTarget, 
             string type, 
             string stereotype="", 
             string lineStyle="D")
         {
-            EA.Element elSource = rep.GetElementByID(nodeSource.ElementID);
-            EA.Element elTarget = rep.GetElementByID(nodeTarget.ElementID);
-            EA.Diagram dia = rep.GetDiagramByID(nodeSource.DiagramID);
+            Element elSource = rep.GetElementByID(nodeSource.ElementID);
+            Element elTarget = rep.GetElementByID(nodeTarget.ElementID);
+            Diagram dia = rep.GetDiagramByID(nodeSource.DiagramID);
             EA.Connector con = DrawConnectorBetweenElements(elSource, elTarget, type, stereotype);
             con.SupplierID = elTarget.ElementID;
             con.Update();
@@ -1911,7 +1924,7 @@ Second Element: Target of move connections and appearances", "Select two element
             elTarget.Connectors.Refresh();
             dia.DiagramLinks.Refresh();
             // set line style
-            foreach (EA.DiagramLink link in dia.DiagramLinks)
+            foreach (DiagramLink link in dia.DiagramLinks)
             {
                 if (link.ConnectorID == con.ConnectorID)
                 {
@@ -1933,28 +1946,28 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="dia"></param>
         /// <param name="text"></param>
-        public static void InsertInterface(EA.Repository rep, EA.Diagram dia, string text)
+        public static void InsertInterface(Repository rep, Diagram dia, string text)
         {
 
             bool isComponent = false;
-            EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+            Package pkg = rep.GetPackageByID(dia.PackageID);
             int pos = 0;
 
             // only one diagram object selected as source
             if (dia.SelectedObjects.Count != 1) return;
 
             // save selected object
-            var objSelected = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
+            var objSelected = (DiagramObject)dia.SelectedObjects.GetAt(0);
 
 
             rep.SaveDiagram(dia.DiagramID);
-            var diaObjSource = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
+            var diaObjSource = (DiagramObject)dia.SelectedObjects.GetAt(0);
             var elSource = rep.GetElementByID(diaObjSource.ElementID);
             if (elSource.Type == "Component") isComponent = true;
             // remember selected object
 
-            List<EA.Element> ifList = GetInterfacesFromText(rep, pkg, text);
-            foreach (EA.Element elTarget in ifList)
+            List<Element> ifList = GetInterfacesFromText(rep, pkg, text);
+            foreach (Element elTarget in ifList)
             {
                 if (elSource.Locked )
                 {
@@ -1976,7 +1989,7 @@ Second Element: Target of move connections and appearances", "Select two element
             // visualize ports
             if (isComponent)
             {
-                dia.SelectedObjects.AddNew(diaObjSource.ElementID.ToString(), EA.ObjectType.otElement.ToString());
+                dia.SelectedObjects.AddNew(diaObjSource.ElementID.ToString(), ObjectType.otElement.ToString());
                 dia.SelectedObjects.Refresh();
                 ShowEmbeddedElementsGui(rep);
             }
@@ -1997,7 +2010,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         }
         #endregion
-        private static void AddInterfaceToElement(EA.Repository rep, int pos, EA.Element elSource, EA.Element elTarget, EA.Diagram dia, EA.DiagramObject diaObjSource)
+        private static void AddInterfaceToElement(Repository rep, int pos, Element elSource, Element elTarget, Diagram dia, DiagramObject diaObjSource)
         {
             // check if interface already exists on diagram
             var diaObjTarget = dia.GetDiagramObjectByID(elTarget.ElementID, "");
@@ -2020,7 +2033,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
                 // create target diagram object
-                diaObjTarget = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+                diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
 
                 diaObjTarget.ElementID = elTarget.ElementID;
                 diaObjTarget.Sequence = 1;
@@ -2056,7 +2069,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 // set line style
                 dia.DiagramLinks.Refresh();
                 //rep.ReloadDiagram(dia.DiagramID);
-                foreach (EA.DiagramLink link in dia.DiagramLinks)
+                foreach (DiagramLink link in dia.DiagramLinks)
                 {
                     if (link.ConnectorID == con.ConnectorID)
                     {
@@ -2079,21 +2092,21 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="elSource">The element to add port</param>
         /// <param name="elInterface">the interface/type to use for the type</param>
         /// <param name="isRequired"></param>
-        private static void AddNewPortToComponent(EA.Element elSource, EA.Element elInterface, bool isRequired=true)
+        private static void AddNewPortToComponent(Element elSource, Element elInterface, bool isRequired=true)
         {
             if (elInterface.Type != "Interface") return;
 
             // check if port with interface already exists
-            foreach (EA.Element p in elSource.EmbeddedElements)
+            foreach (Element p in elSource.EmbeddedElements)
             {
                 if (p.Name == elInterface.Name) return;
             }
             // create a port
-            var port = (EA.Element)elSource.EmbeddedElements.AddNew(elInterface.Name, "Port");
+            var port = (Element)elSource.EmbeddedElements.AddNew(elInterface.Name, "Port");
             elSource.EmbeddedElements.Refresh();
             // add interface
             string embeddedType = isRequired  ? "RequiredInterface" : "ProvidedInterface";
-            var interf = (EA.Element)port.EmbeddedElements.AddNew(elInterface.Name, embeddedType);
+            var interf = (Element)port.EmbeddedElements.AddNew(elInterface.Name, embeddedType);
             // set classifier
             interf.ClassfierID = elInterface.ElementID;
             interf.Update();
@@ -2108,9 +2121,9 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="s"></param>
         /// <param name="addMissingInterface"></param>
         /// <returns></returns>
-        private static List<EA.Element> GetInterfacesFromText(EA.Repository rep, EA.Package pkg, string s, bool addMissingInterface = true)
+        private static List<Element> GetInterfacesFromText(Repository rep, Package pkg, string s, bool addMissingInterface = true)
         {
-            List<EA.Element> elList = new List<EA.Element>();
+            List<Element> elList = new List<Element>();
             s = DeleteComment(s);
             // string pattern = @"#include\s*[""<]([^.]*)\.h";
             string patternPath = @"#include\s*[""<]([^"">]*)";
@@ -2123,11 +2136,11 @@ Second Element: Target of move connections and appearances", "Select two element
                 string includeName = Regex.Match(includePath, @"([\w-]*)\.h").Groups[1].Value;
 
 
-                EA.Element el = CallOperationAction.GetElementFromName(rep, includeName, "Interface");
+                Element el = CallOperationAction.GetElementFromName(rep, includeName, "Interface");
                 if (el == null && addMissingInterface )
                 {
                     // create an interface 
-                    el = (EA.Element)pkg.Elements.AddNew(includeName, "Interface");
+                    el = (Element)pkg.Elements.AddNew(includeName, "Interface");
                     el.Notes = "Interface '" + includeName + "' not available!";
                     el.Update();
                     pkg.Elements.Refresh();
@@ -2155,9 +2168,9 @@ Second Element: Target of move connections and appearances", "Select two element
         /// - Make a Usage Connector from Class/Interface to Interface
         /// </summary>
         /// <param name="rep"></param>
-        public static void GenerateUseInterface(EA.Repository rep)
+        public static void GenerateUseInterface(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
 
             // prevent information loss
@@ -2165,10 +2178,10 @@ Second Element: Target of move connections and appearances", "Select two element
             HoUtil.SetDiagramStyleFitToPage(dia);// after save diagram!
 
             // over all selected diagram objects
-            foreach (EA.DiagramObject obj in dia.SelectedObjects)
+            foreach (DiagramObject obj in dia.SelectedObjects)
             {
 
-                EA.Element elSource = rep.GetElementByID(obj.ElementID);
+                Element elSource = rep.GetElementByID(obj.ElementID);
                 obj.SetStyleEx("Notes", "300");
                 obj.Update();
 
@@ -2185,7 +2198,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 int topStart = obj.top;
                 
                 // over include files of the selected objects
-                foreach (EA.Element ifTarget in GetIncludedHeaderFilesFromCode(rep, elSource))
+                foreach (Element ifTarget in GetIncludedHeaderFilesFromCode(rep, elSource))
                 {
 
                     int top = topStart - pos * (offsetHigh + nodeHigh);
@@ -2193,7 +2206,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     // If element don't already exists, create Interface Node on Diagram
                     if (dia.GetDiagramObjectByID(ifTarget.ElementID,"")==null)
                     {
-                        EA.DiagramObject diaObjTarget = (EA.DiagramObject)dia.DiagramObjects.AddNew($"l={left};r={left+nodeWidth};t={top};b={top-nodeHigh}", "");
+                        DiagramObject diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew($"l={left};r={left+nodeWidth};t={top};b={top-nodeHigh}", "");
 
                         diaObjTarget.ElementID = ifTarget.ElementID;
                         diaObjTarget.SetStyleEx("AttPro","0");
@@ -2242,17 +2255,17 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="text"></param>
 
-        public static void InsertInActivtyDiagram(EA.Repository rep, string text)
+        public static void InsertInActivtyDiagram(Repository rep, string text)
         {
             
             // remember selected object
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             if (dia.Type != "Activity") return;
 
-            EA.Element elSource = HoUtil.GetElementFromContextObject(rep);
+            Element elSource = HoUtil.GetElementFromContextObject(rep);
             if (elSource == null) return;
-            EA.DiagramObject objSource = null;
+            DiagramObject objSource = null;
 
             // Switch case was selected as source
             bool isSwitchCaseSelected = false;
@@ -2506,7 +2519,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
         #region createActionFromText
-        private static void CreateActionFromText(EA.Repository rep, string s1, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", 
+        private static void CreateActionFromText(Repository rep, string s1, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", 
             bool removeModuleNameFromMethodName= false)
         {
             // check if return
@@ -2555,7 +2568,7 @@ Second Element: Target of move connections and appearances", "Select two element
         }
         #endregion
         #region createDecisionFromText
-        public static string CreateDecisionFromText(EA.Repository rep, string decisionName, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "")
+        public static string CreateDecisionFromText(Repository rep, string decisionName, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "")
         {
             decisionName = CallOperationAction.RemoveUnwantedStringsFromText(decisionName);
             string loops = "for, while, switch";
@@ -2584,23 +2597,23 @@ Second Element: Target of move connections and appearances", "Select two element
         }
         #endregion
         #region addElementNote
-        public static void AddElementNote(EA.Repository rep)
+        public static void AddElementNote(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            EA.Element el = HoUtil.GetElementFromContextObject(rep);
+            ObjectType oType = rep.GetContextItemType();
+            Element el = HoUtil.GetElementFromContextObject(rep);
             if (el != null)
             {
-                EA.Diagram dia = rep.GetCurrentDiagram();
-                EA.Package pkg = rep.GetPackageByID(el.PackageID);
+                Diagram dia = rep.GetCurrentDiagram();
+                Package pkg = rep.GetPackageByID(el.PackageID);
                 if (dia == null || pkg.IsProtected || dia.IsLocked || el.Locked ) return;
 
                 // save diagram
                 rep.SaveDiagram(dia.DiagramID);
 
-                EA.Element elNote;
+                Element elNote;
                 try
                 {
-                    elNote = (EA.Element)pkg.Elements.AddNew("", "Note");
+                    elNote = (Element)pkg.Elements.AddNew("", "Note");
                     elNote.Update();
                     pkg.Update();
                 }
@@ -2609,7 +2622,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 // add element to diagram
                 // "l=200;r=400;t=200;b=600;"
 
-                EA.DiagramObject diaObj = GetDiagramObjectFromElement(el, dia);
+                DiagramObject diaObj = GetDiagramObjectFromElement(el, dia);
                
                 int left = diaObj.right + 50;
                 int right = left + 100;
@@ -2617,7 +2630,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 int bottom = top - 100;
 
                 string position = $"l={left};r={right};t={top};b={bottom};";
-                EA.DiagramObject diaObject = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+                DiagramObject diaObject = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
                 dia.Update();
                 diaObject.ElementID = elNote.ElementID;
                 diaObject.Sequence = 1; // put element to top
@@ -2631,7 +2644,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 HoUtil.SetElementHasAttachedLink(rep, el, elNote);
                 rep.ReloadDiagram(dia.DiagramID);
             } 
-            else if (oType.Equals(EA.ObjectType.otConnector))
+            else if (oType.Equals(ObjectType.otConnector))
             {
 
             }
@@ -2642,29 +2655,29 @@ Second Element: Target of move connections and appearances", "Select two element
         /// Update Activity types (return, parameter) according to Operation
         /// </summary>
         /// <param name="rep"></param>
-        public static void UpdateActivityParameter(EA.Repository rep)
+        public static void UpdateActivityParameter(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (oType.Equals(EA.ObjectType.otElement))
+            ObjectType oType = rep.GetContextItemType();
+            if (oType.Equals(ObjectType.otElement))
             {
 
-                EA.Element el = (EA.Element)rep.GetContextObject();
+                Element el = (Element)rep.GetContextObject();
                 if (el.Type.Equals("Activity"))
                 {
                     // get the associated operation
-                    EA.Method m = HoUtil.GetOperationFromBrehavior(rep, el);
+                    Method m = HoUtil.GetOperationFromBrehavior(rep, el);
                     if (el.Locked) return;
                     if (m == null) return;
                     ActivityPar.UpdateParameterFromOperation(rep, el, m);// get parameters from Operation for Activity
-                    EA.Diagram dia = rep.GetCurrentDiagram();
-                    EA.DiagramObject diaObj = dia?.GetDiagramObjectByID(el.ElementID,"");
+                    Diagram dia = rep.GetCurrentDiagram();
+                    DiagramObject diaObj = dia?.GetDiagramObjectByID(el.ElementID,"");
                     if (diaObj == null) return;
                     
                     int pos = 0;
                     rep.SaveDiagram(dia.DiagramID);
 
                     HoUtil.SetDiagramStyleFitToPage(dia);// after save diagram!
-                    foreach (EA.Element actPar in el.EmbeddedElements)
+                    foreach (Element actPar in el.EmbeddedElements)
                     {
                         if (!actPar.Type.Equals("ActivityParameter")) continue;
                         HoUtil.VisualizePortForDiagramobject(rep, pos, dia, diaObj, actPar, null);
@@ -2677,44 +2690,44 @@ Second Element: Target of move connections and appearances", "Select two element
                     UpdateActivityParameterForElement(rep, el);
                 }
             }
-            if (oType.Equals(EA.ObjectType.otMethod))
+            if (oType.Equals(ObjectType.otMethod))
             {
-                EA.Method m = (EA.Method)rep.GetContextObject();
-                EA.Element act = Appl.GetBehaviorForOperation(rep, m);
+                Method m = (Method)rep.GetContextObject();
+                Element act = Appl.GetBehaviorForOperation(rep, m);
                 if (act == null) return;
                 if (act.Locked) return;
                 ActivityPar.UpdateParameterFromOperation(rep, act, m);// get parameters from Operation for Activity
             }
-            if (oType.Equals(EA.ObjectType.otPackage))
+            if (oType.Equals(ObjectType.otPackage))
             {
-                EA.Package pkg = (EA.Package)rep.GetContextObject();
+                Package pkg = (Package)rep.GetContextObject();
                 UpdateActivityParameterForPackage(rep, pkg);
             }
         }
 
-        private static void UpdateActivityParameterForElement(EA.Repository rep, EA.Element el)
+        private static void UpdateActivityParameterForElement(Repository rep, Element el)
         {
-            foreach (EA.Method m in el.Methods)
+            foreach (Method m in el.Methods)
             {
-                EA.Element act = Appl.GetBehaviorForOperation(rep, m);
+                Element act = Appl.GetBehaviorForOperation(rep, m);
                 if (act == null) continue;
                 if (act.Locked) continue;
                 ActivityPar.UpdateParameterFromOperation(rep, act, m);// get parameters from Operation for Activity
             }
-            foreach (EA.Element elSub in el.Elements)
+            foreach (Element elSub in el.Elements)
             {
                 UpdateActivityParameterForElement(rep, elSub);
             }
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private static bool UpdateActivityParameterForPackage(EA.Repository rep, EA.Package pkg)
+        private static bool UpdateActivityParameterForPackage(Repository rep, Package pkg)
         {
-            foreach (EA.Element el in pkg.Elements)
+            foreach (Element el in pkg.Elements)
             {
                 UpdateActivityParameterForElement(rep, el);
             }
-            foreach (EA.Package pkgSub in pkg.Packages)
+            foreach (Package pkgSub in pkg.Packages)
             {
                 // update all packages
                 UpdateActivityParameterForPackage(rep, pkgSub);
@@ -2723,10 +2736,10 @@ Second Element: Target of move connections and appearances", "Select two element
 
         }
 
-        public static void LocateType(EA.Repository rep)
+        public static void LocateType(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            EA.Element el;
+            ObjectType oType = rep.GetContextItemType();
+            Element el;
             int id;
             string triggerGuid;
             // connector
@@ -2734,12 +2747,12 @@ Second Element: Target of move connections and appearances", "Select two element
             switch (oType)
             {
 
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     EA.Connector con = (EA.Connector)rep.GetContextObject();
                     triggerGuid = HoUtil.GetTrigger(rep, con.ConnectorGUID);
                     if (triggerGuid.StartsWith("{", StringComparison.Ordinal) && triggerGuid.EndsWith("}", StringComparison.Ordinal))
                     {
-                        EA.Element trigger = rep.GetElementByGuid(triggerGuid);
+                        Element trigger = rep.GetElementByGuid(triggerGuid);
 
                         if (trigger != null) rep.ShowInProjectView(trigger);
 
@@ -2747,8 +2760,8 @@ Second Element: Target of move connections and appearances", "Select two element
                     break;
 
 
-                case EA.ObjectType.otMethod:
-                    EA.Method m = (EA.Method)rep.GetContextObject();
+                case ObjectType.otMethod:
+                    Method m = (Method)rep.GetContextObject();
                     if (m.ClassifierID != "")
                     {
                         id = Convert.ToInt32(m.ClassifierID);
@@ -2761,7 +2774,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     }
                     break;
 
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute attr = (EA.Attribute)rep.GetContextObject();
                     id = attr.ClassifierID;
                     // get type
@@ -2772,7 +2785,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         {
                             if (el.Type.Equals("Package"))
                             {
-                                EA.Package pkg = rep.GetPackageByID(Convert.ToInt32(el.MiscData[0]));
+                                Package pkg = rep.GetPackageByID(Convert.ToInt32(el.MiscData[0]));
                                 rep.ShowInProjectView(pkg);
                             }
                             else
@@ -2784,14 +2797,14 @@ Second Element: Target of move connections and appearances", "Select two element
                     break;
 
                 // Locate Diagram (e.g. from Search Window)
-                case EA.ObjectType.otDiagram:
-                    EA.Diagram d = (EA.Diagram)rep.GetContextObject();
+                case ObjectType.otDiagram:
+                    Diagram d = (Diagram)rep.GetContextObject();
                     rep.ShowInProjectView(d);
                     break;
 
 
-                case EA.ObjectType.otElement:
-                    el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    el = (Element)rep.GetContextObject();
                     if (el.ClassfierID > 0)
                     {
                         el = rep.GetElementByID(el.ClassfierID);
@@ -2815,7 +2828,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         {
                             if (el.Type.Equals("Action"))
                             {
-                                foreach (EA.CustomProperty custproperty in el.CustomProperties)
+                                foreach (CustomProperty custproperty in el.CustomProperties)
                                 {
                                     if (custproperty.Name.Equals("kind") && custproperty.Value.Contains("AcceptEvent"))
                                     {
@@ -2823,7 +2836,7 @@ Second Element: Target of move connections and appearances", "Select two element
                                         triggerGuid = HoUtil.GetTrigger(rep, el.ElementGUID);
                                         if (triggerGuid.StartsWith("{", StringComparison.Ordinal) && triggerGuid.EndsWith("}", StringComparison.Ordinal))
                                         {
-                                            EA.Element trigger = rep.GetElementByGuid(triggerGuid);
+                                            Element trigger = rep.GetElementByGuid(triggerGuid);
                                             if (trigger != null) rep.ShowInProjectView(trigger);
                                             break;
                                         }
@@ -2838,7 +2851,7 @@ Second Element: Target of move connections and appearances", "Select two element
                                 string signalGuid = HoUtil.GetSignal(rep, el.ElementGUID);
                                 if (signalGuid.StartsWith("RefGUID={", StringComparison.Ordinal))
                                 {
-                                    EA.Element signal = rep.GetElementByGuid(signalGuid.Substring(8, 38));
+                                    Element signal = rep.GetElementByGuid(signalGuid.Substring(8, 38));
                                     if (signal != null) rep.ShowInProjectView(signal);
                                 }
                             }
@@ -2854,9 +2867,9 @@ Second Element: Target of move connections and appearances", "Select two element
                     }
                     break;
 
-                case EA.ObjectType.otPackage:
-                    EA.Package pkgSrc = (EA.Package)rep.GetContextObject();
-                    EA.Package pkgTrg = HoUtil.GetModelDocumentFromPackage(rep, pkgSrc);
+                case ObjectType.otPackage:
+                    Package pkgSrc = (Package)rep.GetContextObject();
+                    Package pkgTrg = HoUtil.GetModelDocumentFromPackage(rep, pkgSrc);
                     if (pkgTrg != null) rep.ShowInProjectView(pkgTrg);
                     break;
             }
@@ -2869,11 +2882,11 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="text"></param>
-        public static void CreateNoteFromText(EA.Repository rep, string text)
+        public static void CreateNoteFromText(Repository rep, string text)
         {
-            if (rep.GetContextItemType().Equals(EA.ObjectType.otElement))
+            if (rep.GetContextItemType().Equals(ObjectType.otElement))
             {
-                EA.Element el = (EA.Element)rep.GetContextObject();
+                Element el = (Element)rep.GetContextObject();
                 string s0 = CallOperationAction.RemoveUnwantedStringsFromText(text.Trim(), false);
                 s0 = Regex.Replace(s0, @"\/\*", "//"); // /* ==> //
                 s0 = Regex.Replace(s0, @"\*\/", "");   // delete */
@@ -2884,10 +2897,10 @@ Second Element: Target of move connections and appearances", "Select two element
             }
         }
 
-        public static void GetVcLatestRecursive(EA.Repository rep)
+        public static void GetVcLatestRecursive(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (oType.Equals(EA.ObjectType.otPackage) || oType.Equals(EA.ObjectType.otNone))
+            ObjectType oType = rep.GetContextItemType();
+            if (oType.Equals(ObjectType.otPackage) || oType.Equals(ObjectType.otNone))
             {
                 // start preparation
                 int count = 0;
@@ -2897,7 +2910,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 rep.CreateOutputTab("Debug");
                 rep.EnsureOutputVisible("Debug");
                 rep.WriteOutput("Debug", "Start GetLatestRecursive", 0);
-                EA.Package pkg = (EA.Package)rep.GetContextObject();
+                Package pkg = (Package)rep.GetContextObject();
                 HoUtil.GetLatest(rep, pkg, true, ref count, 0, ref errorCount);
                 string s = "";
                 if (errorCount > 0) s = " with " + errorCount.ToString() + " errors";
@@ -2908,12 +2921,12 @@ Second Element: Target of move connections and appearances", "Select two element
 
             }
         }
-        public static void CopyGuidSqlToClipboard(EA.Repository rep)
+        public static void CopyGuidSqlToClipboard(Repository rep)
         {
             string str = "";
             string str1;
-            EA.ObjectType oType = rep.GetContextItemType();
-            EA.Diagram diaCurrent = rep.GetCurrentDiagram();
+            ObjectType oType = rep.GetContextItemType();
+            Diagram diaCurrent = rep.GetCurrentDiagram();
             EA.Connector conCurrent = null;
 
             if (diaCurrent != null)
@@ -2940,9 +2953,9 @@ Second Element: Target of move connections and appearances", "Select two element
                 Clipboard.SetText(str);
                 return;
             }
-            if (oType.Equals(EA.ObjectType.otElement))
+            if (oType.Equals(ObjectType.otElement))
             {// Element 
-                var el = (EA.Element)rep.GetContextObject();
+                var el = (Element)rep.GetContextObject();
                 string pdata1 = el.MiscData[0];
                 string pdata1String;
                 if (pdata1.EndsWith("}", StringComparison.Ordinal))
@@ -2974,10 +2987,10 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
 
                 // Look for diagram object
-                EA.Diagram curDia = rep.GetCurrentDiagram();
+                Diagram curDia = rep.GetCurrentDiagram();
                 if (curDia != null)
                 {
-                    foreach (EA.DiagramObject diaObj in curDia.DiagramObjects)
+                    foreach (DiagramObject diaObj in curDia.DiagramObjects)
                     {
                         if (diaObj.ElementID == el.ElementID)
                         {
@@ -2991,20 +3004,20 @@ Second Element: Target of move connections and appearances", "Select two element
 
             }
 
-            if (oType.Equals(EA.ObjectType.otDiagram))
+            if (oType.Equals(ObjectType.otDiagram))
             {// Element 
-                EA.Diagram dia = (EA.Diagram)rep.GetContextObject();
+                Diagram dia = (Diagram)rep.GetContextObject();
                 str = dia.DiagramGUID + " " + dia.Name + ' ' + dia.Type + "\r\n" +
                        "\r\nSelect ea_guid As CLASSGUID, diagram_type As CLASSTYPE,* from t_diagram dia where ea_guid = '" + dia.DiagramGUID + "'";
             }
-            if (oType.Equals(EA.ObjectType.otPackage))
+            if (oType.Equals(ObjectType.otPackage))
             {// Element 
-                EA.Package pkg = (EA.Package)rep.GetContextObject();
+                Package pkg = (Package)rep.GetContextObject();
                 str = pkg.PackageGUID + " " + pkg.Name + ' ' + " Package " + "\r\n" +
                  "\r\nSelect ea_guid As CLASSGUID, 'Package' As CLASSTYPE,* from t_package pkg where ea_guid = '" + pkg.PackageGUID + "'";
 
             }
-            if (oType.Equals(EA.ObjectType.otAttribute))
+            if (oType.Equals(ObjectType.otAttribute))
             {// Element 
                 str1 = "LEFT JOIN  t_object typAttr on (attr.Classifier = typAttr.object_id)";
                 if (rep.ConnectionString.Contains(".eap"))
@@ -3025,7 +3038,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         "\r\n                   " + str1 +
                         "\r\n   where attr.ea_guid = '" + attr.AttributeGUID + "'";
             }
-            if (oType.Equals(EA.ObjectType.otMethod))
+            if (oType.Equals(ObjectType.otMethod))
             {// Element 
                 str1 = "LEFT JOIN t_object parTyp on (par.classifier = parTyp.object_id))";
                 var str2 = "LEFT JOIN t_object opTyp on (op.classifier = opTyp.object_id)";
@@ -3035,7 +3048,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     str2 = " LEFT JOIN t_object opTyp  on (op.classifier  = Format(opTyp.object_id))";
                 }
 
-                EA.Method op = (EA.Method)rep.GetContextObject();
+                Method op = (Method)rep.GetContextObject();
                 str = op.MethodGUID + " " + op.Name + ' ' + " Operation " +
                       "\r\nOperation may have type " +
                       "\r\nSelect op.ea_guid As CLASSGUID, 'Operation' As CLASSTYPE,opTyp As OperationType, op.Name As OperationName, typ.Name As TypName,*" +
@@ -3072,10 +3085,10 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="txt">string</param>
         // #define SP_SHM_HW_MIC_START     0x40008000u
         // #define SP_SHM_HW_MIC_END       0x400083FFu
-        public static void CreateSharedMemoryFromText(EA.Repository rep, string txt) {
-            EA.ObjectType oType = rep.GetContextItemType();
-            if (! oType.Equals(EA.ObjectType.otPackage)) return;
-            EA.Package pkg = (EA.Package)rep.GetContextObject();
+        public static void CreateSharedMemoryFromText(Repository rep, string txt) {
+            ObjectType oType = rep.GetContextItemType();
+            if (! oType.Equals(ObjectType.otPackage)) return;
+            Package pkg = (Package)rep.GetContextObject();
 
             string regexShm = @"#\s*define\sSP_SHM_(.*)_(START|END)\s*(0x[0-9ABCDEF]*)";
             Match matchShm = Regex.Match(txt, regexShm, RegexOptions.Multiline);
@@ -3135,7 +3148,7 @@ Second Element: Target of move connections and appearances", "Select two element
         #endregion
         #region createOperationsFromTextService
         [ServiceOperation("{E56C2722-605A-49BB-84FA-F3782697B6F9}", "Insert Operations in selected Class, Interface, Component", "Insert text with prototype(s)", isTextRequired: false)]
-         public static void CreateOperationsFromTextService(EA.Repository rep, string txt, bool makeDuplicateOperations=false) {
+         public static void CreateOperationsFromTextService(Repository rep, string txt, bool makeDuplicateOperations=false) {
          try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -3156,7 +3169,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region SetMacro
         [ServiceOperation("{D92E154D-D792-4BCC-B553-9BC55747FE59}", "Set Macro as Stereotype from Clipboard (max 20 characters)","Select Element, Attribute, Operation", isTextRequired: false)]
-        public static void SetMacro(EA.Repository rep)
+        public static void SetMacro(Repository rep)
         {
                 string txt = Clipboard.GetText().Trim();
                 int lengthStereotype = 40;
@@ -3168,7 +3181,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 SetMacro(rep,txt);
                
         }
-        public static void SetMacro(EA.Repository rep, string txt)
+        public static void SetMacro(Repository rep, string txt)
         {
             try
             {
@@ -3190,7 +3203,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region DelMacros
         [ServiceOperation("{41B15F26-EA0B-454A-A8F0-2AC924A84398}", "Del Macros / Stereotype", "Select Element, Attribute, Operation", isTextRequired: false)]
-        public static void DelMacro(EA.Repository rep)
+        public static void DelMacro(Repository rep)
         {
             try
             {
@@ -3210,14 +3223,14 @@ Second Element: Target of move connections and appearances", "Select two element
         #endregion
         #region AddMacro
         [ServiceOperation("{41B15F26-EA0B-454A-A8F0-2AC924A84398}", "Add Macros / Stereotype from Clipboard (max. 20 characters)", "Select Element, Attribute, Operation", isTextRequired: false)]
-        public static void AddMacro(EA.Repository rep)
+        public static void AddMacro(Repository rep)
         {
                 string txt = Clipboard.GetText().Trim();
                 if (String.IsNullOrWhiteSpace(txt) || txt.Length > 20) return;
                AddMacro(rep,txt);
        
         }
-        public static void AddMacro(EA.Repository rep, string txt)
+        public static void AddMacro(Repository rep, string txt)
         {
             try
             {
@@ -3243,10 +3256,10 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="txt"></param>
         /// <param name="makeDuplicateOperations"></param>
 
-        private static void CreateOperationsAndMacrosFromText(EA.Repository rep, string txt, bool makeDuplicateOperations)
+        private static void CreateOperationsAndMacrosFromText(Repository rep, string txt, bool makeDuplicateOperations)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
-            EA.Element el = HoUtil.GetElementFromContextObject(rep);
+            Diagram dia = rep.GetCurrentDiagram();
+            Element el = HoUtil.GetElementFromContextObject(rep);
             if (el == null) return;
 
             if (dia != null && dia.SelectedObjects.Count != 1)
@@ -3296,7 +3309,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="el"></param>
         /// <param name="txt"></param>
-        private static void CreateMacroOperationFromText(EA.Repository rep, EA.Element el, string txt)
+        private static void CreateMacroOperationFromText(Repository rep, Element el, string txt)
         {
             // delete comment
             txt = DeleteComment(txt);
@@ -3313,8 +3326,8 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
             // create function if not exists, else update function
-            EA.Method m = null;
-            foreach (EA.Method m1 in el.Methods)
+            Method m = null;
+            foreach (Method m1 in el.Methods)
             {
                 if (m1.Name == functionName )
                 {
@@ -3330,7 +3343,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             if (m == null)
             {
-                m = (EA.Method)el.Methods.AddNew(functionName, "");
+                m = (Method)el.Methods.AddNew(functionName, "");
                 m.Pos = el.Methods.Count + 1;
                 el.Methods.Refresh();
             }
@@ -3357,7 +3370,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 string type = par;
 
  
-                EA.Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
+                Parameter elPar = (Parameter)m.Parameters.AddNew(name, "");
                 m.Parameters.Refresh();
                 elPar.IsConst = false;
                 elPar.Type = type;
@@ -3385,11 +3398,11 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="el"></param>
         /// <param name="txt"></param>
         /// <param name="makeDuplicateOperations"></param>
-        private static void CreateOperationFromText(EA.Repository rep, EA.Element el, 
+        private static void CreateOperationFromText(Repository rep, Element el, 
                                 string txt, bool makeDuplicateOperations)
         {
 
-            EA.Method m = null;
+            Method m = null;
             string functionName;
             string parameters = "";
             string functionType = "";
@@ -3475,7 +3488,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             // Make multiple operations with the same name
             if (! makeDuplicateOperations)
-            foreach (EA.Method m1 in el.Methods) {
+            foreach (Method m1 in el.Methods) {
                 if (m1.Name == functionName && StereotypeExists(m1.StereotypeEx, externAttribute))
                 {
                     isNewFunctions = false;
@@ -3491,7 +3504,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             if (isNewFunctions)
             {
-                m = (EA.Method)el.Methods.AddNew(functionName, "");
+                m = (Method)el.Methods.AddNew(functionName, "");
                 m.Pos = el.Methods.Count + 1;
                 el.Methods.Refresh();
             }
@@ -3546,7 +3559,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
                 string name = lparElements[lparElements.Length - 1];
                 // parameter consists of two parts: type name
-                EA.Parameter elPar = (EA.Parameter)m.Parameters.AddNew(name, "");
+                Parameter elPar = (Parameter)m.Parameters.AddNew(name, "");
                 m.Parameters.Refresh();
                 elPar.IsConst = isConst;
                 elPar.Kind = "in";
@@ -3585,7 +3598,7 @@ Second Element: Target of move connections and appearances", "Select two element
             "Create/Update typedef for struct from Clipboard, union or enum from C-text for selected Class/Interface/Component",
             "Insert text with typedef\nSelect Class to generate it beneath class\nSelect typedef to update it",
             isTextRequired: false)]
-        public static void CreateTypeDefStructFromTextService(EA.Repository rep)
+        public static void CreateTypeDefStructFromTextService(Repository rep)
         {
             string txt = Clipboard.GetText();
             if (String.IsNullOrWhiteSpace(txt)) return;
@@ -3596,16 +3609,16 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="txt"></param>
-        public static void CreateTypeDefStructFromTextService(EA.Repository rep, string txt)
+        public static void CreateTypeDefStructFromTextService(Repository rep, string txt)
         {
             try
             {
                 
                 Cursor.Current = Cursors.WaitCursor;
-                EA.Diagram dia = rep.GetCurrentDiagram();
+                Diagram dia = rep.GetCurrentDiagram();
                 if (dia == null) return;
 
-                EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+                Package pkg = rep.GetPackageByID(dia.PackageID);
                 if (dia.SelectedObjects.Count != 1) return;
 
                 var el = HoUtil.GetElementFromContextObject(rep);
@@ -3644,11 +3657,11 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="el"></param>
         /// <param name="txt"></param>
         /// <param name="deleteAttribute"></param>
-        private static void CreateTypeDefStructFromText(EA.Repository rep, EA.Diagram dia, EA.Package pkg, EA.Element el,
+        private static void CreateTypeDefStructFromText(Repository rep, Diagram dia, Package pkg, Element el,
             string txt, 
             bool deleteAttribute=true)
         {
-            EA.Element elTypedef = null;
+            Element elTypedef = null;
            
 
             // delete comment
@@ -3711,7 +3724,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 if (el != null ) { // create class below element
                    if ("Interface Class Component".Contains(el.Type))
                     {
-                        elTypedef = (EA.Element)el.Elements.AddNew(name, elType);
+                        elTypedef = (Element)el.Elements.AddNew(name, elType);
                         el.Elements.Refresh();
                     }
                     else
@@ -3722,7 +3735,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
                  else // create class in package
                 { 
-                    elTypedef = (EA.Element)pkg.Elements.AddNew(name, elType);
+                    elTypedef = (Element)pkg.Elements.AddNew(name, elType);
                     pkg.Elements.Refresh();
 
                 }
@@ -3772,7 +3785,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 //int right = diaObj.right + 2 * (diaObj.right - diaObj.left);
                 rep.SaveDiagram(dia.DiagramID);
                 string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
-                EA.DiagramObject diaObj = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+                DiagramObject diaObj = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
                 dia.DiagramObjects.Refresh();
                 diaObj.ElementID = elTypedef.ElementID;
                 diaObj.Update();
@@ -3788,7 +3801,7 @@ Second Element: Target of move connections and appearances", "Select two element
         [ServiceOperation("{BE4759E5-2E8D-454D-83F7-94AA2FF3D50A}",
             "Insert/Update Attributes in Class from Clipboard, Interface, Component",
             "Select Class, Interface or enum", isTextRequired: false)]
-        public static void InsertAttributeService(EA.Repository rep, string txt)
+        public static void InsertAttributeService(Repository rep, string txt)
         {
             try
             {
@@ -3814,18 +3827,18 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="txt"></param>
-        private static void CreateAttributesFromText(EA.Repository rep, string txt)
+        private static void CreateAttributesFromText(Repository rep, string txt)
         {
 
-            EA.Element el = HoUtil.GetElementFromContextObject(rep);
+            Element el = HoUtil.GetElementFromContextObject(rep);
             if (el == null) return;
 
             // remember selected object
-            EA.DiagramObject objSelected = null;
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            DiagramObject objSelected = null;
+            Diagram dia = rep.GetCurrentDiagram();
             if (!(dia != null && dia.SelectedObjects.Count > 0 ))
             {
-                objSelected = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
+                objSelected = (DiagramObject)dia.SelectedObjects.GetAt(0);
             }
             
             // update Attribute
@@ -3850,7 +3863,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// <param name="rep"></param>
         /// <param name="el">Selected Element</param>
         /// <param name="txt">String with the attribute definitions</param>
-        private static void CreateClassAttributesFromText(EA.Repository rep, EA.Element el, string txt)
+        private static void CreateClassAttributesFromText(Repository rep, Element el, string txt)
         {
             
             
@@ -4153,7 +4166,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="sMacroDefinition">Line with macro definition</param>
         /// <param name="stereotype">The stereotype to set or 'define' as default or when blank</param>
         // ReSharper disable once UnusedParameter.Local
-        private static void CreateMacroFromText(EA.Repository rep, EA.Element el, string sMacroDefinition, string stereotype="define") {
+        private static void CreateMacroFromText(Repository rep, Element el, string sMacroDefinition, string stereotype="define") {
 
              string name = "";
              string value = "";
@@ -4205,7 +4218,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
              }
 
         }
-        public static string CreateStereotype(EA.Repository rep, EA.Element el, string s) {
+        public static string CreateStereotype(Repository rep, Element el, string s) {
 
             string stereotype = "";
             if (s.Contains("TARGET_CPU_1")) stereotype = "SOFTWARE_VALID_FOR_CPU_1";
@@ -4222,7 +4235,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void CreateEnumerationAttributesFromText(EA.Repository rep, EA.Element el, string txt)
+        private static void CreateEnumerationAttributesFromText(Repository rep, Element el, string txt)
         {
             // delete comment
             txt = DeleteComment(txt);
@@ -4258,17 +4271,17 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
         }
 
-        private static void UpdateOperationTypeForPackage(EA.Repository rep, EA.Package pkg)
+        private static void UpdateOperationTypeForPackage(Repository rep, Package pkg)
         {
-            foreach (EA.Element el1 in pkg.Elements)
+            foreach (Element el1 in pkg.Elements)
             {
 
-                foreach (EA.Method m in el1.Methods)
+                foreach (Method m in el1.Methods)
                 {
                     ReconcileOperationTypes(rep, m);
                 }
             }
-            foreach (EA.Package pkgSub in pkg.Packages)
+            foreach (Package pkgSub in pkg.Packages)
             {
                 UpdateOperationTypeForPackage(rep, pkgSub);
             }
@@ -4277,19 +4290,19 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// Reconcile the type and parameter of operations/methods in selected context
         /// </summary>
         /// <param name="rep"></param>
-        public static void ReconcileOperationTypesWrapper(EA.Repository rep)
+        public static void ReconcileOperationTypesWrapper(Repository rep)
         {
-            EA.ObjectType oType = rep.GetContextItemType();
+            ObjectType oType = rep.GetContextItemType();
             switch (oType)
             {
-                case EA.ObjectType.otMethod:
-                    ReconcileOperationTypes(rep, (EA.Method)rep.GetContextObject());
+                case ObjectType.otMethod:
+                    ReconcileOperationTypes(rep, (Method)rep.GetContextObject());
                     break;
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     if (el.Type == "Activity")
                     {
-                        EA.Method m = HoUtil.GetOperationFromBrehavior(rep, el);
+                        Method m = HoUtil.GetOperationFromBrehavior(rep, el);
                         if (m == null)
                         {
                             MessageBox.Show("Activity hasn't an operation");
@@ -4299,15 +4312,15 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     }
                     else
                     {
-                        foreach (EA.Method m in el.Methods)
+                        foreach (Method m in el.Methods)
                         {
                             ReconcileOperationTypes(rep, m);
                         }
                     }
                     break;
 
-                case EA.ObjectType.otPackage:
-                    EA.Package pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    Package pkg = (Package)rep.GetContextObject();
                     UpdateOperationTypeForPackage(rep, pkg);
                     break;
             }
@@ -4320,7 +4333,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="m"></param>
-        private static void ReconcileOperationTypes(EA.Repository rep, EA.Method m)
+        private static void ReconcileOperationTypes(Repository rep, Method m)
         {
             // update method type
             string methodName = m.Name;
@@ -4333,8 +4346,8 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             {
                 if (methodType == "")
                 {
-                    MessageBox.Show($"Method '{m.Name}' Typ '{m.ReturnType}'",
-                        "Method type undefined");
+                    //MessageBox.Show($"Method '{m.Name}' Typ '{m.ReturnType}'",
+                    //    "Warning: Method type undefined, it continues!");
                 }
                 else
                 {
@@ -4347,7 +4360,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 
             // update parameter
             // set parameter direction to "in"
-            foreach (EA.Parameter par in m.Parameters)
+            foreach (Parameter par in m.Parameters)
             {
                 bool parameterUpdated = false;
                 if (!par.Kind.Equals("in"))
@@ -4382,12 +4395,12 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #endregion
 
-        private static bool UpdateTypeName( EA.Repository rep, ref int classifierId, ref string parName, ref string parType)
+        private static bool UpdateTypeName( Repository rep, ref int classifierId, ref string parName, ref string parType)
         {
             
             // no classifier defined
             // check if type is correct
-            EA.Element el = null;
+            Element el = null;
             if (!classifierId.Equals(0))
             {
                 try
@@ -4458,11 +4471,11 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// </summary>
         /// <param name="rep"></param>
         /// <returns></returns>
-        public static bool SetNewXmlPath(EA.Repository rep)
+        public static bool SetNewXmlPath(Repository rep)
         {
-            if (rep.GetContextItemType().Equals(EA.ObjectType.otPackage))
+            if (rep.GetContextItemType().Equals(ObjectType.otPackage))
             {
-                EA.Package pkg  = (EA.Package)rep.GetContextObject();
+                Package pkg  = (Package)rep.GetContextObject();
                 string guid = pkg.PackageGUID;
 
                 string fileName = HoUtil.GetVccFilePath(rep, pkg);
@@ -4512,7 +4525,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #region VcReconcile
         [ServiceOperation("{EAC9246F-96FA-40E7-885A-A572E907AF86}", "Scan XMI and reconcile", "no selection required", false)]
-        public static void VcReconcile(EA.Repository rep)
+        public static void VcReconcile(Repository rep)
         {
                  //
                 try
@@ -4533,7 +4546,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     #endregion
                     #region checkOutService
         [ServiceOperation("{1BF01759-DD99-4552-8B68-75F19A3C593E}", "Check out", "Select Package",false)]
-        public static void CheckOutService(EA.Repository rep)
+        public static void CheckOutService(Repository rep)
         {
 
             try
@@ -4554,7 +4567,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #endregion
 
-        private static void CheckOut(EA.Repository rep,EA.Package pkg=null)
+        private static void CheckOut(Repository rep,Package pkg=null)
         {
             if (pkg == null) pkg = rep.GetTreeSelectedPackage();
             if (pkg == null) return;
@@ -4585,7 +4598,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #region checkInService
         [ServiceOperation("{085C84D2-7B51-4783-8189-06E956411B94}", "Check in ", "Select package or something in package", false)]
-        public static void CheckInService(EA.Repository rep)
+        public static void CheckInService(Repository rep)
         {
             try
             {
@@ -4605,7 +4618,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     #endregion
                     #region checkInServiceWithUpdateKeyword
         [ServiceOperation("{C5BB52C6-F300-42AE-B4DC-DC97D57D8F7D}", "Check in with get latest (update VC keywords, if Tagged Values 'svnDate'/'svnRevision')", "Select package or something in package", false)]
-         public static void CheckInServiceWithUpdateKeyword (EA.Repository rep) {
+         public static void CheckInServiceWithUpdateKeyword (Repository rep) {
          try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -4633,7 +4646,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             /// <param name="withGetLatest">false if you want to avoid a getLatest to update VC keywords
             /// Tagged Value "svnDoc" or "svnRevision" of package are true</param>
             /// <param name="comment">A checkin comment, default="0" = aks for check-in comment</param>
-        private static void CheckIn(EA.Repository rep, EA.Package pkg=null, bool withGetLatest = false, string comment="0")
+        private static void CheckIn(Repository rep, Package pkg=null, bool withGetLatest = false, string comment="0")
         {
                 
                 if (pkg == null) pkg = rep.GetTreeSelectedPackage();
@@ -4673,7 +4686,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 if (withGetLatest)
                 {
                     // check if GetLatest is appropriate
-                    EA.Element el = rep.GetElementByGuid(pkg.PackageGUID);
+                    Element el = rep.GetElementByGuid(pkg.PackageGUID);
                     foreach (EA.TaggedValue t in el.TaggedValues)
                     {
                         if (t.Name == "svnDoc" | t.Name == "svnRevision")
@@ -4737,10 +4750,10 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             return dialogResult;
         }
 
-        private static bool CheckTaggedValuePackage(EA.Package pkg)
+        private static bool CheckTaggedValuePackage(Package pkg)
         {
             bool workForPackage = false;
-            foreach (EA.Package pkg1 in pkg.Packages)
+            foreach (Package pkg1 in pkg.Packages)
             {
                 if (pkg1.Name.Equals("Architecture") | pkg1.Name.Equals("Behavior"))
                 {
@@ -4751,29 +4764,29 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             return workForPackage;
         }
 
-        private static void SetDirectoryTaggedValueRecursive(EA.Repository rep, EA.Package pkg)
+        private static void SetDirectoryTaggedValueRecursive(Repository rep, Package pkg)
         {
             // remember GUID, because of reloading package from xmi
             string pkgGuid = pkg.PackageGUID;
             if (CheckTaggedValuePackage(pkg)) SetDirectoryTaggedValues(rep, pkg);
 
             pkg = rep.GetPackageByGuid(pkgGuid);
-            foreach (EA.Package pkg1 in pkg.Packages)
+            foreach (Package pkg1 in pkg.Packages)
             {
                 SetDirectoryTaggedValueRecursive(rep, pkg1);
             }
                
 
         }
-        public static void SetTaggedValueGui(EA.Repository rep)
+        public static void SetTaggedValueGui(Repository rep)
         {
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                EA.ObjectType oType = rep.GetContextItemType();
-                if (!oType.Equals(EA.ObjectType.otPackage)) return;
-                EA.Package pkg = (EA.Package)rep.GetContextObject();
+                ObjectType oType = rep.GetContextItemType();
+                if (!oType.Equals(ObjectType.otPackage)) return;
+                Package pkg = (Package)rep.GetContextObject();
                 SetDirectoryTaggedValueRecursive(rep, pkg);
                 Cursor.Current = Cursors.Default;
             }
@@ -4788,7 +4801,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
 
 
-        private static bool IsTaggedValuesComplete(EA.Element el)
+        private static bool IsTaggedValuesComplete(Element el)
         {
             bool isRevision = false;
             bool isDate = false;
@@ -4800,11 +4813,11 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             else return false;
         }
 
-        public static void SetDirectoryTaggedValues(EA.Repository rep, EA.Package pkg) {
+        public static void SetDirectoryTaggedValues(Repository rep, Package pkg) {
             bool withCheckIn = false;
             string guid = pkg.PackageGUID;
 
-            EA.Element el = rep.GetElementByGuid(guid);
+            Element el = rep.GetElementByGuid(guid);
             if (IsTaggedValuesComplete(el)) return;
             if (pkg.IsVersionControlled)
             {
@@ -4862,7 +4875,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
              }
         }
 
-        public static void SetSvnProperty(EA.Repository rep, EA.Package pkg)
+        public static void SetSvnProperty(Repository rep, Package pkg)
         {
             // set svn properties
             if (pkg.IsVersionControlled)
@@ -4871,7 +4884,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 svnHandle.setProperty();
             }
         }
-        public static void GotoSvnLog(EA.Repository rep, EA.Package pkg)
+        public static void GotoSvnLog(Repository rep, Package pkg)
         {
             // set svn properties
             if (pkg.IsVersionControlled)
@@ -4880,7 +4893,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 svnHandle.gotoLog();
             }
         }
-        public static void GotoSvnBrowser(EA.Repository rep, EA.Package pkg)
+        public static void GotoSvnBrowser(Repository rep, Package pkg)
         {
             // set svn properties
             if (pkg.IsVersionControlled)
@@ -4899,9 +4912,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// </para>guardString  of the connector "","yes","no",..
         ///        if "yes" or "" it will locate the node under the last selected element
         /// </summary> 
-        public static void InsertDiagramElementAndConnect(EA.Repository rep, string type, string subType, string guardString="") 
+        public static void InsertDiagramElementAndConnect(Repository rep, string type, string subType, string guardString="") 
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             if (dia.Type != "Activity") return;
 
@@ -4909,23 +4922,23 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             if (count == 0) return;
 
             rep.SaveDiagram(dia.DiagramID);
-            List<EA.DiagramObject> oldCollection = new List<EA.DiagramObject>();
+            List<DiagramObject> oldCollection = new List<DiagramObject>();
 
             // get context element (last selected element)
-            EA.Element originalSrcEl = HoUtil.GetElementFromContextObject(rep);
+            Element originalSrcEl = HoUtil.GetElementFromContextObject(rep);
             if (originalSrcEl == null) return;
             int  originalSrcId =  originalSrcEl.ElementID;
 
             for (int i = count - 1; i > -1; i = i - 1)
             {
-                oldCollection.Add((EA.DiagramObject)dia.SelectedObjects.GetAt((short)i));
+                oldCollection.Add((DiagramObject)dia.SelectedObjects.GetAt((short)i));
                 // keep last selected element
                 //if (i > 0) dia.SelectedObjects.DeleteAt((short)i, true);
             }
             dia.GetDiagramObjectByID(originalSrcId, "");
 
-            EA.DiagramObject trgObj = CreateDiagramObjectFromContext(rep, "", type, subType,0,0,guardString, originalSrcEl);
-            EA.Element trgtEl = rep.GetElementByID(trgObj.ElementID);
+            DiagramObject trgObj = CreateDiagramObjectFromContext(rep, "", type, subType,0,0,guardString, originalSrcEl);
+            Element trgtEl = rep.GetElementByID(trgObj.ElementID);
 
             // if connection to more than one element make sure the new elemenet is on the deepest position
             int offset = 50;
@@ -4934,9 +4947,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             int diff = trgObj.top - trgObj.bottom;
 
 
-            foreach (EA.DiagramObject diaObj in oldCollection)
+            foreach (DiagramObject diaObj in oldCollection)
                 {
-                    EA.Element srcEl = rep.GetElementByID(diaObj.ElementID);
+                    Element srcEl = rep.GetElementByID(diaObj.ElementID);
                     // don't connect two times
                     if (originalSrcId != diaObj.ElementID)
                     {
@@ -4970,10 +4983,10 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 // final
                 if (subType == "101" && trgtEl.ParentID > 0)
                 {
-                    EA.Element parEl = rep.GetElementByID(trgtEl.ParentID);
+                    Element parEl = rep.GetElementByID(trgtEl.ParentID);
                     if (parEl.Type == "Activity")
                     {
-                        EA.DiagramObject parObj = dia.GetDiagramObjectByID(parEl.ElementID, "");
+                        DiagramObject parObj = dia.GetDiagramObjectByID(parEl.ElementID, "");
                         if (parObj != null)
                         {
                             parObj.bottom = trgObj.bottom - 30;
@@ -4997,7 +5010,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="guardText"></param>
         [ServiceOperation("{F0FF506A-7124-48CC-B00B-2D8DB3047E39}", "Make a [No] guard",
             "Make a [no] guard for the connector ", false)]
-        public static void NoGuard(EA.Repository rep, string guardText)
+        public static void NoGuard(Repository rep, string guardText)
         {
             EaDiagram curDiagram = new EaDiagram(rep);
             if (curDiagram.Dia == null) return;
@@ -5042,23 +5055,23 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         #endregion
         #region joinDiagramObjectsToLastSelected
         [ServiceOperation("{6946E63E-3237-4F45-B4D8-7EE0D6580FA5}", "Join nodes to the last selected node", "Only Activity Diagram", false)]
-        public static void JoinDiagramObjectsToLastSelected(EA.Repository rep)
+        public static void JoinDiagramObjectsToLastSelected(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int count = dia.SelectedObjects.Count;
             if (count < 2) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // target object/element
-            EA.Element trgEl = (EA.Element)rep.GetContextObject();
+            Element trgEl = (Element)rep.GetContextObject();
 
 
             // The last selected element is the context element!
             // The selected elements don't reflect the sequence of selected elements
             for (int i = 0; i < count; i = i + 1)
             {
-                EA.DiagramObject srcObj = (EA.DiagramObject)dia.SelectedObjects.GetAt((short)i);
+                DiagramObject srcObj = (DiagramObject)dia.SelectedObjects.GetAt((short)i);
                 var srcEl = rep.GetElementByID(srcObj.ElementID);
                 if (srcEl.ElementID == trgEl.ElementID) continue;
                 Connector connector = GetConnectionDefault(dia);
@@ -5071,7 +5084,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 trgEl.Connectors.Refresh();
                 dia.DiagramLinks.Refresh();
                 // set line style
-                EA.DiagramLink link = GetDiagramLinkForConnector(dia, con.ConnectorID);
+                DiagramLink link = GetDiagramLinkForConnector(dia, con.ConnectorID);
                 if (link != null) HoUtil.SetLineStyleForDiagramLink("LV", link);
                
             }
@@ -5082,29 +5095,29 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     #endregion
 
         // ReSharper disable once UnusedParameter.Local
-        private static Connector GetConnectionDefault(EA.Diagram dia)
+        private static Connector GetConnectionDefault(Diagram dia)
         {
             return new Connector("ControlFlow", "");
 
         }
                     #region splitDiagramObjectsToLastSelected
         [ServiceOperation("{521FCFEB-984B-43F0-A710-E97C29E4C8EE}", "Split last selected Diagram object from previous selected Diagram Objects", "Incoming and outgoing connections", false)]
-        public static void SplitDiagramObjectsToLastSelected(EA.Repository rep)
+        public static void SplitDiagramObjectsToLastSelected(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int count = dia.SelectedObjects.Count;
             if (count < 2) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // target object/element
-            EA.ObjectType objType = rep.GetContextItemType();
-            if (!(objType.Equals(EA.ObjectType.otElement))) return;
-            EA.Element trgEl = (EA.Element)rep.GetContextObject();
+            ObjectType objType = rep.GetContextItemType();
+            if (!(objType.Equals(ObjectType.otElement))) return;
+            Element trgEl = (Element)rep.GetContextObject();
 
             for (int i = 0; i < count; i = i + 1)
             {
-                EA.DiagramObject srcObj = (EA.DiagramObject)dia.SelectedObjects.GetAt((short)i);
+                DiagramObject srcObj = (DiagramObject)dia.SelectedObjects.GetAt((short)i);
                 var srcEl = rep.GetElementByID(srcObj.ElementID);
                 if (srcEl.ElementID == trgEl.ElementID) continue;
                 SplitElementsByConnectorType(srcEl, trgEl, "ControlFlow");
@@ -5116,20 +5129,20 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     #endregion
                     #region splitAllDiagramObjectsToLastSelected
         [ServiceOperation("{CA29CB67-77EA-4BCC-B3B4-8893F6B0DAE2}", "Split last selected Diagram object from all connected Diagram Objects", "Incoming and outgoing connections", false)]
-        public static void SplitAllDiagramObjectsToLastSelected(EA.Repository rep)
+        public static void SplitAllDiagramObjectsToLastSelected(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int count = dia.SelectedObjects.Count;
             if (count == 0) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // target object/element
-            EA.ObjectType objType = rep.GetContextItemType();
-            if (!(objType.Equals(EA.ObjectType.otElement))) return;
-            EA.Element trgEl = (EA.Element)rep.GetContextObject();
+            ObjectType objType = rep.GetContextItemType();
+            if (!(objType.Equals(ObjectType.otElement))) return;
+            Element trgEl = (Element)rep.GetContextObject();
 
-            foreach (EA.DiagramObject srcObj in dia.DiagramObjects)
+            foreach (DiagramObject srcObj in dia.DiagramObjects)
             {
                 var srcEl = rep.GetElementByID(srcObj.ElementID);
                 if (srcEl.ElementID == trgEl.ElementID) continue;
@@ -5148,7 +5161,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="trgEl">Target element of the connector</param>
         /// <param name="connectorType">Connector type or default "All"</param>
         /// <param name="direction">Direction of connection ("in","out","all" or default "All"</param>
-        private static void SplitElementsByConnectorType(EA.Element srcEl, EA.Element trgEl, string connectorType="all", string direction="all")
+        private static void SplitElementsByConnectorType(Element srcEl, Element trgEl, string connectorType="all", string direction="all")
         {
             for (int i = srcEl.Connectors.Count - 1;i >= 0; i=i-1 ) {
                 EA.Connector con = (EA.Connector)srcEl.Connectors.GetAt((short)i);
@@ -5163,9 +5176,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
         }
                     #endregion
-        public static void MakeNested(EA.Repository rep)
+        public static void MakeNested(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int count = dia.SelectedObjects.Count;
             if (count < 2) return;
@@ -5174,17 +5187,17 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 
             // target object/element
 
-            EA.ObjectType objType = rep.GetContextItemType();
-            if (!(objType.Equals(EA.ObjectType.otElement))) return;
+            ObjectType objType = rep.GetContextItemType();
+            if (!(objType.Equals(ObjectType.otElement))) return;
 
-            var trgEl = (EA.Element)rep.GetContextObject();
+            var trgEl = (Element)rep.GetContextObject();
             if  (!(trgEl.Type.Equals("Activity"))) {
                 MessageBox.Show("Target '" + trgEl.Name + ":" + trgEl.Type + "' isn't an Activity", " Only move below Activity is allowed");
                 return;
             }
             for (int i = 0; i < count; i = i + 1)
             {
-                EA.DiagramObject srcObj = (EA.DiagramObject)dia.SelectedObjects.GetAt((short)i);
+                DiagramObject srcObj = (DiagramObject)dia.SelectedObjects.GetAt((short)i);
                 var srcEl = rep.GetElementByID(srcObj.ElementID);
                 if (srcEl.ElementID == trgEl.ElementID) continue;
                 srcEl.ParentID = trgEl.ElementID;
@@ -5193,25 +5206,25 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
            
         }
-        public static void DeleteInvisibleUseRealizationDependencies (EA.Repository rep)
+        public static void DeleteInvisibleUseRealizationDependencies (Repository rep)
         {
             EA.Connector con;
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
-            if (!rep.GetContextItemType().Equals(EA.ObjectType.otElement)) return;
+            if (!rep.GetContextItemType().Equals(ObjectType.otElement)) return;
 
             // only one diagram object selected as source
             if (dia.SelectedObjects.Count != 1) return;
 
             rep.SaveDiagram(dia.DiagramID);
-            EA.DiagramObject diaObjSource = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
+            DiagramObject diaObjSource = (DiagramObject)dia.SelectedObjects.GetAt(0);
             var elSource = rep.GetElementByID(diaObjSource.ElementID);
             var elSourceId = elSource.ElementID;
             if (! ("Interface Class".Contains(elSource.Type))) return;
 
             // list of all connectorIDs
             List<int> lInternalId = new List<int>();
-            foreach (EA.DiagramLink link in dia.DiagramLinks)
+            foreach (DiagramLink link in dia.DiagramLinks)
             {
                con = rep.GetConnectorByID(link.ConnectorID);
                if (con.ClientID != elSourceId) continue;
@@ -5244,7 +5257,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #region copyReleaseInfoOfModuleService
         [ServiceOperation("{1C78E1C0-AAC8-4284-8C25-2D776FF373BC}", "Copy release information to clipboard", "Select Component", false)]
-        public static void CopyReleaseInfoOfModuleService(EA.Repository rep)
+        public static void CopyReleaseInfoOfModuleService(Repository rep)
         {
             try
             {
@@ -5264,19 +5277,19 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         }
                     #endregion
 
-        private static void CopyReleaseInfoOfModule(EA.Repository rep)
+        private static void CopyReleaseInfoOfModule(Repository rep)
          {
-             EA.Diagram dia = rep.GetCurrentDiagram();
+             Diagram dia = rep.GetCurrentDiagram();
              if (dia == null) return;
-             if (!rep.GetContextItemType().Equals(EA.ObjectType.otElement)) return;
-             EA.Element elSource = (EA.Element)rep.GetContextObject();
+             if (!rep.GetContextItemType().Equals(ObjectType.otElement)) return;
+             Element elSource = (Element)rep.GetContextObject();
              if (elSource.Type != "Component") return;
 
              dia.GetDiagramObjectByID(elSource.ElementID, "");
 
              string txt = "";
              string nl = "";
-             foreach (EA.DiagramObject obj in dia.DiagramObjects)
+             foreach (DiagramObject obj in dia.DiagramObjects)
              {
                  var elTarget = rep.GetElementByID(obj.ElementID);
                  if (!("Class Interface".Contains(elTarget.Type))) continue;
@@ -5286,7 +5299,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
              Clipboard.SetText(txt);
          }
 
-        private static string AddReleaseInformation(EA.Repository rep, EA.Element el) {
+        private static string AddReleaseInformation(Repository rep, Element el) {
             string txt;
             string path = HoUtil.GetGenFilePathElement(rep, el);
             if (path == "")
@@ -5296,7 +5309,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             try
             {
-                txt = System.IO.File.ReadAllText(path);
+                txt = File.ReadAllText(path);
             }
             catch (Exception e)
             {
@@ -5336,7 +5349,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="rep"></param>
         #region generateComponentPortsService
         [ServiceOperation("{00602D5F-D581-4926-A31F-806F2D06691C}", "Generate ports for component", "Select Component", false)]
-        public static void GenerateComponentPortsService(EA.Repository rep)
+        public static void GenerateComponentPortsService(Repository rep)
         {
             try
             {
@@ -5366,15 +5379,15 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="isRequired"></param>
         /// <param name="useDependantInterface">Add ports for indirect used header files (include in header file)</param>
         /// <param name="showPorts"></param>
-        private static void GenerateComponentPortsFromDiagram(EA.Repository rep, bool isRequired=false, bool useDependantInterface=true,
+        private static void GenerateComponentPortsFromDiagram(Repository rep, bool isRequired=false, bool useDependantInterface=true,
             bool showPorts=true)
         {
             // Don't visualize dependent interfaces which are used in header files.
 
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
-            if (!rep.GetContextItemType().Equals(EA.ObjectType.otElement)) return;
-            EA.Element elSource = (EA.Element)rep.GetContextObject();
+            if (!rep.GetContextItemType().Equals(ObjectType.otElement)) return;
+            Element elSource = (Element)rep.GetContextObject();
             if (elSource.Type != "Component") return;
 
             dia.GetDiagramObjectByID(elSource.ElementID, "");
@@ -5382,7 +5395,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 
             // Generate a Port for all interfaces of the diagram
             // No private interface '_i' 
-            foreach (EA.DiagramObject obj in dia.DiagramObjects)
+            foreach (DiagramObject obj in dia.DiagramObjects)
             {
                 var elTarget = rep.GetElementByID(obj.ElementID);
 
@@ -5395,14 +5408,14 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             // if generate 'required interface' also generate dependent interfaces from Code of the header files
             if (useDependantInterface)
             {
-                foreach (EA.DiagramObject obj in dia.DiagramObjects) {
+                foreach (DiagramObject obj in dia.DiagramObjects) {
                     var elTarget = rep.GetElementByID(obj.ElementID);
                     // Add all required interfaces from interfaces
                     // Interface and Class may include it (use code)
                     if ("Class Interface".Contains(elTarget.Type))
                     {
-                        List<EA.Element> lEl = GetIncludedHeaderFilesFromCode(rep, elTarget);
-                        foreach (EA.Element el in lEl)
+                        List<Element> lEl = GetIncludedHeaderFilesFromCode(rep, elTarget);
+                        foreach (Element el in lEl)
                         {
                             if (el == null) continue;
                             if (String.IsNullOrWhiteSpace(el.Name)) continue;
@@ -5429,9 +5442,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         /// <param name="rep"></param>
         /// <param name="el"></param>
         /// <returns></returns>
-        private static List<EA.Element> GetIncludedHeaderFilesFromCode(EA.Repository rep, EA.Element el)
+        private static List<Element> GetIncludedHeaderFilesFromCode(Repository rep, Element el)
         {
-            List<EA.Element> lEl = new List<EA.Element>();
+            List<Element> lEl = new List<Element>();
             string path = HoUtil.GetGenFilePathElement(rep, el);
             if (path == "")
             {
@@ -5512,9 +5525,9 @@ ElementType:{el.Type}",
 
         #region vCGetState
         [ServiceOperation("{597608A2-5C3F-4AE6-9B18-86C1B3C27382}", "Get and update VC state of selected package", "Select Packages", false)]
-        public static void VcGetState(EA.Repository rep)
+        public static void VcGetState(Repository rep)
         {
-            EA.Package pkg = rep.GetTreeSelectedPackage();
+            Package pkg = rep.GetTreeSelectedPackage();
             if (pkg != null)
             {
                 if (pkg.IsControlled)
@@ -5529,14 +5542,14 @@ ElementType:{el.Type}",
                     #endregion
                     #region updateVcStateOfSelectedPackageRecursiveService
         [ServiceOperation("{A521EB65-3F3C-4C5D-9B82-D12FFCEC71D4}", "Update VC-State of package(recursive)", "Select Packages or model", false)]
-        public static void UpdateVcStateOfSelectedPackageRecursiveService(EA.Repository rep)
+        public static void UpdateVcStateOfSelectedPackageRecursiveService(Repository rep)
         {
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
                
                 
-                EA.Package pkg = rep.GetTreeSelectedPackage();
+                Package pkg = rep.GetTreeSelectedPackage();
                 UpdateVcStateRecursive(rep, pkg);
                     //pkg = rep.GetTreeSelectedPackage();
                 //if (pkg != null && pkg.ParentID == 0)
@@ -5561,12 +5574,12 @@ ElementType:{el.Type}",
                     #endregion
                     #region updateVcStateRecursive
 
-        private static void UpdateVcStateRecursive(EA.Repository rep, EA.Package pkg,bool recursive=true)
+        private static void UpdateVcStateRecursive(Repository rep, Package pkg,bool recursive=true)
         {
             if (pkg.IsControlled) HoUtil.UpdateVc(rep, pkg);
             if (recursive)
             {
-                foreach (EA.Package p in pkg.Packages)
+                foreach (Package p in pkg.Packages)
                 {
                     if (p.IsControlled) HoUtil.UpdateVc(rep, p);
                     UpdateVcStateRecursive(rep, p);
@@ -5576,9 +5589,9 @@ ElementType:{el.Type}",
                     #endregion
                     #region getDiagramLinkForConnector
 
-        private static EA.DiagramLink GetDiagramLinkForConnector(EA.Diagram dia, int connectorId)
+        private static DiagramLink GetDiagramLinkForConnector(Diagram dia, int connectorId)
         {
-            foreach (EA.DiagramLink link in dia.DiagramLinks)
+            foreach (DiagramLink link in dia.DiagramLinks)
             {
                 if (connectorId == link.ConnectorID) return link;
             }
@@ -5596,7 +5609,7 @@ ElementType:{el.Type}",
             "Element, package, diagram, attribute, operation",
             isTextRequired: false)]
         // ReSharper disable once UnusedMember.Global
-        public static void AddFavorite(EA.Repository rep)
+        public static void AddFavorite(Repository rep)
         {
             Favorite f = new Favorite(rep, GetGuidfromSelectedItem(rep));
             f.Save();
@@ -5613,7 +5626,7 @@ ElementType:{el.Type}",
         [ServiceOperation("{41BFF6D9-DE73-481B-A3EC-7E158AE9BE9E}", "Remove selected item from Favorite",
             "Element, package, diagram, attribute, operation",
             isTextRequired: false)]
-        public static void RemoveFavorite(EA.Repository rep)
+        public static void RemoveFavorite(Repository rep)
         {
             Favorite f = new Favorite(rep, GetGuidfromSelectedItem(rep));
             f.Delete();
@@ -5629,7 +5642,7 @@ ElementType:{el.Type}",
         [ServiceOperation("{756710FA-A99E-40D3-B265-518DDF1014D1}", "Search Favorites",
             "Element, package, diagram, attribute, operation",
             isTextRequired: false)]
-        public static void Favorites(EA.Repository rep)
+        public static void Favorites(Repository rep)
         {
             Favorite f = new Favorite(rep);
             f.Search();
@@ -5637,29 +5650,29 @@ ElementType:{el.Type}",
         }
                     #endregion
                     #region getGuidfromSelectedItem
-        private static string GetGuidfromSelectedItem(EA.Repository rep) {
-            EA.ObjectType objectType = rep.GetContextItemType();
+        private static string GetGuidfromSelectedItem(Repository rep) {
+            ObjectType objectType = rep.GetContextItemType();
             string guid = "";
             switch (objectType)
             {
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute a = (EA.Attribute)rep.GetContextObject();
                     guid = a.AttributeGUID;
                     break;
-                case EA.ObjectType.otMethod:
-                    EA.Method m = (EA.Method)rep.GetContextObject();
+                case ObjectType.otMethod:
+                    Method m = (Method)rep.GetContextObject();
                     guid = m.MethodGUID;
                     break;
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     guid = el.ElementGUID;
                     break;
-                case EA.ObjectType.otDiagram:
-                    EA.Diagram dia = (EA.Diagram)rep.GetContextObject();
+                case ObjectType.otDiagram:
+                    Diagram dia = (Diagram)rep.GetContextObject();
                     guid = dia.DiagramGUID;
                     break;
-                case EA.ObjectType.otPackage:
-                    EA.Package pkg = (EA.Package)rep.GetContextObject();
+                case ObjectType.otPackage:
+                    Package pkg = (Package)rep.GetContextObject();
                     guid = pkg.PackageGUID;
                     break;
                 default:
@@ -5676,28 +5689,28 @@ ElementType:{el.Type}",
         /// </summary>
         /// <param name="rep"></param>
         [ServiceOperation("{28188D09-7B40-4396-8FCF-90EA901CFE12}", "Embedded Elements left", "Select embedded elements", isTextRequired: false)]
-        public static void MoveEmbeddedLeftGui(EA.Repository rep)
+        public static void MoveEmbeddedLeftGui(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int selCount = dia.SelectedObjects.Count;
             if (selCount == 0) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // check if port,..
-            EA.DiagramObject objPort0 = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
-            EA.Element port = rep.GetElementByID(objPort0.ElementID);
+            DiagramObject objPort0 = (DiagramObject)dia.SelectedObjects.GetAt(0);
+            Element port = rep.GetElementByID(objPort0.ElementID);
             if (!EmbeddedElementTypes.Contains(port.Type)) return;
 
             // get parent of embedded element
-            EA.Element el = rep.GetElementByID(port.ParentID);
-            EA.DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
+            Element el = rep.GetElementByID(port.ParentID);
+            DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
 
 
             // check if left limit element is crossed
             int leftLimit = obj.left - 0;// limit cross over left 
             bool isRightLimitCrossed = false;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (objPort.left < leftLimit)
                 {
@@ -5710,7 +5723,7 @@ ElementType:{el.Type}",
             int startValueTop = obj.top - 8;
             int startValueLeft = obj.left - 8;
             int pos = 0;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (!isRightLimitCrossed)
                 {
@@ -5738,28 +5751,28 @@ ElementType:{el.Type}",
         /// </summary>
         /// <param name="rep"></param>
         [ServiceOperation("{91998805-D1E6-4A3E-B9AA-8218B1C9F4AB}", "Embedded Elements right", "Select embedded elements", isTextRequired: false)]
-        public static void MoveEmbeddedRightGui(EA.Repository rep)
+        public static void MoveEmbeddedRightGui(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int selCount = dia.SelectedObjects.Count;
             if (selCount == 0) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // check if port,..
-            EA.DiagramObject objPort0 = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
-            EA.Element port = rep.GetElementByID(objPort0.ElementID);
+            DiagramObject objPort0 = (DiagramObject)dia.SelectedObjects.GetAt(0);
+            Element port = rep.GetElementByID(objPort0.ElementID);
             if (!EmbeddedElementTypes.Contains(port.Type)) return;
 
             // get parent of embedded element
-            EA.Element el = rep.GetElementByID(port.ParentID);
-            EA.DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
+            Element el = rep.GetElementByID(port.ParentID);
+            DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
 
 
             // check if right limit element is crossed
             int rightLimit = obj.right - 16;// limit cross over right 
             bool isRightLimitCrossed = false;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (objPort.left > rightLimit)
                 {
@@ -5772,7 +5785,7 @@ ElementType:{el.Type}",
             int startValueTop = obj.top - 8;
             int startValueLeft = obj.right - 8;
             int pos = 0;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (!isRightLimitCrossed)
                 {
@@ -5800,27 +5813,27 @@ ElementType:{el.Type}",
         /// </summary>
         /// <param name="rep"></param>
         [ServiceOperation("{1F5BA798-F9AC-4F80-8004-A8E8236AF629}", "Embedded Elements down", "Select embedded elements", isTextRequired: false)]
-        public static void MoveEmbeddedDownGui(EA.Repository rep)
+        public static void MoveEmbeddedDownGui(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int selCount = dia.SelectedObjects.Count;
             if (selCount == 0) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // check if port,..
-            EA.DiagramObject objPort0 = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
-            EA.Element port = rep.GetElementByID(objPort0.ElementID);
+            DiagramObject objPort0 = (DiagramObject)dia.SelectedObjects.GetAt(0);
+            Element port = rep.GetElementByID(objPort0.ElementID);
             if (!EmbeddedElementTypes.Contains(port.Type)) return;
 
             // get parent of embedded element
-            EA.Element el = rep.GetElementByID(port.ParentID);
-            EA.DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
+            Element el = rep.GetElementByID(port.ParentID);
+            DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
 
             // check if lower limit element is crossed
             int lowerLimit = obj.bottom + 12;// limit cross over upper 
             bool isLowerLimitCrossed = false;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (objPort.bottom < lowerLimit)
                 {
@@ -5833,7 +5846,7 @@ ElementType:{el.Type}",
             int startValueTop = obj.bottom + 8;
             int startValueLeft = obj.left + 8;
             int pos = 0;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (!isLowerLimitCrossed)
                 {
@@ -5864,28 +5877,28 @@ ElementType:{el.Type}",
         /// </summary>
         /// <param name="rep"></param>
         [ServiceOperation("{26F5F957-4CFD-4684-9417-305A1615460A}", "Embedded Elements up", "Select embedded elements", isTextRequired: false)]
-        public static void MoveEmbeddedUpGui(EA.Repository rep)
+        public static void MoveEmbeddedUpGui(Repository rep)
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
+            Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
             int selCount = dia.SelectedObjects.Count;
             if (selCount == 0) return;
             rep.SaveDiagram(dia.DiagramID);
 
             // check if port,..
-            EA.DiagramObject objPort0 = (EA.DiagramObject)dia.SelectedObjects.GetAt(0);
-            EA.Element port = rep.GetElementByID(objPort0.ElementID);
+            DiagramObject objPort0 = (DiagramObject)dia.SelectedObjects.GetAt(0);
+            Element port = rep.GetElementByID(objPort0.ElementID);
             if (  ! EmbeddedElementTypes.Contains(port.Type) ) return;
 
             // get parent of embedded element
-            EA.Element el = rep.GetElementByID(port.ParentID);
-            EA.DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
+            Element el = rep.GetElementByID(port.ParentID);
+            DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
           
 
             // check if upper limit element is crossed
             int upLimit = obj.top - 10;// limit cross over upper 
             bool isUpperLimitCrossed = false;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects)
+            foreach (DiagramObject objPort in dia.SelectedObjects)
             {
                 if (objPort.top > upLimit)
                 {
@@ -5898,7 +5911,7 @@ ElementType:{el.Type}",
             int startValueTop = obj.top + 8;
             int startValueLeft = obj.left + 8;
             int pos = 0;
-            foreach (EA.DiagramObject objPort in dia.SelectedObjects) 
+            foreach (DiagramObject objPort in dia.SelectedObjects) 
             {
                 if (! isUpperLimitCrossed)
                 {
@@ -5922,12 +5935,12 @@ ElementType:{el.Type}",
 
 
 
-        public static void VcControlRemove(EA.Package pkg)
+        public static void VcControlRemove(Package pkg)
         {
             if (pkg.IsControlled)
             {
                 pkg.VersionControlRemove();
-                foreach (EA.Package pkg1 in pkg.Packages)
+                foreach (Package pkg1 in pkg.Packages)
                 {
                     VcControlRemove(pkg1);
                 }
@@ -5939,13 +5952,13 @@ ElementType:{el.Type}",
         /// Move Feature (Attribute, Method) down. EA automatic ordering has to be disabled in the configuration
         /// </summary>
         /// [ServiceOperation("{F106662F-F18F-4D33-AAAA-4FC9F3246B47}", "Move Feature (Attribute, Method) down", "Select Feature (Attribute, Method)", isTextRequired: false)]
-        public static void FeatureUp(EA.Repository rep)
+        public static void FeatureUp(Repository rep)
         {
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute findAttribute = (EA.Attribute)rep.GetContextObject();
-                    EA.Element el = rep.GetElementByID(findAttribute.ParentID);
+                    Element el = rep.GetElementByID(findAttribute.ParentID);
                     int lfdNr = 1;
                     EA.Attribute lastAttribute = null;
                     foreach (EA.Attribute a in el.Attributes)
@@ -5968,12 +5981,12 @@ ElementType:{el.Type}",
                     rep.ShowInProjectView(findAttribute);
                     break;
                 // handle methods
-                case EA.ObjectType.otMethod:
-                    EA.Method findMethod = (EA.Method)rep.GetContextObject();
-                    EA.Element elMethods = rep.GetElementByID(findMethod.ParentID);
+                case ObjectType.otMethod:
+                    Method findMethod = (Method)rep.GetContextObject();
+                    Element elMethods = rep.GetElementByID(findMethod.ParentID);
                     int lfdNrMethod = 1;
-                    EA.Method lastMethod = null;
-                    foreach (EA.Method m in elMethods.Methods)
+                    Method lastMethod = null;
+                    foreach (Method m in elMethods.Methods)
                     {
                         m.Pos = lfdNrMethod;
                         m.Update();
@@ -5995,23 +6008,23 @@ ElementType:{el.Type}",
             }
         }
         [ServiceOperation("{63618EE6-BA1D-41AD-98C4-4B53B9E19F51}", "Update CallOperation Action", "Select Action", isTextRequired: false)]
-        public static bool UpdateAction(EA.Repository rep)
+        public static bool UpdateAction(Repository rep)
         {
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otElement:
-                    EA.Element el = (EA.Element)rep.GetContextObject();
+                case ObjectType.otElement:
+                    Element el = (Element)rep.GetContextObject();
                     if (el.Type != "Action") return true;
 
 
 
                     string methodName = CallOperationAction.GetMethodNameFromCallString(el.Name);
                     // Operation Find
-                    EA.Method m = CallOperationAction.GetMethodFromMethodName(rep, methodName, isNoExtern: true) ??
+                    Method m = CallOperationAction.GetMethodFromMethodName(rep, methodName, isNoExtern: true) ??
                                   CallOperationAction.GetMethodFromMethodName(rep, methodName, isNoExtern: false);
                     if (m == null) return true;
 
-                    EA.Diagram diaCurrent = rep.GetCurrentDiagram();
+                    Diagram diaCurrent = rep.GetCurrentDiagram();
                     if (diaCurrent == null) return true;
                     var eaDia = new EaDiagram(rep);
                     rep.SaveDiagram(diaCurrent.DiagramID);
@@ -6039,13 +6052,13 @@ ElementType:{el.Type}",
         /// Move Feature (Attribute, Method) down. EA automatic ordering has to be disabled in the configuration
         /// </summary>
         [ServiceOperation("{F106662F-F18F-4D33-AAAA-4FC9F3246B47}", "Move Feature (Attribute, Method) down", "Select Feature (Attribute, Method)", isTextRequired: false)]
-        public static void FeatureDown(EA.Repository rep)
+        public static void FeatureDown(Repository rep)
         {
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     EA.Attribute findAttribute = (EA.Attribute)rep.GetContextObject();
-                    EA.Element el = rep.GetElementByID(findAttribute.ParentID);
+                    Element el = rep.GetElementByID(findAttribute.ParentID);
                     int indexFind = -1;
                     int lfdNr = 1;
                     foreach (EA.Attribute a in el.Attributes)
@@ -6068,12 +6081,12 @@ ElementType:{el.Type}",
                     rep.ShowInProjectView(findAttribute);
                     break;
                 // Method
-                case EA.ObjectType.otMethod:
-                    EA.Method findMethod = (EA.Method)rep.GetContextObject();
-                    EA.Element elMethod = rep.GetElementByID(findMethod.ParentID);
+                case ObjectType.otMethod:
+                    Method findMethod = (Method)rep.GetContextObject();
+                    Element elMethod = rep.GetElementByID(findMethod.ParentID);
                     int indexFindMethod = -1;
                     int lfdNrMethod = 1;
-                    foreach (EA.Method m in elMethod.Methods)
+                    foreach (Method m in elMethod.Methods)
                     {
                         if (m.MethodID == findMethod.MethodID)
                         {
@@ -6113,41 +6126,41 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="elementType"></param>
         /// <param name="connectorLinkType"></param>
-        public static void AddElementsToDiagram(EA.Repository rep,
+        public static void AddElementsToDiagram(Repository rep,
             string elementType = "Note", string connectorLinkType = "Element Note")
 
         {
             // handle multiple selected elements
-            EA.Diagram diaCurrent = rep.GetCurrentDiagram();
+            Diagram diaCurrent = rep.GetCurrentDiagram();
             if (diaCurrent == null) return;
             var eaDia = new EaDiagram(rep);
             rep.SaveDiagram(diaCurrent.DiagramID);
 
             switch (rep.GetContextItemType())
             {
-                case EA.ObjectType.otDiagram:
+                case ObjectType.otDiagram:
                     AddDiagramNote(rep);
                     break;
-                case EA.ObjectType.otConnector:
+                case ObjectType.otConnector:
                     if (!String.IsNullOrWhiteSpace(connectorLinkType)) connectorLinkType = "Link Notes";
                     AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, connectorLinkType);
                     break;
-                case EA.ObjectType.otPackage:
-                case EA.ObjectType.otElement:
+                case ObjectType.otPackage:
+                case ObjectType.otElement:
                     // check for selected DiagramObjects
                     var diaCurrentSelectedObjects = diaCurrent.SelectedObjects;
                     if (diaCurrentSelectedObjects?.Count > 0)
                     {
-                        foreach (EA.DiagramObject diaObj in diaCurrentSelectedObjects)
+                        foreach (DiagramObject diaObj in diaCurrentSelectedObjects)
                         {
                             AddElementWithLink(rep, diaObj, elementType, connectorLinkType);
                         }
                     }
                     break;
-                case EA.ObjectType.otMethod:
-                    AddFeatureWithNoteLink(rep, (EA.Method)rep.GetContextObject(), connectorLinkType);
+                case ObjectType.otMethod:
+                    AddFeatureWithNoteLink(rep, (Method)rep.GetContextObject(), connectorLinkType);
                     break;
-                case EA.ObjectType.otAttribute:
+                case ObjectType.otAttribute:
                     AddFeatureWithNoteLink(rep, (EA.Attribute)rep.GetContextObject(), connectorLinkType);
                     break;
             }
@@ -6164,20 +6177,20 @@ ElementType:{el.Type}",
         /// <param name="diaObj"></param>
         /// <param name="elementType">Default Note</param>
         /// <param name="connectorType">Default: null</param>
-        private static void AddElementWithLink(EA.Repository rep, EA.DiagramObject diaObj,
+        private static void AddElementWithLink(Repository rep, DiagramObject diaObj,
             string elementType = @"Note", string connectorType = "Element Link")
         {
-            EA.Element el = rep.GetElementByID(diaObj.ElementID);
+            Element el = rep.GetElementByID(diaObj.ElementID);
             if (el != null)
             {
-                EA.Diagram dia = rep.GetCurrentDiagram();
-                EA.Package pkg = rep.GetPackageByID(el.PackageID);
+                Diagram dia = rep.GetCurrentDiagram();
+                Package pkg = rep.GetPackageByID(el.PackageID);
                 if (pkg.IsProtected || dia.IsLocked || el.Locked) return;
 
-                EA.Element elNewElement;
+                Element elNewElement;
                 try
                 {
-                    elNewElement = (EA.Element)pkg.Elements.AddNew("", elementType);
+                    elNewElement = (Element)pkg.Elements.AddNew("", elementType);
                     elNewElement.Update();
                     pkg.Update();
                 }
@@ -6195,7 +6208,7 @@ ElementType:{el.Type}",
                 int bottom = top - 100;
 
                 string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
-                var diaObject = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+                var diaObject = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
                 dia.Update();
                 diaObject.ElementID = elNewElement.ElementID;
                 diaObject.Sequence = 1; // put element to top
@@ -6228,13 +6241,13 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="attr"></param>
         /// <param name="connectorLinkType"></param>
-        private static void AddFeatureWithNoteLink(EA.Repository rep, EA.Attribute attr, string connectorLinkType = "")
+        private static void AddFeatureWithNoteLink(Repository rep, EA.Attribute attr, string connectorLinkType = "")
         {
            
             string featureType = "Attribute";
             int featureId = attr.AttributeID;
             string featureName = attr.Name;
-            EA.Element elNote = rep.GetElementByID(attr.ParentID);
+            Element elNote = rep.GetElementByID(attr.ParentID);
 
             SetFeatureLink(rep, elNote, featureType, featureId, featureName, connectorLinkType);
         }
@@ -6246,13 +6259,13 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="op"></param>
         /// <param name="connectorLinkType"></param>
-        private static void AddFeatureWithNoteLink(EA.Repository rep, EA.Method op, string connectorLinkType = "")
+        private static void AddFeatureWithNoteLink(Repository rep, Method op, string connectorLinkType = "")
         {
 
             string featureType = "Operation";
             int featureId = op.MethodID;
             string featureName = op.Name;
-            EA.Element elNote = rep.GetElementByID(op.ParentID);
+            Element elNote = rep.GetElementByID(op.ParentID);
 
             SetFeatureLink(rep, elNote, featureType, featureId, featureName, connectorLinkType);
         }
@@ -6268,21 +6281,21 @@ ElementType:{el.Type}",
         /// <param name="featureId"></param>
         /// <param name="featureName"></param>
         /// <param name="connectorLinkType"></param>
-        private static void SetFeatureLink(EA.Repository rep, EA.Element elNote,  string featureType,
+        private static void SetFeatureLink(Repository rep, Element elNote,  string featureType,
             int featureId, string featureName, string connectorLinkType = "")
         {
             string connectorType = "NoteLink";
 
             if (elNote != null)
             {
-                EA.Diagram dia = rep.GetCurrentDiagram();
-                EA.Package pkg = rep.GetPackageByID(elNote.PackageID);
+                Diagram dia = rep.GetCurrentDiagram();
+                Package pkg = rep.GetPackageByID(elNote.PackageID);
                 if (pkg.IsProtected || dia.IsLocked || elNote.Locked) return;
 
-                EA.Element elNewNote;
+                Element elNewNote;
                 try
                 {
-                    elNewNote = (EA.Element) pkg.Elements.AddNew("", "Note");
+                    elNewNote = (Element) pkg.Elements.AddNew("", "Note");
                     elNewNote.Update();
                     pkg.Update();
                 }
@@ -6293,14 +6306,14 @@ ElementType:{el.Type}",
 
                 // add element to diagram
                 // "l=200;r=400;t=200;b=600;"
-                EA.DiagramObject diaObj = dia.GetDiagramObjectByID(elNote.ElementID, "");
+                DiagramObject diaObj = dia.GetDiagramObjectByID(elNote.ElementID, "");
                 int left = diaObj.right + 50;
                 int right = left + 100;
                 int top = diaObj.top;
                 int bottom = top - 100;
 
                 string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
-                var diaObject = (EA.DiagramObject) dia.DiagramObjects.AddNew(position, "");
+                var diaObject = (DiagramObject) dia.DiagramObjects.AddNew(position, "");
                 dia.Update();
                 diaObject.ElementID = elNewNote.ElementID;
                 diaObject.Sequence = 1; // put element to top
@@ -6337,17 +6350,17 @@ ElementType:{el.Type}",
         /// <param name="con"></param>
         /// <param name="elementType">Default Note</param>
         /// <param name="connectorLinkType">Default: null</param>
-        private static void AddElementWithLinkToConnector(EA.Repository rep, EA.Connector con,
+        private static void AddElementWithLinkToConnector(Repository rep, EA.Connector con,
             string elementType = @"Note", string connectorLinkType = "Link Notes")
         {
-            EA.Diagram dia = rep.GetCurrentDiagram();
-            EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+            Diagram dia = rep.GetCurrentDiagram();
+            Package pkg = rep.GetPackageByID(dia.PackageID);
             if (pkg.IsProtected || dia.IsLocked) return;
 
-            EA.Element elNewElement;
+            Element elNewElement;
             try
             {
-                elNewElement = (EA.Element)pkg.Elements.AddNew("", elementType);
+                elNewElement = (Element)pkg.Elements.AddNew("", elementType);
                 elNewElement.Update();
                 pkg.Update();
             }
@@ -6356,9 +6369,9 @@ ElementType:{el.Type}",
                 return;
             }
 
-            EA.Element sourceEl = rep.GetElementByID(con.SupplierID);
+            Element sourceEl = rep.GetElementByID(con.SupplierID);
             rep.GetElementByID(con.ClientID);
-            EA.DiagramObject sourceObj = dia.GetDiagramObjectByID(sourceEl.ElementID, "");
+            DiagramObject sourceObj = dia.GetDiagramObjectByID(sourceEl.ElementID, "");
 
             // add element to diagram
             // "l=200;r=400;t=200;b=600;"
@@ -6369,7 +6382,7 @@ ElementType:{el.Type}",
             int bottom = top - 100;
 
             string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
-            var diaObject = (EA.DiagramObject)dia.DiagramObjects.AddNew(position, "");
+            var diaObject = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
             dia.Update();
             diaObject.ElementID = elNewElement.ElementID;
             diaObject.Sequence = 1; // put element to top
@@ -6386,11 +6399,11 @@ ElementType:{el.Type}",
         #endregion
 
 
-        private static EA.DiagramObject GetDiagramObjectFromElement(EA.Element el, EA.Diagram dia)
+        private static DiagramObject GetDiagramObjectFromElement(Element el, Diagram dia)
         {
             // get the position of the Element
-            EA.DiagramObject diaObj = null;
-            foreach (EA.DiagramObject dObj in dia.DiagramObjects)
+            DiagramObject diaObj = null;
+            foreach (DiagramObject dObj in dia.DiagramObjects)
             {
                 if (dObj.ElementID == el.ElementID)
                 {
