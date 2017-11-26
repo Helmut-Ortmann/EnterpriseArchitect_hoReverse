@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
-      <Directory Id="TARGETDIR" Name="SourceDir">
-        <Directory Id="ProgramFilesFolder"> <!--LocalAppDataFolder ProgramFilesFolder-->
+    <!--
+      Guidelines Single Package Authoring (per user/per machine install)
+      https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
+      -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+        <Directory Id="LocalAppData"> <!--Prevent using UAC (User Access Control)-->
             <Directory Id="APPLICATIONFOLDER" Name="hoReverse"  > <!--APPLICATIONFOLDER-->
           </Directory>
         </Directory>
       </Directory>
-	 
-    
-    
-    <!--<Property Id="ApplicationFolderName"  Value="hoReverse"  /> -->
-
-    <Property Id="WixAppFolder" Value="WixPerUserFolder"  />
-	  <!--<SetProperty Id="ProgramFilesFolder" Value="[LocalAppDataFolder]" Before="CostFinalize"><![CDATA[NOT Privileged]]></SetProperty>-->
 	</Fragment>
   
   

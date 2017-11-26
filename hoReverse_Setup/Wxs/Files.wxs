@@ -47,7 +47,7 @@
         <File Id="hoLinqToSql.dll" Name="hoLinqToSql.dll" Source="$(var.hoLinqToSql.TargetPath)" KeyPath="yes" />
       </Component>
       <Component Id="RegisterEA" Guid="{048B4FD1-C227-4418-B188-3EFDD0674CB9}">
-        <RegistryKey Root="HKCU" Key="Software\Sparx Systems\EAAddins\hoReverse">
+        <RegistryKey Root="HKMU" Key="Software\Sparx Systems\EAAddins\hoReverse">
           <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
         </RegistryKey>
       </Component>

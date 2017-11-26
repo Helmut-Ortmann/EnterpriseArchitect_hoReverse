@@ -24,6 +24,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressValidation>False</SuppressValidation>
+    <SuppressIces>
+    </SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="LinqToDB.Templates\" />
@@ -77,6 +80,7 @@
     <Content Include="settings.json" />
     <Content Include="Wxs\Collect\Collect.bat" />
     <Content Include="Wxs\hoReverse_Setup.wixproj" />
+    <Content Include="Wxs\LocalizationDefauls.wxl.default" />
     <Content Include="Wxs\WixUI_Advanced.wxs.default" />
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +139,12 @@
       <Name>WixUIExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Wxs\Localization.wxl" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\hoReverse_Setup\Scripts\renamemsi.bat" "$(targetPath)"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\hoReverse_Setup\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_Setup\bin\release\en-us\hoReverse.msi"</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

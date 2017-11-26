@@ -54,8 +54,9 @@ Todo:
         ACTION="INSTALL" AND APPLICATIONFOLDER="" AND (ALLUSERS=1 OR (ALLUSERS=2 AND Privileged))
       </Custom>
     </InstallUISequence>
-
     <UI Id="WixUI_MySetup">
+
+     
       <TextStyle Id="WixUI_Font_Normal" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Normal_Size)" />
       <TextStyle Id="WixUI_Font_Bigger" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Bigger_Size)" />
       <TextStyle Id="WixUI_Font_Title" FaceName="!(loc.Advanced_Font_FaceName)" Size="!(loc.Advanced_Font_Title_Size)" Bold="yes" />
@@ -85,11 +86,15 @@ Todo:
       <Publish Dialog="AdvancedWelcomeEulaDlg" Control="Advanced" Event="NewDialog" Value="FeaturesDlg" Order="2">NOT !(wix.WixUISupportPerMachine)</Publish>
       <Publish Dialog="AdvancedWelcomeEulaDlg" Control="Advanced" Event="NewDialog" Value="InstallDirDlg" Order="3">!(wix.WixUISupportPerMachine) AND NOT !(wix.WixUISupportPerUser)</Publish>
 
+        
       <Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="AdvancedWelcomeEulaDlg">1</Publish>
       <!-- override default WixAppFolder of WixPerMachineFolder as standard user won't be shown the radio group to set WixAppFolder -->
-      <Publish Dialog="InstallScopeDlg" Control="Next" Property="WixAppFolder" Value="MyWixPerUserFolder" Order="1">!(wix.WixUISupportPerUser) AND NOT Privileged</Publish>
-      <Publish Dialog="InstallScopeDlg" Control="Next" Property="MSIINSTALLPERUSER" Value="1" Order="3">WixAppFolder = "WixPerUserFolder"</Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="WixAppFolder" Value="WixPerUserFolder" Order="1">!(wix.WixUISupportPerUser) AND NOT Privileged</Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="{}" Order="2">WixAppFolder = "WixPerUserFolder"</Publish>
       <Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="1" Order="3">WixAppFolder = "WixPerMachineFolder"</Publish>
+      
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="MSIINSTALLPERUSER" Value="1" Order="3">WixAppFolder = "WixPerUserFolder"</Publish>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="MSIINSTALLPERUSER" Value="{}" Order="2">WixAppFolder = "WixPerMachineFolder"</Publish>
       <Publish Dialog="InstallScopeDlg" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Order="4">WixAppFolder = "WixPerUserFolder"</Publish>
       <Publish Dialog="InstallScopeDlg" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Order="5">WixAppFolder = "WixPerMachineFolder"</Publish>
       <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="FeaturesDlg" Order="6">WixAppFolder = "WixPerUserFolder"</Publish>
@@ -119,11 +124,7 @@ Todo:
       <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="3">Installed AND PATCH</Publish>
 
       <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
-
-
-      <Publish Dialog="InstallScopeDlg" Control="Next" Event="DoAction" Value="MyWixSetDefaultPerMachineFolder" Order="3">WixAppFolder = "WixPerMachineFolder"</Publish>
-
-      <Publish Dialog="InstallScopeDlg" Control="Next" Event="DoAction" Value="MyWixSetDefaultPerUserFolder" Order="3">WixAppFolder = "WixPerUserFolder" </Publish>
+     
     </UI>
 
     <InstallUISequence>

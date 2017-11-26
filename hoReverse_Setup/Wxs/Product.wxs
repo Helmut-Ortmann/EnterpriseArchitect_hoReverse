@@ -88,7 +88,19 @@
     -->
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
     <UIRef Id="WixUI_MySetup" /> <!--WixUI_Advanced WixUI_MySetup -->
-    
+    <!--
+      Guidelines Single Package Authoring (per user/per machine install)
+      https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
+
+    <Property Id="ALLUSERS" Value="2"/>
+    <Property Id="MSIINSTALLPERUSER" Value="1"/>
+        -->
+    <Property Id="WixAppFolder" Value= "WixPerUserFolder" />
+
+
+
+
+
     <UIRef Id="WixUI_ErrorProgressText" />
     
 
