@@ -56,7 +56,7 @@ namespace hoReverse.hoUtils.ActivityParameter
             return null;
         }
         /// <summary>
-        ///  Create\Update an Activity Diagram for the operation
+        ///  Create/Update an Activity Diagram for the operation
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="m"></param>
@@ -76,7 +76,7 @@ namespace hoReverse.hoUtils.ActivityParameter
                 EA.Element actForUpdate = rep.GetElementByGuid(behaviorGuid);
                 if (actForUpdate == null)
                 {
-                    MessageBox.Show($"", "Can't update activity for operation, no valid link found");
+                    MessageBox.Show($"Behavior GUID ={behaviorGuid}. Unable to find Activity for this GUIID", "Can't update Activity for Operation, no valid link found");
                     return false;
                 }
                 UpdateParameterFromOperation(rep, actForUpdate, m);// update parameters from Operation for Activity
@@ -317,6 +317,7 @@ namespace hoReverse.hoUtils.ActivityParameter
 
             // over all parameters
             string guids = "";
+            int pos = 0;
             foreach (EA.Parameter parSrc in m.Parameters)
             {
                 // create an Parameter for Activity (in fact an element with properties)
@@ -330,7 +331,8 @@ namespace hoReverse.hoUtils.ActivityParameter
                 if (parSrc.IsConst) prefixTyp = " const";
                 var postfixName = "";
                 if (parSrc.Kind.Contains("out")) postfixName = "*";
-                parName = parSrc.Position + ":" + parSrc.Name + postfixName + prefixTyp + direction;
+                //parName = parSrc.Position + ":" + parSrc.Name + postfixName + prefixTyp + direction;
+                parName = $"{pos}:{parSrc.Name}{postfixName}{prefixTyp}{direction}";
 
                 // check if parameter already exists (last parameter = false)
                 parTrgt = HoUtil.GetParameterFromActivity(rep, parSrc, act);
@@ -370,7 +372,8 @@ namespace hoReverse.hoUtils.ActivityParameter
                 if (parSrc.IsConst)  par.setParameterProperties("constant", "true");
                 par.save();
                 parTrgt.Update();
-               
+                pos += 1;
+
 
 
             }
