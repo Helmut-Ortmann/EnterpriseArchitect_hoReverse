@@ -188,10 +188,15 @@ namespace hoReverse.Services.AutoCpp
                 //codeLines[f.Line - 1].Dump();
                 if (f.LineEnd > 0 && f.ColumnEnd > 0)
                 {
-                    if (codeLines[f.LineEnd - 1].Substring( f.ColumnEnd - 1, 1) != ";")
+                    string line = codeLines[f.LineEnd - 1];
+                    if (line.Length > 1)
                     {
-                        filteredImplemtedFunctions.Add(new ImplFunctionItem(f.Interface, f.Implementation, f.FilePathImplementation,
-                            f.FilePathCallee));
+                        if (line.Substring(f.ColumnEnd - 1, 1) != ";")
+                        {
+                            filteredImplemtedFunctions.Add(new ImplFunctionItem(f.Interface, f.Implementation,
+                                f.FilePathImplementation,
+                                f.FilePathCallee));
+                        }
                     }
                 }
             }

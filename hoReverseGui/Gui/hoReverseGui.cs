@@ -3026,6 +3026,7 @@ namespace hoReverse.Reverse
                 if (sh.keySearchName == "") return;
                 try
                 {
+
                     _repository.RunModelSearch(sh.keySearchName, sh.keySearchTerm, "", "");
                 }
                 catch (Exception e)
