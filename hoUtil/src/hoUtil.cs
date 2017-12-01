@@ -1784,7 +1784,7 @@ Helmut.Ortmann@hoModeler.de
             {
                 MessageBox.Show($@"Can't read '{filePath}'
 
-{e}", "Can't file");
+{e}", "Can't read file");
                 return "";
             }
         }

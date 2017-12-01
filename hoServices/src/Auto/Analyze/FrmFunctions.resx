@@ -154,4 +154,14 @@ All filteres are added with an 'AND' expression.
 Example:
 'ADC_' filters alls trings which begins with 'ADC_'</value>
   </data>
+  <data name="txtVcSymbolDb.ToolTip" xml:space="preserve">
+    <value>VC Code symbol DB
+
+You have at least to open a C/C++ file with VC Code to ensure the DB is updated.
+
+It's a SAQLite DB with all the C/C++ Symbols. The DB is bound to the source folder.
+
+Note:
+You have to set the source folder in Settings!!!!</value>
+  </data>
 </root>

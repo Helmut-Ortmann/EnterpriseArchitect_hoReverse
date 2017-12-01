@@ -31,6 +31,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
             dataGridView1.DataSource = _bsFunctions;
             txtSourceFolder.Text = _folderRoot;
+            txtVcSymbolDb.Text = _vcSymbolDataBase;
             dataGridView1.Columns[0].Width = 300;
             dataGridView1.Columns[1].Width = 250;
             dataGridView1.Columns[2].Width = 200;

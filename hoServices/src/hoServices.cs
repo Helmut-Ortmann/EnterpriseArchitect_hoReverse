@@ -4502,7 +4502,8 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                         // set readonly attribute to false
                         File.SetAttributes(path, FileAttributes.Normal);
 
-                        String strFile = File.ReadAllText(path);
+
+                        String strFile = HoUtil.ReadAllText(path);
                         string replace = @"value=[.0-9a-zA-Z_\\-]*\.xml";
                         string replacement = shortPath;
                         strFile = Regex.Replace(strFile, replace, replacement);
@@ -5309,7 +5310,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             try
             {
-                txt = File.ReadAllText(path);
+                txt = HoUtil.ReadAllText(path);
             }
             catch (Exception e)
             {
@@ -5479,7 +5480,7 @@ ElementType:{el.Type}",
             string text;
             try
             {
-                text = File.ReadAllText(path);
+                text = HoUtil.ReadAllText(path);
             }
             catch (Exception e)
             {

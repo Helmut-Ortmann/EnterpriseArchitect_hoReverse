@@ -38,7 +38,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
             {
                 grdProvidedInterfaces.Columns[0].Width = 250;
                 grdProvidedInterfaces.Columns[1].Width = 200;
-                grdProvidedInterfaces.Columns[2].Width = 200;
+                grdProvidedInterfaces.Columns[2].Width = 110;
+                grdProvidedInterfaces.Columns[3].Width = 110;
                 // set columns headings
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
                 grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";

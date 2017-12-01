@@ -41,7 +41,7 @@ namespace hoReverse.hoUtils.Diagrams
             try
             {
                 // Read JSON
-                string text = System.IO.File.ReadAllText(jasonFilePath);
+                string text = HoUtil.ReadAllText(jasonFilePath);
                 search = JObject.Parse(text);
             }
             catch (Exception e)

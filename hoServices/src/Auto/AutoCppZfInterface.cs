@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DataModels.VcSymbols;
 using EA;
 using hoLinqToSql.LinqUtils;
+using hoReverse.hoUtils;
 using hoReverse.Services.AutoCpp.Analyze;
 using LinqToDB.DataProvider;
 using File = System.IO.File;
@@ -139,7 +140,7 @@ namespace hoReverse.Services.AutoCpp
             List<CallFunctionItem> lFunctionCalls = new List<CallFunctionItem>();
             foreach (var file in filesPathOfClassTree)
             {
-                Match match = rx.Match(File.ReadAllText(file));
+                Match match = rx.Match(HoUtil.ReadAllText(file));
                 while (match.Success)
                 {
                     lFunctionCalls.Add(new CallFunctionItem(match.Groups[1].Value, file));
@@ -193,9 +194,12 @@ namespace hoReverse.Services.AutoCpp
                     {
                         if (line.Substring(f.ColumnEnd - 1, 1) != ";")
                         {
-                            filteredImplemtedFunctions.Add(new ImplFunctionItem(f.Interface, f.Implementation,
-                                f.FilePathImplementation,
-                                f.FilePathCallee));
+                            filteredImplemtedFunctions.Add(new ImplFunctionItem(
+                                f.Interface, 
+                                f.Interface == f.Implementation ? "" : f.Implementation,
+                                // no root path
+                                f.FilePathImplementation.Substring(_folderPathCSourceCode.Length),
+                                f.FilePathCallee.Length > 10 ? f.FilePathCallee.Substring(_folderPathCSourceCode.Length): ""));
                         }
                     }
                 }
@@ -233,7 +237,7 @@ namespace hoReverse.Services.AutoCpp
 
             foreach (var fileName in fileNamesCalledImplementation)
             {
-                string code = File.ReadAllText(fileName);
+                string code = HoUtil.ReadAllText(fileName);
                 code = hoService.DeleteComment(code);
                 foreach (var f1 in compImplementations)
                 {
@@ -252,11 +256,12 @@ namespace hoReverse.Services.AutoCpp
                 select new
                 {
                     Interface = f.Imp.Interface,
-                    Implementation = f.Imp.Implementation,
+                    Implementation = f.Imp.Implementation == f.Imp.Interface ? "" : f.Imp.Implementation,
                     FileName = f.Imp.FileName,
                     FileNameCalleee = f.Imp.FileNameCallee,
-                    FilePathImplementation = f.Imp.FilePath,
-                    FilePathCalle = f.Imp.FilePathCallee,
+                    // no root path
+                    FilePathImplementation = f.Imp.FilePath.Substring(_folderPathCSourceCode.Length),
+                    FilePathCalle = f.Imp.FilePathCallee.Length > 10 ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",
                     isCalled = f.Imp.IsCalled
                 }).Distinct();
 
