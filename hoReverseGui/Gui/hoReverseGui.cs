@@ -375,6 +375,8 @@ namespace hoReverse.Reverse
                 progressBar1.Visible = false;
                 if (_repository.ConnectionString.Contains("WLE") )
                 {
+                    // Check if source folder exists
+                    if (!_addinSettings.isFolderPathCSourceCode()) return;
                     _autoToolStripMenuItem.Visible = true;
                     progressBar1.Visible = true;
 
@@ -1395,7 +1397,7 @@ namespace hoReverse.Reverse
             // 
             this.progressBar1.Location = new System.Drawing.Point(0, 21);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(134, 4);
+            this.progressBar1.Size = new System.Drawing.Size(218, 2);
             this.progressBar1.TabIndex = 57;
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
@@ -3752,6 +3754,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
             else
             {
+                if (!_addinSettings.isFolderPathCSourceCode()) return;
                 Cursor.Current = Cursors.WaitCursor;
                 Object obj;
                 EA.ObjectType type = _repository.GetContextItem(out obj);
@@ -3766,7 +3769,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                 Cursor.Current = Cursors.Default;
             }
 
-    }
+        }
         /// <summary>
         /// Background worker to run capture macros task in background
         /// </summary>
@@ -3828,6 +3831,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private void showFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!_addinSettings.isFolderPathCSourceCode()) return;
             if (_autoCppIsRunning)
             {
                 MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");

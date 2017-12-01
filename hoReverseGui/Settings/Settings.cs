@@ -203,6 +203,17 @@ namespace hoReverse.Settings
 
         }
         /// <summary>
+        /// Check if folder exists
+        /// </summary>
+        /// <returns></returns>
+        public bool isFolderPathCSourceCode()
+        {
+           if (System.IO.Directory.Exists(FolderPathCSourceCode)) return true;
+            MessageBox.Show($"You can set the C/C++ Directory in Settings\r\nDirectory: '{FolderPathCSourceCode}' doesn't exists!", "C/C++ Source code folder doesn't exists, break!!!");
+            return false;
+
+        }
+        /// <summary>
         /// Folder path to C/C++ source code, used to find the VS Code symbol database
         /// Roaming\Code\User\workspaceStorage\hash\ms-vscode.cpptools\.BROWSE.VC.DB
         /// </summary>

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Authentication.ExtendedProtection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using EaServices.Auto.Analyze;
 
 namespace hoReverse.Services.AutoCpp.Analyze
 {
@@ -33,7 +28,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtSourceFolder.Text = _folderRoot;
             txtVcSymbolDb.Text = _vcSymbolDataBase;
             dataGridView1.Columns[0].Width = 300;
-            dataGridView1.Columns[1].Width = 250;
+            dataGridView1.Columns[1].Width = 100;
             dataGridView1.Columns[2].Width = 200;
             dataGridView1.Columns[3].Visible = false;
             dataGridView1.Columns[4].Width = 300;
@@ -74,24 +69,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
         }
 
-        /// <summary>
-        /// Aggregates the filter list an aggregated filter or to null (no filter)
-        /// </summary>
-        /// <param name="lFilters"></param>
-        /// <returns></returns>
-        private static string AggregateFilter(List<string> lFilters)
-        {
-
-            string delimiter = "";
-            string filters = "";
-            foreach (var filter in lFilters)
-            {
-                filters = $@"{filters} {delimiter} {filter}";
-                delimiter = " And ";
-            }
-            if (delimiter == "") return null;
-            return filters;
-        }
+        
         /// <summary>
         /// Filter the form
         /// </summary>
@@ -131,7 +109,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 lFilters.Add($"FileName LIKE '%.C'");
             }
 
-            string filter = AggregateFilter(lFilters);
+            string filter = GuiHelper.AggregateFilter(lFilters);
             _bsFunctions.Filter = filter;
         }
 

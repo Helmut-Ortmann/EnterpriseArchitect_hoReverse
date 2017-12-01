@@ -258,7 +258,7 @@ namespace hoReverse.Services.AutoCpp
                     Interface = f.Imp.Interface,
                     Implementation = f.Imp.Implementation == f.Imp.Interface ? "" : f.Imp.Implementation,
                     FileName = f.Imp.FileName,
-                    FileNameCalleee = f.Imp.FileNameCallee,
+                    FileNameCallee = f.Imp.FileNameCallee,
                     // no root path
                     FilePathImplementation = f.Imp.FilePath.Substring(_folderPathCSourceCode.Length),
                     FilePathCalle = f.Imp.FilePathCallee.Length > 10 ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",

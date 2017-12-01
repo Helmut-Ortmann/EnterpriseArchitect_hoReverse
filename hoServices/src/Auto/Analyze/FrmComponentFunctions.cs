@@ -1,12 +1,15 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
+using EaServices.Auto.Analyze;
 
 namespace hoReverse.Services.AutoCpp.Analyze
 {
     public partial class FrmComponentFunctions : Form
     {
-        private DataTable _dtProvidedInterfaces;
-        private DataTable _dtRequiredInterfaces;
+
+        readonly BindingSource _bsProvidedInterfaces = new BindingSource();
+        readonly BindingSource _bsRequiredInterfaces = new BindingSource();
         private EA.Element _component;
         private string _folderCodeRoot;
         private string _vcSymbolDataBase;
@@ -32,12 +35,16 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtFq.Text = _component.FQName;
             txtFolderRoot.Text = _folderCodeRoot;
             txtVcSymbolDb.Text = _vcSymbolDataBase;
-            grdProvidedInterfaces.DataSource = _dtProvidedInterfaces;
-            grdRequiredInterfaces.DataSource = _dtRequiredInterfaces;
+            chkOnlyMacros.Checked = false;
+            chkOnlyCalledInterfaces.Checked = true;
+
+            grdProvidedInterfaces.DataSource = _bsProvidedInterfaces;
+            grdRequiredInterfaces.DataSource = _bsRequiredInterfaces;
             if (grdProvidedInterfaces.ColumnCount > 6)
             {
+
                 grdProvidedInterfaces.Columns[0].Width = 250;
-                grdProvidedInterfaces.Columns[1].Width = 200;
+                grdProvidedInterfaces.Columns[1].Width = 50;
                 grdProvidedInterfaces.Columns[2].Width = 110;
                 grdProvidedInterfaces.Columns[3].Width = 110;
                 // set columns headings
@@ -72,6 +79,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
 
             }
+            FilterGrid();
         }
 
         /// <summary>
@@ -84,8 +92,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="dtRequiredInterfaces"></param>
         private void InitComponent(string vcSymbolDataBase, EA.Element component, string folderCodeRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            _dtProvidedInterfaces = dtProvidedInterfaces;
-            _dtRequiredInterfaces = dtRequiredInterfaces;
+             // Bind table to binding context
+             // for sorting
+            _bsProvidedInterfaces.DataSource = dtProvidedInterfaces;
+            _bsRequiredInterfaces.DataSource = dtRequiredInterfaces;
             _component = component;
             _folderCodeRoot = folderCodeRoot;
             _vcSymbolDataBase = vcSymbolDataBase;
@@ -106,6 +116,38 @@ namespace hoReverse.Services.AutoCpp.Analyze
             ShowComponent();
 
         }
+
+        /// <summary>
+        /// Filter the form
+        /// https://documentation.devexpress.com/WindowsForms/2567/Controls-and-Libraries/Data-Grid/Filter-and-Search/Filtering-in-Code
+        /// </summary>
+        private void FilterGrid(bool startAtBeginning = false)
+        {
+            string firstWildCard = "";
+            if (startAtBeginning) firstWildCard = "%";
+            // Filters to later aggregate to string
+            List<string> lFilters = new List<string>();
+
+
+            // Handle Macro checked
+            if (chkOnlyMacros.Checked)
+            {
+                lFilters.Add($"Implementation <> ''");
+            }
+            // Handle Implemented by C-Function
+            if (chkOnlyCalledInterfaces.Checked)
+            {
+                lFilters.Add($"isCalled = true");
+            }
+
+            string filter = GuiHelper.AggregateFilter(lFilters);
+            _bsProvidedInterfaces.Filter = filter;
+            _bsRequiredInterfaces.Filter = filter;
+        }
+
+
+
+
         private void btnOk_Click(object sender, System.EventArgs e)
         {
             this.Close();
@@ -114,6 +156,24 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private void btnCancel_Click(object sender, System.EventArgs e)
         {
             this.Close();
+        }
+        /// <summary>
+        /// Filter changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkOnlyMacros_CheckedChanged(object sender, System.EventArgs e)
+        {
+            FilterGrid();
+        }
+        /// <summary>
+        /// Filter changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void chkOnlyCalledInterfaces_CheckedChanged(object sender, System.EventArgs e)
+        {
+            FilterGrid();
         }
     }
 }

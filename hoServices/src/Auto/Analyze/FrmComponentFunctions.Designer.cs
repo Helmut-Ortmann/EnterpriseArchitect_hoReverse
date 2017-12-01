@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -45,6 +46,9 @@
             this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
+            this.chkOnlyCalledInterfaces = new System.Windows.Forms.CheckBox();
+            this.chkOnlyMacros = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -84,6 +88,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.chkOnlyCalledInterfaces);
+            this.panel1.Controls.Add(this.chkOnlyMacros);
             this.panel1.Controls.Add(this.txtVcSymbolDb);
             this.panel1.Controls.Add(this.txtFolderRoot);
             this.panel1.Controls.Add(this.txtFq);
@@ -103,6 +109,7 @@
             this.txtVcSymbolDb.ReadOnly = true;
             this.txtVcSymbolDb.Size = new System.Drawing.Size(859, 20);
             this.txtVcSymbolDb.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.txtVcSymbolDb, "The VC Code Symbol Database");
             // 
             // txtFolderRoot
             // 
@@ -111,6 +118,7 @@
             this.txtFolderRoot.ReadOnly = true;
             this.txtFolderRoot.Size = new System.Drawing.Size(859, 20);
             this.txtFolderRoot.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.txtFolderRoot, "The root folder of source code.\r\n\r\nIf you want to change it do it in Settings ");
             // 
             // txtFq
             // 
@@ -119,14 +127,16 @@
             this.txtFq.ReadOnly = true;
             this.txtFq.Size = new System.Drawing.Size(859, 20);
             this.txtFq.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.txtFq, "The model package path.");
             // 
             // txtGuid
             // 
-            this.txtGuid.Location = new System.Drawing.Point(529, 11);
+            this.txtGuid.Location = new System.Drawing.Point(271, 11);
             this.txtGuid.Name = "txtGuid";
             this.txtGuid.ReadOnly = true;
             this.txtGuid.Size = new System.Drawing.Size(414, 20);
             this.txtGuid.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.txtGuid, "The component GUID");
             // 
             // txtComponent
             // 
@@ -136,6 +146,7 @@
             this.txtComponent.Size = new System.Drawing.Size(167, 20);
             this.txtComponent.TabIndex = 1;
             this.txtComponent.Text = " ";
+            this.toolTip1.SetToolTip(this.txtComponent, "The component to show\r\n- Provided Interfaces\r\n- Required Interfaces");
             // 
             // label1
             // 
@@ -233,6 +244,30 @@
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 202);
             this.grdRequiredInterfaces.TabIndex = 0;
             // 
+            // chkOnlyCalledInterfaces
+            // 
+            this.chkOnlyCalledInterfaces.AutoSize = true;
+            this.chkOnlyCalledInterfaces.Location = new System.Drawing.Point(7, 63);
+            this.chkOnlyCalledInterfaces.Name = "chkOnlyCalledInterfaces";
+            this.chkOnlyCalledInterfaces.Size = new System.Drawing.Size(58, 17);
+            this.chkOnlyCalledInterfaces.TabIndex = 6;
+            this.chkOnlyCalledInterfaces.Text = "Callee ";
+            this.toolTip1.SetToolTip(this.chkOnlyCalledInterfaces, "Check if you want to see only functions called from outside the component");
+            this.chkOnlyCalledInterfaces.UseVisualStyleBackColor = true;
+            this.chkOnlyCalledInterfaces.CheckedChanged += new System.EventHandler(this.chkOnlyCalledInterfaces_CheckedChanged);
+            // 
+            // chkOnlyMacros
+            // 
+            this.chkOnlyMacros.AutoSize = true;
+            this.chkOnlyMacros.Location = new System.Drawing.Point(9, 91);
+            this.chkOnlyMacros.Name = "chkOnlyMacros";
+            this.chkOnlyMacros.Size = new System.Drawing.Size(61, 17);
+            this.chkOnlyMacros.TabIndex = 7;
+            this.chkOnlyMacros.Text = "Macros";
+            this.toolTip1.SetToolTip(this.chkOnlyMacros, "If checked only functions redefined by macros are shown.");
+            this.chkOnlyMacros.UseVisualStyleBackColor = true;
+            this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            // 
             // FrmComponentFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -275,5 +310,8 @@
         private System.Windows.Forms.TabPage tabPageRequired;
         private System.Windows.Forms.DataGridView grdRequiredInterfaces;
         private System.Windows.Forms.TextBox txtVcSymbolDb;
+        private System.Windows.Forms.CheckBox chkOnlyCalledInterfaces;
+        private System.Windows.Forms.CheckBox chkOnlyMacros;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

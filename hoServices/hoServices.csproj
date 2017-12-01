@@ -121,6 +121,7 @@
     <Compile Include="src\Auto\Analyze\FrmFunctions.Designer.cs">
       <DependentUpon>FrmFunctions.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Auto\Analyze\GuiHelper.cs" />
     <Compile Include="src\Auto\AutoCpp.cs" />
     <Compile Include="src\Auto\AutoCppZfInterface.cs" />
     <Compile Include="src\Auto\CallFunctiontem.cs" />

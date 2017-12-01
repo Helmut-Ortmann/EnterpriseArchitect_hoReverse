@@ -48,7 +48,7 @@ namespace hoReverse.Services.AutoCpp
                     .Union
                     (from f in allFunctionsImpl
                      where _macros.All(m => m.Key != f.Implementation)
-                     select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath.Substring(_folderPathCSourceCode.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd,false))
+                     select new ImplFunctionItem(f.Implementation, "", f.FilePath.Substring(_folderPathCSourceCode.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd,false))
                     .Union
                     // macros without implementation
                     (from m in _macros
