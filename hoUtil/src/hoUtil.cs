@@ -1738,7 +1738,7 @@ namespace hoReverse.hoUtils
         /// <param name="description"></param>
         /// <param name="caption"></param>
         /// <param name="lDllNames"></param>
-        public static void AboutMessage(string description, string caption, string[] lDllNames)
+        public static void AboutMessage(string description, string caption, string[] lDllNames, EA.Repository rep)
         {
             string pathRoot = Assembly.GetExecutingAssembly().Location;
             pathRoot = Path.GetDirectoryName(pathRoot);
@@ -1748,6 +1748,8 @@ namespace hoReverse.hoUtils
 Helmut.Ortmann@hoModeler.de
 (+49) 172 / 51 79 16 7
 
+EA Library Version:       {rep.LibraryVersion}
+ConnectionString:  {rep.ConnectionString}
 ";
             foreach (string dllName in lDllNames)
             {

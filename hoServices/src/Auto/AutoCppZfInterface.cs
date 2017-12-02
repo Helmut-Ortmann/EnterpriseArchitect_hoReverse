@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -108,12 +107,12 @@ namespace hoReverse.Services.AutoCpp
                 // new component
                 if (_frm == null || _frm.IsDisposed)
                 {
-                    _frm = new FrmComponentFunctions(connectionString, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm = new FrmComponentFunctions(connectionString, Rep, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 else
                 {
-                    _frm.ChangeComponent(connectionString, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm.ChangeComponent(connectionString, Rep, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 //frm.ShowDialog();
@@ -183,6 +182,12 @@ namespace hoReverse.Services.AutoCpp
             List<ImplFunctionItem> filteredImplemtedFunctions = new List<ImplFunctionItem>();
             foreach (var f in filteredFunctions)
             {
+                if (!File.Exists(f.FilePathImplementation))
+                {
+                    MessageBox.Show($"File:\r\n{f.FilePathImplementation}\r\n\r\nRoot:\r\n{_folderPathCSourceCode}",
+                        "Can't open implementation of required interface, break!!!");
+                    break;
+                }
                 string[] codeLines = File.ReadAllLines(f.FilePathImplementation);
                 // declaration ends with ';'
                 // implementation ends with '}'
@@ -198,8 +203,8 @@ namespace hoReverse.Services.AutoCpp
                                 f.Interface, 
                                 f.Interface == f.Implementation ? "" : f.Implementation,
                                 // no root path
-                                f.FilePathImplementation.Substring(_folderPathCSourceCode.Length),
-                                f.FilePathCallee.Length > 10 ? f.FilePathCallee.Substring(_folderPathCSourceCode.Length): ""));
+                                f.FilePathImplementation.Length > _folderPathCSourceCode.Length ? f.FilePathImplementation.Substring(_folderPathCSourceCode.Length) : "",
+                                f.FilePathCallee.Length > _folderPathCSourceCode.Length ? f.FilePathCallee.Substring(_folderPathCSourceCode.Length): ""));
                         }
                     }
                 }
@@ -237,6 +242,12 @@ namespace hoReverse.Services.AutoCpp
 
             foreach (var fileName in fileNamesCalledImplementation)
             {
+                if (!File.Exists(fileName))
+                {
+                    MessageBox.Show($"File:\r\n{fileName}\r\n\r\nRoot:\r\n{_folderPathCSourceCode}",
+                        "Can't open implementation of provided interface, break!!!");
+                    break;
+                }
                 string code = HoUtil.ReadAllText(fileName);
                 code = hoService.DeleteComment(code);
                 foreach (var f1 in compImplementations)
@@ -260,8 +271,8 @@ namespace hoReverse.Services.AutoCpp
                     FileName = f.Imp.FileName,
                     FileNameCallee = f.Imp.FileNameCallee,
                     // no root path
-                    FilePathImplementation = f.Imp.FilePath.Substring(_folderPathCSourceCode.Length),
-                    FilePathCalle = f.Imp.FilePathCallee.Length > 10 ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",
+                    FilePathImplementation = f.Imp.FilePath.Length > _folderPathCSourceCode.Length ? f.Imp.FilePath.Substring(_folderPathCSourceCode.Length) : "",
+                    FilePathCallee = f.Imp.FilePathCallee.Length > _folderPathCSourceCode.Length ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",
                     isCalled = f.Imp.IsCalled
                 }).Distinct();
 
@@ -323,22 +334,22 @@ namespace hoReverse.Services.AutoCpp
             if (connectionString == "") return false;
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
-                // estimate root path
-                // Find: '\RTE\RTE.C' and go back
-                if (String.IsNullOrWhiteSpace(pathRoot))
-                {
-                    pathRoot = (from f in db.Files
-                        where f.LeafName == "RTE.C"
-                        select f.Name).FirstOrDefault();
-                    if (String.IsNullOrWhiteSpace(pathRoot))
-                    {
-                        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
-                        return false;
-                    }
-                    pathRoot = Path.GetDirectoryName(pathRoot);
-                    pathRoot = Directory.GetParent(pathRoot).FullName;
+                //// estimate root path
+                //// Find: '\RTE\RTE.C' and go back
+                //if (String.IsNullOrWhiteSpace(pathRoot))
+                //{
+                //    pathRoot = (from f in db.Files
+                //        where f.LeafName == "RTE.C"
+                //        select f.Name).FirstOrDefault();
+                //    if (String.IsNullOrWhiteSpace(pathRoot))
+                //    {
+                //        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
+                //        return false;
+                //    }
+                //    pathRoot = Path.GetDirectoryName(pathRoot);
+                //    pathRoot = Directory.GetParent(pathRoot).FullName;
 
-                }
+                //}
                 // Estimates macros which concerns functions
                 var macros = (from m in db.CodeItems
                     join file in db.Files on m.FileId equals file.Id
@@ -406,8 +417,7 @@ namespace hoReverse.Services.AutoCpp
         // d:\hoData\Projects\00Current\ZF\Work\Source\
         // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
-        private static string _folderPathCSourceCode = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
-        //private static readonly string dataSource =
-        //    @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\54bce7b4d8587e2ef489a9d5cc784ca4\ms-vscode.cpptools\.BROWSE.VC.2.DB";
+        // _folderPathCSourceCode = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
+        private static string _folderPathCSourceCode = @"";
     }
 }

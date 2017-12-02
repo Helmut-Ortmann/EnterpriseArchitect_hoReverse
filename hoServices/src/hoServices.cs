@@ -26,6 +26,7 @@ using File = System.IO.File;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using hoReverse.hoUtil.EaCollection;
 using hoReverse.hoUtilsVC;
+using LinqToDB;
 using CustomProperty = EA.CustomProperty;
 using DiagramObject = EA.DiagramObject;
 
@@ -130,49 +131,57 @@ namespace hoReverse.Services
         // dynamical usage as configurable service by reflection
         public static void CopyFqToClipboard(Repository rep)
         {
-            string strFQ = "";
+            string strFq = "";
             object o;
             ObjectType type = rep.GetContextItem(out o);
-            switch (type)
+            try
             {
-                case ObjectType.otElement:
-                    strFQ = ((Element)o).FQName;
-                    break;
+                switch (type)
+                {
+                    case ObjectType.otElement:
+                        strFq = ((Element) o).FQName;
+                        break;
 
-                case ObjectType.otModel:
-                    strFQ = ((Package)o).Name;
-                    break;
+                    case ObjectType.otModel:
+                        strFq = ((Package) o).Name;
+                        break;
 
-                case ObjectType.otPackage:
-                    Element el = rep.GetElementByGuid(((Package)o).PackageGUID);
-                    if (el == null) strFQ = ((Package)o).Name;
-                    else strFQ = el.FQName;
-                    break;
+                    case ObjectType.otPackage:
+                        Element el = rep.GetElementByGuid(((Package) o).PackageGUID);
+                        if (el == null) strFq = ((Package) o).Name;
+                        else strFq = el.FQName;
+                        break;
 
-                case ObjectType.otDiagram:
-                    Diagram dia = (Diagram)o;
-                    if (dia.ParentID != 0)
-                    {
-                        strFQ = $"{rep.GetElementByID(dia.ParentID).FQName}.{dia.Name}";
-                    }
-                    else
-                    {
-                        string guid = rep.GetPackageByID(dia.PackageID).PackageGUID;
-                        strFQ = $"{rep.GetElementByGuid(guid).FQName}.{dia.Name}";
-                    }
-                    break;
-                case ObjectType.otAttribute:
-                    EA.Attribute a = (EA.Attribute)o;
-                    strFQ = $"{rep.GetElementByID(a.ParentID).FQName}.{a.Name}";
-                    break;
-                case ObjectType.otMethod:
-                    Method m = (Method)o;
-                    strFQ = $"{rep.GetElementByID(m.ParentID).FQName}.{m.Name}";
-                    break;
+                    case ObjectType.otDiagram:
+                        Diagram dia = (Diagram) o;
+                        if (dia.ParentID != 0)
+                        {
+                            strFq = $"{rep.GetElementByID(dia.ParentID).FQName}.{dia.Name}";
+                        }
+                        else
+                        {
+                            string guid = rep.GetPackageByID(dia.PackageID).PackageGUID;
+                            strFq = $"{rep.GetElementByGuid(guid).FQName}.{dia.Name}";
+                        }
+                        break;
+                    case ObjectType.otAttribute:
+                        EA.Attribute a = (EA.Attribute) o;
+                        strFq = $"{rep.GetElementByID(a.ParentID).FQName}.{a.Name}";
+                        break;
+                    case ObjectType.otMethod:
+                        Method m = (Method) o;
+                        strFq = $"{rep.GetElementByID(m.ParentID).FQName}.{m.Name}";
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e}", "FQ name not implemented in your EA version!");
+                strFq = "";
             }
 
-            if (String.IsNullOrWhiteSpace(strFQ)) Clipboard.Clear();
-            else Clipboard.SetText(strFQ);
+            if (String.IsNullOrWhiteSpace(strFq)) Clipboard.Clear();
+            else Clipboard.SetText(strFq);
         }
         /// <summary>
         /// Move usage of source element to target element

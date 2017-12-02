@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 
@@ -13,10 +14,11 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private EA.Element _component;
         private string _folderCodeRoot;
         private string _vcSymbolDataBase;
-        public FrmComponentFunctions(string vcSymbolDataBase, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        private EA.Repository _rep;
+        public FrmComponentFunctions(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitializeComponent();
-            InitComponent(vcSymbolDataBase, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, rep, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
 
         }
 
@@ -31,8 +33,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private void ShowComponent()
         {
             txtComponent.Text = _component.Name;
+            
             txtGuid.Text = _component.ElementGUID;
-            txtFq.Text = _component.FQName;
             txtFolderRoot.Text = _folderCodeRoot;
             txtVcSymbolDb.Text = _vcSymbolDataBase;
             chkOnlyMacros.Checked = false;
@@ -51,10 +53,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
                 grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";
                 grdProvidedInterfaces.Columns[2].HeaderText = "File Declaration";
-                grdProvidedInterfaces.Columns[3].HeaderText = "File callee";
+                grdProvidedInterfaces.Columns[3].HeaderText = "File Callee";
                 grdProvidedInterfaces.Columns[4].HeaderText = "Path Declaration";
-                grdProvidedInterfaces.Columns[5].HeaderText = "Path callee";
-                grdProvidedInterfaces.Columns[6].HeaderText = "IsCalled";
+                grdProvidedInterfaces.Columns[5].HeaderText = "Path Callee";
+                grdProvidedInterfaces.Columns[6].HeaderText = "Is Called";
 
             }
             if (grdRequiredInterfaces.ColumnCount > 6)
@@ -65,10 +67,10 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 // set columns headings
                 grdRequiredInterfaces.Columns[0].HeaderText = "Req. Interface";
                 grdRequiredInterfaces.Columns[1].HeaderText = "Implementation";
-                grdRequiredInterfaces.Columns[2].HeaderText = "File implementation";
-                grdRequiredInterfaces.Columns[3].HeaderText = "File callee";
-                grdRequiredInterfaces.Columns[4].HeaderText = "Path implementation";
-                grdRequiredInterfaces.Columns[5].HeaderText = "Path callee";
+                grdRequiredInterfaces.Columns[2].HeaderText = "File Implementation";
+                grdRequiredInterfaces.Columns[3].HeaderText = "File Callee";
+                grdRequiredInterfaces.Columns[4].HeaderText = "Path Implementation";
+                grdRequiredInterfaces.Columns[5].HeaderText = "Path Callee";
                 grdRequiredInterfaces.Columns[6].Visible = false;
                 grdRequiredInterfaces.Columns[7].Visible = false;
                 grdRequiredInterfaces.Columns[8].Visible = false;
@@ -90,7 +92,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="folderCodeRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        private void InitComponent(string vcSymbolDataBase, EA.Element component, string folderCodeRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        private void InitComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderCodeRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
              // Bind table to binding context
              // for sorting
@@ -99,6 +101,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
             _component = component;
             _folderCodeRoot = folderCodeRoot;
             _vcSymbolDataBase = vcSymbolDataBase;
+            _rep = rep;
+
 
         }
 
@@ -106,13 +110,14 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// Change component
         /// </summary>
         /// <param name="vcSymbolDataBase"></param>
+        /// <param name="rep"></param>
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        public void ChangeComponent(string vcSymbolDataBase, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        public void ChangeComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            InitComponent(vcSymbolDataBase, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, rep, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
             ShowComponent();
 
         }
@@ -139,6 +144,23 @@ namespace hoReverse.Services.AutoCpp.Analyze
             {
                 lFilters.Add($"isCalled = true");
             }
+            // Handle ImplementationName
+            // LIKE     =  '*AAA*'
+            // NOT LIKE =  'NOT *AAAA*'
+            string compareValue = txtFilterPathCallee.Text.Trim();
+            if (compareValue != "")
+            {
+                if (compareValue.ToLower().StartsWith("not "))
+                {
+                    string s = compareValue.Split(' ')[1];
+                    lFilters.Add($"FilePathCallee NOT LIKE '{firstWildCard}{s}%'");
+                }
+                else
+                {
+                    lFilters.Add($"FilePathCallee LIKE '{firstWildCard}{compareValue}%'");
+                }
+            }
+
 
             string filter = GuiHelper.AggregateFilter(lFilters);
             _bsProvidedInterfaces.Filter = filter;
@@ -174,6 +196,43 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private void chkOnlyCalledInterfaces_CheckedChanged(object sender, System.EventArgs e)
         {
             FilterGrid();
+        }
+
+        private void txtFilterPathCallee_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                FilterGrid();
+                e.Handled = true;
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            string description = @"
+Prerequisitions:
+- VC Code with C/C++ installed (https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+- VC Code database is up to date (Open a C/C++ File)
+- Open Code with 'Open Folder' and open one file to ensure the VS Code updates the Symbol Database
+
+Troubleshooting:
+- Delete all C/C++ Symbol Databases and let VC Code create a new one.
+-- Delete conten of folder:
+-- c:\users\<user>\AppData\Roaming\Code\User\workspaceStorage\
+
+Background:
+VC Code C/C++ has an SQLite Database for each C/C++ folder which stores all Symbols on the C/C++ code.
+C/C++ updates this Symbol Database when you edit/open a C/C++ file 
+
+";
+            MessageBox.Show(description.Trim(), "Analyze Code your EA model is based on!");
+
+        }
+
+        private void filterToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            string httpFilter = "https://documentation.devexpress.com/WindowsForms/2567/Controls-and-Libraries/Data-Grid/Filter-and-Search/Filtering-in-Code";
+            Process.Start(httpFilter);
         }
     }
 }

@@ -48,12 +48,6 @@ namespace hoReverse.Services.AutoCpp
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
-            //_functions = new Functions(dataSource, Files, rep);
-            //_designFunctions = new Functions(_designFiles, rep);
-
-
-
         }
 
         public AutoCpp(EA.Repository rep, EA.Element component)
@@ -63,9 +57,7 @@ namespace hoReverse.Services.AutoCpp
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
-            //_functions = new Functions(dataSource, Files, rep);
-            //_designFunctions = new Functions(_designFiles, rep);
+            
 
            
             
@@ -84,10 +76,7 @@ namespace hoReverse.Services.AutoCpp
             // inventory from VC Code Database
             _files = new Files(rep);
             _designFiles = new Files(rep);
-            string dataSource = VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
-            //_functions = new Functions(dataSource, Files,rep);
-            //_designFunctions = new Functions(_designFiles, rep);
-
+            
             if (Rep.GetPackageByGuid(designRootPackageGuid) == null)
             {
                 MessageBox.Show($@"Root package of existing design isnt't valid.
