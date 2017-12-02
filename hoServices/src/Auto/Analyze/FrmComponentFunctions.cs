@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 
+// ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp.Analyze
 {
     public partial class FrmComponentFunctions : Form
@@ -52,9 +54,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 // set columns headings
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
                 grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";
-                grdProvidedInterfaces.Columns[2].HeaderText = "File Declaration";
+                grdProvidedInterfaces.Columns[2].HeaderText = "File Implementation";
                 grdProvidedInterfaces.Columns[3].HeaderText = "File Callee";
-                grdProvidedInterfaces.Columns[4].HeaderText = "Path Declaration";
+                grdProvidedInterfaces.Columns[4].HeaderText = "Path Implementation";
                 grdProvidedInterfaces.Columns[5].HeaderText = "Path Callee";
                 grdProvidedInterfaces.Columns[6].HeaderText = "Is Called";
 
@@ -124,6 +126,16 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
         /// <summary>
         /// Filter the form
+        /// - All sub filters are ' AND ' interwinded
+        /// - Wildcard '*' or '%' is only at filter start allowed
+        /// - Filters may contain a 'NOT ' at the start to invert the logic
+        /// 
+        /// Examples:
+        /// 'myFilter'
+        /// '%myFilter'
+        /// 'NOT myFilter'
+        /// 'NOT %myFilter'
+
         /// https://documentation.devexpress.com/WindowsForms/2567/Controls-and-Libraries/Data-Grid/Filter-and-Search/Filtering-in-Code
         /// </summary>
         private void FilterGrid(bool startAtBeginning = false)
@@ -144,30 +156,45 @@ namespace hoReverse.Services.AutoCpp.Analyze
             {
                 lFilters.Add($"isCalled = true");
             }
-            // Handle ImplementationName
-            // LIKE     =  '*AAA*'
-            // NOT LIKE =  'NOT *AAAA*'
-            string compareValue = txtFilterPathCallee.Text.Trim();
-            if (compareValue != "")
-            {
-                if (compareValue.ToLower().StartsWith("not "))
-                {
-                    string s = compareValue.Split(' ')[1];
-                    lFilters.Add($"FilePathCallee NOT LIKE '{firstWildCard}{s}%'");
-                }
-                else
-                {
-                    lFilters.Add($"FilePathCallee LIKE '{firstWildCard}{compareValue}%'");
-                }
-            }
+
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, txtFilterPathCallee.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, txtFilterPathImpl.Text);
 
 
             string filter = GuiHelper.AggregateFilter(lFilters);
-            _bsProvidedInterfaces.Filter = filter;
-            _bsRequiredInterfaces.Filter = filter;
+            try
+            {
+                _bsProvidedInterfaces.Filter = filter;
+                _bsRequiredInterfaces.Filter = filter;
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Filter: '{filter}'
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
+
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
+
+hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
+
+{e}", 
+                    
+                    "The filter you have defined is invalid!");
+                _bsProvidedInterfaces.Filter = "";
+                _bsRequiredInterfaces.Filter = "";
+            }
+            
         }
-
-
+        
 
 
         private void btnOk_Click(object sender, System.EventArgs e)

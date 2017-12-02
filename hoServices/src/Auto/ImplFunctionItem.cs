@@ -6,20 +6,12 @@ namespace hoReverse.Services.AutoCpp
     {
         public string Interface { get; set; }
         public string Implementation { get; set; }
-        public string FileName
-        {
-            get { return Path.GetFileName(FilePath); }
-          
-        }
-        public string FileNameCallee
-        {
-            get { return Path.GetFileName(FilePathCallee); }
-
-        }
-
+        public string FileName => Path.GetFileName(FilePath);
+        public string FileNameCallee => Path.GetFileName(FilePathCallee);
         public string FilePath { get; set; }
         public string FilePathCallee { get; set; }
-        public bool IsCalled { get; set; }
+        public bool IsCalled => FilePathCallee.Trim() != "";
+
         // true = is defined by macro
         // false = isn't defined by macro
         public bool Macro { get; set; }
@@ -33,7 +25,6 @@ namespace hoReverse.Services.AutoCpp
             Interface = @interface;
             Implementation = implementation;
             FilePath = filePath;
-            IsCalled = false;
             FilePathCallee = filePathCallee;
         }
         public ImplFunctionItem(string @interface, string implementation, string filePath)
@@ -41,7 +32,6 @@ namespace hoReverse.Services.AutoCpp
             Interface = @interface;
             Implementation = implementation;
             FilePath = filePath;
-            IsCalled = false;
             FilePathCallee = "";
         }
         public ImplFunctionItem(string @interface, string implementation, string filePath, int lineStart, int columnStart, int lineEnd, int columnEnd)
@@ -49,7 +39,6 @@ namespace hoReverse.Services.AutoCpp
             Interface = @interface;
             Implementation = implementation;
             FilePath = filePath;
-            IsCalled = false;
             FilePathCallee = "";
             LineStart = lineStart;
             LineEnd = lineEnd;
@@ -62,7 +51,6 @@ namespace hoReverse.Services.AutoCpp
             Interface = @interface;
             Implementation = implementation;
             FilePath = filePath;
-            IsCalled = false;
             FilePathCallee = "";
             LineStart = lineStart;
             LineEnd = lineEnd;
@@ -72,14 +60,6 @@ namespace hoReverse.Services.AutoCpp
 
         }
 
-        public ImplFunctionItem(string @interface, string implementation, string filePath, bool isCalled=false)
-        {
-            Interface = @interface;
-            Implementation = implementation;
-            FilePath = filePath;
-            IsCalled = isCalled;
-            FilePathCallee = "";
-        }
-
+        
     }
 }

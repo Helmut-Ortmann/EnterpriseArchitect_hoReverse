@@ -255,7 +255,6 @@ namespace hoReverse.Services.AutoCpp
                     if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
                     {
                         //string found = match.Groups[0].Value; 
-                        f1.Imp.IsCalled = true;
                         f1.Imp.FilePathCallee = fileName;
 
                     }
