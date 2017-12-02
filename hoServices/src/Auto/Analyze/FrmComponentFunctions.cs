@@ -157,8 +157,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 lFilters.Add($"isCalled = true");
             }
 
-            GuiHelper.AddSubFilter(lFilters, firstWildCard, txtFilterPathCallee.Text);
-            GuiHelper.AddSubFilter(lFilters, firstWildCard, txtFilterPathImpl.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "Interface", txtFilterFunctionName.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "FilePathCallee", txtFilterPathCallee.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "FilePath", txtFilterPathImpl.Text);
 
 
             string filter = GuiHelper.AggregateFilter(lFilters);

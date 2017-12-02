@@ -30,6 +30,7 @@ namespace EaServices.Auto.Analyze
             if (delimiter == "") return null;
             return filters;
         }
+
         /// <summary>
         /// Add a filter from the passed string to the filter list
         /// LIKE     =  '*AAA*'
@@ -37,8 +38,9 @@ namespace EaServices.Auto.Analyze
         /// </summary>
         /// <param name="lFilters"></param>
         /// <param name="firstWildCard"></param>
+        /// <param name="nameFilerValue"></param>
         /// <param name="filterValue"></param>
-        public static void AddSubFilter(List<string> lFilters, string firstWildCard, string filterValue)
+        public static void AddSubFilter(List<string> lFilters, string firstWildCard, string nameFilerValue, string filterValue)
         {
             string compareValue = filterValue.Trim();
             if (compareValue != "")
@@ -46,11 +48,11 @@ namespace EaServices.Auto.Analyze
                 if (compareValue.ToLower().StartsWith("not "))
                 {
                     string s = compareValue.Split(' ')[1];
-                    lFilters.Add($"FilePathCallee NOT LIKE '{firstWildCard}{s}%'");
+                    lFilters.Add($"{nameFilerValue} NOT LIKE '{firstWildCard}{s}%'");
                 }
                 else
                 {
-                    lFilters.Add($"FilePathCallee LIKE '{firstWildCard}{compareValue}%'");
+                    lFilters.Add($"{nameFilerValue} LIKE '{firstWildCard}{compareValue}%'");
                 }
             }
         }

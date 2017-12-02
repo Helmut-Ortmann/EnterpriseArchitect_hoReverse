@@ -55,6 +55,7 @@
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtFilterPathImpl = new System.Windows.Forms.TextBox();
+            this.txtFilterFunctionName = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -127,6 +128,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtFilterFunctionName);
             this.panel1.Controls.Add(this.txtFilterPathImpl);
             this.panel1.Controls.Add(this.txtFilterPathCallee);
             this.panel1.Controls.Add(this.chkOnlyCalledInterfaces);
@@ -144,7 +146,7 @@
             // 
             // txtFilterPathCallee
             // 
-            this.txtFilterPathCallee.Location = new System.Drawing.Point(554, 90);
+            this.txtFilterPathCallee.Location = new System.Drawing.Point(657, 90);
             this.txtFilterPathCallee.Name = "txtFilterPathCallee";
             this.txtFilterPathCallee.Size = new System.Drawing.Size(119, 20);
             this.txtFilterPathCallee.TabIndex = 8;
@@ -310,12 +312,21 @@
             // 
             // txtFilterPathImpl
             // 
-            this.txtFilterPathImpl.Location = new System.Drawing.Point(415, 90);
+            this.txtFilterPathImpl.Location = new System.Drawing.Point(532, 90);
             this.txtFilterPathImpl.Name = "txtFilterPathImpl";
             this.txtFilterPathImpl.Size = new System.Drawing.Size(119, 20);
             this.txtFilterPathImpl.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
             this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
+            // 
+            // txtFilterFunctionName
+            // 
+            this.txtFilterFunctionName.Location = new System.Drawing.Point(24, 92);
+            this.txtFilterFunctionName.Name = "txtFilterFunctionName";
+            this.txtFilterFunctionName.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterFunctionName.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
+            this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
             // FrmComponentFunctions
             // 
@@ -369,5 +380,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.TextBox txtFilterPathImpl;
+        private System.Windows.Forms.TextBox txtFilterFunctionName;
     }
 }

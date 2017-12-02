@@ -123,6 +123,25 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
+  <data name="txtFilterFunctionName.ToolTip" xml:space="preserve">
+    <value>Filter Function name!
+
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
+
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
+
+hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
+</value>
+  </data>
   <data name="txtFilterPathImpl.ToolTip" xml:space="preserve">
     <value>Filter Implementation!
 
