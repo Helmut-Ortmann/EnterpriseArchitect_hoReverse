@@ -126,33 +126,60 @@
   <data name="txtFilterFile.ToolTip" xml:space="preserve">
     <value>Filter File-Name, non case sensitive. 
 
-You can use Wildcards at the string end and beginning.
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
 
-All filteres are added with an 'AND' expression.
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
 
-Example:
-'ADC_' filters alls trings which begins with 'ADC_'
+hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
 </value>
   </data>
   <data name="txtFilterImplementation.ToolTip" xml:space="preserve">
     <value>Filter Implementation, C-Function-Name, non case sensitive. 
 
-You can use Wildcards at the string end and beginning.
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
 
-All filteres are added with an 'AND' expression.
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
 
-Example:
-'ADC_' filters alls trings which begins with 'ADC_'</value>
+hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
+</value>
   </data>
   <data name="txtFilterFunction.ToolTip" xml:space="preserve">
     <value>Filter Interface, C-Function Name or Macro-Name, non case sensitive. 
 
-You can use Wildcards at the string end and beginning.
 
-All filteres are added with an 'AND' expression.
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
 
-Example:
-'ADC_' filters alls trings which begins with 'ADC_'</value>
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
+
+hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
+</value>
   </data>
   <data name="txtVcSymbolDb.ToolTip" xml:space="preserve">
     <value>VC Code symbol DB

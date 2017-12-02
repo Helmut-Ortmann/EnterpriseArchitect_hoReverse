@@ -270,7 +270,7 @@ namespace hoReverse.Services.AutoCpp
                     FileName = f.Imp.FileName,
                     FileNameCallee = f.Imp.FileNameCallee,
                     // no root path
-                    FilePathImplementation = f.Imp.FilePath.Length > _folderPathCSourceCode.Length ? f.Imp.FilePath.Substring(_folderPathCSourceCode.Length) : "",
+                    FilePath = f.Imp.FilePath.Length > _folderPathCSourceCode.Length ? f.Imp.FilePath.Substring(_folderPathCSourceCode.Length) : "",
                     FilePathCallee = f.Imp.FilePathCallee.Length > _folderPathCSourceCode.Length ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",
                     isCalled = f.Imp.IsCalled
                 }).Distinct();

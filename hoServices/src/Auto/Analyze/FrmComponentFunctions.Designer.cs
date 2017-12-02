@@ -56,6 +56,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtFilterPathImpl = new System.Windows.Forms.TextBox();
             this.txtFilterFunctionName = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -128,6 +129,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.txtFilterFunctionName);
             this.panel1.Controls.Add(this.txtFilterPathImpl);
             this.panel1.Controls.Add(this.txtFilterPathCallee);
@@ -328,6 +330,15 @@
             this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
             this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(201, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(236, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
+            // 
             // FrmComponentFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -381,5 +392,6 @@
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.TextBox txtFilterPathImpl;
         private System.Windows.Forms.TextBox txtFilterFunctionName;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -80,24 +80,12 @@ namespace hoReverse.Services.AutoCpp.Analyze
             // Filters to later aggregate to string
             List<string> lFilters = new List<string>();
 
-           
-            //----------------------------------
-            // Handle FunctionName
-            if (txtFilterFunction.Text.Trim() != "" )
-            {
-                lFilters.Add($"Interface LIKE '{firstWildCard}{txtFilterFunction.Text}%'");
-            }
-            // Handle ImplementationName
-            if (txtFilterImplementation.Text.Trim() != "")
-            {
-                lFilters.Add($"Implementation LIKE '{firstWildCard}{txtFilterImplementation.Text}%'");
-            }
-            // Handle File name
-            if (txtFilterFile.Text.Trim() != "")
-            {
-                lFilters.Add($"FileName LIKE '{firstWildCard}{txtFilterFile.Text}%'");
-            }
 
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "Interface", txtFilterFunction.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "Implementation", txtFilterImplementation.Text);
+            GuiHelper.AddSubFilter(lFilters, firstWildCard, "FileName", txtFilterFile.Text);
+
+           
             // Handle Macro checked
             if (chkOnlyMacros.Checked)
             {

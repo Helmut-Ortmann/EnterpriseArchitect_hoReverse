@@ -39,11 +39,12 @@
             this.txtFilterFile = new System.Windows.Forms.TextBox();
             this.txtFilterImplementation = new System.Windows.Forms.TextBox();
             this.txtFilterFunction = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.txtSourceFolder = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -95,6 +96,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.chkOnlyImplementations);
             this.panel1.Controls.Add(this.chkOnlyMacros);
             this.panel1.Controls.Add(this.txtFilterFile);
@@ -147,7 +149,7 @@
             // 
             // txtFilterImplementation
             // 
-            this.txtFilterImplementation.Location = new System.Drawing.Point(321, 51);
+            this.txtFilterImplementation.Location = new System.Drawing.Point(414, 49);
             this.txtFilterImplementation.Name = "txtFilterImplementation";
             this.txtFilterImplementation.Size = new System.Drawing.Size(129, 20);
             this.txtFilterImplementation.TabIndex = 2;
@@ -163,6 +165,16 @@
             this.toolTip1.SetToolTip(this.txtFilterFunction, resources.GetString("txtFilterFunction.ToolTip"));
             this.txtFilterFunction.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 28);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Symbols";
+            this.toolTip1.SetToolTip(this.label2, "Path of the SQLite Symbol VC Code db.");
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -171,6 +183,14 @@
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Source";
+            // 
+            // txtVcSymbolDb
+            // 
+            this.txtVcSymbolDb.Location = new System.Drawing.Point(51, 28);
+            this.txtVcSymbolDb.Name = "txtVcSymbolDb";
+            this.txtVcSymbolDb.Size = new System.Drawing.Size(846, 20);
+            this.txtVcSymbolDb.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.txtVcSymbolDb, resources.GetString("txtVcSymbolDb.ToolTip"));
             // 
             // txtSourceFolder
             // 
@@ -182,23 +202,15 @@
         "et it in Settings.\r\n\r\nTo make sure it works:\r\nShow at least one C/C++ file with " +
         "VC Code. \r\n\r\n");
             // 
-            // txtVcSymbolDb
+            // label3
             // 
-            this.txtVcSymbolDb.Location = new System.Drawing.Point(51, 28);
-            this.txtVcSymbolDb.Name = "txtVcSymbolDb";
-            this.txtVcSymbolDb.Size = new System.Drawing.Size(846, 20);
-            this.txtVcSymbolDb.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.txtVcSymbolDb, resources.GetString("txtVcSymbolDb.ToolTip"));
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 28);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Symbols";
-            this.toolTip1.SetToolTip(this.label2, "Path of the SQLite Symbol VC Code db.");
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(135, 55);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(273, 15);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
             // 
             // FrmFunctions
             // 
@@ -236,5 +248,6 @@
         private System.Windows.Forms.CheckBox chkOnlyImplementations;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtVcSymbolDb;
+        private System.Windows.Forms.Label label3;
     }
 }
