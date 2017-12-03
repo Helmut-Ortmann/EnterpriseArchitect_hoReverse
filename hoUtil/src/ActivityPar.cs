@@ -317,6 +317,7 @@ namespace hoReverse.hoUtils.ActivityParameter
 
             // over all parameters
             string guids = "";
+            // It looks as if parSrc.Position isn't reliable
             int pos = 0;
             foreach (EA.Parameter parSrc in m.Parameters)
             {
@@ -364,7 +365,8 @@ namespace hoReverse.hoUtils.ActivityParameter
                 }
 
                 parTrgt.Notes = parSrc.Notes;
-                parTrgt.Alias = "par_" + parSrc.Position + ":" + parSrc.Type;
+                parTrgt.Alias = $"par_{pos}:{parSrc.Type}";
+                //parTrgt.Alias = $"par_{parSrc.Position}:{parSrc.Type}";
 
                 // update properties for parameter
                 Param par = new Param(rep, parTrgt);

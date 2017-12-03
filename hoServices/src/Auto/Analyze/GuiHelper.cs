@@ -43,7 +43,7 @@ namespace EaServices.Auto.Analyze
         public static void AddSubFilter(List<string> lFilters, string firstWildCard, string nameFilerValue, string filterValue)
         {
             string compareValue = filterValue.Trim();
-            if (compareValue != "")
+            if (compareValue != "" && ! compareValue.ToLower().StartsWith("<filter"))
             {
                 if (compareValue.ToLower().StartsWith("not "))
                 {
