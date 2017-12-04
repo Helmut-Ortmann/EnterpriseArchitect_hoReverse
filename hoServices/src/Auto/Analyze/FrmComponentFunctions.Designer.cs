@@ -52,11 +52,11 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageProvided = new System.Windows.Forms.TabPage();
+            this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showImplementationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCalleeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPageProvided = new System.Windows.Forms.TabPage();
-            this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -65,9 +65,9 @@
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.tabPageProvided.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.tabPageRequired.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdRequiredInterfaces)).BeginInit();
             this.SuspendLayout();
@@ -297,27 +297,6 @@
             this.tabControl1.Size = new System.Drawing.Size(964, 248);
             this.tabControl1.TabIndex = 4;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showImplementationToolStripMenuItem,
-            this.showCalleeToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(192, 48);
-            // 
-            // showImplementationToolStripMenuItem
-            // 
-            this.showImplementationToolStripMenuItem.Name = "showImplementationToolStripMenuItem";
-            this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.showImplementationToolStripMenuItem.Text = "Show Implementation";
-            // 
-            // showCalleeToolStripMenuItem
-            // 
-            this.showCalleeToolStripMenuItem.Name = "showCalleeToolStripMenuItem";
-            this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.showCalleeToolStripMenuItem.Text = "Show Callee";
-            this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
-            // 
             // tabPageProvided
             // 
             this.tabPageProvided.Controls.Add(this.grdProvidedInterfaces);
@@ -342,6 +321,28 @@
             this.grdProvidedInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 216);
             this.grdProvidedInterfaces.TabIndex = 2;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showImplementationToolStripMenuItem,
+            this.showCalleeToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(192, 48);
+            // 
+            // showImplementationToolStripMenuItem
+            // 
+            this.showImplementationToolStripMenuItem.Name = "showImplementationToolStripMenuItem";
+            this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.showImplementationToolStripMenuItem.Text = "Show Implementation";
+            this.showImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
+            // 
+            // showCalleeToolStripMenuItem
+            // 
+            this.showCalleeToolStripMenuItem.Name = "showCalleeToolStripMenuItem";
+            this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.showCalleeToolStripMenuItem.Text = "Show Callee";
+            this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
             // 
             // tabPageRequired
             // 
@@ -385,9 +386,9 @@
             this.panel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
             this.tabPageProvided.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.tabPageRequired.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdRequiredInterfaces)).EndInit();
             this.ResumeLayout(false);

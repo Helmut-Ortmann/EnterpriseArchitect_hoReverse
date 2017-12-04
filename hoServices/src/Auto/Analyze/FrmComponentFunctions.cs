@@ -269,7 +269,17 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
 
         private void showCalleeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Try to cast the sender to a ToolStripItem
+            StartCodeFile(sender, "FilePathCallee");
+        }
+        private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartCodeFile(sender, "FilePath");
+
+        }
+
+        private void StartCodeFile(object sender, string columnName)
+        {
+// Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
             if (menuItem != null)
             {
@@ -278,13 +288,14 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
                 if (owner != null)
                 {
                     // Get the control that is displaying this context menu
-                    DataGridView grid = (DataGridView)owner.SourceControl;
-                    string filePath = grid.SelectedRows[0].Cells["FilePathCallee"].Value.ToString();
+                    DataGridView grid = (DataGridView) owner.SourceControl;
+                    string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
                     filePath = Path.Combine(_folderCodeRoot, filePath);
                     HoUtil.StartFile(filePath);
                 }
             }
-
         }
+
+       
     }
 }
