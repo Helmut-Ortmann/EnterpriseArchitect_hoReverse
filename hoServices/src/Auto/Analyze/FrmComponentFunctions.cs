@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
+using hoReverse.hoUtils;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp.Analyze
@@ -15,12 +17,13 @@ namespace hoReverse.Services.AutoCpp.Analyze
         readonly BindingSource _bsRequiredInterfaces = new BindingSource();
         private EA.Element _component;
         private string _folderCodeRoot;
+        private string _folderCodeComponent;
         private string _vcSymbolDataBase;
         private EA.Repository _rep;
-        public FrmComponentFunctions(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        public FrmComponentFunctions(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, string folderComponent, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitializeComponent();
-            InitComponent(vcSymbolDataBase, rep, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, rep, component, folderRoot, folderComponent, dtProvidedInterfaces, dtRequiredInterfaces);
 
         }
 
@@ -94,7 +97,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="folderCodeRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        private void InitComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderCodeRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        private void InitComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderCodeRoot,string folderCodeComponent,  DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
              // Bind table to binding context
              // for sorting
@@ -102,6 +105,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             _bsRequiredInterfaces.DataSource = dtRequiredInterfaces;
             _component = component;
             _folderCodeRoot = folderCodeRoot;
+            _folderCodeComponent = folderCodeComponent;
             _vcSymbolDataBase = vcSymbolDataBase;
             _rep = rep;
 
@@ -117,9 +121,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="folderRoot"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
-        public void ChangeComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
+        public void ChangeComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, string folderComponent,  DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
-            InitComponent(vcSymbolDataBase, rep, component, folderRoot, dtProvidedInterfaces, dtRequiredInterfaces);
+            InitComponent(vcSymbolDataBase, rep, component, folderRoot, folderComponent, dtProvidedInterfaces, dtRequiredInterfaces);
             ShowComponent();
 
         }
@@ -261,6 +265,26 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         {
             string httpFilter = "https://documentation.devexpress.com/WindowsForms/2567/Controls-and-Libraries/Data-Grid/Filter-and-Search/Filtering-in-Code";
             Process.Start(httpFilter);
+        }
+
+        private void showCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                ContextMenuStrip owner = menuItem.Owner as ContextMenuStrip;
+                if (owner != null)
+                {
+                    // Get the control that is displaying this context menu
+                    DataGridView grid = (DataGridView)owner.SourceControl;
+                    string filePath = grid.SelectedRows[0].Cells["FilePathCallee"].Value.ToString();
+                    filePath = Path.Combine(_folderCodeRoot, filePath);
+                    HoUtil.StartFile(filePath);
+                }
+            }
+
         }
     }
 }

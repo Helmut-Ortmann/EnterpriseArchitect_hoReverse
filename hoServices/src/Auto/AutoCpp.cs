@@ -293,7 +293,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         /// - Access= ReadOnly
         /// - Returns empty string if can't find database
         /// </summary>
-        private string ConnectionString => VcDbUtilities.GetConnectionString(_folderPathCSourceCode);
+        private string ConnectionString => VcDbUtilities.GetConnectionString(_folderRoot);
 
        
         public Repository Rep

@@ -21,7 +21,7 @@ namespace hoReverse.Services.AutoCpp
 
             // get connection string of repository
             // the provider to connect to database like Access, ..
-            _folderPathCSourceCode = folderPathCSourceCode;
+            _folderRoot = folderPathCSourceCode;
             string connectionString = LinqUtil.GetConnectionString(folderPathCSourceCode, out IDataProvider provider, withErrorMessage:true);
             if (connectionString == "") return false;
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
@@ -48,7 +48,7 @@ namespace hoReverse.Services.AutoCpp
                     .Union
                     (from f in allFunctionsImpl
                      where _macros.All(m => m.Key != f.Implementation)
-                     select new ImplFunctionItem(f.Implementation, "", f.FilePath.Substring(_folderPathCSourceCode.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd,false))
+                     select new ImplFunctionItem(f.Implementation, "", f.FilePath.Substring(_folderRoot.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd,false))
                     .Union
                     // macros without implementation
                     (from m in _macros

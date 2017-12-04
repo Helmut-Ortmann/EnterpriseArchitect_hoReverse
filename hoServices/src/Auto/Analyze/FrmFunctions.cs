@@ -11,6 +11,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
         string _vcSymbolDataBase;
         private string _folderRoot;
+        private string _folderComponent;
         private DataTable _dtFunctions;
 
         readonly BindingSource _bsFunctions = new BindingSource();
@@ -25,7 +26,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         {
 
             dataGridView1.DataSource = _bsFunctions;
-            txtSourceFolder.Text = _folderRoot;
+            txtSourceFolder.Text = _folderComponent;
             txtVcSymbolDb.Text = _vcSymbolDataBase;
             dataGridView1.Columns[0].Width = 300;
             dataGridView1.Columns[1].Width = 100;

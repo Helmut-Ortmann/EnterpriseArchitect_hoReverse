@@ -28,14 +28,14 @@ namespace hoReverse.Services.AutoCpp
         /// -- Takes macros in account
         /// </summary>
         /// <param name="el"></param>
-        /// <param name="folderPathCSourceCode">Root folder patch of C/C++ source code</param>
+        /// <param name="folderRoot">Root folder patch of C/C++ source code</param>
         /// <returns></returns>
-        public bool ShowInterfacesOfElement(EA.Element el, string folderPathCSourceCode)
+        public bool ShowInterfacesOfElement(EA.Element el, string folderRoot)
         {
             // get connection string of repository
             // the provider to connect to database like Access, ..
-            _folderPathCSourceCode = folderPathCSourceCode;
-            string connectionString = LinqUtil.GetConnectionString(folderPathCSourceCode, out IDataProvider provider);
+            _folderRoot = folderRoot;
+            string connectionString = LinqUtil.GetConnectionString(folderRoot, out IDataProvider provider);
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
@@ -107,12 +107,12 @@ namespace hoReverse.Services.AutoCpp
                 // new component
                 if (_frm == null || _frm.IsDisposed)
                 {
-                    _frm = new FrmComponentFunctions(connectionString, Rep, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm = new FrmComponentFunctions(connectionString, Rep, el, folderRoot, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 else
                 {
-                    _frm.ChangeComponent(connectionString, Rep, el, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
+                    _frm.ChangeComponent(connectionString, Rep, el, _folderRoot, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
                 }
                 //frm.ShowDialog();
@@ -184,7 +184,7 @@ namespace hoReverse.Services.AutoCpp
             {
                 if (!File.Exists(f.FilePathImplementation))
                 {
-                    MessageBox.Show($"File:\r\n{f.FilePathImplementation}\r\n\r\nRoot:\r\n{_folderPathCSourceCode}",
+                    MessageBox.Show($"File:\r\n{f.FilePathImplementation}\r\n\r\nRoot:\r\n{_folderRoot}",
                         "Can't open implementation of required interface, break!!!");
                     break;
                 }
@@ -203,8 +203,8 @@ namespace hoReverse.Services.AutoCpp
                                 f.Interface, 
                                 f.Interface == f.Implementation ? "" : f.Implementation,
                                 // no root path
-                                f.FilePathImplementation.Length > _folderPathCSourceCode.Length ? f.FilePathImplementation.Substring(_folderPathCSourceCode.Length) : "",
-                                f.FilePathCallee.Length > _folderPathCSourceCode.Length ? f.FilePathCallee.Substring(_folderPathCSourceCode.Length): ""));
+                                f.FilePathImplementation.Length > _folderRoot.Length ? f.FilePathImplementation.Substring(_folderRoot.Length) : "",
+                                f.FilePathCallee.Length > _folderRoot.Length ? f.FilePathCallee.Substring(_folderRoot.Length): ""));
                         }
                     }
                 }
@@ -244,7 +244,7 @@ namespace hoReverse.Services.AutoCpp
             {
                 if (!File.Exists(fileName))
                 {
-                    MessageBox.Show($"File:\r\n{fileName}\r\n\r\nRoot:\r\n{_folderPathCSourceCode}",
+                    MessageBox.Show($"File:\r\n{fileName}\r\n\r\nRoot:\r\n{_folderRoot}",
                         "Can't open implementation of provided interface, break!!!");
                     break;
                 }
@@ -270,8 +270,8 @@ namespace hoReverse.Services.AutoCpp
                     FileName = f.Imp.FileName,
                     FileNameCallee = f.Imp.FileNameCallee,
                     // no root path
-                    FilePath = f.Imp.FilePath.Length > _folderPathCSourceCode.Length ? f.Imp.FilePath.Substring(_folderPathCSourceCode.Length) : "",
-                    FilePathCallee = f.Imp.FilePathCallee.Length > _folderPathCSourceCode.Length ? f.Imp.FilePathCallee.Substring(_folderPathCSourceCode.Length) : "",
+                    FilePath = f.Imp.FilePath.Length > _folderRoot.Length ? f.Imp.FilePath.Substring(_folderRoot.Length) : "",
+                    FilePathCallee = f.Imp.FilePathCallee.Length > _folderRoot.Length ? f.Imp.FilePathCallee.Substring(_folderRoot.Length) : "",
                     isCalled = f.Imp.IsCalled
                 }).Distinct();
 
@@ -328,8 +328,8 @@ namespace hoReverse.Services.AutoCpp
 
 
             // get connection string of repository
-            _folderPathCSourceCode = folderPathCSourceCode;
-            string connectionString = LinqUtil.GetConnectionString(_folderPathCSourceCode, out var provider, withErrorMessage:true);
+            _folderRoot = folderPathCSourceCode;
+            string connectionString = LinqUtil.GetConnectionString(_folderRoot, out var provider, withErrorMessage:true);
             if (connectionString == "") return false;
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
@@ -417,6 +417,6 @@ namespace hoReverse.Services.AutoCpp
         // private static readonly string dataSource = @"c:\Users\helmu_000\AppData\Roaming\Code\User\workspaceStorage\aa695e4b2b69e4df2595f987547a5da3\ms-vscode.cpptools\.BROWSE.VC.DB";
         // private static string dataSource = @"c:\Users\uidr5387\AppData\Roaming\Code\User\workspaceStorage\26045e663446b5f8d692303182313101\ms-vscode.cpptools\.BROWSE.VC.DB";
         // _folderPathCSourceCode = @"d:\hoData\Projects\00Current\ZF\Work\Source\";
-        private static string _folderPathCSourceCode = @"";
+        private static string _folderRoot = @"";
     }
 }

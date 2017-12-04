@@ -37,6 +37,9 @@
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtFilterFunctionName = new System.Windows.Forms.TextBox();
+            this.txtFilterPathImpl = new System.Windows.Forms.TextBox();
             this.txtFilterPathCallee = new System.Windows.Forms.TextBox();
             this.chkOnlyCalledInterfaces = new System.Windows.Forms.CheckBox();
             this.chkOnlyMacros = new System.Windows.Forms.CheckBox();
@@ -49,19 +52,20 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showImplementationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showCalleeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPageProvided = new System.Windows.Forms.TabPage();
             this.grdProvidedInterfaces = new System.Windows.Forms.DataGridView();
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.txtFilterPathImpl = new System.Windows.Forms.TextBox();
-            this.txtFilterFunctionName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.tabPageProvided.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).BeginInit();
             this.tabPageRequired.SuspendLayout();
@@ -97,14 +101,14 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.filterToolStripMenuItem.Text = "Filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
@@ -145,6 +149,33 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(964, 115);
             this.panel1.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(201, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(236, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
+            // 
+            // txtFilterFunctionName
+            // 
+            this.txtFilterFunctionName.Location = new System.Drawing.Point(24, 92);
+            this.txtFilterFunctionName.Name = "txtFilterFunctionName";
+            this.txtFilterFunctionName.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterFunctionName.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
+            this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
+            // 
+            // txtFilterPathImpl
+            // 
+            this.txtFilterPathImpl.Location = new System.Drawing.Point(532, 90);
+            this.txtFilterPathImpl.Name = "txtFilterPathImpl";
+            this.txtFilterPathImpl.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterPathImpl.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
+            this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathCallee
             // 
@@ -266,6 +297,27 @@
             this.tabControl1.Size = new System.Drawing.Size(964, 248);
             this.tabControl1.TabIndex = 4;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showImplementationToolStripMenuItem,
+            this.showCalleeToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(192, 48);
+            // 
+            // showImplementationToolStripMenuItem
+            // 
+            this.showImplementationToolStripMenuItem.Name = "showImplementationToolStripMenuItem";
+            this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.showImplementationToolStripMenuItem.Text = "Show Implementation";
+            // 
+            // showCalleeToolStripMenuItem
+            // 
+            this.showCalleeToolStripMenuItem.Name = "showCalleeToolStripMenuItem";
+            this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.showCalleeToolStripMenuItem.Text = "Show Callee";
+            this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
+            // 
             // tabPageProvided
             // 
             this.tabPageProvided.Controls.Add(this.grdProvidedInterfaces);
@@ -282,11 +334,12 @@
             this.grdProvidedInterfaces.AllowUserToAddRows = false;
             this.grdProvidedInterfaces.AllowUserToDeleteRows = false;
             this.grdProvidedInterfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdProvidedInterfaces.ContextMenuStrip = this.contextMenuStrip1;
             this.grdProvidedInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdProvidedInterfaces.Location = new System.Drawing.Point(3, 3);
-            this.grdProvidedInterfaces.MultiSelect = false;
             this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
             this.grdProvidedInterfaces.RowHeadersVisible = false;
+            this.grdProvidedInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 216);
             this.grdProvidedInterfaces.TabIndex = 2;
             // 
@@ -306,38 +359,14 @@
             this.grdRequiredInterfaces.AllowUserToAddRows = false;
             this.grdRequiredInterfaces.AllowUserToDeleteRows = false;
             this.grdRequiredInterfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdRequiredInterfaces.ContextMenuStrip = this.contextMenuStrip1;
             this.grdRequiredInterfaces.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdRequiredInterfaces.Location = new System.Drawing.Point(3, 3);
             this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
+            this.grdRequiredInterfaces.RowHeadersVisible = false;
+            this.grdRequiredInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 216);
             this.grdRequiredInterfaces.TabIndex = 0;
-            // 
-            // txtFilterPathImpl
-            // 
-            this.txtFilterPathImpl.Location = new System.Drawing.Point(532, 90);
-            this.txtFilterPathImpl.Name = "txtFilterPathImpl";
-            this.txtFilterPathImpl.Size = new System.Drawing.Size(119, 20);
-            this.txtFilterPathImpl.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
-            this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
-            // 
-            // txtFilterFunctionName
-            // 
-            this.txtFilterFunctionName.Location = new System.Drawing.Point(24, 92);
-            this.txtFilterFunctionName.Name = "txtFilterFunctionName";
-            this.txtFilterFunctionName.Size = new System.Drawing.Size(119, 20);
-            this.txtFilterFunctionName.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
-            this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(201, 93);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(236, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
             // 
             // FrmComponentFunctions
             // 
@@ -356,6 +385,7 @@
             this.panel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.tabPageProvided.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdProvidedInterfaces)).EndInit();
             this.tabPageRequired.ResumeLayout(false);
@@ -393,5 +423,8 @@
         private System.Windows.Forms.TextBox txtFilterPathImpl;
         private System.Windows.Forms.TextBox txtFilterFunctionName;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem showImplementationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showCalleeToolStripMenuItem;
     }
 }
