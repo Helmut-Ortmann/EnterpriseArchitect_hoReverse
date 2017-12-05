@@ -276,26 +276,44 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             StartCodeFile(sender, "FilePath");
 
         }
+        
+        /// <summary>
+        /// Copy all selected Interface names to Clipboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
+        }
+        /// <summary>
+        /// Open the file according to column name with the editor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="columnName"></param>
         private void StartCodeFile(object sender, string columnName)
         {
-// Try to cast the sender to a ToolStripItem
-            ToolStripItem menuItem = sender as ToolStripItem;
-            if (menuItem != null)
-            {
-                // Retrieve the ContextMenuStrip that owns this ToolStripItem
-                ContextMenuStrip owner = menuItem.Owner as ContextMenuStrip;
-                if (owner != null)
-                {
-                    // Get the control that is displaying this context menu
-                    DataGridView grid = (DataGridView) owner.SourceControl;
-                    string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
-                    filePath = Path.Combine(_folderCodeRoot, filePath);
-                    HoUtil.StartFile(filePath);
-                }
-            }
+            // Get the control that is displaying this context menu
+            DataGridView grid = GetDataGridView(sender);
+            string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
+            filePath = Path.Combine(_folderCodeRoot, filePath);
+            HoUtil.StartFile(filePath);
+              
         }
 
-       
+        private DataGridView GetDataGridView(object sender)
+        {
+            // Try to cast the sender to a ToolStripItem
+            if (sender is ToolStripItem menuItem)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    return (DataGridView) owner.SourceControl;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -139,11 +139,15 @@ namespace hoReverse.Services.AutoCpp
             List<CallFunctionItem> lFunctionCalls = new List<CallFunctionItem>();
             foreach (var file in filesPathOfClassTree)
             {
-                Match match = rx.Match(HoUtil.ReadAllText(file));
-                while (match.Success)
+                // only files that are in source folder, no library files.
+                if (file.Contains(_folderRoot))
                 {
-                    lFunctionCalls.Add(new CallFunctionItem(match.Groups[1].Value, file));
-                    match = match.NextMatch();
+                    Match match = rx.Match(HoUtil.ReadAllText(file));
+                    while (match.Success)
+                    {
+                        lFunctionCalls.Add(new CallFunctionItem(match.Groups[1].Value, file));
+                        match = match.NextMatch();
+                    }
                 }
             }
            
@@ -248,15 +252,19 @@ namespace hoReverse.Services.AutoCpp
                         "Can't open implementation of provided interface, break!!!");
                     break;
                 }
-                string code = HoUtil.ReadAllText(fileName);
-                code = hoService.DeleteComment(code);
-                foreach (var f1 in compImplementations)
+                // only files in implementation
+                if (fileName.Contains(_folderRoot))
                 {
-                    if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
+                    string code = HoUtil.ReadAllText(fileName);
+                    code = hoService.DeleteComment(code);
+                    foreach (var f1 in compImplementations)
                     {
-                        //string found = match.Groups[0].Value; 
-                        f1.Imp.FilePathCallee = fileName;
+                        if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
+                        {
+                            //string found = match.Groups[0].Value; 
+                            f1.Imp.FilePathCallee = fileName;
 
+                        }
                     }
                 }
             }
