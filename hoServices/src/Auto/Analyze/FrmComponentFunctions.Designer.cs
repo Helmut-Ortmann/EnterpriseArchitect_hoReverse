@@ -329,19 +329,19 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showImplementationToolStripMenuItem,
-            this.toolStripSeparator1,
             this.showCalleeToolStripMenuItem,
+            this.toolStripSeparator1,
             this.copyInterfaceToolStripMenuItem,
             this.copyCalleeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 98);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 120);
             // 
             // showImplementationToolStripMenuItem
             // 
             this.showImplementationToolStripMenuItem.Name = "showImplementationToolStripMenuItem";
-            this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.showImplementationToolStripMenuItem.Text = "Open Interface";
-            this.showImplementationToolStripMenuItem.ToolTipText = "Start the Interface to edit with the Editor defined for the type.";
+            this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.showImplementationToolStripMenuItem.Text = "Open Implementation";
+            this.showImplementationToolStripMenuItem.ToolTipText = "Start the Implementation to edit with the Editor defined for the type.";
             this.showImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
             // 
             // showCalleeToolStripMenuItem
@@ -385,17 +385,17 @@
             // copyInterfaceToolStripMenuItem
             // 
             this.copyInterfaceToolStripMenuItem.Name = "copyInterfaceToolStripMenuItem";
-            this.copyInterfaceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.copyInterfaceToolStripMenuItem.Text = "Copy Interface";
-            this.copyInterfaceToolStripMenuItem.ToolTipText = "Copy all selected Interfaces to Clipboard";
+            this.copyInterfaceToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyInterfaceToolStripMenuItem.Text = "Copy Interface/Function";
+            this.copyInterfaceToolStripMenuItem.ToolTipText = "Copy all selected Interfaces/Function Names to Clipboard";
             this.copyInterfaceToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
             // 
             // copyCalleeToolStripMenuItem
             // 
             this.copyCalleeToolStripMenuItem.Name = "copyCalleeToolStripMenuItem";
-            this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.copyCalleeToolStripMenuItem.Text = "Copy Callee";
-            this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  to Clipboard";
+            this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyCalleeToolStripMenuItem.Text = "Copy Callee File-Names";
+            this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  File-Names to Clipboard";
             // 
             // FrmComponentFunctions
             // 

@@ -95,6 +95,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="vcSymbolDataBase"></param>
         /// <param name="component"></param>
         /// <param name="folderCodeRoot"></param>
+        /// <param name="folderCodeComponent"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
         private void InitComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderCodeRoot,string folderCodeComponent,  DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
@@ -278,12 +279,22 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         }
         
         /// <summary>
-        /// Copy all selected Interface names to Clipboard
+        /// Copy all selected Interface/Function names to Clipboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void copyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Get the control that is displaying this context menu
+            DataGridView grid = GetDataGridView(sender);
+            string text = "";
+            string delimiter = "";
+            foreach (DataGridViewSelectedRowCollection function in grid.SelectedRows)
+            {
+                text = $"{text}{delimiter}{grid.SelectedRows[0].Cells["Interface"].Value.ToString()}";
+                delimiter = "\r\n";
+            }
+            Clipboard.SetText(text);
 
         }
         /// <summary>
