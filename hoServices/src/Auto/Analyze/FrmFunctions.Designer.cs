@@ -33,7 +33,11 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openImplementationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copySelectedFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.chkOnlyImplementations = new System.Windows.Forms.CheckBox();
             this.chkOnlyMacros = new System.Windows.Forms.CheckBox();
             this.txtFilterFile = new System.Windows.Forms.TextBox();
@@ -44,9 +48,9 @@
             this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.txtSourceFolder = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,15 +88,40 @@
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 103);
-            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(923, 587);
             this.dataGridView1.TabIndex = 1;
             this.toolTip1.SetToolTip(this.dataGridView1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openImplementationToolStripMenuItem,
+            this.copySelectedFunctionsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 70);
+            // 
+            // openImplementationToolStripMenuItem
+            // 
+            this.openImplementationToolStripMenuItem.Name = "openImplementationToolStripMenuItem";
+            this.openImplementationToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.openImplementationToolStripMenuItem.Text = "Open Implementation";
+            this.openImplementationToolStripMenuItem.ToolTipText = "Open the implementation in the editor";
+            this.openImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
+            // 
+            // copySelectedFunctionsToolStripMenuItem
+            // 
+            this.copySelectedFunctionsToolStripMenuItem.Name = "copySelectedFunctionsToolStripMenuItem";
+            this.copySelectedFunctionsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copySelectedFunctionsToolStripMenuItem.Text = "Copy selected Functions";
+            this.copySelectedFunctionsToolStripMenuItem.ToolTipText = "Copy the selected functions to Clipboard";
+            this.copySelectedFunctionsToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -113,6 +142,16 @@
             this.panel1.TabIndex = 2;
             this.toolTip1.SetToolTip(this.panel1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(135, 55);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(273, 15);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
             // 
             // chkOnlyImplementations
             // 
@@ -202,16 +241,6 @@
         "et it in Settings.\r\n\r\nTo make sure it works:\r\nShow at least one C/C++ file with " +
         "VC Code. \r\n\r\n");
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(135, 55);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(273, 15);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
-            // 
             // FrmFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,6 +255,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -249,5 +279,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtVcSymbolDb;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem openImplementationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copySelectedFunctionsToolStripMenuItem;
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
+using hoReverse.hoUtils;
 
 namespace hoReverse.Services.AutoCpp.Analyze
 {
@@ -114,6 +117,73 @@ namespace hoReverse.Services.AutoCpp.Analyze
         {
             FilterGrid();
 
+        }
+
+        private void showCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartCodeFile(sender, "FilePathCallee");
+        }
+        private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartCodeFile(sender, "FilePath");
+
+        }
+
+        /// <summary>
+        /// Copy all selected Interface/Function names to Clipboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyCellValuesToClipboard(sender, "Interface");
+        }
+        private void copyCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyCellValuesToClipboard(sender, "FileNameCallee");
+        }
+
+        /// <summary>
+        /// Copy the cell according to name of all selected rows to Clipboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="name"></param>
+        private void CopyCellValuesToClipboard(object sender, string name)
+        {
+            // Get the control that is displaying this context menu
+            DataGridView grid = GetDataGridView(sender);
+            string text = "";
+            string delimiter = "";
+            var functions = from f in grid.SelectedRows.Cast<DataGridViewRow>()
+                            orderby f.Cells[name].Value.ToString()
+                            select f.Cells[name].Value.ToString();
+
+            foreach (string function in functions)
+            {
+                text = $"{text}{delimiter}{function}";
+                delimiter = "\r\n";
+            }
+            Clipboard.SetText(text);
+        }
+
+        /// <summary>
+        /// Open the file according to column name with the editor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="columnName"></param>
+        private void StartCodeFile(object sender, string columnName)
+        {
+            // Get the control that is displaying this context menu
+            DataGridView grid = GetDataGridView(sender);
+            string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
+            filePath = Path.Combine(_folderRoot, filePath);
+            HoUtil.StartFile(filePath);
+
+        }
+
+        private DataGridView GetDataGridView(object sender)
+        {
+            return dataGridView1;
         }
     }
 }
