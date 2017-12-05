@@ -396,6 +396,7 @@
             this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.copyCalleeToolStripMenuItem.Text = "Copy Callee File-Names";
             this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  File-Names to Clipboard";
+            this.copyCalleeToolStripMenuItem.Click += new System.EventHandler(this.copyCalleeToolStripMenuItem_Click);
             // 
             // FrmComponentFunctions
             // 
