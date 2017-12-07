@@ -175,9 +175,15 @@ namespace hoReverse.Services.AutoCpp.Analyze
         {
             // Get the control that is displaying this context menu
             DataGridView grid = GetDataGridView(sender);
-            string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
+            var row = grid.SelectedRows[0];
+            string filePath = row.Cells[columnName].Value.ToString();
             filePath = Path.Combine(_folderRoot, filePath);
             HoUtil.StartFile(filePath);
+            // Copy Function name to Clipboard
+            string functionName = row.Cells["Implementation"].Value.ToString().Trim() != ""
+                ? row.Cells["Implementation"].Value.ToString()
+                : row.Cells["Interface"].Value.ToString();
+            Clipboard.SetText(functionName);
 
         }
 

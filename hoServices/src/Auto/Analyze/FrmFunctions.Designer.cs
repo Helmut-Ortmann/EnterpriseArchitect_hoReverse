@@ -105,14 +105,15 @@
             this.openImplementationToolStripMenuItem,
             this.copySelectedFunctionsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 48);
             // 
             // openImplementationToolStripMenuItem
             // 
             this.openImplementationToolStripMenuItem.Name = "openImplementationToolStripMenuItem";
             this.openImplementationToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.openImplementationToolStripMenuItem.Text = "Open Implementation";
-            this.openImplementationToolStripMenuItem.ToolTipText = "Open the implementation in the editor";
+            this.openImplementationToolStripMenuItem.ToolTipText = "Open the implementation in the editor.\r\n\r\nhoReverse copies the function name to c" +
+    "lipboard for reuse in editor.";
             this.openImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
             // 
             // copySelectedFunctionsToolStripMenuItem
