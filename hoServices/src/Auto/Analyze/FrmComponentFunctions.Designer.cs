@@ -57,12 +57,12 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showImplementationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCalleeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPageRequired = new System.Windows.Forms.TabPage();
-            this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.copyInterfaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCalleeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPageRequired = new System.Windows.Forms.TabPage();
+            this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -166,16 +166,16 @@
             // 
             this.txtFilterFunctionName.Location = new System.Drawing.Point(24, 92);
             this.txtFilterFunctionName.Name = "txtFilterFunctionName";
-            this.txtFilterFunctionName.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterFunctionName.Size = new System.Drawing.Size(171, 20);
             this.txtFilterFunctionName.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
             this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathImpl
             // 
-            this.txtFilterPathImpl.Location = new System.Drawing.Point(532, 90);
+            this.txtFilterPathImpl.Location = new System.Drawing.Point(487, 90);
             this.txtFilterPathImpl.Name = "txtFilterPathImpl";
-            this.txtFilterPathImpl.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterPathImpl.Size = new System.Drawing.Size(164, 20);
             this.txtFilterPathImpl.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
             this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
@@ -184,7 +184,7 @@
             // 
             this.txtFilterPathCallee.Location = new System.Drawing.Point(657, 90);
             this.txtFilterPathCallee.Name = "txtFilterPathCallee";
-            this.txtFilterPathCallee.Size = new System.Drawing.Size(119, 20);
+            this.txtFilterPathCallee.Size = new System.Drawing.Size(172, 20);
             this.txtFilterPathCallee.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathCallee, resources.GetString("txtFilterPathCallee.ToolTip"));
             this.txtFilterPathCallee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
@@ -334,7 +334,7 @@
             this.copyInterfaceToolStripMenuItem,
             this.copyCalleeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 98);
             // 
             // showImplementationToolStripMenuItem
             // 
@@ -347,10 +347,31 @@
             // showCalleeToolStripMenuItem
             // 
             this.showCalleeToolStripMenuItem.Name = "showCalleeToolStripMenuItem";
-            this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.showCalleeToolStripMenuItem.Text = "Open Callee";
             this.showCalleeToolStripMenuItem.ToolTipText = "Start the Callee to edit with the Editor defined for the type.";
             this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
+            // 
+            // copyInterfaceToolStripMenuItem
+            // 
+            this.copyInterfaceToolStripMenuItem.Name = "copyInterfaceToolStripMenuItem";
+            this.copyInterfaceToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyInterfaceToolStripMenuItem.Text = "Copy Interface/Function";
+            this.copyInterfaceToolStripMenuItem.ToolTipText = "Copy all selected Interfaces/Function Names to Clipboard";
+            this.copyInterfaceToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
+            // 
+            // copyCalleeToolStripMenuItem
+            // 
+            this.copyCalleeToolStripMenuItem.Name = "copyCalleeToolStripMenuItem";
+            this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.copyCalleeToolStripMenuItem.Text = "Copy Callee File-Names";
+            this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  File-Names to Clipboard";
+            this.copyCalleeToolStripMenuItem.Click += new System.EventHandler(this.copyCalleeToolStripMenuItem_Click);
             // 
             // tabPageRequired
             // 
@@ -376,27 +397,6 @@
             this.grdRequiredInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 216);
             this.grdRequiredInterfaces.TabIndex = 0;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // copyInterfaceToolStripMenuItem
-            // 
-            this.copyInterfaceToolStripMenuItem.Name = "copyInterfaceToolStripMenuItem";
-            this.copyInterfaceToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.copyInterfaceToolStripMenuItem.Text = "Copy Interface/Function";
-            this.copyInterfaceToolStripMenuItem.ToolTipText = "Copy all selected Interfaces/Function Names to Clipboard";
-            this.copyInterfaceToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
-            // 
-            // copyCalleeToolStripMenuItem
-            // 
-            this.copyCalleeToolStripMenuItem.Name = "copyCalleeToolStripMenuItem";
-            this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.copyCalleeToolStripMenuItem.Text = "Copy Callee File-Names";
-            this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  File-Names to Clipboard";
-            this.copyCalleeToolStripMenuItem.Click += new System.EventHandler(this.copyCalleeToolStripMenuItem_Click);
             // 
             // FrmComponentFunctions
             // 

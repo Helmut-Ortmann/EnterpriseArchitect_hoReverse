@@ -276,6 +276,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartCodeFile(sender, "FilePath");
+            
 
         }
         
@@ -317,7 +318,8 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         }
 
         /// <summary>
-        /// Open the file according to column name with the editor
+        /// Open the file according to column name with the editor.
+        /// Copies the function name to Clipboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="columnName"></param>
@@ -325,10 +327,18 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         {
             // Get the control that is displaying this context menu
             DataGridView grid = GetDataGridView(sender);
-            string filePath = grid.SelectedRows[0].Cells[columnName].Value.ToString();
+            var row = grid.SelectedRows[0];
+            string filePath = row.Cells[columnName].Value.ToString();
             filePath = Path.Combine(_folderCodeRoot, filePath);
             HoUtil.StartFile(filePath);
-              
+            // Copy Function name to Clipboard
+            string functionName = row.Cells["Implementation"].Value.ToString().Trim() != ""
+                                  ? row.Cells["Implementation"].Value.ToString()
+                                  : row.Cells["Interface"].Value.ToString();
+            Clipboard.SetText(functionName);
+
+
+
         }
 
         private DataGridView GetDataGridView(object sender)
