@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Windows.Forms;
 using DataModels.VcSymbols;
 using hoReverse.Services.AutoCpp.Analyze;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
+using LinqToDB.SqlQuery;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp
@@ -29,31 +29,47 @@ namespace hoReverse.Services.AutoCpp
 
                 // Get all functions of implementation
                 // store it to list to avoid SQL with something not possible via SQL
-                var allFunctionsImpl = (from f in db.CodeItems
+                // Currently there is a bug in VC-Code which ignores some c-files because of lacking #include files.
+                var allFunctionsImpl1 = (from f in db.CodeItems
                                         join file in db.Files on f.FileId equals file.Id
-                                        where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
+                                        where f.Kind == 22 && 
+                                        file.Name.ToLower().Contains(folderPathCSourceCode) &&
+                                        (
+                                         file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
+                                         file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                                        )
                                         select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine, (int)f.EndColumn)).ToList();
+                // Filter multiple function names
+                var allFunctionsImpl = (from f in allFunctionsImpl1
+                                        orderby f.Implementation, f.FileName
+                    group f by new
+                    {
+                        a= f.Implementation,
+                        b= f.FileName.Substring(0, f.FileName.Length - 3)
+                    }
+                    into gs
+                    select gs.First()).ToList() ;
 
 
 
-               // get all implementations (C_Functions) 
-                // - Macro with Implementation 
-                // - Implementation without Macro
-                // - Macro without implementation
-                IEnumerable<ImplFunctionItem> allImplementations = (
-                        // Implemented Interfaces (Macro with Interface and implementation with different name)
-                        from m in _macros
-                        join f in allFunctionsImpl on m.Key equals f.Implementation
-                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd, true))
-                    .Union
-                    (from f in allFunctionsImpl
-                     where _macros.All(m => m.Key != f.Implementation)
-                     select new ImplFunctionItem(f.Implementation, "", f.FilePath.Substring(_folderRoot.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd,false))
-                    .Union
-                    // macros without implementation
-                    (from m in _macros
-                     where allFunctionsImpl.All(f => m.Key != f.Implementation)
-                     select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0, true));
+            // get all implementations (C_Functions) 
+            // - Macro with Implementation 
+            // - Implementation without Macro
+            // - Macro without implementation
+            IEnumerable < ImplFunctionItem > allImplementations = (
+                    // Implemented Interfaces (Macro with Interface and implementation with different name)
+                    from m in _macros
+                    join f in allFunctionsImpl on m.Key equals f.Implementation
+                    select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd, true))
+                .Union
+                (from f in allFunctionsImpl
+                 where _macros.All(m => m.Key != f.Implementation)
+                 select new ImplFunctionItem(f.Implementation, "", f.FilePath.Substring(_folderRoot.Length), f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd, false))
+                .Union
+                // macros without implementation
+                (from m in _macros
+                 where allFunctionsImpl.All(f => m.Key != f.Implementation)
+                 select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0, true));
 
                 string[] ignoreList= {@"_"};
                 _dtFunctions = (from f in allImplementations

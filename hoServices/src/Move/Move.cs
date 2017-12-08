@@ -106,8 +106,9 @@ namespace EaServices.MOVE
             string description = "";
             try
             { odbc.Rs.Close(); }
-            catch (Exception e)
+            catch (Exception )
             {
+                // ignored
             }
             odbc.Rs.Open(sql, odbc.Cn, ADODB.CursorTypeEnum.adOpenStatic, ADODB.LockTypeEnum.adLockReadOnly, 0);
             while (odbc.Rs.EOF == false)
@@ -167,8 +168,9 @@ namespace EaServices.MOVE
                   $" WHERE x.description like '%{srcGUID.Trim()}%';";
             try
             { odbc.Rs.Close(); }
-            catch (Exception e)
+            catch (Exception)
             {
+                // ignored
             }
             odbc.Rs.Open(sql, odbc.Cn, ADODB.CursorTypeEnum.adOpenStatic, ADODB.LockTypeEnum.adLockReadOnly, 0);
             while (odbc.Rs.EOF == false)

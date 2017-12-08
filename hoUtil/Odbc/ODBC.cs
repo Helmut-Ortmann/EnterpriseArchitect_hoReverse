@@ -124,7 +124,10 @@ namespace hoReverse.hoUtils.ODBC
             if (_cn != null)
             {
                 try { _cn.Close(); }
-                catch (Exception e) { }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
             _cn = null;
             _rs = null;

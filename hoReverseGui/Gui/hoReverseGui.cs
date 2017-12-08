@@ -16,6 +16,7 @@ using hoReverse.hoUtils.WiKiRefs;
 
 using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
+using hoLinqToSql.LinqUtils;
 
 // ReSharper disable RedundantDelegateCreation
 
@@ -224,6 +225,7 @@ namespace hoReverse.Reverse
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private ProgressBar progressBar1;
         private ToolStripMenuItem showFunctionsToolStripMenuItem;
+        private ToolStripMenuItem showSymbolDataBaseFoldersToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -639,6 +641,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -739,7 +742,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1402,6 +1405,23 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1835,7 +1855,8 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem,
             this.toolStripSeparator12,
             this.showExternalComponentFunctionsToolStripMenuItem,
-            this.showFunctionsToolStripMenuItem});
+            this.showFunctionsToolStripMenuItem,
+            this.showSymbolDataBaseFoldersToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
             this._autoToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this._autoToolStripMenuItem.Text = "C-DB";
@@ -1845,7 +1866,7 @@ namespace hoReverse.Reverse
             // modulesToolStripMenuItem
             // 
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
-            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
             this.modulesToolStripMenuItem.Visible = false;
             this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
@@ -1853,7 +1874,7 @@ namespace hoReverse.Reverse
             // inventoryToolStripMenuItem
             // 
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
-            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Visible = false;
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
@@ -1861,7 +1882,7 @@ namespace hoReverse.Reverse
             // _getToolStripMenuItem
             // 
             this._getToolStripMenuItem.Name = "_getToolStripMenuItem";
-            this._getToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this._getToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this._getToolStripMenuItem.Text = "GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
             this._getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
@@ -1869,7 +1890,7 @@ namespace hoReverse.Reverse
             // makeRunnableToolStripMenuItem
             // 
             this.makeRunnableToolStripMenuItem.Name = "makeRunnableToolStripMenuItem";
-            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
             this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
             this.makeRunnableToolStripMenuItem.Visible = false;
@@ -1878,7 +1899,7 @@ namespace hoReverse.Reverse
             // makeServicePortToolStripMenuItem
             // 
             this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
-            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
             this.makeServicePortToolStripMenuItem.Visible = false;
             this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
@@ -1886,7 +1907,7 @@ namespace hoReverse.Reverse
             // makeCalloutToolStripMenuItem
             // 
             this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
-            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Visible = false;
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
@@ -1894,12 +1915,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(258, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(286, 6);
             // 
             // showExternalComponentFunctionsToolStripMenuItem
             // 
             this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
-            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show provided / required functions";
             this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = "Show the provided and required functions for each EA Component.\r\n\r\nSelect Compone" +
     "nt. The function requires an implementation to work (*.c or *.cpp)";
@@ -1908,7 +1929,7 @@ namespace hoReverse.Reverse
             // showFunctionsToolStripMenuItem
             // 
             this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
-            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
             this.showFunctionsToolStripMenuItem.Text = "Show Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
     "+ Code with up to date VC Code symbol database";
@@ -2283,22 +2304,14 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // TxtUserText
+            // showSymbolDataBaseFoldersToolStripMenuItem
             // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Name = "showSymbolDataBaseFoldersToolStripMenuItem";
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Text = "Show Symbol VC-Code DataBase Folders";
+            this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
+    "lete the whole folder. VS-Code will recreate it!";
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.showSymbolDataBaseFoldersToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -3840,10 +3853,14 @@ Please restart EA. During restart hoTools loads the default settings.",
             else
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Object obj;
                 _autoCpp.ShowFunctions(_addinSettings.FolderPathCSourceCode);
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void showSymbolDataBaseFoldersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            hoUtils.HoUtil.StartApp("explorer.exe", VcDbUtilities.GetVcPathSymbolDataBases());
         }
     }
 }

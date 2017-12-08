@@ -334,15 +334,14 @@
             this.copyInterfaceToolStripMenuItem,
             this.copyCalleeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 98);
             // 
             // showImplementationToolStripMenuItem
             // 
             this.showImplementationToolStripMenuItem.Name = "showImplementationToolStripMenuItem";
             this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.showImplementationToolStripMenuItem.Text = "Open Implementation";
-            this.showImplementationToolStripMenuItem.ToolTipText = "Start the Implementation to edit with the Editor defined for the type.\r\n\r\nhoRever" +
-    "se copies the function name to clipboard for reuse in editor.";
+            this.showImplementationToolStripMenuItem.ToolTipText = resources.GetString("showImplementationToolStripMenuItem.ToolTipText");
             this.showImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
             // 
             // showCalleeToolStripMenuItem
@@ -350,8 +349,7 @@
             this.showCalleeToolStripMenuItem.Name = "showCalleeToolStripMenuItem";
             this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.showCalleeToolStripMenuItem.Text = "Open Callee";
-            this.showCalleeToolStripMenuItem.ToolTipText = "Start the Callee to edit with the Editor defined for the type.\r\n\r\nhoReverse copie" +
-    "s the function name to clipboard for reuse in editor.";
+            this.showCalleeToolStripMenuItem.ToolTipText = resources.GetString("showCalleeToolStripMenuItem.ToolTipText");
             this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1

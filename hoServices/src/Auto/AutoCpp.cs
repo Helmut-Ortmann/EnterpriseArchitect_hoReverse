@@ -203,7 +203,6 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             }
             Rep.RefreshModelView(_pkg.PackageID);
             return true;
-            return true;
         }
         /// <summary>
         /// Generate file

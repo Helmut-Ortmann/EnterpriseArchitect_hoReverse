@@ -236,6 +236,10 @@
     <Resource Include="Resources\Images\InteractionOverviewDiagram.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
+      <Project>{fed206af-e583-48c6-9952-bad2c41b3aa4}</Project>
+      <Name>hoLinqToSql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\hoServices\hoServices.csproj">
       <Project>{dfbedf5e-fc7f-4269-a0a6-f9b9e86dac90}</Project>
       <Name>hoServices</Name>
@@ -247,6 +251,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LinqToDB.Templates\CopyMe.SQLite.tt.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net451\System.Data.SQLite.Core.targets')" />

@@ -97,7 +97,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             // Handle Implemented by C-Function
             if (chkOnlyImplementations.Checked)
             {
-                lFilters.Add($"FileName LIKE '%.C'");
+                //lFilters.Add($"FileName LIKE '%.C'");
             }
 
             string filter = GuiHelper.AggregateFilter(lFilters);
@@ -119,10 +119,6 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
         }
 
-        private void showCalleeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StartCodeFile(sender, "FilePathCallee");
-        }
         private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartCodeFile(sender, "FilePath");
@@ -156,10 +152,11 @@ namespace hoReverse.Services.AutoCpp.Analyze
             string delimiter = "";
             var functions = from f in grid.SelectedRows.Cast<DataGridViewRow>()
                             orderby f.Cells[name].Value.ToString()
-                            select f.Cells[name].Value.ToString();
+                            select f.Cells[name].Value.ToString().Distinct();
 
-            foreach (string function in functions)
+            foreach (var c in functions)
             {
+                var function = (string) c;
                 text = $"{text}{delimiter}{function}";
                 delimiter = "\r\n";
             }

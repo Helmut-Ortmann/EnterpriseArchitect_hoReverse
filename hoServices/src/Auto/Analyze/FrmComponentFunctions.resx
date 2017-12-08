@@ -120,9 +120,6 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>229, 17</value>
-  </metadata>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
@@ -179,5 +176,26 @@ Examples:
 hoRerse always adds a wildcard at string end! hoReverse combines filters by ' AND '
 
 Not allowed are wildcard '*' or '%' amidst the filter string.</value>
+  </data>
+  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>229, 17</value>
+  </metadata>
+  <data name="showImplementationToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Start the Implementation to edit with the Editor defined for the type.
+
+hoReverse copies the function name to clipboard for fast location in code..
+
+For VS Code:
+- CTRL * F (Find)
+- CTRL+V (Paste Clipboard)</value>
+  </data>
+  <data name="showCalleeToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Start the Callee to edit with the Editor defined for the type.
+
+hoReverse copies the function name to clipboard for fast location in code..
+
+For VS Code:
+- CTRL * F (Find)
+- CTRL+V (Paste Clipboard)</value>
   </data>
 </root>

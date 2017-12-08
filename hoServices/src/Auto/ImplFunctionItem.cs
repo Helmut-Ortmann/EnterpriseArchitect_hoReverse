@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+// ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp
 {
     public class ImplFunctionItem

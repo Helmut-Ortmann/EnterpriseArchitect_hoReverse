@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -50,12 +51,29 @@ namespace hoReverse.Services.AutoCpp
 
                 // Get all functions of implementation
                 // store it to list to avoid SQL with something not possible via SQL
-                var allFunctionsImpl = (from f in db.CodeItems
+                var allFunctionsImpl1 = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
-                    where f.Kind == 22 && (file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp"))
+                    where f.Kind == 22 &&
+                          file.Name.ToLower().Contains(folderRoot) &&
+                          (
+                              file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
+                              file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                          )
                     select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, (int)f.EndColumn)).ToList() ;
 
-                
+                // Filter multiple function names
+                // If #includes aren't correct VS Code has some issues.
+                var allFunctionsImpl = (from f in allFunctionsImpl1
+                    orderby f.Implementation, f.FileName
+                    group f by new
+                    {
+                        a = f.Implementation,
+                        b = f.FileName.Substring(0, f.FileName.Length - 3)
+                    }
+                    into gs
+                    select gs.First()).ToList();
+
+
 
                 IEnumerable < ImplFunctionItem > allCompImplementations = (
                         // Implemented Interfaces (Macro with Interface and implementation with different name)
@@ -259,10 +277,29 @@ namespace hoReverse.Services.AutoCpp
                     code = hoService.DeleteComment(code);
                     foreach (var f1 in compImplementations)
                     {
+                        
+
                         if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
                         {
-                            //string found = match.Groups[0].Value; 
-                            f1.Imp.FilePathCallee = fileName;
+                            Regex rx = f1.Imp.Implementation == f1.Imp.Interface
+                                ? new Regex($@"^.*\b{f1.Imp.Implementation}\s*\(", RegexOptions.Multiline)
+                                : new Regex($@"^.*\b({f1.Imp.Implementation}|{f1.Imp.Interface})\s*\(", RegexOptions.Multiline);
+
+                            Match match = rx.Match(code);
+                            while (match.Success)
+                            {
+                                // That's not an call to a function
+                                if (match.Value.Trim().StartsWith("FUNC(") || match.Value.Trim().StartsWith("void "))
+                                {
+                                    match = match.NextMatch();
+                                    continue;
+                                }
+
+                                f1.Imp.FilePathCallee = fileName;
+                                break;
+                            }
+
+                            //f1.Imp.FilePathCallee = fileName;
 
                         }
                     }

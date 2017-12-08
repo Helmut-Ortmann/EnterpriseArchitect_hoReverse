@@ -121,6 +121,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// <param name="rep"></param>
         /// <param name="component"></param>
         /// <param name="folderRoot"></param>
+        /// <param name="folderComponent"></param>
         /// <param name="dtProvidedInterfaces"></param>
         /// <param name="dtRequiredInterfaces"></param>
         public void ChangeComponent(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, string folderComponent,  DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
@@ -307,10 +308,11 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             string delimiter = "";
             var functions = from f in grid.SelectedRows.Cast<DataGridViewRow>()
                 orderby f.Cells[name].Value.ToString()
-                select f.Cells[name].Value.ToString();
+                select f.Cells[name].Value.ToString().Distinct();
 
-            foreach (string function in functions)
+            foreach (var c in functions)
             {
+                var function = (string) c;
                 text = $"{text}{delimiter}{function}";
                 delimiter = "\r\n";
             }
