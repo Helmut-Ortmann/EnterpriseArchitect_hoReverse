@@ -226,6 +226,7 @@ namespace hoReverse.Reverse
         private ProgressBar progressBar1;
         private ToolStripMenuItem showFunctionsToolStripMenuItem;
         private ToolStripMenuItem showSymbolDataBaseFoldersToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator13;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -641,7 +642,6 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -743,6 +743,8 @@ namespace hoReverse.Reverse
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1405,23 +1407,6 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1856,6 +1841,7 @@ namespace hoReverse.Reverse
             this.toolStripSeparator12,
             this.showExternalComponentFunctionsToolStripMenuItem,
             this.showFunctionsToolStripMenuItem,
+            this.toolStripSeparator13,
             this.showSymbolDataBaseFoldersToolStripMenuItem});
             this._autoToolStripMenuItem.Name = "_autoToolStripMenuItem";
             this._autoToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
@@ -1921,7 +1907,7 @@ namespace hoReverse.Reverse
             // 
             this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
             this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
-            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show provided / required functions";
+            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions";
             this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = "Show the provided and required functions for each EA Component.\r\n\r\nSelect Compone" +
     "nt. The function requires an implementation to work (*.c or *.cpp)";
             this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
@@ -1930,7 +1916,7 @@ namespace hoReverse.Reverse
             // 
             this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
             this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
-            this.showFunctionsToolStripMenuItem.Text = "Show Functions";
+            this.showFunctionsToolStripMenuItem.Text = "Show all Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
     "+ Code with up to date VC Code symbol database";
             this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showFunctionsToolStripMenuItem_Click);
@@ -2312,6 +2298,28 @@ namespace hoReverse.Reverse
             this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
     "lete the whole folder. VS-Code will recreate it!";
             this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.showSymbolDataBaseFoldersToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(286, 6);
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
             // 
             // HoReverseGui
             // 

@@ -150,9 +150,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
             DataGridView grid = GetDataGridView(sender);
             string text = "";
             string delimiter = "";
-            var functions = from f in grid.SelectedRows.Cast<DataGridViewRow>()
+            var functions = (from f in grid.SelectedRows.Cast<DataGridViewRow>()
                             orderby f.Cells[name].Value.ToString()
-                            select f.Cells[name].Value.ToString().Distinct();
+                            select f.Cells[name].Value.ToString()).Distinct();
 
             foreach (var c in functions)
             {
