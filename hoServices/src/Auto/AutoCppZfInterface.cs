@@ -54,6 +54,7 @@ namespace hoReverse.Services.AutoCpp
                 var allFunctionsImpl1 = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
                     where f.Kind == 22 &&
+                          (f.EndLine - f.StartLine) > 3 &&  // filter out extern.....
                           file.Name.ToLower().Contains(folderRoot) &&
                           (
                               file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
@@ -81,12 +82,15 @@ namespace hoReverse.Services.AutoCpp
                         join f in allFunctionsImpl on m.Key equals f.Implementation
                         where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_")
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
-                    .Union
-                    (from f in allFunctionsImpl
 
-                     where f.Implementation.ToLower().StartsWith($"{el.Name.ToLower()}_")
+                    .Union
+                    // all C-Implementations
+                    (from f in allFunctionsImpl
+                     where f.FilePath.StartsWith(folderNameOfClass)
+                     //where f.Implementation.ToLower().StartsWith($"{el.Name.ToLower()}_")
                      where _macros.All(m => m.Key != f.Implementation)
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+
                     .Union
                     // macros without implementation
                     (from m in _macros
@@ -327,6 +331,8 @@ namespace hoReverse.Services.AutoCpp
 
         /// <summary>
         /// Get File name of component
+        /// name.ext  (ext=.h,.c,.hpp,.cpp)
+        /// name_
         /// </summary>
         /// <param name="el"></param>
         /// <param name="db"></param>
@@ -335,12 +341,13 @@ namespace hoReverse.Services.AutoCpp
         {
             string fileNameOfClass = (from f in db.Files
                 where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
-                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp"
-                select f.Name).FirstOrDefault();
+                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp" ||
+                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.a2l" || f.LeafName.ToLower().StartsWith($"{ el.Name.ToLower()}_")       
+                                      select f.Name).FirstOrDefault();
             if (fileNameOfClass == null)
             {
-                MessageBox.Show("Checked file extensions (*.c,*.h,*.hpp,*.cpp)",
-                    $"Cant't find source for '{el.Name}', Break!!");
+                MessageBox.Show($"Search for filename\r\n'{el.Name}' and extensions *.c,*.h,*.hpp, *.cpp\r\n'{el.Name}_'",
+                    $"Cant't find source for '{el.Name}', Choose folder");
                 return "";
             }
 
