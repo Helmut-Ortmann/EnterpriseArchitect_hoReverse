@@ -111,8 +111,9 @@ namespace hoReverse.hoUtils
                 StartInfo =
                 {
                     FileName = app,
-                    Arguments = par
-                }
+                    Arguments = par,
+                    WindowStyle = ProcessWindowStyle.Hidden
+        }
             };
             try
             {

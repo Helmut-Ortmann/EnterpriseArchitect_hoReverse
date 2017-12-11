@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -92,7 +91,7 @@ namespace hoReverse.Services.AutoCpp
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
                     .Union
-                    // macros without implementation
+                    // macros without implementation, no link to path macro definition available
                     (from m in _macros
                      where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_") &&
                            allFunctionsImpl.All(f => m.Key != f.Implementation)
@@ -164,7 +163,8 @@ namespace hoReverse.Services.AutoCpp
                 // only files that are in source folder, no library files.
                 if (file.ToLower().Contains(_folderRoot.ToLower()))
                 {
-                    Match match = rx.Match(HoUtil.ReadAllText(file));
+                    string code = hoService.DeleteComment(HoUtil.ReadAllText(file));
+                    Match match = rx.Match(code);
                     while (match.Success)
                     {
                         lFunctionCalls.Add(new CallFunctionItem(match.Groups[1].Value, file));
@@ -199,6 +199,7 @@ namespace hoReverse.Services.AutoCpp
                     FilePathImplementation = fAll.FilePath,
                     FilePathCallee = f.FilePath, // no implementation available yet
                     isCalled = false,
+                    LineStart = fAll.LineStart,
                     LineEnd = fAll.LineEnd,
                     ColumnEnd = fAll.ColumnEnd
                 }).Distinct();
@@ -230,7 +231,8 @@ namespace hoReverse.Services.AutoCpp
                                 f.Interface == f.Implementation ? "" : f.Implementation,
                                 // no root path
                                 f.FilePathImplementation.Length > _folderRoot.Length ? f.FilePathImplementation.Substring(_folderRoot.Length) : "",
-                                f.FilePathCallee.Length > _folderRoot.Length ? f.FilePathCallee.Substring(_folderRoot.Length): ""));
+                                f.FilePathCallee.Length > _folderRoot.Length ? f.FilePathCallee.Substring(_folderRoot.Length): "",
+                                f.LineStart));
                         }
                     }
                 }
@@ -255,7 +257,7 @@ namespace hoReverse.Services.AutoCpp
                 where f.FilePath.StartsWith(folderNameOfClass) || f.FilePath == ""
                 select new
                 {
-                    Imp = new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath),
+                    Imp = new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath,"",f.LineStart),
                     RxImplementation = new Regex($@"\b{f.Implementation}\s*\("),
                     RxInterface = new Regex($@"\b{f.Interface}\s*\(")
                 }).ToArray();
@@ -277,8 +279,7 @@ namespace hoReverse.Services.AutoCpp
                 // only files in implementation
                 if (fileName.ToLower().Contains(_folderRoot.ToLower()))
                 {
-                    string code = HoUtil.ReadAllText(fileName);
-                    code = hoService.DeleteComment(code);
+                    string code = hoService.DeleteComment(HoUtil.ReadAllText(fileName));
                     foreach (var f1 in compImplementations)
                     {
                         
@@ -321,7 +322,8 @@ namespace hoReverse.Services.AutoCpp
                     // no root path
                     FilePath = f.Imp.FilePath.Length > _folderRoot.Length ? f.Imp.FilePath.Substring(_folderRoot.Length) : "",
                     FilePathCallee = f.Imp.FilePathCallee.Length > _folderRoot.Length ? f.Imp.FilePathCallee.Substring(_folderRoot.Length) : "",
-                    isCalled = f.Imp.IsCalled
+                    isCalled = f.Imp.IsCalled,
+                    LineStart = f.Imp.LineStart
                 }).Distinct();
 
             return outputList.ToDataTable();

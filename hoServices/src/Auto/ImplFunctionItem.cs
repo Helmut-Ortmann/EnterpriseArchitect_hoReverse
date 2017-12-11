@@ -28,6 +28,14 @@ namespace hoReverse.Services.AutoCpp
             FilePath = filePath;
             FilePathCallee = filePathCallee;
         }
+        public ImplFunctionItem(string @interface, string implementation, string filePath, string filePathCallee, int lineStart)
+        {
+            Interface = @interface;
+            Implementation = implementation;
+            FilePath = filePath;
+            FilePathCallee = filePathCallee;
+            LineStart = lineStart;
+        }
         public ImplFunctionItem(string @interface, string implementation, string filePath)
         {
             Interface = @interface;

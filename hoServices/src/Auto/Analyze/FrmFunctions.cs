@@ -180,8 +180,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 ? $":{row.Cells[lineNumberName].Value.ToString()} -g"
                 : "";
             filePath = Path.Combine(_folderRoot, filePath);
-            //HoUtil.StartFile($"{filePath}");
-            HoUtil.StartFile($"Code {filePath}{lineNumber}");
+            HoUtil.StartApp($"Code", $"{filePath}{lineNumber}");
             // Copy Function name to Clipboard
             string functionName = row.Cells["Implementation"].Value.ToString().Trim() != ""
                 ? row.Cells["Implementation"].Value.ToString()
