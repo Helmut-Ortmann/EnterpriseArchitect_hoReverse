@@ -424,7 +424,8 @@ namespace hoReverse.Services.AutoCpp
 
                 // capture the following macros
                 // #define <<interface>> <<implementation>>
-                Regex rxIsFunctioName = new Regex(@"^[A-Z_a-z]\w*$");
+                // #define <<interface>> &<<implementation>>
+                Regex rxIsFunctioName = new Regex(@"^[&A-Z_a-z]\w*$");
                 foreach (var m in macros)
                 {
                     if (backgroundWorker != null)
@@ -445,7 +446,9 @@ namespace hoReverse.Services.AutoCpp
                         // check if functionName
                         if (rxIsFunctioName.IsMatch(lText[2].Trim()))
                         { 
-                            string key = lText[2];
+                            // delete pointer
+                            if (lText[2].StartsWith("&")) text = "5";
+                            string key = lText[2].Replace("&","");
                             // add macro value as key
                             if (!_macros.ContainsKey(key)) _macros.Add(key, m.MacroName);
                         }
