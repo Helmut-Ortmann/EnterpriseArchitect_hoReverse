@@ -53,7 +53,7 @@ namespace hoReverse.Services.AutoCpp
                 var allFunctionsImpl1 = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
                     where f.Kind == 22 &&
-                          (f.EndLine - f.StartLine) > 3 &&  // filter out extern.....
+                          (f.EndLine - f.StartLine) > 2 &&  // filter out extern.....
                           file.Name.ToLower().Contains(folderRoot) &&
                           (
                               file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
@@ -96,7 +96,6 @@ namespace hoReverse.Services.AutoCpp
                      where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_") &&
                            allFunctionsImpl.All(f => m.Key != f.Implementation)
                      select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
-
 
                 // get all implementations (C_Functions) 
                 // - Macro with Implementation 

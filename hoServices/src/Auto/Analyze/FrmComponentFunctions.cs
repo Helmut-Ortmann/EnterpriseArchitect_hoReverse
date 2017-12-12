@@ -63,6 +63,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdProvidedInterfaces.Columns[4].HeaderText = "Path Implementation";
                 grdProvidedInterfaces.Columns[5].HeaderText = "Path Callee";
                 grdProvidedInterfaces.Columns[6].HeaderText = "Is Called";
+                grdProvidedInterfaces.Columns[7].Visible = false;
 
             }
             if (grdRequiredInterfaces.ColumnCount > 6)
