@@ -43,6 +43,11 @@ namespace hoReverse.hoUtils.WiKiRefs
             Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/Linestyle");
 
         }
+        public static void WikiAnalyzeC()
+        {
+            Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/Analyze");
+
+        }
 
         public static void Repo()
         {
