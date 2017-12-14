@@ -32,13 +32,29 @@ namespace hoReverse.Services.AutoCpp
                 // Currently there is a bug in VC-Code which ignores some c-files because of lacking #include files.
                 var allFunctionsImpl1 = (from f in db.CodeItems
                                         join file in db.Files on f.FileId equals file.Id
-                                        where f.Kind == 22 && 
+                                        where f.Kind == 22 && (f.Name != "TASK" && f.Name != "ISR") &&
                                         file.Name.ToLower().Contains(folderPathCSourceCode) &&
                                         (
                                          file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
                                          file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
                                         )
-                                        select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine, (int)f.EndColumn)).ToList();
+                                        select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine, (int)f.EndColumn)).ToList()
+                                        
+                                        .Union(
+                            (from f in db.CodeItems
+                                join param in db.CodeItems on f.Id equals param.ParentId
+                                join file in db.Files on f.FileId equals file.Id
+                                where f.Kind == 22 && (f.Name == "TASK" || f.Name == "ISR") &&
+                                      (f.EndLine - f.StartLine) > 2 &&  // filter out extern.....
+                                      file.Name.ToLower().Contains(folderPathCSourceCode) &&
+                                      (
+                                          file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
+                                          file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                                      )
+                                select new ImplFunctionItem("", $"{f.Name}({param.Type})", file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine,
+                                    (int)f.EndColumn,
+                                    (int)f.Id)).ToList());
+                                        ;
                 // Filter multiple function names
                 var allFunctionsImpl = (from f in allFunctionsImpl1
                                         orderby f.Implementation, f.FileName

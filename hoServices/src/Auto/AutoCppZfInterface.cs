@@ -104,19 +104,13 @@ namespace hoReverse.Services.AutoCpp
                     select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
                     .Union
-                    // all C-Implementations except TASK, IRQ
+                    // all C-Implementations 
                     (from f in allFunctionsImpl
-                     where f.FilePath.StartsWith(folderNameOfClass) && f.Implementation != "TASK" && f.Implementation != "IRQ"
-                     //where f.Implementation.ToLower().StartsWith($"{el.Name.ToLower()}_")
+                     where f.FilePath.StartsWith(folderNameOfClass) 
                      where _macros.All(m => m.Key != f.Implementation)
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
-                    .Union(// all C-Implementations only TASK, IRQ
-                        (from f in allFunctionsImpl
-                         join param in db.CodeItems on f.Id equals param.ParentId
-                         where f.FilePath.StartsWith(folderNameOfClass) && (f.Implementation == "TASK" || f.Implementation != "IRQ")
-                         select new ImplFunctionItem($"{f.Implementation}({param.Type})", $"{f.Implementation}({param.Type})", f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd)))
-
+                    
                     .Union
                     // macros without implementation, no link to path macro definition available
                     (from m in _macros
@@ -134,16 +128,11 @@ namespace hoReverse.Services.AutoCpp
                         join f in allFunctionsImpl on m.Key equals f.Implementation
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
-                    .Union(// all C-Implementations only TASK, IRQ
+                    .Union(
                         (from f in allFunctionsImpl
                             join param in db.CodeItems on f.Id equals param.ParentId
-                            where f.Implementation == "TASK" || f.Implementation != "IRQ"
                             select new ImplFunctionItem($"{f.Implementation}({param.Type})", $"{f.Implementation}({param.Type})", f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd)))
-                    .Union //// all C-Implementations without TASK, IRQ
-                    (from f in allFunctionsImpl
-                     where f.Implementation != "TASK" && f.Implementation != "IRQ"
-                     where _macros.All(m => m.Key != f.Implementation)
-                     select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                    
                     .Union
                     // macros without implementation
                     (from m in _macros
