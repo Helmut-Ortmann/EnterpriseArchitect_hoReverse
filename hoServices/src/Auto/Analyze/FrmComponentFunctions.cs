@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
+using hoLinqToSql.LinqUtils;
 using hoReverse.hoUtils;
 
 // ReSharper disable once CheckNamespace
@@ -41,8 +42,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
             txtComponent.Text = _component.Name;
             
             txtGuid.Text = _component.ElementGUID;
-            txtFolderRoot.Text = _folderCodeRoot;
-            txtVcSymbolDb.Text = _vcSymbolDataBase;
+            txtFolderRoot.Text = _folderCodeComponent;
+            //txtFolderRoot.Text = _folderCodeRoot;
+            txtVcSymbolDb.Text = LinqUtil.GetDataSourceFromConnectionString(_vcSymbolDataBase);
             chkOnlyMacros.Checked = false;
             chkOnlyCalledInterfaces.Checked = true;
 

@@ -229,7 +229,8 @@
             this.txtFolderRoot.ReadOnly = true;
             this.txtFolderRoot.Size = new System.Drawing.Size(859, 20);
             this.txtFolderRoot.TabIndex = 4;
-            this.toolTip1.SetToolTip(this.txtFolderRoot, "The root folder of source code.\r\n\r\nIf you want to change it do it in Settings ");
+            this.toolTip1.SetToolTip(this.txtFolderRoot, "The component folder of source code.\r\n\r\nThe root folder of source code you can se" +
+        "t in Settings.");
             // 
             // txtGuid
             // 

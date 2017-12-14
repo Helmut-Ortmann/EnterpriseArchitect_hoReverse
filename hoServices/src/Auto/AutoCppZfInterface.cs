@@ -52,14 +52,35 @@ namespace hoReverse.Services.AutoCpp
                 // store it to list to avoid SQL with something not possible via SQL
                 var allFunctionsImpl1 = (from f in db.CodeItems
                     join file in db.Files on f.FileId equals file.Id
-                    where f.Kind == 22 &&
+                    where f.Kind == 22 && (f.Name != "TASK" && f.Name != "ISR") &&
                           (f.EndLine - f.StartLine) > 2 &&  // filter out extern.....
                           file.Name.ToLower().Contains(folderRoot) &&
                           (
                               file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
                               file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
                           )
-                    select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, (int)f.EndColumn)).ToList() ;
+                    select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine,(int)f.StartColumn,(int)f.EndLine, 
+                                                (int)f.EndColumn, 
+                                                (int)f.Id)).ToList() 
+                    
+                   // Task and ISR
+                   .Union(
+                        (from f in db.CodeItems
+                         join param in db.CodeItems on f.Id equals param.ParentId
+                         join file in db.Files on f.FileId equals file.Id
+                            where f.Kind == 22 &&  (f.Name == "TASK" || f.Name == "ISR") &&
+                                  (f.EndLine - f.StartLine) > 2 &&  // filter out extern.....
+                                  file.Name.ToLower().Contains(folderRoot) &&
+                                  (
+                                      file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
+                                      file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                                  )
+                            select new ImplFunctionItem("", $"{f.Name}({param.Type})", file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine,
+                                (int)f.EndColumn,
+                                (int)f.Id)).ToList()
+
+
+                    );
 
                 // Filter multiple function names
                 // If #includes aren't correct VS Code has some issues.
@@ -76,19 +97,25 @@ namespace hoReverse.Services.AutoCpp
 
 
                 IEnumerable < ImplFunctionItem > allCompImplementations = (
-                        // Implemented Interfaces (Macro with Interface and implementation with different name)
-                        from m in _macros
-                        join f in allFunctionsImpl on m.Key equals f.Implementation
-                        where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_")
-                        select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                    // Implemented Interfaces (Macro with Interface and implementation with different name)
+                    from m in _macros
+                    join f in allFunctionsImpl on m.Key equals f.Implementation
+                    where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_")
+                    select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
                     .Union
-                    // all C-Implementations
+                    // all C-Implementations except TASK, IRQ
                     (from f in allFunctionsImpl
-                     where f.FilePath.StartsWith(folderNameOfClass)
+                     where f.FilePath.StartsWith(folderNameOfClass) && f.Implementation != "TASK" && f.Implementation != "IRQ"
                      //where f.Implementation.ToLower().StartsWith($"{el.Name.ToLower()}_")
                      where _macros.All(m => m.Key != f.Implementation)
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+
+                    .Union(// all C-Implementations only TASK, IRQ
+                        (from f in allFunctionsImpl
+                         join param in db.CodeItems on f.Id equals param.ParentId
+                         where f.FilePath.StartsWith(folderNameOfClass) && (f.Implementation == "TASK" || f.Implementation != "IRQ")
+                         select new ImplFunctionItem($"{f.Implementation}({param.Type})", $"{f.Implementation}({param.Type})", f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd)))
 
                     .Union
                     // macros without implementation, no link to path macro definition available
@@ -106,8 +133,15 @@ namespace hoReverse.Services.AutoCpp
                         from m in _macros
                         join f in allFunctionsImpl on m.Key equals f.Implementation
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
-                    .Union
+
+                    .Union(// all C-Implementations only TASK, IRQ
+                        (from f in allFunctionsImpl
+                            join param in db.CodeItems on f.Id equals param.ParentId
+                            where f.Implementation == "TASK" || f.Implementation != "IRQ"
+                            select new ImplFunctionItem($"{f.Implementation}({param.Type})", $"{f.Implementation}({param.Type})", f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd)))
+                    .Union //// all C-Implementations without TASK, IRQ
                     (from f in allFunctionsImpl
+                     where f.Implementation != "TASK" && f.Implementation != "IRQ"
                      where _macros.All(m => m.Key != f.Implementation)
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
                     .Union
@@ -343,8 +377,9 @@ namespace hoReverse.Services.AutoCpp
             string fileNameOfClass = (from f in db.Files
                 where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
                       f.LeafName.ToLower() == $"{el.Name.ToLower()}.cpp" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.hpp" ||
-                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.a2l" || f.LeafName.ToLower().StartsWith($"{ el.Name.ToLower()}_")       
-                                      select f.Name).FirstOrDefault();
+                      f.LeafName.ToLower() == $"{el.Name.ToLower()}.a2l" || f.LeafName.ToLower().StartsWith($"{ el.Name.ToLower()}_")
+                orderby f.Name.Length
+                select f.Name).FirstOrDefault();
             if (fileNameOfClass == null)
             {
                 MessageBox.Show($"Search for filename\r\n'{el.Name}' and extensions *.c,*.h,*.hpp, *.cpp\r\n'{el.Name}_'",

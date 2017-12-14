@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
+using hoLinqToSql.LinqUtils;
 using hoReverse.hoUtils;
 
 namespace hoReverse.Services.AutoCpp.Analyze
@@ -29,7 +30,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
             dataGridView1.DataSource = _bsFunctions;
             txtSourceFolder.Text = _folderRoot;
-            txtVcSymbolDb.Text = _vcSymbolDataBase;
+            txtVcSymbolDb.Text = LinqUtil.GetDataSourceFromConnectionString(_vcSymbolDataBase); 
             dataGridView1.Columns[0].Width = 300;
             dataGridView1.Columns[1].Width = 100;
             dataGridView1.Columns[2].Width = 200;

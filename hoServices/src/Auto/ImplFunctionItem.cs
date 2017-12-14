@@ -20,6 +20,7 @@ namespace hoReverse.Services.AutoCpp
         public int LineEnd { get; set; }
         public int ColumnStart { get; set; }
         public int ColumnEnd { get; set; }
+        public int Id { get; set; }
 
         public ImplFunctionItem(string @interface, string implementation, string filePath, string filePathCallee)
         {
@@ -53,6 +54,20 @@ namespace hoReverse.Services.AutoCpp
             LineEnd = lineEnd;
             ColumnStart = columnStart;
             ColumnEnd = columnEnd;
+            Id = 0;
+
+        }
+        public ImplFunctionItem(string @interface, string implementation, string filePath, int lineStart, int columnStart, int lineEnd, int columnEnd, int id)
+        {
+            Interface = @interface;
+            Implementation = implementation;
+            FilePath = filePath;
+            FilePathCallee = "";
+            LineStart = lineStart;
+            LineEnd = lineEnd;
+            ColumnStart = columnStart;
+            ColumnEnd = columnEnd;
+            Id = id;
 
         }
         public ImplFunctionItem(string @interface, string implementation, string filePath, int lineStart, int columnStart, int lineEnd, int columnEnd, bool macro)

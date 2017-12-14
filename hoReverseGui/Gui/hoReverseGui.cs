@@ -229,6 +229,7 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem analyzeCCToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator14;
+        private ToolStripSeparator toolStripSeparator15;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -747,8 +748,9 @@ namespace hoReverse.Reverse
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2087,6 +2089,7 @@ namespace hoReverse.Reverse
             // 
             this._helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._aboutToolStripMenuItem,
+            this.toolStripSeparator15,
             this._helpF1ToolStripMenuItem,
             this.readmeToolStripMenuItem,
             this.repoToolStripMenuItem,
@@ -2317,6 +2320,11 @@ namespace hoReverse.Reverse
             this.analyzeCCToolStripMenuItem.Text = "AnalyzeC/C++";
             this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
             // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(149, 6);
+            // 
             // TxtUserText
             // 
             this.TxtUserText.AllowDrop = true;
@@ -2334,10 +2342,10 @@ namespace hoReverse.Reverse
             this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
             this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
             // 
-            // toolStripSeparator14
+            // toolStripSeparator15
             // 
-            this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator15.Name = "toolStripSeparator15";
+            this.toolStripSeparator15.Size = new System.Drawing.Size(149, 6);
             // 
             // HoReverseGui
             // 
