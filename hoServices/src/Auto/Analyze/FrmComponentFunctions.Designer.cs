@@ -63,6 +63,7 @@
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -82,14 +83,16 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(970, 20);
+            this.menuStrip1.Size = new System.Drawing.Size(1194, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.printToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 16);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // helpToolStripMenuItem
@@ -98,20 +101,20 @@
             this.aboutToolStripMenuItem,
             this.filterToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 16);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.filterToolStripMenuItem.Text = "Filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
@@ -127,11 +130,11 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 121F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(970, 431);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1194, 431);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
@@ -148,9 +151,9 @@
             this.panel1.Controls.Add(this.txtComponent);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 23);
+            this.panel1.Location = new System.Drawing.Point(3, 27);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(964, 115);
+            this.panel1.Size = new System.Drawing.Size(1188, 115);
             this.panel1.TabIndex = 1;
             // 
             // label2
@@ -267,7 +270,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 398);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(964, 30);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1188, 30);
             this.flowLayoutPanel1.TabIndex = 3;
             // 
             // btnOk
@@ -295,10 +298,10 @@
             this.tabControl1.Controls.Add(this.tabPageProvided);
             this.tabControl1.Controls.Add(this.tabPageRequired);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 144);
+            this.tabControl1.Location = new System.Drawing.Point(3, 148);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(964, 248);
+            this.tabControl1.Size = new System.Drawing.Size(1188, 244);
             this.tabControl1.TabIndex = 4;
             // 
             // tabPageProvided
@@ -307,7 +310,7 @@
             this.tabPageProvided.Location = new System.Drawing.Point(4, 22);
             this.tabPageProvided.Name = "tabPageProvided";
             this.tabPageProvided.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProvided.Size = new System.Drawing.Size(956, 222);
+            this.tabPageProvided.Size = new System.Drawing.Size(1180, 218);
             this.tabPageProvided.TabIndex = 0;
             this.tabPageProvided.Text = "Provided";
             this.tabPageProvided.UseVisualStyleBackColor = true;
@@ -323,7 +326,7 @@
             this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
             this.grdProvidedInterfaces.RowHeadersVisible = false;
             this.grdProvidedInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdProvidedInterfaces.Size = new System.Drawing.Size(950, 216);
+            this.grdProvidedInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdProvidedInterfaces.TabIndex = 2;
             // 
             // contextMenuStrip1
@@ -399,11 +402,19 @@
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 216);
             this.grdRequiredInterfaces.TabIndex = 0;
             // 
+            // printToolStripMenuItem
+            // 
+            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.printToolStripMenuItem.Text = "Print";
+            this.printToolStripMenuItem.ToolTipText = "Print to stadard printer in landscape ";
+            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            // 
             // FrmComponentFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(970, 431);
+            this.ClientSize = new System.Drawing.Size(1194, 431);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FrmComponentFunctions";
             this.Text = "Component Viewer";
@@ -460,5 +471,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem copyInterfaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCalleeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
     }
 }

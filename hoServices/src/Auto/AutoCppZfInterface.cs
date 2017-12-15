@@ -128,10 +128,11 @@ namespace hoReverse.Services.AutoCpp
                         join f in allFunctionsImpl on m.Key equals f.Implementation
                         select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
-                    .Union(
-                        (from f in allFunctionsImpl
-                            join param in db.CodeItems on f.Id equals param.ParentId
-                            select new ImplFunctionItem($"{f.Implementation}({param.Type})", $"{f.Implementation}({param.Type})", f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd)))
+                    .Union( // Implementation without macros
+                         (from f in allFunctionsImpl
+                            where _macros.All(m => m.Key != f.Implementation)
+                            select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
+                           ) 
                     
                     .Union
                     // macros without implementation
@@ -139,7 +140,7 @@ namespace hoReverse.Services.AutoCpp
                         where allFunctionsImpl.All(f => m.Key != f.Implementation)
                         select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
-
+                DataTable dt = allImplementations.ToDataTable();
                 //-----------------------------------------
 
                 DataTable dtProvidedInterface = ShowProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
@@ -244,7 +245,7 @@ namespace hoReverse.Services.AutoCpp
                 if (f.LineEnd > 0 && f.ColumnEnd > 0)
                 {
                     string line = codeLines[f.LineEnd - 1];
-                    if (line.Length > 1)
+                    if (line.Length > 0)
                     {
                         if (line.Substring(f.ColumnEnd - 1, 1) != ";")
                         {

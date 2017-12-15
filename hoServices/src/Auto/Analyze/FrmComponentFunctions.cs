@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -21,12 +23,28 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private string _folderCodeRoot;
         private string _folderCodeComponent;
         private string _vcSymbolDataBase;
+        // ReSharper disable once NotAccessedField.Local
         private EA.Repository _rep;
+
+        // Print document
+        Bitmap _memoryImage;
+        private readonly PrintDocument _printDocument1 = new PrintDocument();
+
+
+
         public FrmComponentFunctions(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, string folderComponent, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
         {
             InitializeComponent();
             InitComponent(vcSymbolDataBase, rep, component, folderRoot, folderComponent, dtProvidedInterfaces, dtRequiredInterfaces);
 
+            // Parameterize printing
+            _printDocument1.DefaultPageSettings.Landscape = true;
+            // Margin: bottom, left, right, top
+            Margins margins = new Margins(0, 50, 0, 0);
+            _printDocument1.DefaultPageSettings.Margins = margins;
+
+            // ReSharper disable once RedundantDelegateCreation
+            _printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
         }
 
         private void FrmComponentFunctions_Load(object sender, System.EventArgs e)
@@ -55,8 +73,11 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
                 grdProvidedInterfaces.Columns[0].Width = 250;
                 grdProvidedInterfaces.Columns[1].Width = 50;
-                grdProvidedInterfaces.Columns[2].Width = 110;
-                grdProvidedInterfaces.Columns[3].Width = 110;
+                grdProvidedInterfaces.Columns[2].Width = 160;
+                grdProvidedInterfaces.Columns[3].Width = 160;
+                grdProvidedInterfaces.Columns[4].Width = 250;
+                grdProvidedInterfaces.Columns[5].Width = 250;
+                grdProvidedInterfaces.Columns[6].Width = 50;
                 // set columns headings
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
                 grdProvidedInterfaces.Columns[1].HeaderText = "Implementation";
@@ -65,14 +86,19 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdProvidedInterfaces.Columns[4].HeaderText = "Path Implementation";
                 grdProvidedInterfaces.Columns[5].HeaderText = "Path Callee";
                 grdProvidedInterfaces.Columns[6].HeaderText = "Is Called";
+                grdProvidedInterfaces.Columns[6].Visible = false;
                 grdProvidedInterfaces.Columns[7].Visible = false;
 
             }
             if (grdRequiredInterfaces.ColumnCount > 6)
             {
                 grdRequiredInterfaces.Columns[0].Width = 250;
-                grdRequiredInterfaces.Columns[1].Width = 200;
-                grdRequiredInterfaces.Columns[2].Width = 200;
+                grdRequiredInterfaces.Columns[1].Width = 50;
+                grdRequiredInterfaces.Columns[2].Width = 160;
+                grdRequiredInterfaces.Columns[3].Width = 160;
+                grdRequiredInterfaces.Columns[4].Width = 250;
+                grdRequiredInterfaces.Columns[5].Width = 250;
+                grdRequiredInterfaces.Columns[6].Width = 50;
                 // set columns headings
                 grdRequiredInterfaces.Columns[0].HeaderText = "Req. Interface";
                 grdRequiredInterfaces.Columns[1].HeaderText = "Implementation";
@@ -86,6 +112,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdRequiredInterfaces.Columns[9].Visible = false;
                 grdRequiredInterfaces.Columns[10].Visible = false;
                 grdRequiredInterfaces.Columns[11].Visible = false;
+                grdRequiredInterfaces.Columns[12].Visible = false;
 
 
 
@@ -97,6 +124,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// Initialize component data for form
         /// </summary>
         /// <param name="vcSymbolDataBase"></param>
+        /// <param name="rep"></param>
         /// <param name="component"></param>
         /// <param name="folderCodeRoot"></param>
         /// <param name="folderCodeComponent"></param>
@@ -315,7 +343,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
 
             foreach (var c in functions)
             {
-                var function = (string) c;
+                var function = c;
                 text = $"{text}{delimiter}{function}";
                 delimiter = "\r\n";
             }
@@ -365,6 +393,40 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             return null;
         }
 
-        
+        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CaptureScreen();
+            _printDocument1.Print();
+        }
+        private void CaptureScreen()
+        {
+            Graphics myGraphics = this.CreateGraphics();
+            Size s = this.Size;
+            _memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
+            Graphics memoryGraphics = Graphics.FromImage(_memoryImage);
+            memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
+        }
+        /// <summary>
+        /// Print and scale document on one page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void printDocument1_PrintPage(System.Object sender,
+            System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            // One page rectangle
+            Rectangle m = e.MarginBounds;
+
+            // Adapt high or wide scaling
+            if (_memoryImage.Width / (double)_memoryImage.Height > m.Width / (double)m.Height) // image is wider
+            {
+                m.Height = (int)(_memoryImage.Height / (double)_memoryImage.Width * m.Width);
+            }
+            else
+            {
+                m.Width = (int)(_memoryImage.Width / (double)_memoryImage.Height * m.Height);
+            }
+            e.Graphics.DrawImage(_memoryImage, m);
+        }
     }
 }
