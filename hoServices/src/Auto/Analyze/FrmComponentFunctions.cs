@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 using hoLinqToSql.LinqUtils;
 using hoReverse.hoUtils;
+using hoReverse.hoUtils.WiKiRefs;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp.Analyze
@@ -75,8 +76,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdProvidedInterfaces.Columns[1].Width = 50;
                 grdProvidedInterfaces.Columns[2].Width = 160;
                 grdProvidedInterfaces.Columns[3].Width = 160;
-                grdProvidedInterfaces.Columns[4].Width = 250;
-                grdProvidedInterfaces.Columns[5].Width = 250;
+                grdProvidedInterfaces.Columns[4].Width = 260;
+                grdProvidedInterfaces.Columns[5].Width = 260;
                 grdProvidedInterfaces.Columns[6].Width = 50;
                 // set columns headings
                 grdProvidedInterfaces.Columns[0].HeaderText = "Prov. Interface";
@@ -96,8 +97,8 @@ namespace hoReverse.Services.AutoCpp.Analyze
                 grdRequiredInterfaces.Columns[1].Width = 50;
                 grdRequiredInterfaces.Columns[2].Width = 160;
                 grdRequiredInterfaces.Columns[3].Width = 160;
-                grdRequiredInterfaces.Columns[4].Width = 250;
-                grdRequiredInterfaces.Columns[5].Width = 250;
+                grdRequiredInterfaces.Columns[4].Width = 260;
+                grdRequiredInterfaces.Columns[5].Width = 260;
                 grdRequiredInterfaces.Columns[6].Width = 50;
                 // set columns headings
                 grdRequiredInterfaces.Columns[0].HeaderText = "Req. Interface";
@@ -393,11 +394,20 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             return null;
         }
 
+        /// <summary>
+        /// Print the screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void printToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CaptureScreen();
             _printDocument1.Print();
         }
+
+        /// <summary>
+        /// Capture the screen to print the screen
+        /// </summary>
         private void CaptureScreen()
         {
             Graphics myGraphics = this.CreateGraphics();
@@ -427,6 +437,11 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
                 m.Width = (int)(_memoryImage.Width / (double)_memoryImage.Height * m.Height);
             }
             e.Graphics.DrawImage(_memoryImage, m);
+        }
+
+        private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.WikiAnalyzeC();
         }
     }
 }

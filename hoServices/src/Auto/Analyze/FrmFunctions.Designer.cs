@@ -48,7 +48,13 @@
             this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.txtSourceFolder = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.fiileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -65,17 +71,20 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(929, 693);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1097, 693);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fiileToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(929, 20);
+            this.menuStrip1.Size = new System.Drawing.Size(1097, 23);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             this.toolTip1.SetToolTip(this.menuStrip1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
@@ -90,11 +99,11 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 103);
+            this.dataGridView1.Location = new System.Drawing.Point(3, 106);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(923, 587);
+            this.dataGridView1.Size = new System.Drawing.Size(1091, 584);
             this.dataGridView1.TabIndex = 1;
             this.toolTip1.SetToolTip(this.dataGridView1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
@@ -137,9 +146,9 @@
             this.panel1.Controls.Add(this.txtVcSymbolDb);
             this.panel1.Controls.Add(this.txtSourceFolder);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 23);
+            this.panel1.Location = new System.Drawing.Point(3, 26);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(923, 74);
+            this.panel1.Size = new System.Drawing.Size(1091, 74);
             this.panel1.TabIndex = 2;
             this.toolTip1.SetToolTip(this.panel1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
@@ -242,11 +251,49 @@
         "et it in Settings.\r\n\r\nTo make sure it works:\r\nShow at least one C/C++ file with " +
         "VC Code. \r\n\r\n");
             // 
+            // fiileToolStripMenuItem
+            // 
+            this.fiileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.printScreenToolStripMenuItem});
+            this.fiileToolStripMenuItem.Name = "fiileToolStripMenuItem";
+            this.fiileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.fiileToolStripMenuItem.Text = "File";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem,
+            this.analyzeCCToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 19);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // printScreenToolStripMenuItem
+            // 
+            this.printScreenToolStripMenuItem.Name = "printScreenToolStripMenuItem";
+            this.printScreenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.printScreenToolStripMenuItem.Text = "Print Screen";
+            this.printScreenToolStripMenuItem.ToolTipText = "Print Screen in landscape";
+            this.printScreenToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // analyzeCCToolStripMenuItem
+            // 
+            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
+            // 
             // FrmFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(929, 693);
+            this.ClientSize = new System.Drawing.Size(1097, 693);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmFunctions";
@@ -255,6 +302,8 @@
         "pp\r\n- Macros from *.h or *.hpp");
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -283,5 +332,10 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openImplementationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySelectedFunctionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fiileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem analyzeCCToolStripMenuItem;
     }
 }

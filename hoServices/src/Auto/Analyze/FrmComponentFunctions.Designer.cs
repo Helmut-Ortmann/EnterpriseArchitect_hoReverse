@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmComponentFunctions));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +64,7 @@
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -95,11 +96,20 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // printToolStripMenuItem
+            // 
+            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.printToolStripMenuItem.Text = "Print";
+            this.printToolStripMenuItem.ToolTipText = "Print to stadard printer in landscape ";
+            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
-            this.filterToolStripMenuItem});
+            this.filterToolStripMenuItem,
+            this.analyzeCCToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -107,14 +117,14 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.filterToolStripMenuItem.Text = "Filter";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
@@ -383,7 +393,7 @@
             this.tabPageRequired.Location = new System.Drawing.Point(4, 22);
             this.tabPageRequired.Name = "tabPageRequired";
             this.tabPageRequired.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageRequired.Size = new System.Drawing.Size(956, 222);
+            this.tabPageRequired.Size = new System.Drawing.Size(1180, 218);
             this.tabPageRequired.TabIndex = 1;
             this.tabPageRequired.Text = "Required";
             this.tabPageRequired.UseVisualStyleBackColor = true;
@@ -399,16 +409,15 @@
             this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
             this.grdRequiredInterfaces.RowHeadersVisible = false;
             this.grdRequiredInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdRequiredInterfaces.Size = new System.Drawing.Size(950, 216);
+            this.grdRequiredInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdRequiredInterfaces.TabIndex = 0;
             // 
-            // printToolStripMenuItem
+            // analyzeCCToolStripMenuItem
             // 
-            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.printToolStripMenuItem.Text = "Print";
-            this.printToolStripMenuItem.ToolTipText = "Print to stadard printer in landscape ";
-            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
             // 
             // FrmComponentFunctions
             // 
@@ -472,5 +481,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyInterfaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCalleeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem analyzeCCToolStripMenuItem;
     }
 }

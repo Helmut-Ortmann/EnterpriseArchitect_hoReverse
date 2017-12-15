@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 using hoLinqToSql.LinqUtils;
 using hoReverse.hoUtils;
+using hoReverse.hoUtils.WiKiRefs;
 
+// ReSharper disable once CheckNamespace
 namespace hoReverse.Services.AutoCpp.Analyze
 {
     public partial class FrmFunctions : Form
@@ -15,14 +19,26 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
         string _vcSymbolDataBase;
         private string _folderRoot;
-        private DataTable _dtFunctions;
 
         readonly BindingSource _bsFunctions = new BindingSource();
+
+        // Print document
+        Bitmap _memoryImage;
+        private readonly PrintDocument _printDocument1 = new PrintDocument();
 
 
         public FrmFunctions()
         {
             InitializeComponent();
+
+            // Parameterize printing
+            _printDocument1.DefaultPageSettings.Landscape = true;
+            // Margin: bottom, left, right, top
+            Margins margins = new Margins(0, 50, 0, 0);
+            _printDocument1.DefaultPageSettings.Margins = margins;
+
+            // ReSharper disable once RedundantDelegateCreation
+            _printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
         }
 
         private void ShowFolder()
@@ -43,6 +59,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             dataGridView1.Columns[9].Visible = false;
             dataGridView1.Columns[10].Visible = false;
             dataGridView1.Columns[11].Visible = false;
+            dataGridView1.Columns[12].Visible = false;
             chkOnlyImplementations.Checked = true;
 
             //dataGridView1.Columns[6].Visible = false;
@@ -54,7 +71,6 @@ namespace hoReverse.Services.AutoCpp.Analyze
         {
             _vcSymbolDataBase = vcSymbolDataBase;
             _folderRoot = folderRoot;
-            _dtFunctions = dtFunctions;
             _bsFunctions.DataSource = dtFunctions;  // Bind table to binding context
 
 
@@ -193,6 +209,55 @@ namespace hoReverse.Services.AutoCpp.Analyze
         private DataGridView GetDataGridView(object sender)
         {
             return dataGridView1;
+        }
+        /// <summary>
+        /// Print the screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CaptureScreen();
+            _printDocument1.Print();
+        }
+
+        /// <summary>
+        /// Capture the screen to print the screen
+        /// </summary>
+        private void CaptureScreen()
+        {
+            Graphics myGraphics = this.CreateGraphics();
+            Size s = this.Size;
+            _memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
+            Graphics memoryGraphics = Graphics.FromImage(_memoryImage);
+            memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
+        }
+        /// <summary>
+        /// Print and scale document on one page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void printDocument1_PrintPage(System.Object sender,
+            System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            // One page rectangle
+            Rectangle m = e.MarginBounds;
+
+            // Adapt high or wide scaling
+            if (_memoryImage.Width / (double)_memoryImage.Height > m.Width / (double)m.Height) // image is wider
+            {
+                m.Height = (int)(_memoryImage.Height / (double)_memoryImage.Width * m.Width);
+            }
+            else
+            {
+                m.Width = (int)(_memoryImage.Width / (double)_memoryImage.Height * m.Height);
+            }
+            e.Graphics.DrawImage(_memoryImage, m);
+        }
+
+        private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.WikiAnalyzeC();
         }
     }
 }
