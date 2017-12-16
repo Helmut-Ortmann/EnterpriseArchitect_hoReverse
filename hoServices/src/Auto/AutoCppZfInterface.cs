@@ -373,7 +373,7 @@ namespace hoReverse.Services.AutoCpp
             if (fileNameOfClass == null)
             {
                 MessageBox.Show($"Search for filename\r\n'{el.Name}' and extensions *.c,*.h,*.hpp, *.cpp\r\n'{el.Name}_'",
-                    $"Cant't find source for '{el.Name}', Choose folder");
+                    $"Cant't find source folder for '{el.Name}', Choose folder");
                 return "";
             }
 
@@ -388,7 +388,7 @@ namespace hoReverse.Services.AutoCpp
             if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
             {
                 MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)\r\nLast checked:{folderNameOfClass}",
-                    $"Cant't find source for '{el.Name}', Break!!");
+                    $"Cant't find source folder for '{el.Name}', Break!!");
                 return "";
             }
             return folderNameOfClass;
@@ -411,22 +411,7 @@ namespace hoReverse.Services.AutoCpp
             if (connectionString == "") return false;
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
-                //// estimate root path
-                //// Find: '\RTE\RTE.C' and go back
-                //if (String.IsNullOrWhiteSpace(pathRoot))
-                //{
-                //    pathRoot = (from f in db.Files
-                //        where f.LeafName == "RTE.C"
-                //        select f.Name).FirstOrDefault();
-                //    if (String.IsNullOrWhiteSpace(pathRoot))
-                //    {
-                //        MessageBox.Show($"Cant find file 'RTE.C' in\r\n{connectionString} ", "Can't determine root path of source code.");
-                //        return false;
-                //    }
-                //    pathRoot = Path.GetDirectoryName(pathRoot);
-                //    pathRoot = Directory.GetParent(pathRoot).FullName;
-
-                //}
+                
                 // Estimates macros which concerns functions
                 var macros = (from m in db.CodeItems
                     join file in db.Files on m.FileId equals file.Id

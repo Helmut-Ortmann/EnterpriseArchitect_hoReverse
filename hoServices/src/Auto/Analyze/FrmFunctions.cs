@@ -118,7 +118,38 @@ namespace hoReverse.Services.AutoCpp.Analyze
             }
 
             string filter = GuiHelper.AggregateFilter(lFilters);
-            _bsFunctions.Filter = filter;
+
+            // enter filter and check for exceptions
+            try
+            {
+                _bsFunctions.Filter = filter;
+            }
+                catch (Exception e)
+            {
+                MessageBox.Show($@"Filter: '{filter}'
+The Filter may contain:
+- '%' or '*' wildcard at string start
+- 'NOT ' preceding the filter string
+
+Examples:
+'myFilter'
+'%myFilter'
+'NOT myFilter'
+'NOT %myFilter'
+
+hoReverse always adds a wildcard at string end! hoReverse combines filters by ' AND '
+
+Not allowed are wildcard '*' or '%' amidst the filter string.
+
+
+{e}",
+
+                    "The filter you have defined is invalid!");
+                _bsFunctions.Filter = "";
+            }
+
+
+
         }
 
         private void txtFilterFunction_KeyPress(object sender, KeyPressEventArgs e)
