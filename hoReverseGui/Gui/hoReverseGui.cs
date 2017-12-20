@@ -230,6 +230,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem analyzeCCToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripSeparator toolStripSeparator15;
+        private ToolStripMenuItem showProvidedRequiredFunctionsForSourceToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -645,6 +646,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -704,6 +706,7 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.showExternalComponentFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -726,11 +729,14 @@ namespace hoReverse.Reverse
             this._vCRemoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this._helpF1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hoToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lineStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this._toolStrip6 = new System.Windows.Forms.ToolStrip();
@@ -747,10 +753,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
-            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1413,6 +1415,23 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
+        "code");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1846,6 +1865,7 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem,
             this.toolStripSeparator12,
             this.showExternalComponentFunctionsToolStripMenuItem,
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem,
             this.showFunctionsToolStripMenuItem,
             this.toolStripSeparator13,
             this.showSymbolDataBaseFoldersToolStripMenuItem});
@@ -1858,7 +1878,7 @@ namespace hoReverse.Reverse
             // modulesToolStripMenuItem
             // 
             this.modulesToolStripMenuItem.Name = "modulesToolStripMenuItem";
-            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.modulesToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.modulesToolStripMenuItem.Text = "Generate";
             this.modulesToolStripMenuItem.Visible = false;
             this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
@@ -1866,7 +1886,7 @@ namespace hoReverse.Reverse
             // inventoryToolStripMenuItem
             // 
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
-            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Visible = false;
             this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
@@ -1874,7 +1894,7 @@ namespace hoReverse.Reverse
             // _getToolStripMenuItem
             // 
             this._getToolStripMenuItem.Name = "_getToolStripMenuItem";
-            this._getToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this._getToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this._getToolStripMenuItem.Text = "GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
             this._getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
@@ -1882,7 +1902,7 @@ namespace hoReverse.Reverse
             // makeRunnableToolStripMenuItem
             // 
             this.makeRunnableToolStripMenuItem.Name = "makeRunnableToolStripMenuItem";
-            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
             this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
             this.makeRunnableToolStripMenuItem.Visible = false;
@@ -1891,7 +1911,7 @@ namespace hoReverse.Reverse
             // makeServicePortToolStripMenuItem
             // 
             this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
-            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
             this.makeServicePortToolStripMenuItem.Visible = false;
             this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
@@ -1899,7 +1919,7 @@ namespace hoReverse.Reverse
             // makeCalloutToolStripMenuItem
             // 
             this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
-            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Visible = false;
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
@@ -1907,21 +1927,28 @@ namespace hoReverse.Reverse
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(286, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(346, 6);
             // 
             // showExternalComponentFunctionsToolStripMenuItem
             // 
             this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
-            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
-            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions";
-            this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = "Show the provided and required functions for each EA Component.\r\n\r\nSelect Compone" +
-    "nt. The function requires an implementation to work (*.c or *.cpp)";
+            this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
+            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions for EA-Element";
+            this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = resources.GetString("showExternalComponentFunctionsToolStripMenuItem.ToolTipText");
             this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
+            // 
+            // showProvidedRequiredFunctionsForSourceToolStripMenuItem
+            // 
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Name = "showProvidedRequiredFunctionsForSourceToolStripMenuItem";
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Text = "Show Provided / Required Functions for File/Folder";
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText = resources.GetString("showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText");
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Click += new System.EventHandler(this.showProvidedRequiredFunctionsForSourceToolStripMenuItem_Click);
             // 
             // showFunctionsToolStripMenuItem
             // 
             this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
-            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.showFunctionsToolStripMenuItem.Text = "Show all Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
     "+ Code with up to date VC Code symbol database";
@@ -1930,12 +1957,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(286, 6);
+            this.toolStripSeparator13.Size = new System.Drawing.Size(346, 6);
             // 
             // showSymbolDataBaseFoldersToolStripMenuItem
             // 
             this.showSymbolDataBaseFoldersToolStripMenuItem.Name = "showSymbolDataBaseFoldersToolStripMenuItem";
-            this.showSymbolDataBaseFoldersToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.showSymbolDataBaseFoldersToolStripMenuItem.Text = "Show Symbol VC-Code DataBase Folders";
             this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
     "lete the whole folder. VS-Code will recreate it!";
@@ -2108,6 +2135,11 @@ namespace hoReverse.Reverse
             this._aboutToolStripMenuItem.Text = "&About";
             this._aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // toolStripSeparator15
+            // 
+            this.toolStripSeparator15.Name = "toolStripSeparator15";
+            this.toolStripSeparator15.Size = new System.Drawing.Size(149, 6);
+            // 
             // _helpF1ToolStripMenuItem
             // 
             this._helpF1ToolStripMenuItem.Name = "_helpF1ToolStripMenuItem";
@@ -2146,6 +2178,18 @@ namespace hoReverse.Reverse
             this.lineStyleToolStripMenuItem.Text = "LineStyle";
             this.lineStyleToolStripMenuItem.ToolTipText = "Show WiKi LineStyle";
             this.lineStyleToolStripMenuItem.Click += new System.EventHandler(this.lineStyleToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(149, 6);
+            // 
+            // analyzeCCToolStripMenuItem
+            // 
+            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.analyzeCCToolStripMenuItem.Text = "AnalyzeC/C++";
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -2312,40 +2356,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
-            // analyzeCCToolStripMenuItem
-            // 
-            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
-            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.analyzeCCToolStripMenuItem.Text = "AnalyzeC/C++";
-            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator14
-            // 
-            this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(149, 6);
-            // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Search and Code:\r\n1. Enter to start Quick Search\r\n2. Double click to insert text/" +
-        "code");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
-            // toolStripSeparator15
-            // 
-            this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(149, 6);
             // 
             // HoReverseGui
             // 
@@ -3818,6 +3828,31 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
         /// <summary>
+        /// Show Provided/Required Functions for Folder or File which you choose with File-Dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showProvidedRequiredFunctionsForSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_autoCppIsRunning)
+            {
+                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
+
+            }
+            else
+            {
+                if (!_addinSettings.isFolderPathCSourceCode()) return;
+                Cursor.Current = Cursors.WaitCursor;
+                string fileFolderName = GetFolderOrFile(_addinSettings.FolderPathCSourceCode);
+
+                if (fileFolderName != "")
+                    _autoCpp.ShowInterfacesOfElement(null, _addinSettings.FolderPathCSourceCode, fileFolderName);
+
+                Cursor.Current = Cursors.Default;
+            }
+
+        }
+        /// <summary>
         /// Background worker to run capture macros task in background
         /// </summary>
         /// <param name="sender"></param>
@@ -3901,6 +3936,34 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             WikiRef.WikiAnalyzeC(); 
         }
+
+        /// <summary>
+        /// Get file of folder by file dialog. It return the file relative to the root folder in upper cases (like symbol database).
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// <returns></returns>
+        private string GetFolderOrFile(string rootFolder)
+        {
+            var dlg = new OpenFileDialog
+            {
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                FileName = "Folder Selection.",
+                InitialDirectory = rootFolder,
+                RestoreDirectory = true,
+                Title = "Open folder or *.c|*.cpp file to analyze",
+                DefaultExt = ".c",
+                Filter = "C-files (*.c)|*.c|CPP-Files (*.cpp)|*.cpp|All files and folders|*"
+            };
+            if (dlg.ShowDialog() == DialogResult.OK) return dlg.FileName.ToUpper();
+            return "";
+
+
+
+        }
+
+
     }
 }
 

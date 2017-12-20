@@ -58,9 +58,18 @@ namespace hoReverse.Services.AutoCpp.Analyze
         /// </summary>
         private void ShowComponent()
         {
-            txtComponent.Text = _component.Name;
+            if (_component != null)
+            {
+                txtComponent.Text = _component.Name;
+                txtGuid.Text = _component.ElementGUID;
+            }
+            else
+            {
+                txtComponent.Text = Path.GetFileName(_folderCodeComponent);
+                txtGuid.Text = "N.A.";
+            }
+
             
-            txtGuid.Text = _component.ElementGUID;
             txtFolderRoot.Text = _folderCodeComponent;
             //txtFolderRoot.Text = _folderCodeRoot;
             txtVcSymbolDb.Text = LinqUtil.GetDataSourceFromConnectionString(_vcSymbolDataBase);

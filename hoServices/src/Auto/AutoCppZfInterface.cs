@@ -29,8 +29,9 @@ namespace hoReverse.Services.AutoCpp
         /// </summary>
         /// <param name="el"></param>
         /// <param name="folderRoot">Root folder patch of C/C++ source code</param>
+        /// <param name="fileFolderToAnalyze"></param>
         /// <returns></returns>
-        public bool ShowInterfacesOfElement(EA.Element el, string folderRoot)
+        public bool ShowInterfacesOfElement(EA.Element el, string folderRoot, string fileFolderToAnalyze="")
         {
             // get connection string of repository
             // the provider to connect to database like Access, ..
@@ -39,7 +40,16 @@ namespace hoReverse.Services.AutoCpp
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
                 // Estimate file name of component
-                var folderNameOfClass = GetFileNameOfComponent(el,  db);
+                if (el == null && fileFolderToAnalyze == "")
+                {
+                    MessageBox.Show("You should select Element or a file/folder","Nothing selected");
+                    return false;
+                }
+                string modName = "xxxxxx";
+                if (el != null) modName = $"{el.Name.ToLower()}_";
+                var folderNameOfClass = fileFolderToAnalyze != "" 
+                    ? fileFolderToAnalyze 
+                    : GetSourceOfComponent(el,  db);
                 if (folderNameOfClass == "") return false;
 
                 // estimate file names of component
@@ -100,13 +110,14 @@ namespace hoReverse.Services.AutoCpp
                     // Implemented Interfaces (Macro with Interface and implementation with different name)
                     from m in _macros
                     join f in allFunctionsImpl on m.Key equals f.Implementation
-                    where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_")
+                    where f.FilePath.StartsWith(folderNameOfClass)
+                    //where m.Value.ToLower().StartsWith(modName)
                     select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
                     .Union
                     // all C-Implementations 
                     (from f in allFunctionsImpl
-                     where f.FilePath.StartsWith(folderNameOfClass) 
+                     where f.FilePath.StartsWith(folderNameOfClass)
                      where _macros.All(m => m.Key != f.Implementation)
                      select new ImplFunctionItem(f.Implementation, f.Implementation, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd, f.ColumnEnd))
 
@@ -114,7 +125,7 @@ namespace hoReverse.Services.AutoCpp
                     .Union
                     // macros without implementation, no link to path macro definition available
                     (from m in _macros
-                     where m.Value.ToLower().StartsWith($"{el.Name.ToLower()}_") &&
+                     where m.Value.ToLower().StartsWith(modName) &&
                            allFunctionsImpl.All(f => m.Key != f.Implementation)
                      select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
@@ -140,7 +151,8 @@ namespace hoReverse.Services.AutoCpp
                         where allFunctionsImpl.All(f => m.Key != f.Implementation)
                         select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
-                DataTable dt = allImplementations.ToDataTable();
+                // Test purposes
+                DataTable dt = allCompImplementations.ToDataTable();
                 //-----------------------------------------
 
                 DataTable dtProvidedInterface = ShowProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
@@ -355,14 +367,15 @@ namespace hoReverse.Services.AutoCpp
 
 
         /// <summary>
-        /// Get File name of component
-        /// name.ext  (ext=.h,.c,.hpp,.cpp)
-        /// name_
+        /// Get source of component/class
+        /// Folder if Element name = Folder name
+        /// Source-File if Element name = 'file name'.c or 'file name'.cpp
         /// </summary>
         /// <param name="el"></param>
         /// <param name="db"></param>
+        /// <param name="getFolder"></param>
         /// <returns></returns>
-        private static string GetFileNameOfComponent(Element el, BROWSEVCDB db)
+        private static string GetSourceOfComponent(Element el, BROWSEVCDB db, bool getFolder = true)
         {
             string fileNameOfClass = (from f in db.Files
                 where f.LeafName.ToLower() == $"{el.Name.ToLower()}.c" || f.LeafName.ToLower() == $"{el.Name.ToLower()}.h" ||
@@ -373,10 +386,10 @@ namespace hoReverse.Services.AutoCpp
             if (fileNameOfClass == null)
             {
                 MessageBox.Show($"Search for filename\r\n'{el.Name}' and extensions *.c,*.h,*.hpp, *.cpp\r\n'{el.Name}_'",
-                    $"Cant't find source folder for '{el.Name}', Choose folder");
+                    $"Can't find source folder for '{el.Name}', Choose folder");
                 return "";
             }
-
+            // try to get folder name
             string folderNameOfClass = Path.GetDirectoryName(fileNameOfClass);
             if (Path.GetFileName(folderNameOfClass)?.ToLower() != el.Name.ToLower())
                 folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
@@ -385,10 +398,16 @@ namespace hoReverse.Services.AutoCpp
             if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
                 folderNameOfClass = Directory.GetParent(folderNameOfClass).FullName;
 
+            // Folder not found, check if *.c,*.cpp file exists
+            // Try the source file if the folder isn't the component / class name
             if (Path.GetFileName(folderNameOfClass).ToLower() != el.Name.ToLower())
             {
+                if ( fileNameOfClass.ToLower().EndsWith($"{el.Name}.c".ToLower()) ||
+                     fileNameOfClass.ToLower().EndsWith($"{el.Name}.cpp".ToLower())
+                    )
+                    return fileNameOfClass;
                 MessageBox.Show($"Checked file extensions (*.c,*.h,*.hpp,*.cpp)\r\nLast checked:{folderNameOfClass}",
-                    $"Cant't find source folder for '{el.Name}', Break!!");
+                    $"Can't find source folder for '{el.Name}', Break!!");
                 return "";
             }
             return folderNameOfClass;
@@ -469,6 +488,8 @@ namespace hoReverse.Services.AutoCpp
             }
             return true;
         }
+
+       
 
         private readonly Dictionary<string, string> _macros = new Dictionary<string, string>();
         private FrmComponentFunctions _frm;

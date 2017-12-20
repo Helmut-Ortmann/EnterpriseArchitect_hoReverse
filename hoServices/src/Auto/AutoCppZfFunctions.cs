@@ -26,6 +26,7 @@ namespace hoReverse.Services.AutoCpp
             if (connectionString == "") return false;
             using (BROWSEVCDB db = new BROWSEVCDB(provider, connectionString))
             {
+                folderPathCSourceCode = folderPathCSourceCode.ToUpper();
 
                 // Get all functions of implementation
                 // store it to list to avoid SQL with something not possible via SQL
@@ -33,10 +34,10 @@ namespace hoReverse.Services.AutoCpp
                 var allFunctionsImpl1 = (from f in db.CodeItems
                                         join file in db.Files on f.FileId equals file.Id
                                         where f.Kind == 22 && (f.Name != "TASK" && f.Name != "ISR") &&
-                                        file.Name.ToLower().Contains(folderPathCSourceCode) &&
+                                        file.Name.Contains(folderPathCSourceCode) &&
                                         (
-                                         file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
-                                         file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                                         file.LeafName.EndsWith(".C") || file.LeafName.EndsWith(".CPP") ||
+                                         file.LeafName.EndsWith(".H") || file.LeafName.EndsWith(".HPP")
                                         )
                                         select new ImplFunctionItem("", f.Name, file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine, (int)f.EndColumn)).ToList()
                                         
@@ -46,10 +47,10 @@ namespace hoReverse.Services.AutoCpp
                                 join file in db.Files on f.FileId equals file.Id
                                 where f.Kind == 22 && (f.Name == "TASK" || f.Name == "ISR") &&
                                       (f.EndLine - f.StartLine) > 2 &&  // filter out extern.....
-                                      file.Name.ToLower().Contains(folderPathCSourceCode) &&
+                                      file.Name.Contains(folderPathCSourceCode) &&
                                       (
-                                          file.LeafName.ToLower().EndsWith(".c") || file.LeafName.ToLower().EndsWith(".cpp") ||
-                                          file.LeafName.ToLower().EndsWith(".h") || file.LeafName.ToLower().EndsWith(".hpp")
+                                          file.LeafName.EndsWith(".C") || file.LeafName.EndsWith(".CPP") ||
+                                          file.LeafName.EndsWith(".H") || file.LeafName.EndsWith(".HPP")
                                       )
                                 select new ImplFunctionItem("", $"{f.Name}({param.Type})", file.Name, (int)f.StartLine, (int)f.StartColumn, (int)f.EndLine,
                                     (int)f.EndColumn,

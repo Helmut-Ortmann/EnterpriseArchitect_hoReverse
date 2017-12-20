@@ -337,12 +337,33 @@ empty                add '&lt;&lt;define&gt;&gt;'
 
 </value>
   </data>
+  <data name="showExternalComponentFunctionsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Show the provided and required functions for each EA Component.
+
+Select Component or Class. 
+
+The function requires an implementation to work (*.c or *.cpp) and:
+- Source Code folder with the name of the selected Element   OR
+- Source File with the name of the selected Element and the extension *.c or *.cpp</value>
+  </data>
+  <data name="showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Show the provided and required functions for choosen:
+- Folder with C-Implementation
+- *.c/*.cpp file
+
+hoReverse analyzis the choosen folder or source file for:
+- Required
+- Provided 
+Interface </value>
+  </data>
   <data name="_changeXmlPathToolStripMenuItem1.ToolTipText" xml:space="preserve">
     <value>Set/Change the *.xml file path for a VC (Version Controlled) package
 1. Check-In the package
-2. Move the *.xml file to the new location and check it in
-3. Click on Set/Change VC *.xml file
-4. Enter new *.xml file path</value>
+2. Checkout the parent package
+3. Move the *.xml file to the new location and check it in
+4. Click on Set/Change VC *.xml file
+5. Enter new *.xml file path
+6. Check-in the parent Package</value>
   </data>
   <metadata name="_toolStrip6.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>572, 17</value>
