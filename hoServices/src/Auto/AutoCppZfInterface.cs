@@ -152,7 +152,7 @@ namespace hoReverse.Services.AutoCpp
                         select new ImplFunctionItem(m.Value, m.Key, "", 0, 0, 0, 0));
 
                 // Test purposes
-                DataTable dt = allCompImplementations.ToDataTable();
+                //DataTable dt = allCompImplementations.ToDataTable();
                 //-----------------------------------------
 
                 DataTable dtProvidedInterface = ShowProvidedInterface(db, folderNameOfClass, fileNamesOfClassTree, allCompImplementations);
@@ -170,9 +170,9 @@ namespace hoReverse.Services.AutoCpp
                 {
                     _frm.ChangeComponent(connectionString, Rep, el, _folderRoot, folderNameOfClass, dtProvidedInterface, dtRequiredInterface);
                     _frm.Show();
+                    _frm.BringToFront();
                 }
-                //frm.ShowDialog();
-               
+              
                 return true;
 
             }

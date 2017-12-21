@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 using hoLinqToSql.LinqUtils;
@@ -25,6 +26,32 @@ namespace hoReverse.Services.AutoCpp.Analyze
         // Print document
         Bitmap _memoryImage;
         private readonly PrintDocument _printDocument1 = new PrintDocument();
+
+        #region helperBringTop
+        // Bring window to top helper
+        private void BringTotop()
+        {
+            // is an icon?
+            if (IsIconic(this.Handle))
+                ShowWindowAsync(this.Handle, SW_RESTORE);
+
+            SetForegroundWindow(this.Handle);
+        }
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool IsIconic(IntPtr hWnd);
+
+        private const int SW_RESTORE = 9;
+        #endregion
 
 
         public FrmFunctions()
@@ -61,6 +88,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             dataGridView1.Columns[11].Visible = false;
             dataGridView1.Columns[12].Visible = false;
             chkOnlyImplementations.Checked = true;
+            BringTotop();
 
             //dataGridView1.Columns[6].Visible = false;
             //dataGridView1.Columns[7].Visible = false;
@@ -289,6 +317,11 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiAnalyzeC();
+        }
+
+        private void FrmFunctions_Shown(object sender, EventArgs e)
+        {
+            this.TopMost = true;
         }
     }
 }

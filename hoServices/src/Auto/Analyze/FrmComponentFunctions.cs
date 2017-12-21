@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 using hoLinqToSql.LinqUtils;
@@ -31,6 +32,32 @@ namespace hoReverse.Services.AutoCpp.Analyze
         Bitmap _memoryImage;
         private readonly PrintDocument _printDocument1 = new PrintDocument();
 
+
+        #region helperBringTop
+        // Bring window to top helper
+        private void BringTotop()
+        {
+            // is an icon?
+            if (IsIconic(this.Handle))
+                ShowWindowAsync(this.Handle, SW_RESTORE);
+
+            SetForegroundWindow(this.Handle);
+        }
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern
+            bool IsIconic(IntPtr hWnd);
+
+        private const int SW_RESTORE = 9;
+        #endregion
 
 
         public FrmComponentFunctions(string vcSymbolDataBase, EA.Repository rep, EA.Element component, string folderRoot, string folderComponent, DataTable dtProvidedInterfaces, DataTable dtRequiredInterfaces)
@@ -128,6 +155,9 @@ namespace hoReverse.Services.AutoCpp.Analyze
 
             }
             FilterGrid();
+            BringTotop();
+            
+
         }
 
         /// <summary>
@@ -451,6 +481,11 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiAnalyzeC();
+        }
+
+        private void FrmComponentFunctions_Shown(object sender, EventArgs e)
+        {
+            this.TopMost = true;
         }
     }
 }

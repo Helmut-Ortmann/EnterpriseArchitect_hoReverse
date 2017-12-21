@@ -32,6 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmFunctions));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fiileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openImplementationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,11 +53,6 @@
             this.txtVcSymbolDb = new System.Windows.Forms.TextBox();
             this.txtSourceFolder = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.fiileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -89,6 +89,44 @@
             this.menuStrip1.Text = "menuStrip1";
             this.toolTip1.SetToolTip(this.menuStrip1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
+            // 
+            // fiileToolStripMenuItem
+            // 
+            this.fiileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.printScreenToolStripMenuItem});
+            this.fiileToolStripMenuItem.Name = "fiileToolStripMenuItem";
+            this.fiileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.fiileToolStripMenuItem.Text = "File";
+            // 
+            // printScreenToolStripMenuItem
+            // 
+            this.printScreenToolStripMenuItem.Name = "printScreenToolStripMenuItem";
+            this.printScreenToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.printScreenToolStripMenuItem.Text = "Print Screen";
+            this.printScreenToolStripMenuItem.ToolTipText = "Print Screen in landscape";
+            this.printScreenToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem,
+            this.analyzeCCToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 19);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // analyzeCCToolStripMenuItem
+            // 
+            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
             // 
             // dataGridView1
             // 
@@ -251,44 +289,6 @@
         "et it in Settings.\r\n\r\nTo make sure it works:\r\nShow at least one C/C++ file with " +
         "VC Code. \r\n\r\n");
             // 
-            // fiileToolStripMenuItem
-            // 
-            this.fiileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.printScreenToolStripMenuItem});
-            this.fiileToolStripMenuItem.Name = "fiileToolStripMenuItem";
-            this.fiileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
-            this.fiileToolStripMenuItem.Text = "File";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem,
-            this.analyzeCCToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 19);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // printScreenToolStripMenuItem
-            // 
-            this.printScreenToolStripMenuItem.Name = "printScreenToolStripMenuItem";
-            this.printScreenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.printScreenToolStripMenuItem.Text = "Print Screen";
-            this.printScreenToolStripMenuItem.ToolTipText = "Print Screen in landscape";
-            this.printScreenToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            // 
-            // analyzeCCToolStripMenuItem
-            // 
-            this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
-            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
-            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
-            // 
             // FrmFunctions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -300,6 +300,7 @@
             this.Text = "FrmFunctions";
             this.toolTip1.SetToolTip(this, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
+            this.Shown += new System.EventHandler(this.FrmFunctions_Shown);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
