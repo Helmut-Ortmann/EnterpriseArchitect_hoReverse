@@ -337,7 +337,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
 
         private void filterToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            string httpFilter = "https://documentation.devexpress.com/WindowsForms/2567/Controls-and-Libraries/Data-Grid/Filter-and-Search/Filtering-in-Code";
+            string httpFilter = "https://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396";
             Process.Start(httpFilter);
         }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EaServices.Auto.Analyze
 {
@@ -33,8 +29,9 @@ namespace EaServices.Auto.Analyze
 
         /// <summary>
         /// Add a filter from the passed string to the filter list
-        /// LIKE     =  '*AAA*'
-        /// NOT LIKE =  'NOT *AAAA*'
+        /// Arbitrary string     = '(........)'    ==> (........)
+        /// LIKE                 =  '*AAA*'        ==> nameFilterValue LIKE '*AAA*'
+        /// NOT LIKE             =  'NOT *AAAA*'   ==> nameFilterValue NOT LIKE '*AAA*'
         /// </summary>
         /// <param name="lFilters"></param>
         /// <param name="firstWildCard"></param>
@@ -45,14 +42,21 @@ namespace EaServices.Auto.Analyze
             string compareValue = filterValue.Trim();
             if (compareValue != "" && ! compareValue.ToLower().StartsWith("<filter"))
             {
+                if (compareValue.StartsWith("(") || compareValue.Split(' ').Length > 2)
+                {
+                    lFilters.Add($" {filterValue} ");
+                    return;
+                }
                 if (compareValue.ToLower().StartsWith("not "))
                 {
                     string s = compareValue.Split(' ')[1];
                     lFilters.Add($"{nameFilerValue} NOT LIKE '{firstWildCard}{s}%'");
+                    return;
                 }
                 else
                 {
                     lFilters.Add($"{nameFilerValue} LIKE '{firstWildCard}{compareValue}%'");
+                    return;
                 }
             }
         }

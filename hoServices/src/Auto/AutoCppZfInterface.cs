@@ -104,6 +104,16 @@ namespace hoReverse.Services.AutoCpp
                     into gs
                     select gs.First()).ToList();
 
+                // Check macros
+                //DataTable tMacro = _macros.OrderBy(x=>x.Key).ToDataTable();
+                //DataTable tx = (
+                //    // Implemented Interfaces (Macro with Interface and implementation with different name)
+                //    from m in _macros
+                //    join f in allFunctionsImpl on m.Key equals f.Implementation
+                //    where f.FilePath.StartsWith(folderNameOfClass)
+                //    //where m.Value.ToLower().StartsWith(modName)
+                //    select new ImplFunctionItem(m.Value, m.Key, f.FilePath, f.LineStart, f.ColumnStart, f.LineEnd,
+                //        f.ColumnEnd)).ToDataTable(); 
 
 
                 IEnumerable < ImplFunctionItem > allCompImplementations = (
@@ -275,7 +285,8 @@ namespace hoReverse.Services.AutoCpp
             return filteredImplemtedFunctions.ToDataTable();
         }
         /// <summary>
-        /// Generate provided Interface
+        /// Generate provided Interface. All functions called from not component modules
+        /// - 
         /// </summary>
         /// <param name="db"></param>
         /// <param name="folderNameOfClass"></param>
@@ -293,6 +304,8 @@ namespace hoReverse.Services.AutoCpp
                 select new
                 {
                     Imp = new ImplFunctionItem(f.Interface, f.Implementation, f.FilePath,"",f.LineStart),
+                    // Rx to find a call to function, should be fast, later detailed test
+                    // 'function('
                     RxImplementation = new Regex($@"\b{f.Implementation}\s*\("),
                     RxInterface = new Regex($@"\b{f.Interface}\s*\(")
                 }).ToArray();
@@ -322,14 +335,14 @@ namespace hoReverse.Services.AutoCpp
                         if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
                         {
                             Regex rx = f1.Imp.Implementation == f1.Imp.Interface
-                                ? new Regex($@"^.*\b{f1.Imp.Implementation}\s*\(", RegexOptions.Multiline)
-                                : new Regex($@"^.*\b({f1.Imp.Implementation}|{f1.Imp.Interface})\s*\(", RegexOptions.Multiline);
+                                ? new Regex($@"^.*\b{f1.Imp.Implementation}\s*\([^\}}{{;]*", RegexOptions.Multiline)
+                                : new Regex($@"^.*\b({f1.Imp.Implementation}|{f1.Imp.Interface})\s*\([^\}}{{;]*", RegexOptions.Multiline);
 
                             Match match = rx.Match(code);
                             while (match.Success)
                             {
                                 // That's not an call to a function
-                                if (match.Value.Trim().StartsWith("FUNC(") || match.Value.Trim().StartsWith("void "))
+                                if (match.Value.Trim().StartsWith("FUNC(") || match.Value.Trim().StartsWith("void ") || match.Value.Trim().StartsWith("static ") || match.Value.Trim().StartsWith("extern ") )
                                 {
                                     match = match.NextMatch();
                                     continue;

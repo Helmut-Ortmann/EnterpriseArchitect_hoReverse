@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
@@ -322,6 +323,11 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         private void FrmFunctions_Shown(object sender, EventArgs e)
         {
             this.TopMost = true;
+        }
+
+        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396");
         }
     }
 }
