@@ -335,8 +335,8 @@ namespace hoReverse.Services.AutoCpp
                         if (f1.RxImplementation.IsMatch(code) || f1.RxInterface.IsMatch(code))
                         {
                             Regex rx = f1.Imp.Implementation == f1.Imp.Interface
-                                ? new Regex($@"^.*\b{f1.Imp.Implementation}\s*\([^\}}{{;]*", RegexOptions.Multiline)
-                                : new Regex($@"^.*\b({f1.Imp.Implementation}|{f1.Imp.Interface})\s*\([^\}}{{;]*", RegexOptions.Multiline);
+                                ? new Regex($@"^.*\b{f1.Imp.Implementation}\s*\([^}}{{;]*;", RegexOptions.Multiline)
+                                : new Regex($@"^.*\b({f1.Imp.Implementation}|{f1.Imp.Interface})\s*\([^}}{{;]*;", RegexOptions.Multiline);
 
                             Match match = rx.Match(code);
                             while (match.Success)

@@ -7,6 +7,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EaServices.Auto.Analyze;
 using hoLinqToSql.LinqUtils;
@@ -395,27 +396,55 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         /// Copies the function name to Clipboard
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="columnName"></param>
-        /// <param name="lineNumberName"></param>
-        private void StartCodeFile(object sender, string columnName, string lineNumberName = "")
+        /// <param name="columnNameFilePath"></param>
+        /// <param name="columnNameLineNumber"></param>
+        private void StartCodeFile(object sender, string columnNameFilePath, string columnNameLineNumber = "")
         {
             // Get the control that is displaying this context menu
             DataGridView grid = GetDataGridView(sender);
             var row = grid.SelectedRows[0];
-            string filePath = row.Cells[columnName].Value.ToString();
+            string filePath = row.Cells[columnNameFilePath].Value.ToString();
             filePath = Path.Combine(_folderCodeRoot, filePath);
-            string lineNumber = lineNumberName != ""
-                ? $":{row.Cells[lineNumberName]?.Value.ToString()} -g"
-                : "";
-            HoUtil.StartApp($"Code", $"{filePath}{lineNumber}");
+
             // Copy Function name to Clipboard
             string functionName = row.Cells["Implementation"].Value.ToString().Trim() != ""
-                                  ? row.Cells["Implementation"].Value.ToString()
-                                  : row.Cells["Interface"].Value.ToString();
+                ? row.Cells["Implementation"].Value.ToString()
+                : row.Cells["Interface"].Value.ToString();
             Clipboard.SetText(functionName);
 
+            // Estimate line number
+            string lineNumber = "-1";
+            if (columnNameLineNumber == "")
+            {
+                lineNumber = GetLineNumber(filePath, functionName).ToString();
+            } else
+            {
+                lineNumber = row.Cells[columnNameLineNumber].Value.ToString();
+            }
+
+            lineNumber = lineNumber != "-1"
+                ? $":{lineNumber} -g"
+                : "";
+            HoUtil.StartApp($"Code", $"{filePath}{lineNumber}");
+           
 
 
+
+        }
+
+        private int GetLineNumber(string file, string functionName)
+        {
+            string code = File.ReadAllText(file);
+            Regex rx = new Regex($@"\b{functionName}\b\s*\([^;{{}}]*;");
+            Match match = rx.Match(code);
+            if (match.Success)
+            {
+                return code.Take(match.Groups[0].Index).Count(c => c == '\n') + 1;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         private DataGridView GetDataGridView(object sender)
