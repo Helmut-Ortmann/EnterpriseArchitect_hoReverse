@@ -237,6 +237,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem showProvidedRequiredFunctionsForSourceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator16;
         private ToolStripMenuItem bulkToolStripMenuItem;
+        private ToolStripMenuItem bulkActivityASILBToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -703,6 +704,8 @@ namespace hoReverse.Reverse
             this._delMacroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this._copyReleaseInformationToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.bulkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -759,8 +762,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.bulkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.bulkActivityASILBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1705,7 +1707,8 @@ namespace hoReverse.Reverse
             this._toolStripSeparator,
             this._copyReleaseInformationToClipboardToolStripMenuItem,
             this.toolStripSeparator16,
-            this.bulkToolStripMenuItem});
+            this.bulkToolStripMenuItem,
+            this.bulkActivityASILBToolStripMenuItem});
             this._codeToolStripMenuItem.Name = "_codeToolStripMenuItem";
             this._codeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this._codeToolStripMenuItem.Text = "&Code";
@@ -1863,6 +1866,19 @@ namespace hoReverse.Reverse
             this._copyReleaseInformationToClipboardToolStripMenuItem.ToolTipText = "Copy release information of *.c and *.h files to Clipboard:\r\n- Select Module\r\n- F" +
     "or all elements on the diagram the release information is printed";
             this._copyReleaseInformationToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyReleaseInformationToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(273, 6);
+            // 
+            // bulkToolStripMenuItem
+            // 
+            this.bulkToolStripMenuItem.Name = "bulkToolStripMenuItem";
+            this.bulkToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.bulkToolStripMenuItem.Text = "Bulk Action ASIL B";
+            this.bulkToolStripMenuItem.ToolTipText = "Bulk change of elements (experimental)";
+            this.bulkToolStripMenuItem.Click += new System.EventHandler(this.bulkActionAsilBToolStripMenuItem_Click);
             // 
             // _autoToolStripMenuItem
             // 
@@ -2367,18 +2383,12 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // bulkToolStripMenuItem
+            // bulkActivityASILBToolStripMenuItem
             // 
-            this.bulkToolStripMenuItem.Name = "bulkToolStripMenuItem";
-            this.bulkToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this.bulkToolStripMenuItem.Text = "Bulk";
-            this.bulkToolStripMenuItem.ToolTipText = "Bulk change of elements (experimental)";
-            this.bulkToolStripMenuItem.Click += new System.EventHandler(this.bulkToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator16
-            // 
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(273, 6);
+            this.bulkActivityASILBToolStripMenuItem.Name = "bulkActivityASILBToolStripMenuItem";
+            this.bulkActivityASILBToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.bulkActivityASILBToolStripMenuItem.Text = "Bulk Activity ASIL B";
+            this.bulkActivityASILBToolStripMenuItem.Click += new System.EventHandler(this.bulkActivityASILBToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -3985,13 +3995,30 @@ Please restart EA. During restart hoTools loads the default settings.",
 
 
         }
-
-        private void bulkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void bulkActivityASILBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BulkElement bulkElement;
+            string json = @"{
+                            'Name'        : 'Activity ASIL B',
+                            'Description' : 'Set Stereotype and ASIL B for Activity', 
+                            'Type'        : 'Activity',
+                            'Stereotypes' : [
+                                                  'ZF_LE::LE Activity'
+                                            ], 
+                            'TaggedValues' : [ 
+                                                  {'Name' : 'ZF_LE::LE Activity::Criticality', 'Value' : 'ASIL B' }
+                                             ]
+                            }";
+            BulkChange(json);
+
+        }
+
+        private void bulkActionAsilBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
             string json = @"{
                             'Name'        : 'Action ASIL B',
-                            'Description' : 'Set Stereotype and ASIL B for Action',  
+                            'Description' : 'Set Stereotype and ASIL B for Action', 
+                            'Type'        : 'Action',
                             'Stereotypes' : [
                                                   'ZF_LE::LE Action'
                                             ], 
@@ -3999,6 +4026,17 @@ Please restart EA. During restart hoTools loads the default settings.",
                                                   {'Name' : 'ZF_LE::LE Action::Criticality', 'Value' : 'ASIL B' }
                                              ]
                             }";
+            BulkChange(json);
+        }
+
+
+        /// <summary>
+        /// Bulk change selected Diagram objects
+        /// </summary>
+        /// <param name="json"></param>
+        private void BulkChange(string json)
+        {
+            BulkElement bulkElement;
             try
             {
                 bulkElement = JsonConvert.DeserializeObject<BulkElement>(json);
@@ -4008,42 +4046,44 @@ Please restart EA. During restart hoTools loads the default settings.",
                 MessageBox.Show($"JSON:\r\n{json}\r\n{ex}", @"Error deserialize JSON");
                 return;
             }
-            
+
 
             var eaDia = new EaDiagram(_repository);
             foreach (EA.DiagramObject diaObj in eaDia.SelObjects)
             {
                 EA.Element el = _repository.GetElementByID(diaObj.ElementID);
-                // set all stereotypes
-                foreach (var st in bulkElement.Stereotypes)
+                if (bulkElement.Type == null || (bulkElement.Type != null && bulkElement.Type == el.Type))
                 {
-                    el.StereotypeEx = st;
-                    
-                }
-
-                el.Update();
-                foreach (var tag in bulkElement.TaggedValues)
-                {
-                    string name = tag.Name;
-                    string value = tag.Value;
-                    foreach (EA.TaggedValue tg in el.TaggedValues)
+                    // set all stereotypes
+                    foreach (var st in bulkElement.Stereotypes)
                     {
-                        if (tg.FQName == name)
+                        el.StereotypeEx = st;
+                    }
+
+                    el.Update();
+                    foreach (var tag in bulkElement.TaggedValues)
+                    {
+                        string name = tag.Name;
+                        string value = tag.Value;
+                        foreach (EA.TaggedValue tg in el.TaggedValues)
                         {
-                            tg.Value = value;
+                            if (tg.FQName == name)
+                            {
+                                tg.Value = value;
+                            }
+
+                            tg.Update();
                         }
 
-                        tg.Update();
+                        el.TaggedValues.Refresh();
                     }
-                    el.TaggedValues.Refresh();
-                    
+
+                    el.Update();
                 }
-                el.Update();
             }
-
-
-
         }
+
+        
     }
 }
 
