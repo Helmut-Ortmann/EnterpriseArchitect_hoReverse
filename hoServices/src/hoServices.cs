@@ -6201,24 +6201,26 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="elementType"></param>
         /// <param name="connectorLinkType"></param>
+        /// <param name="bound"></param>
         public static void AddElementsToDiagram(Repository rep,
-            string elementType = "Note", string connectorLinkType = "Element Note")
+            string elementType = "Note", string connectorLinkType = "Element Note", bool bound = true)
 
         {
             // handle multiple selected elements
+            ObjectType objectType = rep.GetContextItemType();
             Diagram diaCurrent = rep.GetCurrentDiagram();
             if (diaCurrent == null) return;
             var eaDia = new EaDiagram(rep);
             rep.SaveDiagram(diaCurrent.DiagramID);
 
-            switch (rep.GetContextItemType())
+            switch (objectType)
             {
                 case ObjectType.otDiagram:
                     AddDiagramNote(rep);
                     break;
                 case ObjectType.otConnector:
                     if (!String.IsNullOrWhiteSpace(connectorLinkType)) connectorLinkType = "Link Notes";
-                    AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, connectorLinkType);
+                    AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, bound);
                     break;
                 case ObjectType.otPackage:
                 case ObjectType.otElement:
@@ -6424,9 +6426,11 @@ ElementType:{el.Type}",
         /// <param name="rep"></param>
         /// <param name="con"></param>
         /// <param name="elementType">Default Note</param>
-        /// <param name="connectorLinkType">Default: null</param>
-        private static void AddElementWithLinkToConnector(Repository rep, EA.Connector con,
-            string elementType = @"Note", string connectorLinkType = "Link Notes")
+        /// <param name="bound"></param>
+        private static void AddElementWithLinkToConnector(Repository rep, 
+            EA.Connector con,
+            string elementType = @"Note", 
+            bool bound = true)
         {
             Diagram dia = rep.GetCurrentDiagram();
             Package pkg = rep.GetPackageByID(dia.PackageID);
@@ -6464,7 +6468,8 @@ ElementType:{el.Type}",
             diaObject.Update();
             pkg.Elements.Refresh();
 
-            HoUtil.SetElementHasAttachedConnectorLink(rep, con, elNewElement, connectorLinkType: connectorLinkType);
+            // link to to connector, bout to notes text or not
+            HoUtil.SetElementHasAttachedConnectorLink(rep, con, elNewElement, bound);
             elNewElement.Refresh();
             diaObject.Update();
             dia.Update();

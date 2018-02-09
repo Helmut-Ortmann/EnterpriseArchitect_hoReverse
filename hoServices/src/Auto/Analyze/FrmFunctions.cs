@@ -329,5 +329,29 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         {
             Process.Start("https://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396");
         }
+        /// <summary>
+        /// Output the Column Header/Technical name as Tooltip. It uses the data column of the associated data source. 
+        /// Disable Tooltip in the grid (ShowCellToolTips = false;).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        // Enter a cell
+        private void grdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 && e.ColumnIndex != -1)
+
+            {
+                DataGridView grid = (DataGridView) sender;
+                var dataPropertyName = grid.Columns[e.ColumnIndex].DataPropertyName;
+
+                string columnName = grid.Columns[e.ColumnIndex].Name;
+                toolTip1.SetToolTip((DataGridView) sender, dataPropertyName);
+            }
+            else
+            {
+                toolTip1.Hide((DataGridView) sender);
+            }
+
+        }
     }
 }

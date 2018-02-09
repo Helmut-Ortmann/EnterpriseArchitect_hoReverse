@@ -1691,30 +1691,53 @@ namespace hoReverse.hoUtils
         public static bool SetElementLink(Repository rep, int elId, string pdata1, int pdata2, string pdata3,
             string pdata4, int ntype)
         {
-            if (String.IsNullOrWhiteSpace(pdata1)) pdata1 = " ";
+            string delimiter = "";
+            string pdata1Value = "";
+            if (! String.IsNullOrWhiteSpace(pdata1))
+            {
+                pdata1Value = $"pdata1 = '{pdata1}'";
+                delimiter = ", ";
+            }
             // ID of the object (Element, Connector, Attribute, Operation,..)
             string pdata2Value = "";
             if (pdata2 > 0)
-                pdata2Value = $@", pdata2 = {pdata2}";
+            {
+                pdata2Value = $@"{delimiter} pdata2 = {pdata2}";
+                delimiter = ", ";
+            }
+
             // Feature name
             string pdata3Value = "";
             if (pdata3 != "")
-                pdata3Value = $@", pdata3 = '{pdata3}'";
+            {
+                pdata3Value = $@"{delimiter} pdata3 = '{pdata3}'";
+                delimiter = ", ";
+            }
+            string pdata4Value = "";
+            if (pdata4 != "")
+            {
+                pdata4Value = $@"{delimiter} pdata4 = '{pdata4}'";
+                delimiter = ", ";
+            }
 
-            string updateStr =
-                $@"update t_object set pdata1 = '{pdata1}' {pdata2Value} {pdata3Value}, pdata4='{
-                        pdata4
-                    }', NTYPE={ntype}" +
-                $@" where object_ID = {elId} ";
+            string updateStr = $@"update t_object set {pdata1Value} {pdata2Value} {pdata3Value} {pdata4Value} {delimiter} NTYPE={ntype}" +
+                               $@" where object_ID = {elId} ";
             rep.Execute(updateStr);
             return true;
         }
 
-        // ReSharper disable once UnusedMethodReturnValue.Global
+        /// <summary>
+        /// Set in Element the connector it is connected to. You can also specify if the description is bound to the connector description.
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="con"></param>
+        /// <param name="elNote"></param>
+        /// <param name="bound"></param>
+        /// <returns></returns>
         public static bool SetElementHasAttachedConnectorLink(Repository rep, Connector con, EA.Element elNote,
-            string connectorLinkType = "Link Notes")
+             bool bound=true)
         {
-            
+            var connectorLinkType = bound == false ? "" : "Link Notes";
             return SetElementLink(rep, elNote.ElementID, connectorLinkType, 0, "", $@"idref1={con.ConnectorID}", 1);
         }
 

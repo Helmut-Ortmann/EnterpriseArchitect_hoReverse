@@ -18,6 +18,10 @@ using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
 using hoLinqToSql.LinqUtils;
 
+using EaServices.Json;
+using Newtonsoft.Json;
+
+
 // ReSharper disable RedundantDelegateCreation
 
 //--------------------------------------------------------------------------------
@@ -231,6 +235,8 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem showProvidedRequiredFunctionsForSourceToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator16;
+        private ToolStripMenuItem bulkToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -753,6 +759,8 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.bulkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -846,7 +854,7 @@ namespace hoReverse.Reverse
             this._btnAddElementNote.TabIndex = 9;
             this._btnAddElementNote.Text = "Note";
             this._toolTip.SetToolTip(this._btnAddElementNote, "Add Note to selected: \r\n- Elements\r\n- Connector\r\n- Diagram if nothing is selected" +
-        "");
+        "\r\n\r\nThe note is free editable.");
             this._btnAddElementNote.UseVisualStyleBackColor = true;
             this._btnAddElementNote.Click += new System.EventHandler(this._btnAddElementNote_Click);
             // 
@@ -858,7 +866,7 @@ namespace hoReverse.Reverse
             this._btnAddConstraint.TabIndex = 10;
             this._btnAddConstraint.Text = "Constraint";
             this._toolTip.SetToolTip(this._btnAddConstraint, "Add Constraint to selected: \r\n- Elements\r\n- Connector\r\n- Diagram if nothing selec" +
-        "ted");
+        "ted\r\n\r\nThe constraint is free editable.");
             this._btnAddConstraint.UseVisualStyleBackColor = true;
             this._btnAddConstraint.Click += new System.EventHandler(this._btnAddConstraint_Click);
             // 
@@ -1695,7 +1703,9 @@ namespace hoReverse.Reverse
             this._addMacroToolStripMenuItem,
             this._delMacroToolStripMenuItem,
             this._toolStripSeparator,
-            this._copyReleaseInformationToClipboardToolStripMenuItem});
+            this._copyReleaseInformationToClipboardToolStripMenuItem,
+            this.toolStripSeparator16,
+            this.bulkToolStripMenuItem});
             this._codeToolStripMenuItem.Name = "_codeToolStripMenuItem";
             this._codeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this._codeToolStripMenuItem.Text = "&Code";
@@ -2356,6 +2366,19 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // bulkToolStripMenuItem
+            // 
+            this.bulkToolStripMenuItem.Name = "bulkToolStripMenuItem";
+            this.bulkToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.bulkToolStripMenuItem.Text = "Bulk";
+            this.bulkToolStripMenuItem.ToolTipText = "Bulk change of elements (experimental)";
+            this.bulkToolStripMenuItem.Click += new System.EventHandler(this.bulkToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(273, 6);
             // 
             // HoReverseGui
             // 
@@ -3387,7 +3410,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddNoteAndLink_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "Element Note");
+            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "Element Note", bound:true);
         }
         /// <summary>
         /// Show Note:
@@ -3399,7 +3422,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddElementNote_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "");
+            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "", bound:false);
         }
         /// <summary>
         /// Show constraint
@@ -3411,7 +3434,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddConstraint_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "");
+            hoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "", bound:false);
         }
 
         /// <summary>
@@ -3963,7 +3986,64 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
 
+        private void bulkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BulkElement bulkElement;
+            string json = @"{
+                            'Name'        : 'Action ASIL B',
+                            'Description' : 'Set Stereotype and ASIL B for Action',  
+                            'Stereotypes' : [
+                                                  'ZF_LE::LE Action'
+                                            ], 
+                            'TaggedValues' : [ 
+                                                  {'Name' : 'ZF_LE::LE Action::Criticality', 'Value' : 'ASIL B' }
+                                             ]
+                            }";
+            try
+            {
+                bulkElement = JsonConvert.DeserializeObject<BulkElement>(json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"JSON:\r\n{json}\r\n{ex}", @"Error deserialize JSON");
+                return;
+            }
+            
 
+            var eaDia = new EaDiagram(_repository);
+            foreach (EA.DiagramObject diaObj in eaDia.SelObjects)
+            {
+                EA.Element el = _repository.GetElementByID(diaObj.ElementID);
+                // set all stereotypes
+                foreach (var st in bulkElement.Stereotypes)
+                {
+                    el.StereotypeEx = st;
+                    
+                }
+
+                el.Update();
+                foreach (var tag in bulkElement.TaggedValues)
+                {
+                    string name = tag.Name;
+                    string value = tag.Value;
+                    foreach (EA.TaggedValue tg in el.TaggedValues)
+                    {
+                        if (tg.FQName == name)
+                        {
+                            tg.Value = value;
+                        }
+
+                        tg.Update();
+                    }
+                    el.TaggedValues.Refresh();
+                    
+                }
+                el.Update();
+            }
+
+
+
+        }
     }
 }
 

@@ -38,7 +38,7 @@ Let's discuss it, but it works.
 
 2.1.5 Installaller can handle no admin install for user install
 - Create/Update activity (fix skipped parameter)
-- Fixes
+- Fixes (e.g.Features, Constraint, Note)
 - Install without Admin rights (per user install)
 -- Click on *.msi
 -- Advanced!!!

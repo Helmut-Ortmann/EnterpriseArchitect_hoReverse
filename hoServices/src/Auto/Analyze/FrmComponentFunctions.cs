@@ -413,14 +413,9 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             Clipboard.SetText(functionName);
 
             // Estimate line number
-            string lineNumber = "-1";
-            if (columnNameLineNumber == "")
-            {
-                lineNumber = GetLineNumber(filePath, functionName).ToString();
-            } else
-            {
-                lineNumber = row.Cells[columnNameLineNumber].Value.ToString();
-            }
+            var lineNumber = columnNameLineNumber == "" 
+                ? GetLineNumber(filePath, functionName).ToString() 
+                : row.Cells[columnNameLineNumber].Value.ToString();
 
             lineNumber = lineNumber != "-1"
                 ? $":{lineNumber} -g"
@@ -515,6 +510,35 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         private void FrmComponentFunctions_Shown(object sender, EventArgs e)
         {
             this.TopMost = true;
+        }
+
+        /// <summary>
+        /// Output the Column Header/Technical name as Tooltip. It uses the data column of the associated data source. 
+        /// Disable Tooltip in the grid (ShowCellToolTips = false;).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        // Enter a cell
+        private void grdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 && e.ColumnIndex != -1)
+
+            {
+                DataGridView grid = (DataGridView) sender;
+                var dataPropertyName = grid.Columns[e.ColumnIndex].DataPropertyName;
+               toolTip1.SetToolTip((DataGridView) sender, dataPropertyName);
+            }
+            else
+            {
+                toolTip1.Hide((DataGridView) sender);
+            }
+
+        }
+
+        private void filterToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/Analyze#filter");
+
         }
     }
 }

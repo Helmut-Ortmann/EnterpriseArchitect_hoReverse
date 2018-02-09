@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="src\Extension\EaExtensionClass.cs" />
     <Compile Include="src\hoServices.cs" />
+    <Compile Include="src\Json\BulkElement.cs" />
     <Compile Include="src\Move\Move.cs" />
     <Compile Include="src\ServicesCall.cs" />
     <Compile Include="src\PortServices.cs" />

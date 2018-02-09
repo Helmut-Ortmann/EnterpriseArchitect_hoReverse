@@ -65,6 +65,7 @@
             this.tabPageRequired = new System.Windows.Forms.TabPage();
             this.grdRequiredInterfaces = new System.Windows.Forms.DataGridView();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.filterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -99,7 +100,7 @@
             // printToolStripMenuItem
             // 
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printToolStripMenuItem.Text = "Print";
             this.printToolStripMenuItem.ToolTipText = "Print to stadard printer in landscape ";
             this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
@@ -108,6 +109,7 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
+            this.filterToolStripMenuItem1,
             this.filterToolStripMenuItem,
             this.analyzeCCToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -117,22 +119,24 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.filterToolStripMenuItem.Text = "Filter";
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.filterToolStripMenuItem.Text = "Filter Microsoft Reference";
+            this.filterToolStripMenuItem.ToolTipText = "Microsoft page which describes filter.";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
             // analyzeCCToolStripMenuItem
             // 
             this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
-            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
+            this.analyzeCCToolStripMenuItem.ToolTipText = "Basics to analyze C/C++";
             this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
@@ -176,35 +180,36 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(201, 93);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(268, 85);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(236, 13);
+            this.label2.Size = new System.Drawing.Size(349, 15);
             this.label2.TabIndex = 9;
-            this.label2.Text = "Filter are \' AND \', \'*\' at start for arbitrary beginning";
+            this.label2.Text = "Filter are \' AND \' interwinded  , \'*\' at start for arbitrary beginning.";
             // 
             // txtFilterFunctionName
             // 
-            this.txtFilterFunctionName.Location = new System.Drawing.Point(24, 92);
+            this.txtFilterFunctionName.Location = new System.Drawing.Point(4, 85);
             this.txtFilterFunctionName.Name = "txtFilterFunctionName";
-            this.txtFilterFunctionName.Size = new System.Drawing.Size(171, 20);
+            this.txtFilterFunctionName.Size = new System.Drawing.Size(263, 20);
             this.txtFilterFunctionName.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
             this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathImpl
             // 
-            this.txtFilterPathImpl.Location = new System.Drawing.Point(487, 90);
+            this.txtFilterPathImpl.Location = new System.Drawing.Point(620, 85);
             this.txtFilterPathImpl.Name = "txtFilterPathImpl";
-            this.txtFilterPathImpl.Size = new System.Drawing.Size(164, 20);
+            this.txtFilterPathImpl.Size = new System.Drawing.Size(197, 20);
             this.txtFilterPathImpl.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
             this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathCallee
             // 
-            this.txtFilterPathCallee.Location = new System.Drawing.Point(657, 90);
+            this.txtFilterPathCallee.Location = new System.Drawing.Point(823, 85);
             this.txtFilterPathCallee.Name = "txtFilterPathCallee";
-            this.txtFilterPathCallee.Size = new System.Drawing.Size(172, 20);
+            this.txtFilterPathCallee.Size = new System.Drawing.Size(219, 20);
             this.txtFilterPathCallee.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathCallee, resources.GetString("txtFilterPathCallee.ToolTip"));
             this.txtFilterPathCallee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
@@ -343,8 +348,10 @@
             this.grdProvidedInterfaces.Name = "grdProvidedInterfaces";
             this.grdProvidedInterfaces.RowHeadersVisible = false;
             this.grdProvidedInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdProvidedInterfaces.ShowCellToolTips = false;
             this.grdProvidedInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdProvidedInterfaces.TabIndex = 2;
+            this.grdProvidedInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdInterfaces_CellMouseEnter);
             // 
             // contextMenuStrip1
             // 
@@ -416,8 +423,17 @@
             this.grdRequiredInterfaces.Name = "grdRequiredInterfaces";
             this.grdRequiredInterfaces.RowHeadersVisible = false;
             this.grdRequiredInterfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdRequiredInterfaces.ShowCellToolTips = false;
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdRequiredInterfaces.TabIndex = 0;
+            this.grdRequiredInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdInterfaces_CellMouseEnter);
+            // 
+            // filterToolStripMenuItem1
+            // 
+            this.filterToolStripMenuItem1.Name = "filterToolStripMenuItem1";
+            this.filterToolStripMenuItem1.Size = new System.Drawing.Size(209, 22);
+            this.filterToolStripMenuItem1.Text = "Filter";
+            this.filterToolStripMenuItem1.Click += new System.EventHandler(this.filterToolStripMenuItem1_Click);
             // 
             // FrmComponentFunctions
             // 
@@ -483,5 +499,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyCalleeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analyzeCCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem1;
     }
 }
