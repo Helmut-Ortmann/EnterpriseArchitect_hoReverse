@@ -110,6 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkChange\BulkElement.cs" />
     <Compile Include="COM\Com.cs" />
     <Compile Include="Cutils\Cutil.cs" />
     <Compile Include="DB\SQLite.cs" />

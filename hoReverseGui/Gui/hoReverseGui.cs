@@ -18,7 +18,7 @@ using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
 using hoLinqToSql.LinqUtils;
 
-using EaServices.Json;
+using hoUtils.BulkChange;
 using Newtonsoft.Json;
 
 
@@ -49,10 +49,13 @@ namespace hoReverse.Reverse
         private bool _autoCppIsRunning = false;
         private bool _autoCppIsRequested = false;
 
-
+        // Handling Settings.json
+        // - Diagram Styles
+        // - Bulk changes of EA items
         private const string JasonFile = @"Settings.json";
         private string _jasonFilePath;
         private DiagramFormat _diagramStyle;
+
 
         // Do Menu entries already inserted
         private bool _doMenuDiagramStyleInserted = false;
@@ -3997,16 +4000,12 @@ Please restart EA. During restart hoTools loads the default settings.",
         }
         private void bulkActivityASILBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string json = @"{
-                            'Name'        : 'Activity ASIL B',
-                            'Description' : 'Set Stereotype and ASIL B for Activity', 
-                            'Type'        : 'Activity',
-                            'Stereotypes' : [
-                                                  'ZF_LE::LE Activity'
-                                            ], 
-                            'TaggedValues' : [ 
-                                                  {'Name' : 'ZF_LE::LE Activity::Criticality', 'Value' : 'ASIL B' }
-                                             ]
+            string json = @"{ 'Name'                 : 'Activity ASIL B',
+                                'Description'       : 'Set Stereotype and ASIL B for Activity', 
+                                'TypesCheck'        : ['Activity'],
+                                'StereotypesCheck'  : [],
+                                'StereotypesApply'  : ['ZF_LE::LE Activity'], 
+                                'TaggedValuesApply' : [ {'Name' : 'ZF_LE::LE Activity::Criticality', 'Value' : 'ASIL B' } ]
                             }";
             BulkChange(json);
 
@@ -4015,16 +4014,12 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void bulkActionAsilBToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            string json = @"{
-                            'Name'        : 'Action ASIL B',
-                            'Description' : 'Set Stereotype and ASIL B for Action', 
-                            'Type'        : 'Action',
-                            'Stereotypes' : [
-                                                  'ZF_LE::LE Action'
-                                            ], 
-                            'TaggedValues' : [ 
-                                                  {'Name' : 'ZF_LE::LE Action::Criticality', 'Value' : 'ASIL B' }
-                                             ]
+            string json = @"{ 'Name'              : 'Action ASIL B',
+                                'Description'       : 'Set Stereotype and ASIL B for Action', 
+                                'TypesCheck'        : ['Action'],
+                                'StereotypesCheck'  : [],
+                                'StereotypesApply'  : ['ZF_LE::LE Action'], 
+                                'TaggedValuesApply' : [ {'Name' : 'ZF_LE::LE Action::Criticality', 'Value' : 'ASIL B' } ]
                             }";
             BulkChange(json);
         }
@@ -4052,16 +4047,13 @@ Please restart EA. During restart hoTools loads the default settings.",
             foreach (EA.DiagramObject diaObj in eaDia.SelObjects)
             {
                 EA.Element el = _repository.GetElementByID(diaObj.ElementID);
-                if (bulkElement.Type == null || (bulkElement.Type != null && bulkElement.Type == el.Type))
+                // Check if bulk change is to apply for the current element
+                if (BulkChangeCheck(bulkElement, el) )
                 {
-                    // set all stereotypes
-                    foreach (var st in bulkElement.Stereotypes)
-                    {
-                        el.StereotypeEx = st;
-                    }
-
+                    // Apply changes to the current element
+                    el.StereotypeEx = String.Join(",", bulkElement.StereotypesApply);
                     el.Update();
-                    foreach (var tag in bulkElement.TaggedValues)
+                    foreach (var tag in bulkElement.TaggedValuesApply)
                     {
                         string name = tag.Name;
                         string value = tag.Value;
@@ -4079,8 +4071,31 @@ Please restart EA. During restart hoTools loads the default settings.",
                     }
 
                     el.Update();
-                }
+                    }
+               
             }
+        }
+        /// <summary>
+        /// Check of for current element an bulk change is to apply. It checks Stereotype and Type.
+        /// </summary>
+        /// <param name="bulkElement">Checking rules</param>
+        /// <param name="el">Current EA element to check</param>
+        /// <returns></returns>
+        private bool BulkChangeCheck(BulkElement bulkElement, EA.Element el)
+        {
+            // Check if for the current element type the change is to apply
+            if (bulkElement.TypesCheck == null ||
+                ( bulkElement.TypesCheck != null && bulkElement.TypesCheck.Contains(el.Type)))
+            {
+                // Check if for the current element stereotype the change is to apply
+                if (bulkElement.StereotypesCheck == null || 
+                    bulkElement.StereotypesCheck.Count == 0 ||
+                    (bulkElement.StereotypesCheck != null &&
+                     bulkElement.StereotypesCheck.Contains(el.Stereotype)))
+                return true;
+            }
+
+            return false;
         }
 
         

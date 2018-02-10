@@ -7,6 +7,7 @@ using EA;
 using hoReverse.hoUtils.COM;
 using Newtonsoft.Json.Linq;
 using hoReverse.hoUtils.SQL;
+using hoUtils.BulkChange;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -18,7 +19,11 @@ namespace hoReverse.hoUtils.Diagrams
 {
 
 
-
+    /// <summary>
+    /// Handles
+    /// - Diagram formats
+    /// - Bulk changes to EA elements
+    /// </summary>
     public class DiagramFormat
     {
         // Diagram Styles
@@ -27,6 +32,9 @@ namespace hoReverse.hoUtils.Diagrams
         public List<DiagramObjectStyleItem> DiagramObjectStyleItems { get; }
         // Diagram Link Styles
         public List<DiagramLinkStyleItem> DiagramLinkStyleItems { get; }
+
+        // Bulk Item Change
+        public List<BulkElement> BulkElementItems { get; }
 
         /// <summary>
         /// Constructor
@@ -62,6 +70,7 @@ Consider Resetting to factory settings
             DiagramStyleItems = (List<DiagramStyleItem>)GetConfigurationStyleItems<DiagramStyleItem>(search, "DiagramStyle");
             DiagramObjectStyleItems = (List<DiagramObjectStyleItem>)GetConfigurationStyleItems<DiagramObjectStyleItem>(search, "DiagramObjectStyle");
             DiagramLinkStyleItems = (List<DiagramLinkStyleItem>)GetConfigurationStyleItems<DiagramLinkStyleItem>(search, "DiagramLinkStyle");
+            BulkElementItems = (List<BulkElement>)GetConfigurationStyleItems<BulkElement>(search, "BulkItem");
 
 
         }
