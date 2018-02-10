@@ -3000,6 +3000,7 @@ namespace hoReverse.Reverse
                     "Change DiagramLink Style",
                     "Change the DiagramLink Style\r\nSelect\r\n-Diagram \r\n-DiagramLink",
                     ChangeDiagramLinkStylePackage_Click));
+                _doToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 // Bulk change EA items
                 _doToolStripMenuItem.DropDownItems.Add(_diagramStyle.ConstructStyleToolStripMenuDiagram(
                     _diagramStyle.BulkElementItems,
