@@ -35,10 +35,15 @@ Let's discuss it, but it works.
 
 ## News
 
+2.1.6  Bulk Change Diagram elements
+-  Bulk change Diagram elements (Stereotype, Tagged Values)
+-- Configuration in %appdata%roaming\ho\hoReverse\settings.json
+- Error fixes
+-- - Fixes (e.g.Features, Constraint, Note)
+
 
 2.1.5 Installaller can handle no admin install for user install
 - Create/Update activity (fix skipped parameter)
-- Fixes (e.g.Features, Constraint, Note)
 - Install without Admin rights (per user install)
 -- Click on *.msi
 -- Advanced!!!

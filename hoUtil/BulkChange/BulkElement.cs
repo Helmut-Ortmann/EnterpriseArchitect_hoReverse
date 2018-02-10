@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using hoUtils.Gui;
 
 namespace hoUtils.BulkChange
 {
@@ -8,7 +9,7 @@ namespace hoUtils.BulkChange
     /// <summary>
     /// Deserialize json for bulk change of EA items
     /// </summary>
-    public class BulkElement
+    public class BulkElement : IMenuItem
     {
         public string Name { get; set; }
         public string Description { get; set; }

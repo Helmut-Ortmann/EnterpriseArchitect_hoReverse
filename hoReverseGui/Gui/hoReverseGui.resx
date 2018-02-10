@@ -120,9 +120,6 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
-  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>130, 17</value>
-  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -213,6 +210,60 @@ If the diagram items selected (Elements, Packages) the hoReverse sorts them alph
   <metadata name="_menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>226, 17</value>
   </metadata>
+  <data name="settingsDiagramStylesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Change settings 'Bulk change Diagram Style':
+- Opens the Settings.json file to edit it
+- c:\users\&lt;user&gt;\AppData\Roaming\ho\hoTools\Setting.json
+
+Function:
+- Package, Element, Diagrams
+- Package recursive
+- Templates in Settings.json
+
+One Click, and you have the Diagram Styles according to your selection changed.
+</value>
+  </data>
+  <data name="_createActivityForOperationToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Create/Update Activity for Method according to selected context:
+
+Select:
+- Method/Operation
+- Class/Interface
+- Package
+- Activity (only update Activity parameter)
+
+It creates:
+- Package with name of Method
+- Activity with name of Method
+- Activity Parameter
+- Link Method to Behavior (Activity)
+- Activity Diagram with name of Method (Activity, ...)
+
+It updates Activities:
+- Name, Stereotype
+- Parameter and type
+
+Because the Activity is possible visualized in more than one diagram you have to take care of the different diagrams.
+
+</value>
+  </data>
+  <data name="moveUsageToElementToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Move all usages from source to target element
+- Source: Fist selected Element in Diagram
+- Target: Second selected Element in Diagram
+
+It updates:
+- Links
+- Attribute type
+- Operation type
+- Operation Parameter type
+- Apperance in Diagrams
+- Appearance in t_xref (conveyed items)
+- Generalization
+- Connector updates source and target
+- Parent of object
+- Type of object</value>
+  </data>
   <data name="_insertAttributeToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Insert &amp; update  attributes from C-Code for selected element:
 - Class/Interface: Attribute (macros)
@@ -287,60 +338,6 @@ define, a = b     add '&lt;&lt;define&gt;&gt;,&lt;&lt; a=b&gt;&gt;'
 empty                add '&lt;&lt;define&gt;&gt;'
 
 </value>
-  </data>
-  <data name="settingsDiagramStylesToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Change settings 'Bulk change Diagram Style':
-- Opens the Settings.json file to edit it
-- c:\users\&lt;user&gt;\AppData\Roaming\ho\hoTools\Setting.json
-
-Function:
-- Package, Element, Diagrams
-- Package recursive
-- Templates in Settings.json
-
-One Click, and you have the Diagram Styles according to your selection changed.
-</value>
-  </data>
-  <data name="_createActivityForOperationToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Create/Update Activity for Method according to selected context:
-
-Select:
-- Method/Operation
-- Class/Interface
-- Package
-- Activity (only update Activity parameter)
-
-It creates:
-- Package with name of Method
-- Activity with name of Method
-- Activity Parameter
-- Link Method to Behavior (Activity)
-- Activity Diagram with name of Method (Activity, ...)
-
-It updates Activities:
-- Name, Stereotype
-- Parameter and type
-
-Because the Activity is possible visualized in more than one diagram you have to take care of the different diagrams.
-
-</value>
-  </data>
-  <data name="moveUsageToElementToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Move all usages from source to target element
-- Source: Fist selected Element in Diagram
-- Target: Second selected Element in Diagram
-
-It updates:
-- Links
-- Attribute type
-- Operation type
-- Operation Parameter type
-- Apperance in Diagrams
-- Appearance in t_xref (conveyed items)
-- Generalization
-- Connector updates source and target
-- Parent of object
-- Type of object</value>
   </data>
   <data name="showExternalComponentFunctionsToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Show the provided and required functions for each EA Component.

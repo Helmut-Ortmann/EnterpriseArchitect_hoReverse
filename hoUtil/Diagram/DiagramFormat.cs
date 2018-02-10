@@ -8,6 +8,7 @@ using hoReverse.hoUtils.COM;
 using Newtonsoft.Json.Linq;
 using hoReverse.hoUtils.SQL;
 using hoUtils.BulkChange;
+using hoUtils.Gui;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -45,12 +46,12 @@ namespace hoReverse.hoUtils.Diagrams
         {
 
             // use 'Deserializing Partial JSON Fragments'
-            JObject search;
+            JObject jObject;
             try
             {
                 // Read JSON
                 string text = HoUtil.ReadAllText(jasonFilePath);
-                search = JObject.Parse(text);
+                jObject = JObject.Parse(text);
             }
             catch (Exception e)
             {
@@ -67,10 +68,10 @@ Consider Resetting to factory settings
             //----------------------------------------------------------------------
             // Deserialize "DiagramStyle", "DiagramObjectStyle",""DiagramLinkStyle"
             // get JSON result objects into a list
-            DiagramStyleItems = (List<DiagramStyleItem>)GetConfigurationStyleItems<DiagramStyleItem>(search, "DiagramStyle");
-            DiagramObjectStyleItems = (List<DiagramObjectStyleItem>)GetConfigurationStyleItems<DiagramObjectStyleItem>(search, "DiagramObjectStyle");
-            DiagramLinkStyleItems = (List<DiagramLinkStyleItem>)GetConfigurationStyleItems<DiagramLinkStyleItem>(search, "DiagramLinkStyle");
-            BulkElementItems = (List<BulkElement>)GetConfigurationStyleItems<BulkElement>(search, "BulkItem");
+            DiagramStyleItems = (List<DiagramStyleItem>)GetConfigurationStyleItems<DiagramStyleItem>(jObject, "DiagramStyle");
+            DiagramObjectStyleItems = (List<DiagramObjectStyleItem>)GetConfigurationStyleItems<DiagramObjectStyleItem>(jObject, "DiagramObjectStyle");
+            DiagramLinkStyleItems = (List<DiagramLinkStyleItem>)GetConfigurationStyleItems<DiagramLinkStyleItem>(jObject, "DiagramLinkStyle");
+            BulkElementItems = (List<BulkElement>)GetConfigurationStyleItems<BulkElement>(jObject, "BulkItems");
 
 
         }
@@ -133,7 +134,7 @@ Consider Resetting to factory settings:
             // Add item of possible style as items in drop down
             foreach (T style in items)
             {
-                DiagramGeneralStyleItem style1 = style as DiagramGeneralStyleItem;
+                var style1 = style as IMenuItem;
                 ToolStripMenuItem item = new ToolStripMenuItem
                 {
                     Text = style1.Name,
@@ -146,6 +147,8 @@ Consider Resetting to factory settings:
             return insertTemplateMenuItem;
 
         }
+
+       
 
 
 

@@ -1,5 +1,17 @@
-﻿{
-  'DiagramStyle':
+﻿//---------------------------------------------------------------------------------------------------------------
+// Settings.json
+//---------------------------------------------------------------------------------------------------------------
+// Settings to::
+// - Set Diagram styles
+// - Bulk change of EA items
+//
+// Distribution::
+// - Original: Setup
+// - hoReverseRoot: Operating for initial values
+// - %appdata%Roaming\ho\hoReverse  Current values
+{
+
+  "DiagramStyle":
   //  Possible DiagramStyles:
   //  PDATA:
   //HideRel=0;ShowTags=0;ShowReqs=0;ShowCons=0;OpParams=2;ShowSN=0;ScalePI=1;PPgs.cx=1;PPgs.cy=1;PSize=9;ShowIcons=1;
@@ -57,7 +69,7 @@
       "StyleEX": "ShowNotes=1"
     }
   ],
-  'DiagramObjectStyle':
+  "DiagramObjectStyle":
   [
     // Template for EA DiagramObject styles.
     // Name:         Template name
@@ -133,7 +145,7 @@
       "Property": ""
     }
   ],
-  'DiagramLinkStyle':
+  "DiagramLinkStyle":
   [
     // Name:         Template name
     // Description:  Description for e.g. Tooltip
@@ -255,7 +267,48 @@
       "Style": "",
       "Property": "ConnectorColor=green, ConnectorWidth=3" // default for links 
     }
+  ],
+  // Bulk changes of EA elements
+  //
+  // TypesCheck:         The EA-Types to apply the bulk change
+  // StereotypeCheck:    The Stereotypes to apply the change
+  // StereotypesApply:   Comma separated list of Stereotypes to set, you may use full qualified named like 'ZF_LE::LE Action'
+  // TaggedValuesApply:  The Tagged Values to set, you may use full qualified named like 'ZF_LE::LE Action::Criticality' 
+  "BulkItems" :
+  [
+	 {
+                            "Name"              : "Action ASIL B",
+                            "Description"       : "Set Stereotype and ASIL B for Action", 
+                            "TypesCheck"        : ["Action"],
+                            "StereotypesCheck"  : [""],
+                            "StereotypesApply"  : ["ZF_LE::LE Action"], 
+                            "TaggedValuesApply" : [ {"Name" : "ZF_LE::LE Action::Criticality", "Value" : "ASIL B" } ]
+    },
+	{
+                            "Name"              : "Activity ASIL B",
+                            "Description"       : "Set Stereotype and ASIL B for Activity", 
+                            "TypesCheck"        : ["Activity"],
+                            "StereotypesCheck"  : [""],
+                            "StereotypesApply"  : ["ZF_LE::LE Activity"], 
+                            "TaggedValuesApply" : [ {"Name" : "ZF_LE::LE Activity::Criticality", "Value" : "ASIL B" } ]
+    },
+    {
+        "Name"              : "Action ASIL C",
+        "Description"       : "Set Stereotype and ASIL C for Action", 
+        "TypesCheck"        : ["Action"],
+        "StereotypesCheck"  : [""],
+        "StereotypesApply"  : ["ZF_LE::LE Action"], 
+        "TaggedValuesApply" : [ {"Name" : "ZF_LE::LE Action::Criticality", "Value" : "ASIL C" } ]
+    },
+    {
+        "Name"              : "Activity ASIL C",
+        "Description"       : "Set Stereotype and ASIL C for Activity", 
+        "TypesCheck"        : ["Activity"],
+        "StereotypesCheck"  : [""],
+        "StereotypesApply"  : ["ZF_LE::LE Activity"], 
+        "TaggedValuesApply" : [ {"Name" : "ZF_LE::LE Activity::Criticality", "Value" : "ASIL C" } ]
+    }
+	
   ]
-
 }
 
