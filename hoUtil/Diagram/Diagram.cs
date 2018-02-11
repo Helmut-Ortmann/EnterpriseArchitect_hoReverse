@@ -25,6 +25,11 @@ namespace hoReverse.hoUtils.Diagrams
         // List of selected Elements (Note: Element can also be a package)
         public List<EA.Element> SelElements { get; } = new List<EA.Element>();
 
+        public List<EA.Element> TreeSelectedElements = new List<EA.Element>();
+        public EA.Package TreeSelectedPackage;
+
+
+
         public bool IsSelectedObjects { get; }
 
         public EA.Diagram Dia => _dia;
@@ -70,7 +75,11 @@ namespace hoReverse.hoUtils.Diagrams
             IsSelectedObjects = false;
 
             EA.Diagram dia = rep.GetCurrentDiagram();
-            if (dia == null) return;
+            if (dia == null)
+            {
+                GetTreeSelected();
+                return;
+            }
 
             EA.ObjectType contextObjectType = Rep.GetContextItemType();
 
@@ -144,6 +153,21 @@ namespace hoReverse.hoUtils.Diagrams
 
         }
         #endregion
+        /// <summary>
+        /// Get tree selected elements. These are the selected elements or the selected package
+        /// </summary>
+        private void GetTreeSelected()
+        {
+            EA.Collection col = _rep.GetTreeSelectedElements();
+            if (col.Count == 0) TreeSelectedPackage = _rep.GetTreeSelectedPackage();
+            else
+            {
+                foreach (EA.Element c in col)
+                {
+                    TreeSelectedElements.Add(c);
+                }
+            }
+        }
 
         #region ReloadSelectedObjectsAndConnector
         /// <summary>
