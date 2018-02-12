@@ -75,7 +75,8 @@ namespace hoReverse.hoUtils.Diagrams
             IsSelectedObjects = false;
 
             EA.Diagram dia = rep.GetCurrentDiagram();
-            if (dia == null)
+            // Nothing selected
+            if (dia == null || (dia.SelectedConnector == null && dia.SelectedObjects.Count == 0) )
             {
                 GetTreeSelected();
                 return;

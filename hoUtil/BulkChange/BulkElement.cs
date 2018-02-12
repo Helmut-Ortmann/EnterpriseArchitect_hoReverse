@@ -17,6 +17,7 @@ namespace hoUtils.BulkChange
         public IList<string> StereotypesCheck { get; set; }
         public IList<string> StereotypesApply { get; set; }
         public IList<Tv> TaggedValuesApply { get; set; }
+        public IList<string> PropertiesApply { get; set; }
     }
    /// <summary>
    /// Tagged Value
