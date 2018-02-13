@@ -35,7 +35,7 @@ namespace hoReverse.hoUtils.Diagrams
         public List<DiagramLinkStyleItem> DiagramLinkStyleItems { get; }
 
         // Bulk Item Change
-        public List<BulkElement> BulkElementItems { get; }
+        public List<BulkElementItem> BulkElementItems { get; }
 
         /// <summary>
         /// Constructor
@@ -71,7 +71,7 @@ Consider Resetting to factory settings
             DiagramStyleItems = (List<DiagramStyleItem>)GetConfigurationStyleItems<DiagramStyleItem>(jObject, "DiagramStyle");
             DiagramObjectStyleItems = (List<DiagramObjectStyleItem>)GetConfigurationStyleItems<DiagramObjectStyleItem>(jObject, "DiagramObjectStyle");
             DiagramLinkStyleItems = (List<DiagramLinkStyleItem>)GetConfigurationStyleItems<DiagramLinkStyleItem>(jObject, "DiagramLinkStyle");
-            BulkElementItems = (List<BulkElement>)GetConfigurationStyleItems<BulkElement>(jObject, "BulkItems");
+            BulkElementItems = (List<BulkElementItem>)GetConfigurationStyleItems<BulkElementItem>(jObject, "BulkItems");
 
 
         }

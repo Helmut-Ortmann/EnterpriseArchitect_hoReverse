@@ -26,7 +26,6 @@ using File = System.IO.File;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using hoReverse.hoUtil.EaCollection;
 using hoReverse.hoUtilsVC;
-using LinqToDB;
 using CustomProperty = EA.CustomProperty;
 using DiagramObject = EA.DiagramObject;
 
@@ -91,7 +90,6 @@ namespace hoReverse.Services
 
         #endregion
 
-       
         /// <summary>
         /// Sort diagram elements alphabetic
         /// </summary>
