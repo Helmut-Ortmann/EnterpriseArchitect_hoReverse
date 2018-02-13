@@ -1512,8 +1512,8 @@ namespace hoReverse.Reverse
             // settingsDiagramStylesToolStripMenuItem
             // 
             this.settingsDiagramStylesToolStripMenuItem.Name = "settingsDiagramStylesToolStripMenuItem";
-            this.settingsDiagramStylesToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
-            this.settingsDiagramStylesToolStripMenuItem.Text = "Settings \'Bulk change Diagram Style, Element\'";
+            this.settingsDiagramStylesToolStripMenuItem.Size = new System.Drawing.Size(321, 22);
+            this.settingsDiagramStylesToolStripMenuItem.Text = "Settings \'Bulk change Diagram Style\', \'Element\'";
             this.settingsDiagramStylesToolStripMenuItem.ToolTipText = resources.GetString("settingsDiagramStylesToolStripMenuItem.ToolTipText");
             this.settingsDiagramStylesToolStripMenuItem.Click += new System.EventHandler(this.settingsDiagramStylesToolStripMenuItem_Click);
             // 
@@ -3009,6 +3009,11 @@ namespace hoReverse.Reverse
                     "Bulk item change",
                     "Change selected EA items\r\nSelect\r\n-Diagram objects",
                     BulkChangeEaItems_Click));
+                _doToolStripMenuItem.DropDownItems.Add(_diagramStyle.ConstructStyleToolStripMenuDiagram(
+                    _diagramStyle.BulkElementItems,
+                    "Bulk item change Package recursive",
+                    "Change selected EA items in Package (recursive)\r\nSelect\r\n-Package",
+                    BulkChangeEaItemsRecursive_Click));
 
 
 
@@ -3537,6 +3542,14 @@ namespace hoReverse.Reverse
             BulkElement bulkElement = (BulkElement)item.Tag;
             BulkChange(bulkElement);
         }
+        void BulkChangeEaItemsRecursive_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            Debug.Assert(item != null, nameof(item) + " != null");
+            BulkElement bulkElement = (BulkElement)item.Tag;
+            BulkChangeRecursive(bulkElement);
+
+        }
 
         /// <summary>
         /// Change diagram object style for selected diagram objects or all diagram objects if nothing selected
@@ -4021,14 +4034,52 @@ Please restart EA. During restart hoTools loads the default settings.",
 
             if (eaDia.TreeSelectedPackage != null)
             {
-                foreach (EA.Element el in eaDia.TreeSelectedPackage.Elements)
+                BulkChangePackage(bulkElement, eaDia.TreeSelectedPackage, pkgRecursive:false, elRecursive:true);
+                
+            }
+
+        }
+
+        /// <summary>
+        /// Bulk change Element properties for package recursive
+        /// </summary>
+        /// <param name="bulkElement"></param>
+        private void BulkChangeRecursive(BulkElement bulkElement)
+        {
+            if (_repository.GetContextItem(out var contextItem) == EA.ObjectType.otPackage)
+            {
+                BulkChangePackage(bulkElement, (EA.Package)contextItem, pkgRecursive: true, elRecursive: true);
+                return;
+            }
+
+            
+        }
+        /// <summary>
+        /// Bulk change all Elements in package. It also supports recursion of package and elements
+        /// </summary>
+        /// <param name="bulkElement"></param>
+        /// <param name="pkg"></param>
+        /// <param name="pkgRecursive"></param>
+        /// <param name="elRecursive"></param>
+        private void BulkChangePackage(BulkElement bulkElement, EA.Package pkg, bool pkgRecursive, bool elRecursive)
+        {
+            // All selected elements in tree
+            foreach (EA.Element el in pkg.Elements)
+            {
+                BulkChangeElement(bulkElement, el, recursive:elRecursive);
+            }
+
+            if (pkgRecursive)
+            {
+                foreach (EA.Package pkgSub in pkg.Packages)
                 {
-                    BulkChangeElement(bulkElement, el, recursive:true);
-                   
+                    BulkChangePackage(bulkElement, pkgSub, pkgRecursive: true, elRecursive: elRecursive);
                 }
             }
 
         }
+
+
         /// <summary>
         /// Change an Element:
         /// - Stereotype
@@ -4040,7 +4091,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="recursive"></param>
         private void BulkChangeElement(BulkElement bulkElement, Element el, bool recursive=false)
         {
-// Check if bulk change is to apply for the current element
+            // Check if bulk change is to apply for the current element
             if (BulkChangeCheck(bulkElement, el))
             {
                 // Apply changes to the current element
@@ -4051,8 +4102,9 @@ Please restart EA. During restart hoTools loads the default settings.",
                 // Tagged Values
                 foreach (var tag in bulkElement.TaggedValuesApply)
                 {
-                    string name = tag.Name;
-                    string value = tag.Value;
+                    string name = tag.Name.Trim();
+                    string value = tag.Value.Trim();
+                    if (name == "") continue;
                     foreach (EA.TaggedValue tg in el.TaggedValues)
                     {
                         // Check complete name and name without namespace
@@ -4114,6 +4166,9 @@ Please restart EA. During restart hoTools loads the default settings.",
                             break;
                         case "Visibility":
                             el.Visibility = propertyValue;
+                            break;
+                        case "StyleEx":
+                            el.StyleEx = propertyValue;
                             break;
                     
                     }
