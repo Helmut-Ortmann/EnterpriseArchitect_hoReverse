@@ -397,14 +397,14 @@ namespace hoReverse
                         HoUtil.SetConnectorGuard(_repository, connectorId, "no");
                     }
 
-                    hoService.SetLineStyle(repository, lineStyle);
+                    HoService.SetLineStyle(repository, lineStyle);
                     return true;
 
                 case "Statechart":
                     HoUtil.GetDiagramLinkFromConnector(dia, connectorId);
                     lineStyle = _addinSettings.StatechartLineStyle.Substring(0, 2).ToUpper();
                     if (lineStyle == "NO" ) return false;
-                    hoService.SetLineStyle(repository, lineStyle);
+                    HoService.SetLineStyle(repository, lineStyle);
                     return true;
 
                 case "Logical":
@@ -709,52 +709,52 @@ namespace hoReverse
                     break;
 
                 case MenuUpdateOperationTypes:
-                    hoService.ReconcileOperationTypesWrapper(repository);
+                    HoService.ReconcileOperationTypesWrapper(repository);
                     break;
 
                 case MenuSetXmlPath:
-                    hoService.SetNewXmlPath(repository);
+                    HoService.SetNewXmlPath(repository);
                     break;
 
                 case  MenuGetAllLatest:
-                    hoService.GetVcLatestRecursive(repository);
+                    HoService.GetVcLatestRecursive(repository);
                      break;
 
                 case MenuSetSvnPackageTaggedValues:
                     if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
                      pkg = (EA.Package)repository.GetContextObject();
-                     hoService.SetDirectoryTaggedValues(_repository, pkg);
+                     HoService.SetDirectoryTaggedValues(_repository, pkg);
                      break;
 
                 case MenuSetSvnPackageTaggedValuesRecursive:
-                     hoService.SetTaggedValueGui(repository);
+                     HoService.SetTaggedValueGui(repository);
                      break;
 
                 case MenuSetSvnKeywords:
                     if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
                     pkg = (EA.Package)repository.GetContextObject();
-                    hoService.SetSvnProperty(_repository, pkg);
+                    HoService.SetSvnProperty(_repository, pkg);
                      break;
                 
                 case MenuShowTortoiseLog:
                      if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
                     pkg = (EA.Package)repository.GetContextObject();
-                    hoService.GotoSvnLog(_repository, pkg);
+                    HoService.GotoSvnLog(_repository, pkg);
                      break;
 
                 case MenuShowTortoiseRepoBrowser:
                      if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
                     pkg = (EA.Package)repository.GetContextObject();
-                    hoService.GotoSvnBrowser(_repository, pkg);
+                    HoService.GotoSvnBrowser(_repository, pkg);
                      break;
 
 
                 case MenuShowFolder:
-                     hoService.ShowFolder(_repository, isTotalCommander: _addinSettings.FileManagerIsTotalCommander);
+                     HoService.ShowFolder(_repository, isTotalCommander: _addinSettings.FileManagerIsTotalCommander);
                      break;
 
                 case MenuAbout:
@@ -762,33 +762,33 @@ namespace hoReverse
                     break;
 
                 case MenuHelp:
-                    HoUtil.StartFile(hoService.GetAssemblyPath() + "\\" + "hoReverse.chm");
+                    HoUtil.StartFile(HoService.GetAssemblyPath() + "\\" + "hoReverse.chm");
                     break;
 
                 // Line style: Lateral Horizontal 
                 case MenuLineStyleDiaLh:
-                    hoService.SetLineStyle(repository, "LH");
+                    HoService.SetLineStyle(repository, "LH");
 
                     break;
                 // Line style: Lateral Vertical 
                 case MenuLineStyleDiaLv:
                     // all connections of diagram
-                    hoService.SetLineStyle(repository, "LV");
+                    HoService.SetLineStyle(repository, "LV");
                     break;
                 // Line style: Tree Vertical 
                 case MenuLineStyleDiaTv:
-                    hoService.SetLineStyle(repository, "V");
+                    HoService.SetLineStyle(repository, "V");
 
                     break;
 
                 // Line style: Tree Horizental 
                 case MenuLineStyleDiaTh:
-                    hoService.SetLineStyle(repository, "H");
+                    HoService.SetLineStyle(repository, "H");
 
                     break;
                 // Line style: Orthogonal square 
                 case MenuLineStyleDiaOs:
-                    hoService.SetLineStyle(repository, "OS");
+                    HoService.SetLineStyle(repository, "OS");
 
                     break;
 
@@ -820,7 +820,7 @@ namespace hoReverse
 
                 // Start specification (file parameter)
                 case MenuShowSpecification:
-                    hoService.ShowSpecification(repository);
+                    HoService.ShowSpecification(repository);
 
                     break;
 
@@ -867,7 +867,7 @@ namespace hoReverse
 
 
                 case MenuLocateCompositeElementorDiagram:
-                    hoService.NavigateComposite(repository);
+                    HoService.NavigateComposite(repository);
                     break;
 
                 // 
@@ -903,8 +903,8 @@ namespace hoReverse
                     try
                     {
                         Cursor.Current = Cursors.WaitCursor;
-                        hoService.ReconcileOperationTypesWrapper(_repository);
-                        hoService.CreateActivityForOperation(repository);
+                        HoService.ReconcileOperationTypesWrapper(_repository);
+                        HoService.CreateActivityForOperation(repository);
                         Cursor.Current = Cursors.Default;
                     }
                     catch (Exception e10)
@@ -919,13 +919,13 @@ namespace hoReverse
 
                 // get Parameter for Activity
                 case MenuUpdateOperationParameter:
-                    hoService.ReconcileOperationTypesWrapper(_repository);
-                    hoService.UpdateActivityParameter(repository);
+                    HoService.ReconcileOperationTypesWrapper(_repository);
+                    HoService.UpdateActivityParameter(repository);
                     try
                     {
                         Cursor.Current = Cursors.WaitCursor;
-                        hoService.ReconcileOperationTypesWrapper(_repository);
-                        hoService.UpdateActivityParameter(repository);
+                        HoService.ReconcileOperationTypesWrapper(_repository);
+                        HoService.UpdateActivityParameter(repository);
                         Cursor.Current = Cursors.Default;
                     }
                     catch (Exception e10)
@@ -953,22 +953,22 @@ namespace hoReverse
 
 
                 case MenuAddLinkedDiagramNote:
-                    hoService.AddDiagramNote(repository);
+                    HoService.AddDiagramNote(repository);
 
                     break;
 
                 case MenuAddLinkedNote:
-                    hoService.AddElementNote(repository);
+                    HoService.AddElementNote(repository);
 
                     break;
 
                 case MenuLocateType:
-                    hoService.LocateType(repository);
+                    HoService.LocateType(repository);
 
                     break;
 
                 case MenuUsage:
-                    hoService.FindUsage(repository);
+                    HoService.FindUsage(repository);
 
                     break;
 
@@ -1052,7 +1052,7 @@ namespace hoReverse
                     break;
 
                 case MenuCopyGuidToClipboard:
-                    hoService.CopyGuidSqlToClipboard(repository);
+                    HoService.CopyGuidSqlToClipboard(repository);
                     break;
 
 
@@ -1081,11 +1081,11 @@ namespace hoReverse
                     break;
 
                 case MenuDisplayMethodDefinition:
-                    hoService.DisplayOperationForSelectedElement(repository, hoService.DisplayMode.Method);
+                    HoService.DisplayOperationForSelectedElement(repository, HoService.DisplayMode.Method);
                     break;
 
                 case MenuDisplayBehavior:
-                    hoService.DisplayOperationForSelectedElement(repository, hoService.DisplayMode.Behavior);
+                    HoService.DisplayOperationForSelectedElement(repository, HoService.DisplayMode.Behavior);
                     break;
 
 
@@ -1202,23 +1202,23 @@ namespace hoReverse
 
         void btnFinal_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
 
         }
 
         void btnAction_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
 
         }
         
         void btnDecision_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
         }
         void btnMerge_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
         }
 
         ///////////////////////////////////////////
@@ -1241,18 +1241,18 @@ namespace hoReverse
 
             if (dia.Type == "Activity")
             {
-                hoService.InsertInActivtyDiagram(_repository, _hoReverseGui.TxtUserText.Text);
+                HoService.InsertInActivtyDiagram(_repository, _hoReverseGui.TxtUserText.Text);
             }
             else
             {
-                hoService.InsertInterface(_repository, dia, _hoReverseGui.TxtUserText.Text);
+                HoService.InsertInterface(_repository, dia, _hoReverseGui.TxtUserText.Text);
             }
         }
   
         void btnActionFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
 
         }
 
@@ -1275,13 +1275,13 @@ namespace hoReverse
         void btnActivityFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
 
         }
         void btnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
 
         }
 
@@ -1289,7 +1289,7 @@ namespace hoReverse
         void btnDecisionFromText_Click(object sender, EventArgs e)
         {
             string decisionName = _hoReverseGui.TxtUserText.Text.Trim();
-            decisionName = hoService.CreateDecisionFromText(_repository, decisionName);
+            decisionName = HoService.CreateDecisionFromText(_repository, decisionName);
 
         }
 
@@ -1299,7 +1299,7 @@ namespace hoReverse
         }
         void createActivityForOperationToolStripMenuIte_Click(object sender, EventArgs e)
         {
-            hoService.CreateActivityForOperation(_repository);
+            HoService.CreateActivityForOperation(_repository);
         }
         //---------------------------------------------------------------------------------------------------------------
         // Search for Elements, Operation, Attributes, GUID

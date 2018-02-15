@@ -208,7 +208,7 @@ namespace hoReverse.Services.AutoCpp
                 // only files that are in source folder, no library files.
                 if (file.ToLower().Contains(_folderRoot.ToLower()))
                 {
-                    string code = hoService.DeleteComment(HoUtil.ReadAllText(file));
+                    string code = HoService.DeleteComment(HoUtil.ReadAllText(file));
                     Match match = rx.Match(code);
                     while (match.Success)
                     {
@@ -327,7 +327,7 @@ namespace hoReverse.Services.AutoCpp
                 // only files in implementation
                 if (fileName.ToLower().Contains(_folderRoot.ToLower()))
                 {
-                    string code = hoService.DeleteComment(HoUtil.ReadAllText(fileName));
+                    string code = HoService.DeleteComment(HoUtil.ReadAllText(fileName));
                     foreach (var f1 in compImplementations)
                     {
                         

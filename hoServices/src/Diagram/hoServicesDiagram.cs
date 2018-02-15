@@ -10,7 +10,7 @@ using DiagramObject = EA.DiagramObject;
 namespace hoReverse.Services
 {
 
-    public static partial class hoService
+    public static partial class HoService
     {
         /// <summary>
         /// Bulk change Diagram Styles 1 according to Settings.Json 
@@ -449,10 +449,10 @@ namespace hoReverse.Services
                 Cursor.Current = Cursors.WaitCursor;
 
                 // if action update link to operation
-                hoService.UpdateAction(rep);
+                HoService.UpdateAction(rep);
 
-                hoService.ReconcileOperationTypesWrapper(rep);
-                hoService.UpdateActivityParameter(rep);
+                HoService.ReconcileOperationTypesWrapper(rep);
+                HoService.UpdateActivityParameter(rep);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)

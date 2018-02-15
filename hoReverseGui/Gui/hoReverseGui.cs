@@ -459,12 +459,12 @@ namespace hoReverse.Reverse
 
         void btnDisplayBehavior_Click(object sender, EventArgs e)
         {
-            hoService.DisplayOperationForSelectedElement(_repository, hoService.DisplayMode.Behavior);
+            HoService.DisplayOperationForSelectedElement(_repository, HoService.DisplayMode.Behavior);
         }
 
         void btnLocateOperation_Click(object sender, EventArgs e)
         {
-            hoService.DisplayOperationForSelectedElement(_repository, hoService.DisplayMode.Method);
+            HoService.DisplayOperationForSelectedElement(_repository, HoService.DisplayMode.Method);
         }
 
 
@@ -472,14 +472,14 @@ namespace hoReverse.Reverse
 
         void btnLocateType_Click(object sender, EventArgs e)
         {
-            hoService.LocateType(_repository);
+            HoService.LocateType(_repository);
         }
 
 
 
         void btnShowSpecification_Click(object sender, EventArgs e)
         {
-            hoService.ShowSpecification(_repository);
+            HoService.ShowSpecification(_repository);
         }
 
 
@@ -490,8 +490,8 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.ReconcileOperationTypesWrapper(_repository);
-                hoService.UpdateActivityParameter(_repository);
+                HoService.ReconcileOperationTypesWrapper(_repository);
+                HoService.UpdateActivityParameter(_repository);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e11)
@@ -506,7 +506,7 @@ namespace hoReverse.Reverse
 
         void btnFindUsage_Click(object sender, EventArgs e)
         {
-            hoService.FindUsage(_repository);
+            HoService.FindUsage(_repository);
         }
 
 
@@ -520,28 +520,28 @@ namespace hoReverse.Reverse
 
         void btnLH_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "LH");
+            HoService.SetLineStyle(_repository, "LH");
         }
 
         void btnLV_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "LV");
+            HoService.SetLineStyle(_repository, "LV");
         }
 
 
         void btnTH_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "TH");
+            HoService.SetLineStyle(_repository, "TH");
         }
 
         void btnTV_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "TV");
+            HoService.SetLineStyle(_repository, "TV");
         }
 
         void btnOS_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "OS");
+            HoService.SetLineStyle(_repository, "OS");
         }
 
         // Enter text field
@@ -549,7 +549,7 @@ namespace hoReverse.Reverse
         {
             if (e.KeyCode == Keys.Enter)
             {
-                hoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
+                HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
                 e.Handled = true;
             }
         }
@@ -2546,11 +2546,11 @@ namespace hoReverse.Reverse
             // In activity it 
             if (dia.Type == "Activity")
             {
-                hoService.InsertInActivtyDiagram(_repository, TxtUserText.Text);
+                HoService.InsertInActivtyDiagram(_repository, TxtUserText.Text);
             }
             else
             {
-                hoService.InsertInterface(_repository, dia, TxtUserText.Text);
+                HoService.InsertInterface(_repository, dia, TxtUserText.Text);
             }
         }
 
@@ -2560,13 +2560,13 @@ namespace hoReverse.Reverse
 
         private void btnNoteFromText_Click(object sender, EventArgs e)
         {
-            hoService.CreateNoteFromText(_repository, TxtUserText.Text);
+            HoService.CreateNoteFromText(_repository, TxtUserText.Text);
         }
 
 
         private void btnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
-            hoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
+            HoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
 
         }
 
@@ -2577,41 +2577,41 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void btnActivityFromText_Click(object sender, EventArgs e)
         {
-            hoService.CreateActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
+            HoService.CreateActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
         }
 
         void btnC_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "C");
+            HoService.SetLineStyle(_repository, "C");
         }
 
 
         void btnD_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "D");
+            HoService.SetLineStyle(_repository, "D");
         }
 
 
 
         void btnA_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "A");
+            HoService.SetLineStyle(_repository, "A");
         }
 
 
         void btnOR_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "OR");
+            HoService.SetLineStyle(_repository, "OR");
         }
 
         private void btnBezier_Click(object sender, EventArgs e)
         {
-            hoService.SetLineStyle(_repository, "B");
+            HoService.SetLineStyle(_repository, "B");
         }
 
         private void btnComposite_Click(object sender, EventArgs e)
         {
-            hoService.NavigateComposite(_repository);
+            HoService.NavigateComposite(_repository);
         }
 
         private void btnBack_Click(object sender, EventArgs e)
@@ -2704,27 +2704,27 @@ namespace hoReverse.Reverse
             EA.Element el = HoUtil.GetElementFromContextObject(_repository);
             if (el == null) return;
             if ("Interface Class Component".Contains(el.Type))
-                hoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
-            else hoService.InsertDiagramElementAndConnect(_repository, "StateNode", "101");
+                HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
+            else HoService.InsertDiagramElementAndConnect(_repository, "StateNode", "101");
 
 
         }
 
         private void btnAction_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
 
         }
 
         private void btnDecision_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
 
         }
 
         private void btnMerge_Click(object sender, EventArgs e)
         {
-            hoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "");
+            HoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "");
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
@@ -2738,7 +2738,7 @@ namespace hoReverse.Reverse
 
                 // Insert Attributes, Structures, Enums
                 if ("Class Interface Component".Contains(el.Type))
-                    hoService.InsertAttributeService(_repository, TxtUserText.Text);
+                    HoService.InsertAttributeService(_repository, TxtUserText.Text);
                 // Insert Behavior
                 else InsertFromText();
             }
@@ -2758,14 +2758,14 @@ namespace hoReverse.Reverse
         private void btnActionFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
 
         }
 
         private void btnDecisionFromText_Click(object sender, EventArgs e)
         {
             string decisionName = TxtUserText.Text.Trim();
-            hoService.CreateDecisionFromText(_repository, decisionName);
+            HoService.CreateDecisionFromText(_repository, decisionName);
         }
 
 
@@ -2825,12 +2825,12 @@ namespace hoReverse.Reverse
 
         private void createActivityForOperationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateActivityForOperation(_repository);
+            HoService.CreateActivityForOperation(_repository);
         }
 
         private void btnShowPort_Click(object sender, EventArgs e)
         {
-            hoService.ShowEmbeddedElementsGui(_repository, "");
+            HoService.ShowEmbeddedElementsGui(_repository, "");
         }
 
         // show folder for:
@@ -2838,29 +2838,29 @@ namespace hoReverse.Reverse
         // - source file
         private void showFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.ShowFolder(_repository, isTotalCommander: AddinSettings.FileManagerIsTotalCommander);
+            HoService.ShowFolder(_repository, isTotalCommander: AddinSettings.FileManagerIsTotalCommander);
         }
 
 
         private void getVcLastestRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.GetVcLatestRecursive(_repository);
+            HoService.GetVcLatestRecursive(_repository);
         }
 
         private void copyGuidSqlToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CopyGuidSqlToClipboard(_repository);
+            HoService.CopyGuidSqlToClipboard(_repository);
         }
 
         private void createSharedMemoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateSharedMemoryFromText(_repository, TxtUserText.Text);
+            HoService.CreateSharedMemoryFromText(_repository, TxtUserText.Text);
         }
 
 
         private void updateMethodParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.UpdateActivityMethodParameterWrapper(_repository);
+            HoService.UpdateActivityMethodParameterWrapper(_repository);
         }
 
         private void helpF1ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2876,12 +2876,12 @@ namespace hoReverse.Reverse
 
         private void quickSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
+            HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
         }
 
         private void insertTextIntoNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateNoteFromText(_repository, TxtUserText.Text);
+            HoService.CreateNoteFromText(_repository, TxtUserText.Text);
         }
 
         private void insertBeneathNodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2892,35 +2892,35 @@ namespace hoReverse.Reverse
         private void addCompositeActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
         }
 
         private void addActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
-            hoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
+            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
         }
 
         private void addFinalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
         }
 
         private void addMergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
+            HoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
         }
 
         private void showAllPortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.ShowEmbeddedElementsGui(_repository);
+            HoService.ShowEmbeddedElementsGui(_repository);
         }
 
         // no/else merge
         private void btnNoMerge_Click(object sender, EventArgs e)
         {
             //EaService.createDiagramObjectFromContext(m_repository, "", "MergeNode", "no");
-            hoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "", "no");
+            HoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "", "no");
         }
 
 
@@ -2955,7 +2955,7 @@ namespace hoReverse.Reverse
                 // ReSharper disable once AssignNullToNotNullAttribute
                 _jasonFilePath = targetSettingsPath;
                 _diagramStyle = new DiagramFormat(_jasonFilePath);
-                hoService.DiagramStyle = _diagramStyle;
+                HoService.DiagramStyle = _diagramStyle;
 
                
 
@@ -3030,13 +3030,13 @@ namespace hoReverse.Reverse
 
         private void changeXmlPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.SetNewXmlPath(_repository);
+            HoService.SetNewXmlPath(_repository);
 
         }
 
         private void insertAttributeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.InsertAttributeService(_repository, TxtUserText.Text);
+            HoService.InsertAttributeService(_repository, TxtUserText.Text);
 
         }
 
@@ -3044,7 +3044,7 @@ namespace hoReverse.Reverse
 
         private void insertTypedefStructToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateTypeDefStructFromTextService(_repository, TxtUserText.Text);
+            HoService.CreateTypeDefStructFromTextService(_repository, TxtUserText.Text);
         }
 
 
@@ -3088,7 +3088,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.VcReconcile(rep);
+                HoService.VcReconcile(rep);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e11)
@@ -3112,8 +3112,10 @@ namespace hoReverse.Reverse
                 if (sh.keySearchName == "") return;
                 try
                 {
-
-                    _repository.RunModelSearch(sh.keySearchName, sh.keySearchTerm, "", "");
+                    // Use Search Term from Configuration or from GUI
+                    string searchTerm = sh.keySearchTerm.Trim();
+                    if (searchTerm.ToLower().Equals("<search term>")) searchTerm = _contextMenuStripTextField.Text;
+                    _repository.RunModelSearch(sh.keySearchName, searchTerm, "", "");
                 }
                 catch (Exception e)
                 {
@@ -3163,7 +3165,7 @@ namespace hoReverse.Reverse
 
         private void setSvnTaggedValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.SetTaggedValueGui(_repository);
+            HoService.SetTaggedValueGui(_repository);
 
 
 
@@ -3175,7 +3177,7 @@ namespace hoReverse.Reverse
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
             EA.Package pkg = (EA.Package) _repository.GetContextObject();
-            hoService.SetSvnProperty(_repository, pkg);
+            HoService.SetSvnProperty(_repository, pkg);
         }
 
         private void svnLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3184,7 +3186,7 @@ namespace hoReverse.Reverse
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
             EA.Package pkg = (EA.Package) _repository.GetContextObject();
-            hoService.GotoSvnLog(_repository, pkg);
+            HoService.GotoSvnLog(_repository, pkg);
         }
 
         private void svnTortoiseRepobrowserToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3193,12 +3195,12 @@ namespace hoReverse.Reverse
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
             EA.Package pkg = (EA.Package) _repository.GetContextObject();
-            hoService.GotoSvnBrowser(_repository, pkg);
+            HoService.GotoSvnBrowser(_repository, pkg);
         }
 
         private void showDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.ShowFolder(_repository, isTotalCommander: _addinSettings.FileManagerIsTotalCommander);
+            HoService.ShowFolder(_repository, isTotalCommander: _addinSettings.FileManagerIsTotalCommander);
         }
 
         private void setSvnTaggedValuesToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -3207,7 +3209,7 @@ namespace hoReverse.Reverse
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
 
             EA.Package pkg = (EA.Package) _repository.GetContextObject();
-            hoService.SetDirectoryTaggedValues(_repository, pkg);
+            HoService.SetDirectoryTaggedValues(_repository, pkg);
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -3217,38 +3219,38 @@ namespace hoReverse.Reverse
 
         private void btnNoGuard_Click(object sender, EventArgs e)
         {
-            hoService.NoGuard(_repository, "no");
+            HoService.NoGuard(_repository, "no");
         }
 
         private void btnYesGuard_Click(object sender, EventArgs e)
         {
-            hoService.NoGuard(_repository, "yes");
+            HoService.NoGuard(_repository, "yes");
         }
 
         private void btnBlankGuard_Click(object sender, EventArgs e)
         {
-            hoService.NoGuard(_repository, "");
+            HoService.NoGuard(_repository, "");
         }
 
 
         private void btnJoinNodes_Click(object sender, EventArgs e)
         {
-            hoService.JoinDiagramObjectsToLastSelected(_repository);
+            HoService.JoinDiagramObjectsToLastSelected(_repository);
         }
 
         private void btnSplitNodes_Click(object sender, EventArgs e)
         {
-            hoService.SplitDiagramObjectsToLastSelected(_repository);
+            HoService.SplitDiagramObjectsToLastSelected(_repository);
         }
 
         private void makeNestedOfToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.MakeNested(_repository);
+            HoService.MakeNested(_repository);
         }
 
         private void btnSplitAll_Click(object sender, EventArgs e)
         {
-            hoService.SplitAllDiagramObjectsToLastSelected(_repository);
+            HoService.SplitAllDiagramObjectsToLastSelected(_repository);
         }
 
         private void deleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3256,7 +3258,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.DeleteInvisibleUseRealizationDependencies(_repository);
+                HoService.DeleteInvisibleUseRealizationDependencies(_repository);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
@@ -3279,25 +3281,25 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void generateComponentPortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.GenerateComponentPortsService(_repository);
+            HoService.GenerateComponentPortsService(_repository);
 
 
         }
 
         private void vCResyncToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.UpdateVcStateOfSelectedPackageRecursiveService(_repository);
+            HoService.UpdateVcStateOfSelectedPackageRecursiveService(_repository);
 
         }
 
         private void vCXMIReconsileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.VcReconcile(_repository);
+            HoService.VcReconcile(_repository);
         }
 
         private void vCGetStateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.VcGetState(_repository);
+            HoService.VcGetState(_repository);
 
         }
         
@@ -3307,12 +3309,12 @@ namespace hoReverse.Reverse
 
         private void copyReleaseInformationToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CopyReleaseInfoOfModuleService(_repository);
+            HoService.CopyReleaseInfoOfModuleService(_repository);
         }
 
         private void showAllPortsActivityParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.ShowEmbeddedElementsGui(_repository, "");
+            HoService.ShowEmbeddedElementsGui(_repository, "");
         }
 
         private void setting2ConnectorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3337,7 +3339,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.AddMacroFromText(_repository, TxtUserText.Text);
+                HoService.AddMacroFromText(_repository, TxtUserText.Text);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
@@ -3376,7 +3378,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.GenerateUseInterface(_repository);
+                HoService.GenerateUseInterface(_repository);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
@@ -3392,18 +3394,18 @@ namespace hoReverse.Reverse
 
         private void btnFeatureUp_Click(object sender, EventArgs e)
         {
-            hoService.FeatureUp(_repository);
+            HoService.FeatureUp(_repository);
         }
 
 
         private void btnFeatureDown_Click(object sender, EventArgs e)
         {
-            hoService.FeatureDown(_repository);
+            HoService.FeatureDown(_repository);
         }
 
         private void setFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.SetFolder(_repository);
+            HoService.SetFolder(_repository);
         }
 
         /// <summary>
@@ -3414,7 +3416,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddNoteAndLink_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "Element Note", bound:true);
+            HoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "Element Note", bound:true);
         }
         /// <summary>
         /// Show Note:
@@ -3426,7 +3428,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddElementNote_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "", bound:false);
+            HoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "", bound:false);
         }
         /// <summary>
         /// Show constraint
@@ -3438,7 +3440,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnAddConstraint_Click(object sender, EventArgs e)
         {
-            hoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "", bound:false);
+            HoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "", bound:false);
         }
 
         /// <summary>
@@ -3449,7 +3451,7 @@ namespace hoReverse.Reverse
         private void _btnCopy_Click(object sender, EventArgs e)
         {
             
-            TxtUserText.Text = hoService.CopyContextNameToClipboard(_repository);
+            TxtUserText.Text = HoService.CopyContextNameToClipboard(_repository);
         }
 
         private void endifMacroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3473,7 +3475,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                hoService.SetMacroFromText(_repository, s);
+                HoService.SetMacroFromText(_repository, s);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
@@ -3488,14 +3490,14 @@ namespace hoReverse.Reverse
 
         private void _updateActionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.UpdateAction(_repository);
+            HoService.UpdateAction(_repository);
         }
 
 
 
         private void _hideAllPortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.HideEmbeddedElements(_repository);
+            HoService.HideEmbeddedElements(_repository);
         }
 
         private void standardDiagramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3506,7 +3508,7 @@ namespace hoReverse.Reverse
             styleEx[1] = "";
             styleEx[2] = "";
 
-            hoService.ChangeDiagramStyle(_repository,  styleEx, ChangeScope.PackageRecursive);
+            HoService.ChangeDiagramStyle(_repository,  styleEx, ChangeScope.PackageRecursive);
 
         }
 
@@ -3545,7 +3547,7 @@ namespace hoReverse.Reverse
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
             BulkElementItem bulkElement = (BulkElementItem)item.Tag;
-            BulkChangeRecursive(bulkElement);
+            BulkItemChange.BulkChangeRecursive(_repository, bulkElement);
 
         }
 
@@ -3562,7 +3564,7 @@ namespace hoReverse.Reverse
             Debug.Assert(item != null, nameof(item) + " != null");
             DiagramObjectStyleItem style = (DiagramObjectStyleItem)item.Tag;
 
-            hoService.DiagramObjectStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
+            HoService.DiagramObjectStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
 
         }
 
@@ -3581,7 +3583,7 @@ namespace hoReverse.Reverse
             styleEx[1] = style.Pdata;
             styleEx[2] = style.Property;
             styleEx[3] = style.Type;
-            hoService.ChangeDiagramStyle(_repository, styleEx, changeScope);
+            HoService.ChangeDiagramStyle(_repository, styleEx, changeScope);
         }
 
         private void settingsDiagramStylesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3620,12 +3622,12 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void insertFunctionToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            hoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
+            HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
 
         }
         private void insertFunctionMakeDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.CreateOperationsFromTextService(_repository, TxtUserText.Text, makeDuplicateOperations:true);
+            HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text, makeDuplicateOperations:true);
         }
         /// <summary>
         /// Change diagram link style for selected diagram links 
@@ -3640,7 +3642,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             Debug.Assert(item != null, nameof(item) + " != null");
             DiagramLinkStyleItem style = (DiagramLinkStyleItem)item.Tag;
 
-            hoService.DiagramLinkStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
+            HoService.DiagramLinkStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
 
         }
 
@@ -3734,7 +3736,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             object pkg;
             if (EA.ObjectType.otPackage == _repository.GetContextItem(out pkg))
             {
-                hoService.VcControlRemove((EA.Package)pkg);
+                HoService.VcControlRemove((EA.Package)pkg);
             }
         }
         /// <summary>
@@ -3744,12 +3746,12 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private void moveUsageToElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.MoveUsage(_repository);
+            HoService.MoveUsage(_repository);
         }
 
         private void sortAlphabeticToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            hoService.SortAlphabetic(_repository);
+            HoService.SortAlphabetic(_repository);
         }
 
         private void repoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4008,23 +4010,6 @@ Please restart EA. During restart hoTools loads the default settings.",
 
 
         }
-        
-
-        /// <summary>
-        /// Bulk change Element properties for package recursive
-        /// </summary>
-        /// <param name="bulkElement"></param>
-        private void BulkChangeRecursive(BulkElementItem bulkElement)
-        {
-            if (_repository.GetContextItem(out var contextItem) == EA.ObjectType.otPackage)
-            {
-                BulkItemChange.BulkChangePackage(bulkElement, (EA.Package)contextItem, pkgRecursive: true, elRecursive: true);
-                return;
-            }
-
-            
-        }
-       
     }
 }
 

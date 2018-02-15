@@ -55,7 +55,7 @@ namespace hoReverse.Services
     #endregion
 
     // ReSharper disable once InconsistentNaming
-    public static partial class hoService
+    public static partial class HoService
     {
         public static string Release = "1.0.01";
         private const string EmbeddedElementTypes = "Port Parameter Pin";
@@ -4529,7 +4529,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
         public static string GetAssemblyPath()
         {
             return Path.GetDirectoryName(
-                Assembly.GetAssembly(typeof(hoService)).CodeBase);
+                Assembly.GetAssembly(typeof(HoService)).CodeBase);
             
         }
 

@@ -110,7 +110,7 @@ namespace EaServices.Files
         {
             string t = hoReverse.hoUtils.HoUtil.ReadAllText(filePath);
             if (t == "") return;
-            string s = hoService.DeleteComment(t);
+            string s = HoService.DeleteComment(t);
 
             Regex rgx = new Regex(@"(\w+)\(", RegexOptions.Multiline);
             Match match = rgx.Match(s);

@@ -556,7 +556,7 @@ namespace hoReverse.Settings
         }
         private void GetAllServices()
         {
-            Type type = typeof(hoService);
+            Type type = typeof(HoService);
             AllServices.Add(new ServiceCall(null, "{B93C105E-64BC-4D9C-B92F-3DDF0C9150E6}", "-- no --", "no service selected", false));
             foreach (MethodInfo method in type.GetMethods())
             {
