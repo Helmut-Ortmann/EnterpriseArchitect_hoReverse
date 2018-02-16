@@ -1481,7 +1481,7 @@ namespace hoReverse.Reverse
             // _saveToolStripMenuItem
             // 
             this._saveToolStripMenuItem.Name = "_saveToolStripMenuItem";
-            this._saveToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this._saveToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._saveToolStripMenuItem.Text = "&Save";
             this._saveToolStripMenuItem.ToolTipText = "Save bookmarks and history";
             this._saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
@@ -1489,12 +1489,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(312, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(396, 6);
             // 
             // _settingsToolStripMenuItem
             // 
             this._settingsToolStripMenuItem.Name = "_settingsToolStripMenuItem";
-            this._settingsToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this._settingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._settingsToolStripMenuItem.Text = "Settings";
             this._settingsToolStripMenuItem.ToolTipText = "Opens the setting menu";
             this._settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
@@ -1502,7 +1502,7 @@ namespace hoReverse.Reverse
             // _setting2ConnectorToolStripMenuItem
             // 
             this._setting2ConnectorToolStripMenuItem.Name = "_setting2ConnectorToolStripMenuItem";
-            this._setting2ConnectorToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this._setting2ConnectorToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._setting2ConnectorToolStripMenuItem.Text = "Setting: Default Linestyle";
             this._setting2ConnectorToolStripMenuItem.ToolTipText = "Set the default Linestyle for diagrams";
             this._setting2ConnectorToolStripMenuItem.Click += new System.EventHandler(this.setting2ConnectorToolStripMenuItem_Click);
@@ -1510,27 +1510,28 @@ namespace hoReverse.Reverse
             // settingsDiagramStylesToolStripMenuItem
             // 
             this.settingsDiagramStylesToolStripMenuItem.Name = "settingsDiagramStylesToolStripMenuItem";
-            this.settingsDiagramStylesToolStripMenuItem.Size = new System.Drawing.Size(321, 22);
-            this.settingsDiagramStylesToolStripMenuItem.Text = "Settings \'Bulk change Diagram Style\', \'Element\'";
+            this.settingsDiagramStylesToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.settingsDiagramStylesToolStripMenuItem.Text = "Settings \'Bulk change Diagram Style\', \'Element\' (Settings.json)";
             this.settingsDiagramStylesToolStripMenuItem.ToolTipText = resources.GetString("settingsDiagramStylesToolStripMenuItem.ToolTipText");
             this.settingsDiagramStylesToolStripMenuItem.Click += new System.EventHandler(this.settingsDiagramStylesToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(312, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(396, 6);
             // 
             // reloadSettingsToolStripMenuItem
             // 
             this.reloadSettingsToolStripMenuItem.Name = "reloadSettingsToolStripMenuItem";
-            this.reloadSettingsToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
-            this.reloadSettingsToolStripMenuItem.Text = "Reload Settings";
+            this.reloadSettingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.reloadSettingsToolStripMenuItem.Text = "Reload Settings from Settings.json";
+            this.reloadSettingsToolStripMenuItem.ToolTipText = "Load Settings.json from %appdata%\\ho\\hoReverse\\Settings.json";
             this.reloadSettingsToolStripMenuItem.Click += new System.EventHandler(this.reloadSettingsToolStripMenuItem_Click);
             // 
             // resetFactorySettingsToolStripMenuItem
             // 
             this.resetFactorySettingsToolStripMenuItem.Name = "resetFactorySettingsToolStripMenuItem";
-            this.resetFactorySettingsToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this.resetFactorySettingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.resetFactorySettingsToolStripMenuItem.Text = "ResetFactorySettings";
             this.resetFactorySettingsToolStripMenuItem.ToolTipText = "Reset the user.config to reset to delivery configuration.\r\n\r\nPlease restart. hoRe" +
     "verse will  create a new user.config with the default settings.";
@@ -1539,12 +1540,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(312, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(396, 6);
             // 
             // _clearToolStripMenuItem
             // 
             this._clearToolStripMenuItem.Name = "_clearToolStripMenuItem";
-            this._clearToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this._clearToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._clearToolStripMenuItem.Text = "Clear Diagram History and Bookmarks";
             this._clearToolStripMenuItem.ToolTipText = "Delete all history and diagram entries for all projects.";
             this._clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);

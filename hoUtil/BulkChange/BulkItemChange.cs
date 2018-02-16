@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using EA;
 using hoReverse.hoUtils.Diagrams;
 
 namespace hoUtils.BulkChange
 {
-    public class BulkItemChange
+    public static class BulkItemChange
     {
 
         /// <summary>
@@ -15,10 +14,14 @@ namespace hoUtils.BulkChange
         /// <param name="bulkElement"></param>
         public static void BulkChangeRecursive(EA.Repository rep, BulkElementItem bulkElement)
         {
+            // get package
             if (rep.GetContextItem(out var contextItem) == EA.ObjectType.otPackage)
-            {
-                BulkItemChange.BulkChangePackage(bulkElement, (EA.Package)contextItem, pkgRecursive: true, elRecursive: true);
-                return;
+            {   // Package recursive
+                BulkChangePackage(bulkElement, (EA.Package)contextItem, pkgRecursive: true, elRecursive: true);
+            }
+            else
+            {   // work for selected Elements
+                BulkChange(rep, bulkElement,   elRecursive:true);
             }
 
             
@@ -30,7 +33,7 @@ namespace hoUtils.BulkChange
         /// <param name="pkg"></param>
         /// <param name="pkgRecursive"></param>
         /// <param name="elRecursive"></param>
-        public static void BulkChangePackage(BulkElementItem bulkElement, EA.Package pkg, bool pkgRecursive, bool elRecursive)
+        private static void BulkChangePackage(BulkElementItem bulkElement, EA.Package pkg, bool pkgRecursive, bool elRecursive)
         {
             // All selected elements in tree
             foreach (EA.Element el in pkg.Elements)
@@ -56,7 +59,8 @@ namespace hoUtils.BulkChange
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="bulkElement"></param>
-        public static void BulkChange(EA.Repository rep, BulkElementItem bulkElement)
+        /// <param name="elRecursive"></param>
+        public static void BulkChange(EA.Repository rep, BulkElementItem bulkElement, bool elRecursive=false )
         {
             var eaDia = new EaDiagram(rep);
             // all selected elements in diagram
@@ -68,7 +72,7 @@ namespace hoUtils.BulkChange
             // All selected elements in tree
             foreach (EA.Element el in eaDia.TreeSelectedElements)
             {
-                BulkChangeElement(bulkElement, el);
+                BulkChangeElement(bulkElement, el, elRecursive);
             }
 
             if (eaDia.TreeSelectedPackage != null)
@@ -87,7 +91,7 @@ namespace hoUtils.BulkChange
         /// <param name="bulkElement"></param>
         /// <param name="el"></param>
         /// <param name="recursive"></param>
-        public static void BulkChangeElement(BulkElementItem bulkElement, Element el, bool recursive=false)
+        private static void BulkChangeElement(BulkElementItem bulkElement, EA.Element el, bool recursive=false)
         {
             // Check if bulk change is to apply for the current element
             if (BulkChangeCheck(bulkElement, el))
@@ -191,7 +195,7 @@ namespace hoUtils.BulkChange
         /// <param name="bulkElement">Checking rules</param>
         /// <param name="el">Current EA element to check</param>
         /// <returns></returns>
-        public static bool BulkChangeCheck(BulkElementItem bulkElement, EA.Element el)
+        private static bool BulkChangeCheck(BulkElementItem bulkElement, EA.Element el)
         {
             // Check if for the current element type the change is to apply
             if (bulkElement.TypesCheck == null ||
