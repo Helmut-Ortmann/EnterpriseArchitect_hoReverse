@@ -3114,7 +3114,7 @@ namespace hoReverse.Reverse
                 {
                     // Use Search Term from Configuration or from GUI
                     string searchTerm = sh.keySearchTerm.Trim();
-                    if (searchTerm.ToLower().Equals("<search term>")) searchTerm = _contextMenuStripTextField.Text;
+                    if (searchTerm.ToLower().Equals("<search term>")) searchTerm = TxtUserText.Text;
                     _repository.RunModelSearch(sh.keySearchName, searchTerm, "", "");
                 }
                 catch (Exception e)
