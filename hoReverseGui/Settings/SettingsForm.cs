@@ -41,6 +41,8 @@ namespace hoReverse.Settings
             this._cbxWithBookmarks.Checked = settings.ShowBookmark;
             this._cbxWithHistory.Checked = settings.ShowHistory;
 
+
+            chkUseCallBehavior.Checked = settings.UseCallBehaviorAction;
             // load shortcuts
             EaAddinShortcutSearch sh = _settings.ShortcutsSearch[0];
             txtBtn1Text.Text = sh.keyText;
@@ -481,6 +483,8 @@ namespace hoReverse.Settings
             _settings.ActivityLineStyle = cboActivityLineStyle.Text;
             _settings.StatechartLineStyle = cboStateLineStyle.Text;
             _settings.FolderPathCSourceCode = txtFolderPathCSourceCode.Text;
+
+            _settings.UseCallBehaviorAction = chkUseCallBehavior.Checked;
 
             // store shortcuts
             EaAddinShortcutSearch sh = _settings.ShortcutsSearch[0];

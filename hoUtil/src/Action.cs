@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Xml;
-using EA;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.hoUtils
 {
     public static class CallOperationAction
     {
-        public static bool CreateCallAction(Repository rep, EA.Element action, Method method)
+        public static bool CreateCallAction(EA.Repository rep, EA.Element action, EA.Method method)
         {
             // add ClassifierGUID to target action
             string updateStr = @"update t_object set classifier_GUID = '" + method.MethodGUID +
@@ -31,7 +30,7 @@ namespace hoReverse.hoUtils
             return true;
         }
         
-        public static bool SetClassifierId(Repository rep, EA.Element el, string guid)
+        public static bool SetClassifierId(EA.Repository rep, EA.Element el, string guid)
         {
             // add ClassifierGUID to target action
             string updateStr = @"update t_object set classifier_GUID = '" + guid +
@@ -212,7 +211,7 @@ namespace hoReverse.hoUtils
 
             return s.Trim();
         }
-        public static EA.Element GetElementFromName(Repository rep, string elementName, string elementType)
+        public static EA.Element GetElementFromName(EA.Repository rep, string elementName, string elementType)
         {
             EA.Element el = null;
             string query = @"select o.ea_guid AS EA_GUID
@@ -249,9 +248,17 @@ namespace hoReverse.hoUtils
             }
             return "";
         }
-        public static Method GetMethodFromMethodName(Repository rep, string methodName, bool isNoExtern=false)
+
+        /// <summary>
+        /// Find method from method name
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="methodName"></param>
+        /// <param name="isNoExtern"></param>
+        /// <returns></returns>
+        public static EA.Method GetMethodFromMethodName(EA.Repository rep, string methodName, bool isNoExtern=false)
         {
-            Method method = null;
+            EA.Method method = null;
             string externStereotype = "";
             if (isNoExtern) externStereotype = " AND (stereotype = NULL OR stereotype <> 'extern')";
             string query = $@"select op.ea_guid AS EA_GUID

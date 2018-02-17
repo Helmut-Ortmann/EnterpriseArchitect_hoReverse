@@ -35,6 +35,13 @@ Let's discuss it, but it works.
 
 ## News
 
+2.1.8
+
+2.1.7 Bulk change Elements (Diagram, Browser, Package, Package recursive) 
+- Bulk change Elements (Diagram, Browser, Package, Package recursive)
+- Search: <Search Term> in hoReverse Entry field 
+
+
 2.1.6  Bulk Change Diagram elements
 -  Bulk change Diagram elements (Stereotype, Tagged Values)
 -- Configuration in %appdata%roaming\ho\hoReverse\settings.json

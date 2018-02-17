@@ -2547,7 +2547,7 @@ namespace hoReverse.Reverse
             // In activity it 
             if (dia.Type == "Activity")
             {
-                HoService.InsertInActivtyDiagram(_repository, TxtUserText.Text);
+                HoService.InsertInActivtyDiagram(_repository, TxtUserText.Text, _addinSettings.UseCallBehaviorAction);
             }
             else
             {
@@ -2727,7 +2727,13 @@ namespace hoReverse.Reverse
         {
             HoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "");
         }
-
+        /// <summary>
+        /// Insert from Entry field:
+        /// - Code converted to Activity Diagram Items
+        /// - If context element is Class, Interface or Component insert Attributes, Structures or Enums 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnInsert_Click(object sender, EventArgs e)
         {
 

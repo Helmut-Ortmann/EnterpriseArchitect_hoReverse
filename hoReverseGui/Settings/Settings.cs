@@ -180,6 +180,26 @@ namespace hoReverse.Settings
 
         }
 
+        /// <summary>
+        /// In reverse engineering use a CallBehavior Action for a function call instead of a CallOperation Action.
+        /// </summary>
+        public bool UseCallBehaviorAction
+        {
+            get
+            {
+                bool result;
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["UseCallBehaviorAction"].Value, out result))
+                {
+                    return result;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            set { this.CurrentConfig.AppSettings.Settings["UseCallBehaviorAction"].Value = value.ToString(); }
+        }
+
 
         public bool FileManagerIsTotalCommander
         {

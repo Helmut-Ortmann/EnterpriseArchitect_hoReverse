@@ -1695,12 +1695,15 @@ Second Element: Target of move connections and appearances", "Select two element
         }
         #region createDiagramObjectFromContext
         //----------------------------------------------------------------------------------------
-        // type:      "Action", "Activity","Decision", "MergeNode","StateNode"
-        // extension: "CallOperation" ,"101"=StateNode, Final, "no"= else/no Merge
-        //             comp=yes:  Activity with composite Diagram
+        // type:      "Action", "Activity", "CallOperation", CallBehavior", "Decision", "MergeNode","StateNode"
+        // extension: "CallOperation" ,"CallBehavior": methodName
+        //             "101"=StateNode, Final, 
+        //             "no"= else/no Merge
+        //             "comp=yes":  Activity with composite Diagram
         //----------------------------------------------------------------------------------------
         public static DiagramObject  CreateDiagramObjectFromContext(Repository rep, string name, string type,
-            string extension, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", Element srcEl=null)
+            string extension, 
+            int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", Element srcEl=null)
         {
             int WidthPerCharacter = 60;
             // filter out linefeed, tab
@@ -1715,7 +1718,7 @@ Second Element: Target of move connections and appearances", "Select two element
             Element elTarget;
 
             string basicType = type;
-            if (type == "CallOperation") basicType = "Action";
+            if (type == "CallOperation" || type == "CallBehavior") basicType = "Action";
 
             Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return null;
@@ -1922,7 +1925,22 @@ Second Element: Target of move connections and appearances", "Select two element
                     Method method = CallOperationAction.GetMethodFromMethodName(rep, extension);
                     if (method != null)
                     {
-                        CallOperationAction.CreateCallAction(rep, elTarget, method);
+                        //CallOperationAction.CreateCallAction(rep, elTarget, method);
+                        Activity.CreateCallAction(rep, elTarget, method.MethodGUID, "CallOperation");
+                    }
+                    
+                }
+
+                string methodName = extension;
+                if (type == "CallBehavior")
+                {
+
+                    EA.Element activity = Activity.GetActivityFromMethodName(rep, methodName);
+
+                    
+                    if (activity != null)
+                    {
+                        Activity.CreateCallAction(rep, elTarget, activity.ElementGUID, "CallBehavior");
 
                     }
                     
@@ -2320,14 +2338,14 @@ Second Element: Target of move connections and appearances", "Select two element
 
         }
 
-        
+
         /// <summary>
         /// Insert Code/Behavior in Activity Diagram
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="text"></param>
-
-        public static void InsertInActivtyDiagram(Repository rep, string text)
+        /// <param name="UseCallBehaviorAction"></param>
+        public static void InsertInActivtyDiagram(Repository rep, string text, bool useCallBehaviorAction=false)
         {
             
             // remember selected object
@@ -2482,7 +2500,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         // switch case with only one line
                         if (lines[0].Contains("case"))
                         {
-                            CreateActionFromText(rep, s1, offsetHorizontal, offsetVertical, guardString);
+                            CreateActionFromText(rep, s1, offsetHorizontal, offsetVertical, guardString, useCallBehaviorAction:useCallBehaviorAction);
                         }
                     }
                     continue;
@@ -2526,7 +2544,7 @@ Second Element: Target of move connections and appearances", "Select two element
                                 else s1 = "";
                             } 
                             if ( !( s1.Equals("")  || s1.Equals("{") || s1.Equals("}") ) )
-                                    CreateActionFromText(rep, s1, offsetHorizontal, offsetVertical, guardString);
+                                    CreateActionFromText(rep, s1, offsetHorizontal, offsetVertical, guardString, useCallBehaviorAction:useCallBehaviorAction);
                             offsetHorizontal = 0;
                             guardString = "";
 
@@ -2592,8 +2610,12 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #region createActionFromText
         private static void CreateActionFromText(Repository rep, string s1, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", 
-            bool removeModuleNameFromMethodName= false)
+            bool removeModuleNameFromMethodName= false,
+            bool useCallBehaviorAction=false)
         {
+            // ActionType
+            string actionType = useCallBehaviorAction ? @"CallBehavior" : @"CallOperation";
+
             // check if return
             Match matchReturn = Regex.Match(s1, @"\s*return\s*([^;]*);");
             if (matchReturn.Success)
@@ -2625,16 +2647,69 @@ Second Element: Target of move connections and appearances", "Select two element
                 // check if function is available
                 if (methodName != "")
                 {
-                    if (CallOperationAction.GetMethodFromMethodName(rep, methodName) == null)
+                    if (useCallBehaviorAction)
                     {
-                        CreateDiagramObjectFromContext(rep, methodString, "Action", "", offsetHorizental, offsetVertical, guardString);
+                        // use CallBehaviourAction
+                        EA.Element act = Activity.GetActivityFromMethodName(rep, methodName);
+                        if (act == null)
+                        {
+                            // Create Activity
+                            if (MessageBox.Show($"No Activity '{methodName}' exists in model.\r\n Create Activity?", "Create Activity?",
+                                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                var dia = rep.GetCurrentDiagram();
+                                if (dia != null)
+                                {
+                                    if (dia.ParentID > 0)
+                                    {
+                                        EA.Element parentEl = rep.GetElementByID(dia.ParentID);
+                                        act = (Element) parentEl.Elements.AddNew(methodName, "Activity");
+                                        parentEl.Elements.Refresh();
+                                    }
+                                    else
+                                    {
+                                        EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+                                        act = (Element) pkg.Elements.AddNew(methodName, "Activity");
+                                        pkg.Elements.Refresh();
+
+                                    }
+
+                                    act.Update();
+                                }
+                            }
+                        }
+
+                        // use CallOperation Action
+                        if (act == null)
+                        {
+                            CreateDiagramObjectFromContext(rep, methodString, "Action", "", offsetHorizental,
+                                offsetVertical, guardString);
+                        }
+                        else
+                        {
+                            CreateDiagramObjectFromContext(rep, methodString, actionType, methodName,
+                                offsetHorizental, offsetVertical, guardString);
+                        }
                     }
                     else
                     {
-                        CreateDiagramObjectFromContext(rep, methodString, "CallOperation", methodName, offsetHorizental, offsetVertical, guardString);
+                        // use CallOperation Action
+                        if (CallOperationAction.GetMethodFromMethodName(rep, methodName) == null)
+                        {
+                            CreateDiagramObjectFromContext(rep, methodString, "Action", "", offsetHorizental,
+                                offsetVertical, guardString);
+                        }
+                        else
+                        {
+                            CreateDiagramObjectFromContext(rep, methodString, actionType, methodName,
+                                offsetHorizental, offsetVertical, guardString);
+                        }
                     }
                 }
-                else { CreateDiagramObjectFromContext(rep, methodString, "CallOperation", methodName, offsetHorizental, offsetVertical, guardString);}
+                else
+                {   // no Method name
+                    CreateDiagramObjectFromContext(rep, methodString, actionType, methodName, offsetHorizental, offsetVertical, guardString);
+                }
             }
             
         }

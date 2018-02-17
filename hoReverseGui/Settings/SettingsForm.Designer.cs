@@ -148,6 +148,7 @@
             this.cmbGlobalKeySearch3Tooltip = new System.Windows.Forms.TextBox();
             this.cmbGlobalKeySearch2Tooltip = new System.Windows.Forms.TextBox();
             this.cmbGlobalKeySearch1Tooltip = new System.Windows.Forms.TextBox();
+            this.txtFolderPathCSourceCode = new System.Windows.Forms.TextBox();
             this.lblActivityLineStyle = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -180,8 +181,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this._cbxWithHistory = new System.Windows.Forms.CheckBox();
             this._cbxWithBookmarks = new System.Windows.Forms.CheckBox();
-            this.txtFolderPathCSourceCode = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
+            this.chkUseCallBehavior = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -224,7 +225,7 @@
             // cbxFileManagerIsTotalCommander
             // 
             this.cbxFileManagerIsTotalCommander.AutoSize = true;
-            this.cbxFileManagerIsTotalCommander.Location = new System.Drawing.Point(117, 28);
+            this.cbxFileManagerIsTotalCommander.Location = new System.Drawing.Point(226, 30);
             this.cbxFileManagerIsTotalCommander.Margin = new System.Windows.Forms.Padding(2);
             this.cbxFileManagerIsTotalCommander.Name = "cbxFileManagerIsTotalCommander";
             this.cbxFileManagerIsTotalCommander.Size = new System.Drawing.Size(291, 17);
@@ -238,7 +239,7 @@
             // 
             this.cboActivityLineStyle.DisplayMember = "LV";
             this.cboActivityLineStyle.FormattingEnabled = true;
-            this.cboActivityLineStyle.Location = new System.Drawing.Point(557, 4);
+            this.cboActivityLineStyle.Location = new System.Drawing.Point(657, 8);
             this.cboActivityLineStyle.Margin = new System.Windows.Forms.Padding(2);
             this.cboActivityLineStyle.Name = "cboActivityLineStyle";
             this.cboActivityLineStyle.Size = new System.Drawing.Size(192, 21);
@@ -248,7 +249,7 @@
             // cboStateLineStyle
             // 
             this.cboStateLineStyle.FormattingEnabled = true;
-            this.cboStateLineStyle.Location = new System.Drawing.Point(557, 28);
+            this.cboStateLineStyle.Location = new System.Drawing.Point(657, 32);
             this.cboStateLineStyle.Margin = new System.Windows.Forms.Padding(2);
             this.cboStateLineStyle.Name = "cboStateLineStyle";
             this.cboStateLineStyle.Size = new System.Drawing.Size(192, 21);
@@ -1312,10 +1313,18 @@
             this.cmbGlobalKeySearch1Tooltip.TabIndex = 104;
             this.toolTip1.SetToolTip(this.cmbGlobalKeySearch1Tooltip, "Tooltip");
             // 
+            // txtFolderPathCSourceCode
+            // 
+            this.txtFolderPathCSourceCode.Location = new System.Drawing.Point(142, 722);
+            this.txtFolderPathCSourceCode.Name = "txtFolderPathCSourceCode";
+            this.txtFolderPathCSourceCode.Size = new System.Drawing.Size(808, 20);
+            this.txtFolderPathCSourceCode.TabIndex = 114;
+            this.toolTip1.SetToolTip(this.txtFolderPathCSourceCode, resources.GetString("txtFolderPathCSourceCode.ToolTip"));
+            // 
             // lblActivityLineStyle
             // 
             this.lblActivityLineStyle.AutoSize = true;
-            this.lblActivityLineStyle.Location = new System.Drawing.Point(436, 6);
+            this.lblActivityLineStyle.Location = new System.Drawing.Point(536, 10);
             this.lblActivityLineStyle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblActivityLineStyle.Name = "lblActivityLineStyle";
             this.lblActivityLineStyle.Size = new System.Drawing.Size(88, 13);
@@ -1325,7 +1334,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(436, 27);
+            this.label7.Location = new System.Drawing.Point(536, 31);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(79, 13);
@@ -1642,7 +1651,7 @@
             // _cbxWithHistory
             // 
             this._cbxWithHistory.AutoSize = true;
-            this._cbxWithHistory.Location = new System.Drawing.Point(781, 7);
+            this._cbxWithHistory.Location = new System.Drawing.Point(854, 8);
             this._cbxWithHistory.Name = "_cbxWithHistory";
             this._cbxWithHistory.Size = new System.Drawing.Size(88, 17);
             this._cbxWithHistory.TabIndex = 113;
@@ -1652,20 +1661,12 @@
             // _cbxWithBookmarks
             // 
             this._cbxWithBookmarks.AutoSize = true;
-            this._cbxWithBookmarks.Location = new System.Drawing.Point(781, 30);
+            this._cbxWithBookmarks.Location = new System.Drawing.Point(854, 32);
             this._cbxWithBookmarks.Name = "_cbxWithBookmarks";
             this._cbxWithBookmarks.Size = new System.Drawing.Size(109, 17);
             this._cbxWithBookmarks.TabIndex = 113;
             this._cbxWithBookmarks.Text = "Show Bookmarks";
             this._cbxWithBookmarks.UseVisualStyleBackColor = true;
-            // 
-            // txtFolderPathCSourceCode
-            // 
-            this.txtFolderPathCSourceCode.Location = new System.Drawing.Point(142, 722);
-            this.txtFolderPathCSourceCode.Name = "txtFolderPathCSourceCode";
-            this.txtFolderPathCSourceCode.Size = new System.Drawing.Size(808, 20);
-            this.txtFolderPathCSourceCode.TabIndex = 114;
-            this.toolTip1.SetToolTip(this.txtFolderPathCSourceCode, resources.GetString("txtFolderPathCSourceCode.ToolTip"));
             // 
             // label26
             // 
@@ -1676,11 +1677,23 @@
             this.label26.TabIndex = 115;
             this.label26.Text = "C/C++ Source code folder";
             // 
+            // chkUseCallBehavior
+            // 
+            this.chkUseCallBehavior.AutoSize = true;
+            this.chkUseCallBehavior.Location = new System.Drawing.Point(15, 26);
+            this.chkUseCallBehavior.Name = "chkUseCallBehavior";
+            this.chkUseCallBehavior.Size = new System.Drawing.Size(104, 17);
+            this.chkUseCallBehavior.TabIndex = 116;
+            this.chkUseCallBehavior.Text = "UseCallBehavior";
+            this.toolTip1.SetToolTip(this.chkUseCallBehavior, resources.GetString("chkUseCallBehavior.ToolTip"));
+            this.chkUseCallBehavior.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 808);
+            this.Controls.Add(this.chkUseCallBehavior);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.txtFolderPathCSourceCode);
             this.Controls.Add(this._cbxWithBookmarks);
@@ -1967,5 +1980,6 @@
         private System.Windows.Forms.CheckBox _cbxWithBookmarks;
         private System.Windows.Forms.TextBox txtFolderPathCSourceCode;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.CheckBox chkUseCallBehavior;
     }
 }

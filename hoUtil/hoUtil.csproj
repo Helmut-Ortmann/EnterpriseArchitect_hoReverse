@@ -135,6 +135,7 @@
     <Compile Include="src\Action.cs" />
     <Compile Include="src\ActionPin.cs" />
     <Compile Include="src\ActiveProcess.cs" />
+    <Compile Include="src\Activity.cs" />
     <Compile Include="src\ActivityPar.cs" />
     <Compile Include="src\Appl.cs" />
     <Compile Include="src\Connector.cs" />

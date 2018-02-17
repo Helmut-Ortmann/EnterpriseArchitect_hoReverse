@@ -255,6 +255,18 @@ to let VS Code update the symbol database.
 
 After changing the source folder you have to chenge the project or restart EA.</value>
   </data>
+  <data name="chkUseCallBehavior.ToolTip" xml:space="preserve">
+    <value>Use CallBehavoir to link an Action to a function.
+
+The usual behavior is:
+- Method as class feature
+- Call operation Action to model the call 
+- Activity linked to the method to model the Behavior of the operation
+
+The CallBehavior usage:
+- A Function is an Activity
+- The call to a function is modelled with a CallBehavior Action</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>25</value>
   </metadata>
