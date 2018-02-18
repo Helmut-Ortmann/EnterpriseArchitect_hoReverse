@@ -1935,7 +1935,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 if (type == "CallBehavior")
                 {
 
-                    EA.Element activity = Activity.GetActivityFromMethodName(rep, methodName);
+                    EA.Element activity = Activity.GetActivityFromMethodName(rep, methodName, verbose:true);
 
                     
                     if (activity != null)
@@ -2650,34 +2650,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     if (useCallBehaviorAction)
                     {
                         // use CallBehaviourAction
-                        EA.Element act = Activity.GetActivityFromMethodName(rep, methodName);
-                        if (act == null)
-                        {
-                            // Create Activity
-                            if (MessageBox.Show($"No Activity '{methodName}' exists in model.\r\n Create Activity?", "Create Activity?",
-                                    MessageBoxButtons.YesNo) == DialogResult.Yes)
-                            {
-                                var dia = rep.GetCurrentDiagram();
-                                if (dia != null)
-                                {
-                                    if (dia.ParentID > 0)
-                                    {
-                                        EA.Element parentEl = rep.GetElementByID(dia.ParentID);
-                                        act = (Element) parentEl.Elements.AddNew(methodName, "Activity");
-                                        parentEl.Elements.Refresh();
-                                    }
-                                    else
-                                    {
-                                        EA.Package pkg = rep.GetPackageByID(dia.PackageID);
-                                        act = (Element) pkg.Elements.AddNew(methodName, "Activity");
-                                        pkg.Elements.Refresh();
-
-                                    }
-
-                                    act.Update();
-                                }
-                            }
-                        }
+                        var act = Activity.CreateInDiagramContext(rep, methodName);
 
                         // use CallOperation Action
                         if (act == null)
@@ -2713,6 +2686,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             
         }
+
         #endregion
         #region createDecisionFromText
         public static string CreateDecisionFromText(Repository rep, string decisionName, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "")

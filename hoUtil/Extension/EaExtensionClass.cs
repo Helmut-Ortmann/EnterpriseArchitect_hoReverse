@@ -84,6 +84,21 @@ namespace hoReverse.hoUtils.Extension
                    el.Type == "ExpansionNode" ||
                    el.Type == "ActionPin";
         }
+        /// <summary>
+        /// Make an IEnumerable from EA collection to easily use LINQ
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ToEnumerable<T>(this EA.Collection container)
+        {
+            for (short j = 0; j < container.Count; j++)
+            {
+                T item = (T) container.GetAt(j);
+                yield return item;
+            }
+            
+        }
 
 
     }

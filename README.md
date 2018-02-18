@@ -35,7 +35,8 @@ Let's discuss it, but it works.
 
 ## News
 
-2.1.8
+2.1.8 Choose CallBehavior Action or CallOperation Action for a C/C++ function call
+- Entry field allows Enter without starting a query. Start the query with Buttons or use hoTools
 
 2.1.7 Bulk change Elements (Diagram, Browser, Package, Package recursive) 
 - Bulk change Elements (Diagram, Browser, Package, Package recursive)
