@@ -7,28 +7,7 @@ namespace hoReverse.hoUtils
 {
     public static class CallOperationAction
     {
-        public static bool CreateCallAction(EA.Repository rep, EA.Element action, EA.Method method)
-        {
-            // add ClassifierGUID to target action
-            string updateStr = @"update t_object set classifier_GUID = '" + method.MethodGUID +
-                       "' where ea_guid = '" + action.ElementGUID + "' ";
-            rep.Execute(updateStr);
-
-            // set CallOperation
-            string CallOperationProperty = "@PROP=@NAME=kind@ENDNAME;@TYPE=ActionKind@ENDTYPE;@VALU=CallOperation@ENDVALU;@PRMT=@ENDPRMT;@ENDPROP;";
-            Guid g = Guid.NewGuid();
-            string xrefid = "{" + g + "}";
-            string insertIntoTXref = @"insert into t_xref 
-                (XrefID,            Name,               Type,              Visibility, Namespace, Requirement, [Constraint], Behavior, Partition, Description, Client, Supplier, Link)
-                VALUES('" + xrefid + "', 'CustomProperties', 'element property','Public', '','','', '',0, '" + CallOperationProperty + "', '" + action.ElementGUID + "', null,'')";
-                rep.Execute(insertIntoTXref);
-
-            // Link Call Operation to operation
-                Guid.NewGuid();
-            //rep.Execute(insertIntoT_xref);
-              
-            return true;
-        }
+       
         
         public static bool SetClassifierId(EA.Repository rep, EA.Element el, string guid)
         {
