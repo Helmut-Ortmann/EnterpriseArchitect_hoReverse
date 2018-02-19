@@ -256,9 +256,9 @@ namespace hoReverse.Services.AutoCpp
             {
                 if (!File.Exists(f.FilePathImplementation))
                 {
-                    MessageBox.Show($"File:\r\n{f.FilePathImplementation}\r\n\r\nRoot:\r\n{_folderRoot}",
-                        "Can't open implementation of required interface, break!!!");
-                    break;
+                    MessageBox.Show($"File:\r\n'{f.FilePathImplementation}'\r\n\r\nRoot:\r\n{_folderRoot}",
+                        "Can't open implementation of required interface, skip interface!!!");
+                    continue;
                 }
                 string[] codeLines = File.ReadAllLines(f.FilePathImplementation);
                 // declaration ends with ';'
@@ -320,9 +320,9 @@ namespace hoReverse.Services.AutoCpp
             {
                 if (!File.Exists(fileName))
                 {
-                    MessageBox.Show($"File:\r\n{fileName}\r\n\r\nRoot:\r\n{_folderRoot}",
-                        "Can't open implementation of provided interface, break!!!");
-                    break;
+                    MessageBox.Show($"File:\r\n'{fileName}'\r\n\r\nRoot:\r\n{_folderRoot}",
+                        "Can't open implementation of provided interface, skip!!!");
+                   continue;
                 }
                 // only files in implementation
                 if (fileName.ToLower().Contains(_folderRoot.ToLower()))
