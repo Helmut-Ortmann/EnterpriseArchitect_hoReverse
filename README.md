@@ -35,6 +35,9 @@ Let's discuss it, but it works.
 
 ## News
 
+2.1.10 Error fixing
+-  Create CallBehaviour Action with SQL error fixed
+
 2.1.9  Error fixing
 - No Error message if Settings.Json doesn't contain configuration chapter for Styles, Bulk changes and more
   - Menu entry shows the information of missing configuration

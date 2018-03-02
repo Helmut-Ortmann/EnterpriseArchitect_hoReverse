@@ -70,12 +70,19 @@ namespace hoReverse.hoUtils
             string callBehaviorProperty = $"@PROP=@NAME=kind@ENDNAME;@TYPE=ActionKind@ENDTYPE;@VALU={typeCall}@ENDVALU;@PRMT=@ENDPRMT;@ENDPROP;";
             Guid g = Guid.NewGuid();
             string xrefid = "{" + g + "}";
-            string insertIntoTXref = @"insert into t_xref 
-                (XrefID,            Name,               Type,              Visibility, Namespace, Requirement, [Constraint], Behavior, Partition, Description, Client, Supplier, Link)
-                VALUES('" + xrefid + "', 'CustomProperties', 'element property','Public', '','','', '',0, '" + callBehaviorProperty + "', '" + action.ElementGUID + "', null,'')";
-            rep.Execute(insertIntoTXref);
+            string insertIntoTXref = $@"insert into t_xref 
+                (XrefID,            Name,               Type,              Visibility,  Description, Client)
+                VALUES('{xrefid}', 'CustomProperties', 'element property','Public',  '{callBehaviorProperty}', '{action.ElementGUID}')";
+            try
+            {
+                rep.Execute(insertIntoTXref);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{insertIntoTXref}\r\nAction='{action.Name}'\r\n\r\n{e}", "Error CreateAction t_xref");
+            }
 
-         
+
             return true;
         }
 
