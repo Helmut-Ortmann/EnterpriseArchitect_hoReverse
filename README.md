@@ -20,7 +20,7 @@ Especially the requirements of safety (ASIL D or SIL 3) projects forced my to do
 
 That was the start of hoReverse. By the time it grows and in current projects I'm able to make a decent detailed design from Code with not too much manual work. 
 
-Is this all according to theory or the processes? 
+Is this all according to theory or the processes? Can''
 
 Let's discuss it, but it works.
 
@@ -34,6 +34,10 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+
+2.1.9  Error fixing
+- No Error message if Settings.Json doesn't contain configuration chapter for Styles, Bulk changes and more
+  - Menu entry shows the information of missing configuration
 
 2.1.8 Choose CallBehavior Action or CallOperation Action for a C/C++ function call
 - Entry field allows Enter without starting a query. Start the query with Buttons or use hoTools

@@ -77,13 +77,14 @@ Consider Resetting to factory settings
         }
 
         /// <summary>
-        /// 
+        /// Get configuration from json. Usually it's advisable not to throw an error.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
         /// <param name="search"></param>
         /// <param name="jsonChapter">"DiagramStyle", "DiagramObjectStyle","DiagramLinkStyle"</param>
-        private IList<T> GetConfigurationStyleItems<T>(JObject search, string jsonChapter)
+        /// <param name="ignoreError">Don't show an import error</param>
+        private IList<T> GetConfigurationStyleItems<T>(JObject search, string jsonChapter, bool ignoreError=true)
         {
             try
             {
@@ -103,21 +104,25 @@ Consider Resetting to factory settings
             }
             catch (Exception e)
             {
-                MessageBox.Show(
-$@"Can't import Chapter '{jsonChapter}' from 'Settings.json' in %APPDATA%..
+                if (!ignoreError)
+                {
+                    MessageBox.Show(
+                        $@"Can't import Chapter '{jsonChapter}' from 'Settings.json' in %APPDATA%..
 
-Consider Resetting to factory settings:
+Consider Resetting to factory settings or editing the configuration:
 - File, Reset Factory Settings!!!
 
 {e}",
-                    $@"Can't import Diagram Styles '{jsonChapter}'");
-                return new List<T>();
+                        $@"Can't import Diagram Styles '{jsonChapter}'");
+                }
+
+                return null;
             }
         }
 
         /// <summary>
         /// Create a ToolStripItem with DropDownitems for each Style (Subtypes of DiagramGeneralStyleItem) .
-        /// The Tag property contains the style.
+        /// The Tag property contains the style. If no configuration is available insert a text as a hint to a missing configuration.
         /// </summary>
         /// <param name="items"></param>
         /// <param name="nameRoot"></param>
@@ -132,90 +137,38 @@ Consider Resetting to factory settings:
                 ToolTipText = toolTipRoot
             };
             // Add item of possible style as items in drop down
-            foreach (T style in items)
+            if (items == null)
             {
-                var style1 = style as IMenuItem;
                 ToolStripMenuItem item = new ToolStripMenuItem
                 {
-                    Text = style1.Name,
-                    ToolTipText = style1.Description,
-                    Tag = style1
+                    Text = $"Settings for '{typeof(T)}' not found!",
+                    ToolTipText = $"Setting Settings.Json not available\r\nChapter: '{typeof(T)}'\r\nConsider resetting to factory settings or create your own styles\r\nFile: '%appdata%\\ho\\hoTools\\Settings.Json'",
+
                 };
-                item.Click += eventHandler;
                 insertTemplateMenuItem.DropDownItems.Add(item);
+
             }
+            else
+            {
+                foreach (T style in items)
+                {
+                    var style1 = style as IMenuItem;
+                    ToolStripMenuItem item = new ToolStripMenuItem
+                    {
+                        Text = style1.Name,
+                        ToolTipText = style1.Description,
+                        Tag = style1
+                    };
+                    item.Click += eventHandler;
+                    insertTemplateMenuItem.DropDownItems.Add(item);
+                }
+            }
+
             return insertTemplateMenuItem;
 
         }
 
        
-
-
-
-
-
-        /// <summary>
-        /// Create a ToolStripItem with DropDownitems for each DiagramStyle.
-        /// The Tag property contains the style.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="toolTip"></param>
-        /// <param name="eventHandler"></param>
-        /// <returns></returns>
-        public ToolStripMenuItem GetToolStripMenuDiagramStyle(string name, string toolTip, EventHandler eventHandler)
-        {
-            ToolStripMenuItem insertTemplateMenuItem = new ToolStripMenuItem
-            {
-                Text = name,
-                ToolTipText = toolTip
-            };
-            // Add item of possible style as items in drop down
-            foreach (var style in DiagramStyleItems)
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem
-                {
-                    Text = style.Name,
-                    ToolTipText = style.Description,
-                    Tag = style
-                };
-                item.Click += eventHandler;
-                insertTemplateMenuItem.DropDownItems.Add(item);
-            }
-            return insertTemplateMenuItem;
-
-        }
-        /// <summary>
-        /// Create a ToolStripItem with DropDownitems for each DiagramStyle.
-        /// The Tag property contains the style.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="toolTip"></param>
-        /// <param name="eventHandler"></param>
-        /// <returns></returns>
-        public ToolStripMenuItem GetToolStripMenuDiagramObjectStyle(string name, string toolTip, EventHandler eventHandler)
-        {
-            ToolStripMenuItem insertTemplateMenuItem = new ToolStripMenuItem
-            {
-                Text = name,
-                ToolTipText = toolTip
-            };
-            // Add item of possible style as items in drop down
-            foreach (DiagramObjectStyleItem style in DiagramObjectStyleItems)
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem
-                {
-                    Text = style.Name,
-                    ToolTipText = style.Description,
-                    Tag = style
-                };
-                item.Click += eventHandler;
-                insertTemplateMenuItem.DropDownItems.Add(item);
-            }
-            return insertTemplateMenuItem;
-
-        }
-
-
         /// <summary>
         /// Set Ea Diagram Object Style according to properties passed in the form 'properyName=propertyValue'
         /// </summary>

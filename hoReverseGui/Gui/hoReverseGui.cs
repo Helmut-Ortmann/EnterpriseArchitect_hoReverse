@@ -3549,6 +3549,7 @@ namespace hoReverse.Reverse
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
             BulkElementItem bulkElement = (BulkElementItem)item.Tag;
             BulkItemChange.BulkChange(_repository,  bulkElement);
         }
@@ -3556,6 +3557,7 @@ namespace hoReverse.Reverse
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
             BulkElementItem bulkElement = (BulkElementItem)item.Tag;
             BulkItemChange.BulkChangeRecursive(_repository, bulkElement);
 
@@ -3572,6 +3574,7 @@ namespace hoReverse.Reverse
 
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
             DiagramObjectStyleItem style = (DiagramObjectStyleItem)item.Tag;
 
             HoService.DiagramObjectStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
@@ -3582,6 +3585,7 @@ namespace hoReverse.Reverse
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem; //((ToolStripMenuItem) sender).Tag; DiagramStyleItem
             Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
             DiagramStyleItem style = (DiagramStyleItem) item.Tag;
 
             // [0] StyleEx
@@ -3649,7 +3653,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
 
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
             DiagramLinkStyleItem style = (DiagramLinkStyleItem)item.Tag;
 
             HoService.DiagramLinkStyleWrapper(_repository, style.Type, style.Style, style.Property, changeScope);
