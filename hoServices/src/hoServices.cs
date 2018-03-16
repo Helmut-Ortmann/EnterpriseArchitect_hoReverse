@@ -303,6 +303,9 @@ Second Element: Target of move connections and appearances", "Select two element
                 case ObjectType.otParameter:
                     strGuid = ((Parameter)o).ParameterGUID;
                     break;
+                case EA.ObjectType.otDiagramObject:
+                    strGuid = $"{((EA.DiagramObject) o).InstanceGUID}";
+                    break;
 
             }
 
@@ -310,7 +313,58 @@ Second Element: Target of move connections and appearances", "Select two element
             else Clipboard.SetText(strGuid);
         }
         /// <summary>
-        /// Copy GUID to ClipBoard
+        /// Copy ID to ClipBoard
+        /// </summary>
+        /// <param name="rep"></param>
+        [ServiceOperation("{363D3671-8C85-4DEA-8C41-D54CA3F3DAA1}", "Copy ID to Clipboard",
+            "Copy ID to Clipboard (Package, Element, Diagram, Attribute, Operation, Connector, Parameter)",
+            isTextRequired: false)]
+        // ReSharper disable once UnusedMember.Global
+        // dynamical usage as configurable service by reflection
+        public static void CopyIdToClipboard(Repository rep)
+        {
+            string id = "";
+            object o;
+            EA.ObjectType type = rep.GetContextItem(out o);
+            switch (type)
+            {
+                case EA.ObjectType.otElement:
+                    id = $"{((EA.Element) o).ElementID}";
+                    break;
+                case EA.ObjectType.otPackage:
+                    id = $"{((EA.Package) o).PackageID}";
+                    break;
+                case EA.ObjectType.otDiagram:
+                    id = $"{((EA.Diagram) o).DiagramID}";
+                    break;
+                case EA.ObjectType.otAttribute:
+                    id = $"{((EA.Attribute) o).AttributeID}";
+                    break;
+                case EA.ObjectType.otMethod:
+                    id = $"{((EA.Method) o).MethodID}";
+                    break;
+
+                case EA.ObjectType.otConnector:
+                    id = $"{((EA.Connector) o).ConnectorID}";
+                    break;
+                case EA.ObjectType.otModel:
+                    id = $"{((EA.Package) o).PackageID}";
+                    break;
+                case EA.ObjectType.otDiagramObject:
+                    id = $"{((EA.DiagramObject) o).InstanceID}";
+                    break;
+                case EA.ObjectType.otDiagramLink:
+                    id = $"{((EA.DiagramLink) o).InstanceID}";
+                    break;
+               
+
+            }
+
+            if (String.IsNullOrWhiteSpace(id)) Clipboard.Clear();
+            else Clipboard.SetText(id);
+        }
+        /// <summary>
+        /// Copy Review info to ClipBoard
         /// </summary>
         /// <param name="rep"></param>
         [ServiceOperation("{28A7501A-ADDC-4250-9E05-E3561840CF3B}", "Copy Review Info: Type, Name, GUID to Clipboard",
