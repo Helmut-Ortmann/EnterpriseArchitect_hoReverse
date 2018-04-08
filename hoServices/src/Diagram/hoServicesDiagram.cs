@@ -447,12 +447,16 @@ namespace hoReverse.Services
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
+                rep.BatchAppend = true;
+                rep.EnableUIUpdates = false;
 
                 // if action update link to operation
                 HoService.UpdateAction(rep);
 
                 HoService.ReconcileOperationTypesWrapper(rep);
                 HoService.UpdateActivityParameter(rep);
+                rep.BatchAppend = false;
+                rep.EnableUIUpdates = true;
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)

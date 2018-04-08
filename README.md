@@ -38,6 +38,7 @@ Let's discuss it, but it works.
 2.1.10 Error fixing
 -  Create CallBehaviour Action with SQL error fixed
 -  Service Copy ID of Element, Package, Diagram, .. copied
+-  Improved update behavior create/update activity from Method
 
 2.1.9  Error fixing
 - No Error message if Settings.Json doesn't contain configuration chapter for Styles, Bulk changes and more
