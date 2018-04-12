@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using EA;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
@@ -19,6 +21,7 @@ using File = System.IO.File;
 using hoLinqToSql.LinqUtils;
 
 using hoUtils.BulkChange;
+using hoUtils.ExportImport;
 
 
 // ReSharper disable RedundantDelegateCreation
@@ -238,6 +241,7 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem showProvidedRequiredFunctionsForSourceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator16;
+        private ToolStripMenuItem doorsImportcsvToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -653,6 +657,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -760,7 +765,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.doorsImportcsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1423,6 +1428,26 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AcceptsReturn = true;
+            this.TxtUserText.AcceptsTab = true;
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
+        "lon as in C.");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -2073,15 +2098,17 @@ namespace hoReverse.Reverse
             this._vCGetStateToolStripMenuItem,
             this._vCResyncToolStripMenuItem,
             this._vCxmiReconsileToolStripMenuItem,
-            this._vCRemoveToolStripMenuItem});
+            this._vCRemoveToolStripMenuItem,
+            this.doorsImportcsvToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this._maintenanceToolStripMenuItem.Text = "Maintenance";
+            this._maintenanceToolStripMenuItem.ToolTipText = "Experimental";
             // 
             // _vCGetStateToolStripMenuItem
             // 
             this._vCGetStateToolStripMenuItem.Name = "_vCGetStateToolStripMenuItem";
-            this._vCGetStateToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this._vCGetStateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this._vCGetStateToolStripMenuItem.Text = "&VC get state";
             this._vCGetStateToolStripMenuItem.ToolTipText = "Show the VC package state in a messagage box.\r\n- How has checked out the package";
             this._vCGetStateToolStripMenuItem.Click += new System.EventHandler(this.vCGetStateToolStripMenuItem_Click);
@@ -2089,7 +2116,7 @@ namespace hoReverse.Reverse
             // _vCResyncToolStripMenuItem
             // 
             this._vCResyncToolStripMenuItem.Name = "_vCResyncToolStripMenuItem";
-            this._vCResyncToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this._vCResyncToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this._vCResyncToolStripMenuItem.Text = "&VC Resync";
             this._vCResyncToolStripMenuItem.ToolTipText = "Resynchronice svn VC package state for package(recursive).\r\n- Select Package\r\n- S" +
     "elect Model for whole Model (root package)";
@@ -2098,7 +2125,7 @@ namespace hoReverse.Reverse
             // _vCxmiReconsileToolStripMenuItem
             // 
             this._vCxmiReconsileToolStripMenuItem.Name = "_vCxmiReconsileToolStripMenuItem";
-            this._vCxmiReconsileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this._vCxmiReconsileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this._vCxmiReconsileToolStripMenuItem.Text = "VC XMI reconsile";
             this._vCxmiReconsileToolStripMenuItem.ToolTipText = "Scan all XMI packages and reconsile deleted objects or connectors.";
             this._vCxmiReconsileToolStripMenuItem.Click += new System.EventHandler(this.vCXMIReconsileToolStripMenuItem_Click);
@@ -2106,7 +2133,7 @@ namespace hoReverse.Reverse
             // _vCRemoveToolStripMenuItem
             // 
             this._vCRemoveToolStripMenuItem.Name = "_vCRemoveToolStripMenuItem";
-            this._vCRemoveToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this._vCRemoveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this._vCRemoveToolStripMenuItem.Text = "VC Remove";
             this._vCRemoveToolStripMenuItem.Click += new System.EventHandler(this._vCRemoveToolStripMenuItem_Click);
             // 
@@ -2355,25 +2382,12 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // TxtUserText
+            // doorsImportcsvToolStripMenuItem
             // 
-            this.TxtUserText.AcceptsReturn = true;
-            this.TxtUserText.AcceptsTab = true;
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
-        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
-        "lon as in C.");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            this.doorsImportcsvToolStripMenuItem.Name = "doorsImportcsvToolStripMenuItem";
+            this.doorsImportcsvToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.doorsImportcsvToolStripMenuItem.Text = "Doors Import *.csv";
+            this.doorsImportcsvToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4022,6 +4036,72 @@ Please restart EA. During restart hoTools loads the default settings.",
             return "";
 
 
+
+        }
+        /// <summary>
+        /// Import *.csv from DOORS into current package as requirements
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void doorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            object item;
+            EA.ObjectType type = _repository.GetContextItem(out item);
+            if (type != EA.ObjectType.otPackage) return;
+
+            EA.Package pkg = (EA.Package) item;
+            
+            string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
+            DataTable dt = ExpImp.MakeDataTableFromCsvFile(filePath, ',');
+
+            _repository.BatchAppend = true;
+            _repository.EnableUIUpdates = false;
+            Cursor.Current = Cursors.WaitCursor;
+
+            // Get only the number of the id
+            Regex ex = new Regex("[0-9]*$");
+            Regex exFirstLine = new Regex("[^\r]*");
+            foreach (DataRow row in dt.Rows)
+            {
+                string objectId =  row["Id"].ToString();
+                string reqNumber = ex.Match(objectId).Value;
+                string objectLevel = row["Object Level"].ToString();
+                string objectNumber = row["Object Number"].ToString();
+                string objectType = row["ObjectType"].ToString();
+
+                
+
+
+                string name;
+                string notes;
+
+
+                if (objectType == "headline")
+                {
+                    name = $"{objectNumber} {row["Object Heading"]}";
+                    notes =  row["Object Heading"].ToString(); 
+                }
+                else
+                {
+                    notes =  row["Object Text"].ToString();
+                    string objectShorttext = exFirstLine.Match(notes).Value;
+                    objectShorttext = objectShorttext.Length > 40 ? objectShorttext.Substring(0,40) : objectShorttext;
+                    name = $"{reqNumber.PadRight(7)} {objectShorttext}";
+                    
+                }
+                EA.Element el = (EA.Element)pkg.Elements.AddNew(name, "Requirement");
+                el.Alias = objectId;
+                el.Name = name;
+                el.Notes = notes;
+                el.Update();
+                pkg.Elements.Refresh();
+            }
+
+            
+            _repository.BatchAppend = false;
+            _repository.EnableUIUpdates = true;
+            _repository.ReloadPackage(pkg.PackageID);
+            Cursor.Current = Cursors.Default;
 
         }
     }

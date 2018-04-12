@@ -225,6 +225,21 @@
       <Component Id="DeleteFiles" Guid="C4132857-ECC3-4071-B7E8-90788C9A5416">
         <RemoveFile Id="Purge" Name="*.*" On="uninstall" />
       </Component>
+      <!--
+      Export/Import via *.xml, *.csc, Excel,   
+      -->
+        <Component Id="KBCsv" Guid="B1BF84D5-3F02-438C-A5D4-E0AD0EB5E6A9">
+            <File Id="KBCsv" KeyPath="yes" Name="KBCsv.dll"  Source="..\packages\KBCsv.5.0.0\lib\netstandard1.0\KBCsv.dll" />
+        </Component>
+        <Component Id="KBCsv.Extensions.Data" Guid="5EDED75D-E813-491D-8E2A-5CCE4341BD38">
+            <File Id="KBCsv.Extensions.Data" KeyPath="yes" Name="KBCsv.Extensions.Data.dll"  Source="..\packages\KBCsv.Extensions.Data.5.0.0\lib\net45\KBCsv.Extensions.Data.dll" />
+        </Component>
+        <Component Id="DocumentFormat.OpenXml" Guid="41B53040-189A-4F3A-BFF5-D94CC0FC352C">
+            <File Id="DocumentFormat.OpenXml" KeyPath="yes" Name="DocumentFormat.OpenXml.dll"  Source="..\packages\DocumentFormat.OpenXml.2.8.1\lib\net46\DocumentFormat.OpenXml.dll" />
+        </Component>
+        <Component Id="ClosedXml" Guid="AAE6BCF4-002B-4FAD-B5E4-0853B04A800A">
+            <File Id="ClosedXml" KeyPath="yes" Name="ClosedXml.dll"  Source="..\packages\ClosedXML.0.92.1\lib\net40\ClosedXML.dll" />
+        </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

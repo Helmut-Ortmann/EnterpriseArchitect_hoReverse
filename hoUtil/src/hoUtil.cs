@@ -1814,5 +1814,40 @@ ConnectionString:  {rep.ConnectionString}
                 return "";
             }
         }
+        /// <summary>
+        /// Open Directory of a directory or a file with Explorer or Totalcommander.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="isTotalCommander"></param>
+        public static void ShowFolder(string path, bool isTotalCommander=false)
+        {
+            path = Path.GetDirectoryName(path);
+
+            if (isTotalCommander)
+                StartApp(@"totalcmd.exe", "/o " + path);
+            else
+                StartApp(@"Explorer.exe", "/e, " + path);
+        }
+        /// <summary>
+        /// Delete file with error handling
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static bool TryToDeleteFile(string fileName)
+        {
+            try
+            {
+                // A.
+                // Try to delete the file.
+                if (File.Exists(fileName)) File.Delete(fileName);
+                return true;
+            }
+            catch (IOException)
+            {
+                // B.
+                // We could not delete the file.
+                return false;
+            }
+        }
     }
 }

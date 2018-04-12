@@ -2406,7 +2406,7 @@ Second Element: Target of move connections and appearances", "Select two element
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="text"></param>
-        /// <param name="UseCallBehaviorAction"></param>
+        /// <param name="useCallBehaviorAction"></param>
         public static void InsertInActivtyDiagram(Repository rep, string text, bool useCallBehaviorAction=false)
         {
             
