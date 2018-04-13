@@ -10,6 +10,17 @@ using hoUtils.ExportImport;
 
 namespace EaServices.Doors
 {
+    /// <summary>
+    /// Handle import requirements from doors. It requires the following properties:
+    /// - Object Level
+    /// - Object Number
+    /// - ID
+    /// - State
+    /// - Objecttype
+    /// DoorsModule converts additional columns into Tagged value.
+    /// 
+    /// Note: DoorsModule uses the EA column 'Multiplicity' to store the absolute/unique DOORS ID (without module prefix)
+    /// </summary>
     public class DoorsModule
     {
         string _importModuleFile;
@@ -68,6 +79,9 @@ namespace EaServices.Doors
         /// </summary>
         public void ImportUpdateRequirements()
         {
+            _rep.BatchAppend = true;
+            _rep.EnableUIUpdates = false;
+
             int count = 0;
             List<int> parentElementIdsPerLevel = new List<int>();
             parentElementIdsPerLevel.Add(0);
@@ -172,6 +186,10 @@ namespace EaServices.Doors
             }
 
             MoveDeletedRequirements();
+
+            _rep.BatchAppend = false;
+            _rep.EnableUIUpdates = true;
+            _rep.ReloadPackage(_pkg.PackageID);
         }
 
         /// <summary>
