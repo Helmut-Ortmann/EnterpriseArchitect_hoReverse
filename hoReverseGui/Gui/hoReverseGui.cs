@@ -4058,7 +4058,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
 
-            DataTable dt = ExpImp.MakeDataTableFromCsvFile(filePath, ',');
+            DataTable dt = doorsModule.DtDoorsRequirements;
 
             _repository.BatchAppend = true;
             _repository.EnableUIUpdates = false;
@@ -4085,6 +4085,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
                 string objectNumber = row["Object Number"].ToString();
                 string objectType = row["ObjectType"].ToString();
+                string objectHeading = row["Object Heading"].ToString();
 
 
                 // Maintain parent ids of level
@@ -4099,14 +4100,15 @@ Please restart EA. During restart hoTools loads the default settings.",
                 {
                     parentElementId =  parentElementIdsPerLevel[objectLevel];
                 }
-                
+
+                oldLevel = objectLevel;
                 string name;
                 string notes;
 
-
-                if (objectType == "headline")
+                // Estimate if header
+                if (objectType == "headline" || ! String.IsNullOrWhiteSpace(objectHeading))
                 {
-                    name = $"{objectNumber} {row["Object Heading"]}";
+                    name = $"{objectNumber} {objectHeading}";
                     notes =  row["Object Heading"].ToString(); 
                 }
                 else
@@ -4152,6 +4154,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                 }
             }
 
+            doorsModule.MoveDeletedRequirements();
             
             _repository.BatchAppend = false;
             _repository.EnableUIUpdates = true;
