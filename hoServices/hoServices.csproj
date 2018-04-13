@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Doors\DoorsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">
       <SubType>UserControl</SubType>

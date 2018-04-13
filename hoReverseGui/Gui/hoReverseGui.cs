@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -4045,6 +4047,8 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private void doorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string[] columnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
+
             object item;
             EA.ObjectType type = _repository.GetContextItem(out item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4052,6 +4056,8 @@ Please restart EA. During restart hoTools loads the default settings.",
             EA.Package pkg = (EA.Package) item;
             
             string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
+
             DataTable dt = ExpImp.MakeDataTableFromCsvFile(filePath, ',');
 
             _repository.BatchAppend = true;
@@ -4059,19 +4065,41 @@ Please restart EA. During restart hoTools loads the default settings.",
             Cursor.Current = Cursors.WaitCursor;
 
             // Get only the number of the id
-            Regex ex = new Regex("[0-9]*$");
+            Regex exDoorsAbsNumber = new Regex("[0-9]*$");
+
+            // extract doors requirement id (number)
             Regex exFirstLine = new Regex("[^\r]*");
+            int count = 0;
+            List<int> parentElementIdsPerLevel = new List<int>();
+            parentElementIdsPerLevel.Add(0);
+            int parentElementId = 0;
+            int lastElementId = 0;
+            
+            int oldLevel = 0;
+
             foreach (DataRow row in dt.Rows)
             {
+                count +=1;
                 string objectId =  row["Id"].ToString();
-                string reqNumber = ex.Match(objectId).Value;
-                string objectLevel = row["Object Level"].ToString();
+                string reqAbsNumber = exDoorsAbsNumber.Match(objectId).Value;
+                int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
                 string objectNumber = row["Object Number"].ToString();
                 string objectType = row["ObjectType"].ToString();
 
+
+                // Maintain parent ids of level
+                // get parent id
+                if (objectLevel > oldLevel)
+                {
+                    if (parentElementIdsPerLevel.Count <= objectLevel) parentElementIdsPerLevel.Add(lastElementId);
+                    else parentElementIdsPerLevel[objectLevel] = lastElementId;
+                    parentElementId = lastElementId;
+                }
+                if (objectLevel < oldLevel)
+                {
+                    parentElementId =  parentElementIdsPerLevel[objectLevel];
+                }
                 
-
-
                 string name;
                 string notes;
 
@@ -4086,15 +4114,42 @@ Please restart EA. During restart hoTools loads the default settings.",
                     notes =  row["Object Text"].ToString();
                     string objectShorttext = exFirstLine.Match(notes).Value;
                     objectShorttext = objectShorttext.Length > 40 ? objectShorttext.Substring(0,40) : objectShorttext;
-                    name = $"{reqNumber.PadRight(7)} {objectShorttext}";
+                    name = $"{reqAbsNumber.PadRight(7)} {objectShorttext}";
                     
                 }
-                EA.Element el = (EA.Element)pkg.Elements.AddNew(name, "Requirement");
+
+                bool isExistingRequirement = doorsModule.DictObjectIdFromDoorsId.TryGetValue(reqAbsNumber, out int elId);
+                
+
+                EA.Element el = isExistingRequirement ? (EA.Element)_repository.GetElementByID(elId) : (EA.Element)pkg.Elements.AddNew(name, "Requirement");
+
                 el.Alias = objectId;
                 el.Name = name;
+                el.Multiplicity = reqAbsNumber;
                 el.Notes = notes;
+                el.TreePos = count*10;
+                el.PackageID = pkg.PackageID;
+                el.ParentID = parentElementId;
                 el.Update();
                 pkg.Elements.Refresh();
+                lastElementId = el.ElementID;
+
+                // handle the remaining columns/ tagged values
+                var cols = from c in dt.Columns.Cast<DataColumn>()
+                           where !columnNamesNoTaggedValues.Any(n => n == c.ColumnName ) 
+                    select new {
+                        Name=c.ColumnName,
+                        Value=row[c].ToString()
+                    }
+                        
+                    ;
+                foreach (var c in cols)
+                {
+                    EA.TaggedValue tg = (EA.TaggedValue)el.TaggedValues.AddNew(c.Name, "");
+                    tg.Value = c.Value;
+                    tg.Update();
+                    el.TaggedValues.Refresh();
+                }
             }
 
             
