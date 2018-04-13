@@ -244,6 +244,8 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem showProvidedRequiredFunctionsForSourceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator16;
         private ToolStripMenuItem doorsImportcsvToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator17;
+        private ToolStripMenuItem doorsImportcsvWithFileDialogToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -741,6 +743,7 @@ namespace hoReverse.Reverse
             this._vCResyncToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._vCxmiReconsileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._vCRemoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doorsImportcsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -767,7 +770,8 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.doorsImportcsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.doorsImportcsvWithFileDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2101,7 +2105,9 @@ namespace hoReverse.Reverse
             this._vCResyncToolStripMenuItem,
             this._vCxmiReconsileToolStripMenuItem,
             this._vCRemoveToolStripMenuItem,
-            this.doorsImportcsvToolStripMenuItem});
+            this.toolStripSeparator17,
+            this.doorsImportcsvToolStripMenuItem,
+            this.doorsImportcsvWithFileDialogToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this._maintenanceToolStripMenuItem.Text = "Maintenance";
@@ -2110,7 +2116,7 @@ namespace hoReverse.Reverse
             // _vCGetStateToolStripMenuItem
             // 
             this._vCGetStateToolStripMenuItem.Name = "_vCGetStateToolStripMenuItem";
-            this._vCGetStateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._vCGetStateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCGetStateToolStripMenuItem.Text = "&VC get state";
             this._vCGetStateToolStripMenuItem.ToolTipText = "Show the VC package state in a messagage box.\r\n- How has checked out the package";
             this._vCGetStateToolStripMenuItem.Click += new System.EventHandler(this.vCGetStateToolStripMenuItem_Click);
@@ -2118,7 +2124,7 @@ namespace hoReverse.Reverse
             // _vCResyncToolStripMenuItem
             // 
             this._vCResyncToolStripMenuItem.Name = "_vCResyncToolStripMenuItem";
-            this._vCResyncToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._vCResyncToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCResyncToolStripMenuItem.Text = "&VC Resync";
             this._vCResyncToolStripMenuItem.ToolTipText = "Resynchronice svn VC package state for package(recursive).\r\n- Select Package\r\n- S" +
     "elect Model for whole Model (root package)";
@@ -2127,7 +2133,7 @@ namespace hoReverse.Reverse
             // _vCxmiReconsileToolStripMenuItem
             // 
             this._vCxmiReconsileToolStripMenuItem.Name = "_vCxmiReconsileToolStripMenuItem";
-            this._vCxmiReconsileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._vCxmiReconsileToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCxmiReconsileToolStripMenuItem.Text = "VC XMI reconsile";
             this._vCxmiReconsileToolStripMenuItem.ToolTipText = "Scan all XMI packages and reconsile deleted objects or connectors.";
             this._vCxmiReconsileToolStripMenuItem.Click += new System.EventHandler(this.vCXMIReconsileToolStripMenuItem_Click);
@@ -2135,9 +2141,17 @@ namespace hoReverse.Reverse
             // _vCRemoveToolStripMenuItem
             // 
             this._vCRemoveToolStripMenuItem.Name = "_vCRemoveToolStripMenuItem";
-            this._vCRemoveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._vCRemoveToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCRemoveToolStripMenuItem.Text = "VC Remove";
             this._vCRemoveToolStripMenuItem.Click += new System.EventHandler(this._vCRemoveToolStripMenuItem_Click);
+            // 
+            // doorsImportcsvToolStripMenuItem
+            // 
+            this.doorsImportcsvToolStripMenuItem.Name = "doorsImportcsvToolStripMenuItem";
+            this.doorsImportcsvToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.doorsImportcsvToolStripMenuItem.Text = "Doors Import *.csv";
+            this.doorsImportcsvToolStripMenuItem.ToolTipText = resources.GetString("doorsImportcsvToolStripMenuItem.ToolTipText");
+            this.doorsImportcsvToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvToolStripMenuItem_Click);
             // 
             // _helpToolStripMenuItem
             // 
@@ -2384,12 +2398,18 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // doorsImportcsvToolStripMenuItem
+            // toolStripSeparator17
             // 
-            this.doorsImportcsvToolStripMenuItem.Name = "doorsImportcsvToolStripMenuItem";
-            this.doorsImportcsvToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.doorsImportcsvToolStripMenuItem.Text = "Doors Import *.csv";
-            this.doorsImportcsvToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvToolStripMenuItem_Click);
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(251, 6);
+            // 
+            // doorsImportcsvWithFileDialogToolStripMenuItem
+            // 
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.Name = "doorsImportcsvWithFileDialogToolStripMenuItem";
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.Text = "Doors Import *.csv with file Dialog";
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText = resources.GetString("doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText");
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvWithFileDialogToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4053,11 +4073,47 @@ Please restart EA. During restart hoTools loads the default settings.",
             EA.Package pkg = (EA.Package) item;
             
             string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show($"{filePath}", "*.csv to import DOORS requirements doesn't exists");
+                return;
+            }
 
 
             Cursor.Current = Cursors.WaitCursor;
+            // Generate Requirements
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
+            doorsModule.ImportUpdateRequirements();
 
 
+            Cursor.Current = Cursors.Default;
+
+        }
+
+        private void doorsImportcsvWithFileDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EA.ObjectType type = _repository.GetContextItem(out var item);
+            if (type != EA.ObjectType.otPackage) return;
+
+            EA.Package pkg = (EA.Package) item;
+            
+            string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
+            OpenFileDialog theDialog = new OpenFileDialog();
+            theDialog.Title = "Open DOORS requirement *.csv File, comma separated";
+            theDialog.Filter = "CSV files|*.csv";
+            theDialog.InitialDirectory = @"C:\";
+            if (theDialog.ShowDialog() != DialogResult.OK) return;
+
+            filePath = theDialog.FileName.ToString();
+
+
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show($"{filePath}", "*.csv to import DOORS requirements doesn't exists");
+                return;
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
             doorsModule.ImportUpdateRequirements();
