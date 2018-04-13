@@ -4145,13 +4145,31 @@ Please restart EA. During restart hoTools loads the default settings.",
                     }
                         
                     ;
+                // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    EA.TaggedValue tg = (EA.TaggedValue)el.TaggedValues.AddNew(c.Name, "");
-                    tg.Value = c.Value;
-                    tg.Update();
-                    el.TaggedValues.Refresh();
-                }
+                    bool find = false;
+                    foreach (EA.TaggedValue t in el.TaggedValues)
+                    {
+                        if (t.Name == c.Name)
+                        {
+                            find = true;
+                            t.Value = c.Value;
+                            t.Update();
+                            break;
+                        }
+                        
+                    }
+
+                    if (find == false)
+                    {
+                        EA.TaggedValue tg = (EA.TaggedValue) el.TaggedValues.AddNew(c.Name, "");
+                        tg.Value = c.Value;
+                        tg.Update();
+                        el.TaggedValues.Refresh();
+
+                    }
+               }
             }
 
             doorsModule.MoveDeletedRequirements();
