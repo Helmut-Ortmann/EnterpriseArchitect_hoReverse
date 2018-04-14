@@ -150,6 +150,7 @@
     <Compile Include="Extension\EaExtensionClass.cs" />
     <Compile Include="Gui\IMenuItem.cs" />
     <Compile Include="Helper\EaHelper.cs" />
+    <Compile Include="Json\JasonHelper.cs" />
     <Compile Include="Odbc\ODBC.cs" />
     <Compile Include="Package\Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
