@@ -32,7 +32,7 @@ namespace EaServices.Doors
         private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
         DataTable _dtDoorsRequirements;
-        Dictionary<string, int> _dictObjectIdFromDoorsId = new Dictionary<string,int>();
+        Dictionary<string, int> _dictPackageRequirements = new Dictionary<string,int>();
         private string _jsonFilePath;
 
         private List<FileImportSettingsItem> _importSettings;
@@ -44,84 +44,73 @@ namespace EaServices.Doors
 
         private readonly string packageNameDeletedObjects = "DeletedDoorsRequirements";
 
-        public DoorsModule(string jsonFilePath, EA.Repository rep, EA.Package pkg, string importModuleFile)
+        /// <summary>
+        /// Initialize basic
+        /// </summary>
+        /// <param name="jsonFilePath"></param>
+        /// <param name="rep"></param>
+        public DoorsModule(string jsonFilePath, EA.Repository rep)
+        {
+            _jsonFilePath = jsonFilePath;
+            _rep = rep;
+            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
+            ReadImportSettings();
+        }
+        /// <summary>
+        /// Initialize DoorsModule for handling a file
+        /// </summary>
+        /// <param name="jsonFilePath"></param>
+        /// <param name="rep"></param>
+        /// <param name="pkg"></param>
+        /// <param name="importModuleFile"></param>
+        public DoorsModule(EA.Repository rep, EA.Package pkg, string importModuleFile)
         {
             _importModuleFile = importModuleFile;
-            Init(jsonFilePath, rep, pkg);
-            
-            // Read all requirements
-            _dtDoorsRequirements = ExpImp.MakeDataTableFromCsvFile(_importModuleFile, ',');
-
-            // get connection string of repository
-            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
-
-            if (_connectionString == "") return;
-
-            // Read all existing EA Requirements of package
-            // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
-            using (var db = new EaDataModel(_provider, _connectionString))
-            {
-                try
-                {
-                    _dictObjectIdFromDoorsId = (from r in db.q_object
-                        where r.Object_Type == "Requirement" && r.Package_ID == _pkg.PackageID
-                        group r by r.Multiplicity into grp
-                        select new
-                        {
-                           Name = grp.Key, //Multiplicity,
-                           Value = grp.Max(x => x.Object_ID)
-
-                        }).ToDictionary(x=>x.Name, x=>x.Value);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"{e}", "Can't determine EA Elements of Doors requirements.");
-                }
-            }
-
-            CreatePackageDeletedObjects();
+            Init(rep, pkg);
         }
 
+        
         /// <summary>
         /// Constructor without a file to import. It's used for e.g. checks.
         /// </summary>
         /// <param name="jsonFilePath"></param>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
-        public DoorsModule(string jsonFilePath, EA.Repository rep, EA.Package pkg)
+        public DoorsModule(EA.Repository rep, EA.Package pkg)
         {
-            Init(jsonFilePath, rep, pkg);
+            Init(rep, pkg);
         }
 
         /// <summary>
-        /// Initialize DoorsModule.
+        /// Initialize DoorsModule for usage with package.
         /// </summary>
-        /// <param name="jsonFilePath"></param>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
-        private void Init(string jsonFilePath, EA.Repository rep, EA.Package pkg)
+        private void Init(EA.Repository rep, EA.Package pkg)
         {
-            _jsonFilePath = jsonFilePath;
             _pkg = pkg;
             _rep = rep;
 
             // get connection string of repository
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
-
-            if (_connectionString == "") return;
-
+         
+        }
+        /// <summary>
+        /// Read Import Settings
+        /// </summary>
+        private void ReadImportSettings()
+        {
             // Get settings from 'Settings.json', Chapter 'Importer'
             _importSettings = (List<FileImportSettingsItem>)JasonHelper
                 .GetConfigurationItems<FileImportSettingsItem>(JasonHelper
-                .DeserializeSettings(_jsonFilePath), "Importer");
+                    .DeserializeSettings(_jsonFilePath), "Importer");
 
-            ReadRequirements();
-          
         }
+
         /// <summary>
-        /// Read Requirements into dictionary _dictObjectIdFromDoorsId.
+        /// Read Requirements of _pkg into dictionary _dictPackageRequirements.
         /// </summary>
-        private void ReadRequirements()
+        private void ReadPackageRequirements()
         {
             // Read all existing EA Requirements of package
             // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
@@ -129,7 +118,8 @@ namespace EaServices.Doors
             {
                 try
                 {
-                    var _dictObjectIdFromDoorsId = (from r in db.q_object
+                    //var notUniqueRequirements = (from r in db.q_object
+                    _dictPackageRequirements = (from r in db.q_object
                         where r.Object_Type == "Requirement" && r.Package_ID == _pkg.PackageID
                         group r by r.Multiplicity into grp
                         select new
@@ -139,7 +129,7 @@ namespace EaServices.Doors
 
                         }).ToDictionary(x=>x.Name, x=>x.Value);
                     //DataTable dt = notUniqueRequirements.ToDataTable();
-                    //_dictObjectIdFromDoorsId = notUniqueRequirements.ToDictionary(x=>x.Name, x=>x.Value);
+                    //_dictPackageRequirements = notUniqueRequirements.ToDictionary(x=>x.Name, x=>x.Value);
                 }
                 catch (Exception e)
                 {
@@ -151,13 +141,19 @@ namespace EaServices.Doors
 
 
         /// <summary>
-        /// Import and update Requirements
+        /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public async Task ImportUpdateRequirements()
+        public async Task ImportUpdateRequirements(string eaObjectType="Requirement", string eaStereotype="")
         {
             _rep.BatchAppend = true;
             _rep.EnableUIUpdates = false;
+
+            // Prepare
+            _dtDoorsRequirements = ExpImp.MakeDataTableFromCsvFile(_importModuleFile, ',');
+
+            ReadPackageRequirements();
+            CreatePackageDeletedObjects();
 
             int count = 0;
             List<int> parentElementIdsPerLevel = new List<int>();
@@ -166,7 +162,6 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-
             foreach (DataRow row in _dtDoorsRequirements.Rows)
             {
                 count += 1;
@@ -209,8 +204,8 @@ namespace EaServices.Doors
                     name = $"{reqAbsNumber.PadRight(7)} {objectShorttext}";
 
                 }
-
-                bool isExistingRequirement = _dictObjectIdFromDoorsId.TryGetValue(reqAbsNumber, out int elId);
+                // Check if requirement with Doors ID already exists
+                bool isExistingRequirement = _dictPackageRequirements.TryGetValue(reqAbsNumber, out int elId);
 
 
                 EA.Element el = isExistingRequirement ? (EA.Element)_rep.GetElementByID(elId) : (EA.Element)_pkg.Elements.AddNew(name, "Requirement");
@@ -222,6 +217,9 @@ namespace EaServices.Doors
                 el.TreePos = count * 10;
                 el.PackageID = _pkg.PackageID;
                 el.ParentID = parentElementId;
+                el.Type = eaObjectType;
+                el.Stereotype = eaStereotype;
+
                 el.Update();
                 _pkg.Elements.Refresh();
                 lastElementId = el.ElementID;
@@ -293,7 +291,7 @@ namespace EaServices.Doors
         /// </summary>
         public void MoveDeletedRequirements()
         {
-            var moveEaElements = from m in _dictObjectIdFromDoorsId
+            var moveEaElements = from m in _dictPackageRequirements
                 where !_dtDoorsRequirements.Rows.Cast<DataRow>().Any(x => GetAbsoluteNumerFromDoorsId(x["Id"].ToString()) == m.Key)
                 select m.Value;
             foreach (var eaId in moveEaElements)
@@ -369,6 +367,23 @@ namespace EaServices.Doors
             return _pkgDeletedObjects;
 
         }
+        /// <summary>
+        /// Import according to import settings
+        /// </summary>
+        public async void ImportBySetting()
+        {
+            foreach (FileImportSettingsItem item in _importSettings)
+            {
+                _pkg = _rep.GetPackageByGuid(item.PackageGuid);
+                _importModuleFile = item.InputFile;
+                string eaObjectType = item.ObjectType;
+                string eaStereotype = item.Stereotype;
+
+                await Task.Run(() => ImportUpdateRequirements(eaObjectType,eaStereotype));
+                
+            }
+
+        }
 
         public EA.Repository Rep { get => _rep; set => _rep = value; }
         public EA.Package Pkg { get => _pkg; set => _pkg = value; }
@@ -376,7 +391,7 @@ namespace EaServices.Doors
         /// <summary>
         /// EA Element-Ids of DOORS IDs
         /// </summary>
-        public Dictionary<string, int> DictObjectIdFromDoorsId { get => _dictObjectIdFromDoorsId; set => _dictObjectIdFromDoorsId = value; }
+        public Dictionary<string, int> DictObjectIdFromDoorsId { get => _dictPackageRequirements; set => _dictPackageRequirements = value; }
         public DataTable DtDoorsRequirements { get => _dtDoorsRequirements; set => _dtDoorsRequirements = value; }
     }
 }

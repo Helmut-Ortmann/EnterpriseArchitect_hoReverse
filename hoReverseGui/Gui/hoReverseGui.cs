@@ -247,6 +247,8 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator17;
         private ToolStripMenuItem doorsImportcsvWithFileDialogToolStripMenuItem;
         private ToolStripMenuItem checkDOORSRequirementsToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator18;
+        private ToolStripMenuItem importBySettingsToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -662,7 +664,6 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -774,6 +775,9 @@ namespace hoReverse.Reverse
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.checkDOORSRequirementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this.importBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1436,26 +1440,6 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AcceptsReturn = true;
-            this.TxtUserText.AcceptsTab = true;
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
-        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
-        "lon as in C.");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -2110,7 +2094,9 @@ namespace hoReverse.Reverse
             this.toolStripSeparator17,
             this.doorsImportcsvToolStripMenuItem,
             this.doorsImportcsvWithFileDialogToolStripMenuItem,
-            this.checkDOORSRequirementsToolStripMenuItem});
+            this.checkDOORSRequirementsToolStripMenuItem,
+            this.toolStripSeparator18,
+            this.importBySettingsToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this._maintenanceToolStripMenuItem.Text = "Maintenance";
@@ -2422,6 +2408,40 @@ namespace hoReverse.Reverse
             this.checkDOORSRequirementsToolStripMenuItem.ToolTipText = "Select a package with imported DOORS requirements and run the check.\r\n\r\nIt shows:" +
     "\r\n- All not unique DOORS Requirements";
             this.checkDOORSRequirementsToolStripMenuItem.Click += new System.EventHandler(this.checkDOORSRequirementsToolStripMenuItem_Click);
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AcceptsReturn = true;
+            this.TxtUserText.AcceptsTab = true;
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
+        "lon as in C.");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            // 
+            // importBySettingsToolStripMenuItem
+            // 
+            this.importBySettingsToolStripMenuItem.Name = "importBySettingsToolStripMenuItem";
+            this.importBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importBySettingsToolStripMenuItem.Text = "ImportBySettings";
+            this.importBySettingsToolStripMenuItem.ToolTipText = "Import specified by Settings.json, Chapter \'Import\'\r\n\r\nCurrently supported:\r\n- DO" +
+    "ORS *.csv format";
+            this.importBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportBySettingsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(251, 6);
             // 
             // HoReverseGui
             // 
@@ -4094,7 +4114,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository, pkg, filePath);
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
             await doorsModule.ImportUpdateRequirements();
 
 
@@ -4131,7 +4151,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository, pkg, filePath);
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule( _repository, pkg, filePath);
             await doorsModule.ImportUpdateRequirements();
             Cursor.Current = Cursors.Default;
 
@@ -4148,9 +4168,17 @@ Please restart EA. During restart hoTools loads the default settings.",
             if (type != EA.ObjectType.otPackage) return;
 
             EA.Package pkg = (EA.Package) item;
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository, pkg);
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg);
             doorsModule.CheckRequirements();
 
+        }
+
+        private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            doorsModule.ImportBySetting();
+            Cursor.Current = Cursors.Default;
         }
     }
 }
