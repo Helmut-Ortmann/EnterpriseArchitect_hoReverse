@@ -379,7 +379,9 @@ The DOORS requirement import/update function requires the following columns:
 - Object Number
 - ID
 - State
-- Objecttype</value>
+- Objecttype
+
+The function works in background and you can proceed writing.</value>
   </data>
   <data name="doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Import DOORS *.csv file into selected package, comma separated, using the file dialog.
@@ -391,7 +393,8 @@ The DOORS requirement import/update function requires the following columns:
 - ID
 - State
 - Objecttype
-</value>
+
+The function works in background and you can proceed writing.</value>
   </data>
   <metadata name="_toolStrip6.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>572, 17</value>

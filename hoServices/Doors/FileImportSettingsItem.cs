@@ -90,6 +90,42 @@ namespace EaServices.Doors
         [JsonProperty("StatusChanged")]
         private string  _statusChanged;
 
+        /// <summary>
+        /// Description
+        /// </summary>
+        [JsonIgnore]
+        public string Description
+        {
+            get => _description;
+            set => _description = value;
+        }
+        [JsonProperty("Description")]
+        private string  _description;
+
+        /// <summary>
+        /// Tooltip
+        /// </summary>
+        [JsonIgnore]
+        public string Tooltip
+        {
+            get => _tooltip;
+            set => _tooltip = value;
+        }
+        [JsonProperty("Tooltip")]
+        private string  _tooltip;
+
+        /// <summary>
+        /// ListNo. The number of the list to group lists.
+        /// </summary>
+        [JsonIgnore]
+        public string ListNo
+        {
+            get => _listNo;
+            set => _listNo = value;
+        }
+        [JsonProperty("ListNo")]
+        private string  _listNo;
+
         
 
 

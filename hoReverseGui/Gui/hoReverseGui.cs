@@ -664,6 +664,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -748,6 +749,9 @@ namespace hoReverse.Reverse
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.doorsImportcsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doorsImportcsvWithFileDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkDOORSRequirementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.importBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -774,10 +778,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.checkDOORSRequirementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
-            this.importBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1439,6 +1439,26 @@ namespace hoReverse.Reverse
             this.progressBar1.TabIndex = 57;
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
+            // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AcceptsReturn = true;
+            this.TxtUserText.AcceptsTab = true;
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
+        "lon as in C.");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
             // 
             // _menuStrip1
             // 
@@ -2155,6 +2175,30 @@ namespace hoReverse.Reverse
             this.doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText = resources.GetString("doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText");
             this.doorsImportcsvWithFileDialogToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvWithFileDialogToolStripMenuItem_Click);
             // 
+            // checkDOORSRequirementsToolStripMenuItem
+            // 
+            this.checkDOORSRequirementsToolStripMenuItem.Name = "checkDOORSRequirementsToolStripMenuItem";
+            this.checkDOORSRequirementsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.checkDOORSRequirementsToolStripMenuItem.Text = "Check DOORS Requirements";
+            this.checkDOORSRequirementsToolStripMenuItem.ToolTipText = "Select a package with imported DOORS requirements and run the check.\r\n\r\nIt shows:" +
+    "\r\n- All not unique DOORS Requirements";
+            this.checkDOORSRequirementsToolStripMenuItem.Click += new System.EventHandler(this.checkDOORSRequirementsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(251, 6);
+            // 
+            // importBySettingsToolStripMenuItem
+            // 
+            this.importBySettingsToolStripMenuItem.Name = "importBySettingsToolStripMenuItem";
+            this.importBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importBySettingsToolStripMenuItem.Text = "ImportBySettings";
+            this.importBySettingsToolStripMenuItem.ToolTipText = "Import specified by Settings.json, Chapter \'Import\'\r\n\r\nCurrently supported:\r\n- DO" +
+    "ORS *.csv format\r\n\r\nThe function works in background and you can proceed writing" +
+    ".";
+            this.importBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportBySettingsToolStripMenuItem_Click);
+            // 
             // _helpToolStripMenuItem
             // 
             this._helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2399,49 +2443,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
-            // checkDOORSRequirementsToolStripMenuItem
-            // 
-            this.checkDOORSRequirementsToolStripMenuItem.Name = "checkDOORSRequirementsToolStripMenuItem";
-            this.checkDOORSRequirementsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.checkDOORSRequirementsToolStripMenuItem.Text = "Check DOORS Requirements";
-            this.checkDOORSRequirementsToolStripMenuItem.ToolTipText = "Select a package with imported DOORS requirements and run the check.\r\n\r\nIt shows:" +
-    "\r\n- All not unique DOORS Requirements";
-            this.checkDOORSRequirementsToolStripMenuItem.Click += new System.EventHandler(this.checkDOORSRequirementsToolStripMenuItem_Click);
-            // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AcceptsReturn = true;
-            this.TxtUserText.AcceptsTab = true;
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
-        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
-        "lon as in C.");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
-            // 
-            // importBySettingsToolStripMenuItem
-            // 
-            this.importBySettingsToolStripMenuItem.Name = "importBySettingsToolStripMenuItem";
-            this.importBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.importBySettingsToolStripMenuItem.Text = "ImportBySettings";
-            this.importBySettingsToolStripMenuItem.ToolTipText = "Import specified by Settings.json, Chapter \'Import\'\r\n\r\nCurrently supported:\r\n- DO" +
-    "ORS *.csv format";
-            this.importBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportBySettingsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator18
-            // 
-            this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(251, 6);
             // 
             // HoReverseGui
             // 
@@ -4111,11 +4112,12 @@ Please restart EA. During restart hoTools loads the default settings.",
                 return;
             }
 
-
+            EnableImportDialog(false);
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
             await doorsModule.ImportUpdateRequirements();
+            EnableImportDialog(true);
 
 
             Cursor.Current = Cursors.Default;
@@ -4150,9 +4152,11 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
 
             Cursor.Current = Cursors.WaitCursor;
+            EnableImportDialog(false);
             // Generate Requirements
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule( _repository, pkg, filePath);
             await doorsModule.ImportUpdateRequirements();
+            EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
 
         }
@@ -4172,13 +4176,35 @@ Please restart EA. During restart hoTools loads the default settings.",
             doorsModule.CheckRequirements();
 
         }
-
+        /// <summary>
+        /// Import according to Setting.json definitions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            EnableImportDialog(false);
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
-            doorsModule.ImportBySetting();
+            await doorsModule.ImportBySetting();
+            EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
+
+  
+            MessageBox.Show("See File, settings for the import definitions.","Import DOORS Requirements finished.");
+        }
+
+        /// <summary>
+        /// Enable dialogs for Import functions
+        /// </summary>
+        /// <param name="isEnabled"></param>
+        private void EnableImportDialog(bool isEnabled)
+        {
+            doorsImportcsvToolStripMenuItem.Enabled = isEnabled;
+            doorsImportcsvWithFileDialogToolStripMenuItem.Enabled = isEnabled;
+            checkDOORSRequirementsToolStripMenuItem.Enabled = isEnabled;
+            importBySettingsToolStripMenuItem.Enabled = isEnabled;
         }
     }
 }

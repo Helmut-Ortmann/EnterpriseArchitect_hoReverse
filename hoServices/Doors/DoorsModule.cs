@@ -27,6 +27,10 @@ namespace EaServices.Doors
     /// </summary>
     public class DoorsModule
     {
+        int _count = 0;
+        int _countChanged = 0;
+        int _countNew = 0;
+
         string _importModuleFile;
         EA.Package _pkg;
         private EA.Package _pkgDeletedObjects;
@@ -144,7 +148,10 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public async Task ImportUpdateRequirements(string eaObjectType="Requirement", string eaStereotype="")
+        public async Task ImportUpdateRequirements(string eaObjectType="Requirement", 
+            string eaStereotype="",
+            string stateNew="",
+            string stateChanged="")
         {
             _rep.BatchAppend = true;
             _rep.EnableUIUpdates = false;
@@ -155,7 +162,9 @@ namespace EaServices.Doors
             ReadPackageRequirements();
             CreatePackageDeletedObjects();
 
-            int count = 0;
+            _count = 0;
+            _countChanged = 0;
+            _countNew = 0;
             List<int> parentElementIdsPerLevel = new List<int>();
             parentElementIdsPerLevel.Add(0);
             int parentElementId = 0;
@@ -164,7 +173,7 @@ namespace EaServices.Doors
             int oldLevel = 0;
             foreach (DataRow row in _dtDoorsRequirements.Rows)
             {
-                count += 1;
+                _count += 1;
                 string objectId = row["Id"].ToString();
                 string reqAbsNumber = GetAbsoluteNumerFromDoorsId(objectId);
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
@@ -208,13 +217,33 @@ namespace EaServices.Doors
                 bool isExistingRequirement = _dictPackageRequirements.TryGetValue(reqAbsNumber, out int elId);
 
 
-                EA.Element el = isExistingRequirement ? (EA.Element)_rep.GetElementByID(elId) : (EA.Element)_pkg.Elements.AddNew(name, "Requirement");
+                EA.Element el;
+                if (isExistingRequirement)
+                {
+                    el = (EA.Element) _rep.GetElementByID(elId);
+                    if (el.Alias != objectId ||
+                        el.Name != name ||
+                        el.Notes != notes ||
+                        el.Type != eaObjectType ||
+                        el.Stereotype != eaStereotype)
+                    {
+                        el.Status = stateChanged;
+                        _countChanged += 1;
+                    }
+                }
+                else
+                {
+                    el = (EA.Element)_pkg.Elements.AddNew(name, "Requirement");
+                    el.Status = stateNew;
+                    _countChanged += 1;
+                }
+
 
                 el.Alias = objectId;
                 el.Name = name;
                 el.Multiplicity = reqAbsNumber;
                 el.Notes = notes;
-                el.TreePos = count * 10;
+                el.TreePos = _count * 10;
                 el.PackageID = _pkg.PackageID;
                 el.ParentID = parentElementId;
                 el.Type = eaObjectType;
@@ -258,6 +287,8 @@ namespace EaServices.Doors
             TaggedValue.SetTaggedValue(el, "ImportedBy", $"{Environment.UserName}");
             TaggedValue.SetTaggedValue(el, "ImportedFile", $"{_importModuleFile}");
             TaggedValue.SetTaggedValue(el, "ImportedCount", $"{_dtDoorsRequirements.Rows.Count}");
+            TaggedValue.SetTaggedValue(el, "ImportedNew", $"{_countNew}");
+            TaggedValue.SetTaggedValue(el, "ImportedChanged", $"{_countChanged}");
 
         }
 
@@ -370,7 +401,7 @@ namespace EaServices.Doors
         /// <summary>
         /// Import according to import settings
         /// </summary>
-        public async void ImportBySetting()
+        public async Task ImportBySetting()
         {
             foreach (FileImportSettingsItem item in _importSettings)
             {
@@ -378,8 +409,10 @@ namespace EaServices.Doors
                 _importModuleFile = item.InputFile;
                 string eaObjectType = item.ObjectType;
                 string eaStereotype = item.Stereotype;
+                string eaStatusNew = item.StatusNew;
+                string eaStatusChanged = item.StatusChanged;
 
-                await Task.Run(() => ImportUpdateRequirements(eaObjectType,eaStereotype));
+                await Task.Run(() => ImportUpdateRequirements(eaObjectType,eaStereotype, eaStatusNew, eaStatusChanged));
                 
             }
 
@@ -393,5 +426,23 @@ namespace EaServices.Doors
         /// </summary>
         public Dictionary<string, int> DictObjectIdFromDoorsId { get => _dictPackageRequirements; set => _dictPackageRequirements = value; }
         public DataTable DtDoorsRequirements { get => _dtDoorsRequirements; set => _dtDoorsRequirements = value; }
+
+        public int Count
+        {
+            get { return _count; }
+            set { _count = value; }
+        }
+
+        public int CountChanged
+        {
+            get { return _countChanged; }
+            set { _countChanged = value; }
+        }
+
+        public int CountNew
+        {
+            get { return _countNew; }
+            set { _countNew = value; }
+        }
     }
 }
