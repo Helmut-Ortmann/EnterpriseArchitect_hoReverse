@@ -217,7 +217,7 @@
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />
       </Component>
       <Component Id="Newtonsoft.Json" Guid="{8062C079-8ED3-427F-B0AA-6A7BBC159B62}">
-        <File Id="Newtonsoft.Json" KeyPath="yes" Name="Newtonsoft.Json.dll"  Source="..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll" />
+        <File Id="Newtonsoft.Json" KeyPath="yes" Name="Newtonsoft.Json.dll"  Source="..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll" />
       </Component>
        <!-- Delete all files, in theory WIX/Installer should do this by their one, but it doesn't work 
        Note: This may leads to problems if there are dependencies

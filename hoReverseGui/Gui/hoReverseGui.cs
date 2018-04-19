@@ -2897,7 +2897,11 @@ namespace hoReverse.Reverse
                 "SQLite.Interop.dll",
                 "System.Data.SQLite.dll"
             };
-            HoUtil.AboutMessage("C - Reverse Engineering Workbench", "About hoReverse Workbench", dllNames, _repository);
+            HoUtil.AboutMessage("C - Reverse Engineering Workbench",
+                "About hoReverse Workbench",
+                dllNames,
+                _repository,
+                _addinSettings.ConfigFilePath);
 
         }
 
