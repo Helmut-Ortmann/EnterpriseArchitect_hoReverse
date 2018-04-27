@@ -44,7 +44,7 @@ namespace EaServices.Doors
         private IDataProvider _provider;
         private string _connectionString;
 
-        readonly string[] _columnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
+        protected readonly string[] ColumnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
 
         private readonly string packageNameDeletedObjects = "DeletedDoorsRequirements";
 
@@ -114,7 +114,7 @@ namespace EaServices.Doors
         /// <summary>
         /// Read Requirements of _pkg into dictionary _dictPackageRequirements.
         /// </summary>
-        private void ReadPackageRequirements()
+        protected void ReadPackageRequirements()
         {
             // Read all existing EA Requirements of package
             // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
@@ -123,7 +123,7 @@ namespace EaServices.Doors
                 try
                 {
                     //var notUniqueRequirements = (from r in db.q_object
-                    _dictPackageRequirements = (from r in db.q_object
+                    DictPackageRequirements = (from r in db.q_object
                         where r.Object_Type == "Requirement" && r.Package_ID == _pkg.PackageID
                         group r by r.Multiplicity into grp
                         select new
@@ -148,10 +148,10 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public async Task ImportUpdateRequirements(string eaObjectType="Requirement", 
-            string eaStereotype="",
-            string stateNew="",
-            string stateChanged="")
+        public virtual async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+            string eaStereotype = "",
+            string stateNew = "",
+            string stateChanged = "")
         {
             _rep.BatchAppend = true;
             _rep.EnableUIUpdates = false;
@@ -214,7 +214,7 @@ namespace EaServices.Doors
 
                 }
                 // Check if requirement with Doors ID already exists
-                bool isExistingRequirement = _dictPackageRequirements.TryGetValue(reqAbsNumber, out int elId);
+                bool isExistingRequirement = DictPackageRequirements.TryGetValue(reqAbsNumber, out int elId);
 
 
                 EA.Element el;
@@ -255,7 +255,7 @@ namespace EaServices.Doors
 
                 // handle the remaining columns/ tagged values
                 var cols = from c in _dtDoorsRequirements.Columns.Cast<DataColumn>()
-                           where !_columnNamesNoTaggedValues.Any(n => n == c.ColumnName)
+                           where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                            select new
                            {
                                Name = c.ColumnName,
@@ -276,11 +276,12 @@ namespace EaServices.Doors
             _rep.BatchAppend = false;
             _rep.EnableUIUpdates = true;
             _rep.ReloadPackage(_pkg.PackageID);
+
         }
         /// <summary>
         /// Update import package with: 
         /// </summary>
-        private void UpdatePackage()
+        protected void UpdatePackage()
         {
             EA.Element el = _rep.GetElementByGuid(_pkg.PackageGUID);
             TaggedValue.SetTaggedValue(el, "Imported", $"{DateTime.Now:G}");
@@ -297,7 +298,7 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="doorsId"></param>
         /// <returns></returns>
-        private string GetAbsoluteNumerFromDoorsId(string doorsId)
+        protected string GetAbsoluteNumerFromDoorsId(string doorsId)
         {
             // Get only the number of the id
             Regex exDoorsAbsNumber = new Regex("[0-9]*$");
@@ -310,7 +311,7 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="longText"></param>
         /// <returns></returns>
-        private string GetTextExtract(string longText)
+        protected string GetTextExtract(string longText)
         {
             // extract doors requirement id (number)
             Regex exFirstLine = new Regex("[^\r]*");
@@ -322,7 +323,7 @@ namespace EaServices.Doors
         /// </summary>
         public void MoveDeletedRequirements()
         {
-            var moveEaElements = from m in _dictPackageRequirements
+            var moveEaElements = from m in DictPackageRequirements
                 where !_dtDoorsRequirements.Rows.Cast<DataRow>().Any(x => GetAbsoluteNumerFromDoorsId(x["Id"].ToString()) == m.Key)
                 select m.Value;
             foreach (var eaId in moveEaElements)
@@ -383,7 +384,7 @@ namespace EaServices.Doors
         /// Create Package for deleted objects
         /// </summary>
         /// <returns>Package created Objects</returns>
-        private EA.Package CreatePackageDeletedObjects()
+        protected EA.Package CreatePackageDeletedObjects()
         {
             if (_pkgDeletedObjects != null) return _pkgDeletedObjects;
             if (_pkg.Packages.Count > 0)
@@ -401,7 +402,7 @@ namespace EaServices.Doors
         /// <summary>
         /// Import according to import settings
         /// </summary>
-        public async Task ImportBySetting()
+        public async Task ImportBySetting(int listNumber)
         {
             foreach (FileImportSettingsItem item in _importSettings)
             {
@@ -412,8 +413,25 @@ namespace EaServices.Doors
                 string eaStatusNew = item.StatusNew;
                 string eaStatusChanged = item.StatusChanged;
 
-                await Task.Run(() => ImportUpdateRequirements(eaObjectType,eaStereotype, eaStatusNew, eaStatusChanged));
-                
+                if (Convert.ToInt32(item.ListNo) == listNumber)
+                {
+                    switch (item.ImportType)
+                    {
+                        case FileImportSettingsItem.ImportTypes.DoorsCsv:
+                           var  doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile) ;
+                           await Task.Run(() =>
+                                doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        break;
+                        case FileImportSettingsItem.ImportTypes.DoorsReqIf:
+                            var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile) ;
+                            await Task.Run(() =>
+                                doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                            break;
+                    }
+                    
+                    
+                }
+
             }
 
         }
@@ -424,7 +442,7 @@ namespace EaServices.Doors
         /// <summary>
         /// EA Element-Ids of DOORS IDs
         /// </summary>
-        public Dictionary<string, int> DictObjectIdFromDoorsId { get => _dictPackageRequirements; set => _dictPackageRequirements = value; }
+        public Dictionary<string, int> DictObjectIdFromDoorsId { get => DictPackageRequirements; set => DictPackageRequirements = value; }
         public DataTable DtDoorsRequirements { get => _dtDoorsRequirements; set => _dtDoorsRequirements = value; }
 
         public int Count
@@ -443,6 +461,12 @@ namespace EaServices.Doors
         {
             get { return _countNew; }
             set { _countNew = value; }
+        }
+
+        public Dictionary<string, int> DictPackageRequirements
+        {
+            get { return _dictPackageRequirements; }
+            set { _dictPackageRequirements = value; }
         }
     }
 }

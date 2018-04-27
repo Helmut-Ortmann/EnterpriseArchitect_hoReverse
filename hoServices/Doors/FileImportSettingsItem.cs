@@ -13,7 +13,8 @@ namespace EaServices.Doors
         /// </summary>
         public enum ImportTypes
         {
-           DoorsCsv 
+           DoorsCsv,
+           DoorsReqIf
         }
         [JsonProperty("ImportType")]
         public ImportTypes ImportType { get; set; }

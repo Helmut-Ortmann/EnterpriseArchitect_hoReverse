@@ -249,6 +249,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem checkDOORSRequirementsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator18;
         private ToolStripMenuItem importBySettingsToolStripMenuItem;
+        private ToolStripMenuItem importReqIFBySettingsToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -778,6 +779,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.importReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2116,7 +2118,8 @@ namespace hoReverse.Reverse
             this.doorsImportcsvWithFileDialogToolStripMenuItem,
             this.checkDOORSRequirementsToolStripMenuItem,
             this.toolStripSeparator18,
-            this.importBySettingsToolStripMenuItem});
+            this.importBySettingsToolStripMenuItem,
+            this.importReqIFBySettingsToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this._maintenanceToolStripMenuItem.Text = "Maintenance";
@@ -2443,6 +2446,13 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // importReqIFBySettingsToolStripMenuItem
+            // 
+            this.importReqIFBySettingsToolStripMenuItem.Name = "importReqIFBySettingsToolStripMenuItem";
+            this.importReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importReqIFBySettingsToolStripMenuItem.Text = "ImportReqIFBySettings";
+            this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettingsToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4180,24 +4190,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             doorsModule.CheckRequirements();
 
         }
-        /// <summary>
-        /// Import according to Setting.json definitions
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-            EnableImportDialog(false);
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
-            await doorsModule.ImportBySetting();
-            EnableImportDialog(true);
-            Cursor.Current = Cursors.Default;
-
-  
-            MessageBox.Show("See File, settings for the import definitions.","Import DOORS Requirements finished.");
-        }
+        
 
         /// <summary>
         /// Enable dialogs for Import functions
@@ -4209,6 +4202,37 @@ Please restart EA. During restart hoTools loads the default settings.",
             doorsImportcsvWithFileDialogToolStripMenuItem.Enabled = isEnabled;
             checkDOORSRequirementsToolStripMenuItem.Enabled = isEnabled;
             importBySettingsToolStripMenuItem.Enabled = isEnabled;
+        }
+        /// <summary>
+        /// Import according to Setting.json definitions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            EnableImportDialog(false);
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            await doorsModule.ImportBySetting(1);
+            EnableImportDialog(true);
+            Cursor.Current = Cursors.Default;
+
+  
+            MessageBox.Show("See File, settings for the import definitions.","Import DOORS Requirements finished.");
+        }
+
+        private async void importReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            EnableImportDialog(false);
+            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            await doorsModule.ImportBySetting(2);
+            EnableImportDialog(true);
+            Cursor.Current = Cursors.Default;
+
+
         }
     }
 }

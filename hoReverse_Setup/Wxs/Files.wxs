@@ -240,6 +240,15 @@
         <Component Id="ClosedXml" Guid="AAE6BCF4-002B-4FAD-B5E4-0853B04A800A">
             <File Id="ClosedXml" KeyPath="yes" Name="ClosedXml.dll"  Source="..\packages\ClosedXML.0.92.1\lib\net40\ClosedXML.dll" />
         </Component>
+        <!--
+        ReqIF 
+        -->
+        <Component Id="HtmlAgilityPack.dll" Guid="9CBB6AC8-5A61-4A98-A047-54F6C5D94532">
+            <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll"  Source="..\packages\HtmlAgilityPack.1.8.1\lib\Net45\HtmlAgilityPack.dll" />
+        </Component>
+        <Component Id="ReqIFSharp.dll" Guid="CFE7B196-C169-4F8D-BACD-FAD4938F25DE">
+            <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.0\lib\net45\ReqIFSharp.dll" />
+        </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

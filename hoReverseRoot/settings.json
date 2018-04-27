@@ -368,7 +368,7 @@
   "Importer":
   [
       {
-          "Description"     :  "Import Requirements from Doors",
+          "Description"     :  "Import Requirements from Doors as *.csv",
           "Tooltip"         :  "Use EA Multiplicity as DOORS absolute number",
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/requirements.csv" ,
@@ -386,6 +386,42 @@
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "FunctionalRequirement",
           "ImportType"      :  "DoorsCsv",
+          "StatusNew"       :  "Proposed",
+          "StatusChanged"   :  "Mandatory" 
+      },
+      {
+          "Description"     :  "Import 'FLR_BT_SWRS' Requirements from Doors as *.reqIF",
+          "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
+          "ListNo"          :  "2", 
+          "InputFile"       :  "d:/temp/reqIF/FLR_BT_SWRS.reqif" ,
+          "PackageGuid"     :  "{4A61F344-65CB-4a5f-B93C-9E6A7F4FF0E6}" ,
+          "ObjectType"      :  "Requirement", 
+          "Stereotype"      :  "",
+          "ImportType"      :  "DoorsReqIF", 
+          "StatusNew"       :  "Proposed",
+          "StatusChanged"   :  "Proposed" 
+      },
+      {
+          "Description"     :  "Import 'datatype-configuration-example.reqifz' Requirements as *.reqIF",
+          "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
+          "ListNo"          :  "3", 
+          "InputFile"       :  "d:/hoData/Knowledge/ReqIF/datatype-configuration-example.reqifz" ,
+          "PackageGuid"     :  "{32162683-3A69-4214-8F0E-E06B2351F075}" ,
+          "ObjectType"      :  "Requirement", 
+          "Stereotype"      :  "FunctionalRequirement",
+          "ImportType"      :  "DoorsReqIF",
+          "StatusNew"       :  "Proposed",
+          "StatusChanged"   :  "Mandatory" 
+      },
+      {
+          "Description"     :  "Import 'subset26-chapter3.reqifz' Requirements as *.reqIF",
+          "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
+          "ListNo"          :  "4", 
+          "InputFile"       :  "d:/hoData/Knowledge/ReqIF/subset26-chapter3.reqifz" ,
+          "PackageGuid"     :  "{A33CC410-0CF1-45d5-ABE9-30DDB089B2BA}" ,
+          "ObjectType"      :  "Requirement", 
+          "Stereotype"      :  "FunctionalRequirement",
+          "ImportType"      :  "DoorsReqIF",
           "StatusNew"       :  "Proposed",
           "StatusChanged"   :  "Mandatory" 
       }
