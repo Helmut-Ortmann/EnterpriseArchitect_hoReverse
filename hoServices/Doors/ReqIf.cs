@@ -9,9 +9,9 @@ using ReqIFSharp;
 
 namespace EaServices.Doors
 {
-    public class DoorsReqIf : DoorsModule
+    public class ReqIf : DoorsModule
     {
-        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
+        public ReqIf(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
         {
         }
          /// <summary>

@@ -24,6 +24,7 @@ using hoLinqToSql.LinqUtils;
 
 using hoUtils.BulkChange;
 using hoUtils.ExportImport;
+using Task = System.Threading.Tasks.Task;
 
 
 // ReSharper disable RedundantDelegateCreation
@@ -249,6 +250,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem checkDOORSRequirementsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator18;
         private ToolStripMenuItem importBySettingsToolStripMenuItem;
+        private ToolStripMenuItem importDoorsReqIFBySettingsToolStripMenuItem;
         private ToolStripMenuItem importReqIFBySettingsToolStripMenuItem;
         private ToolTip _toolTip1;
 
@@ -753,6 +755,7 @@ namespace hoReverse.Reverse
             this.checkDOORSRequirementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.importBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importDoorsReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -2119,6 +2122,7 @@ namespace hoReverse.Reverse
             this.checkDOORSRequirementsToolStripMenuItem,
             this.toolStripSeparator18,
             this.importBySettingsToolStripMenuItem,
+            this.importDoorsReqIFBySettingsToolStripMenuItem,
             this.importReqIFBySettingsToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -2201,6 +2205,13 @@ namespace hoReverse.Reverse
     "ORS *.csv format\r\n\r\nThe function works in background and you can proceed writing" +
     ".";
             this.importBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportBySettingsToolStripMenuItem_Click);
+            // 
+            // importDoorsReqIFBySettingsToolStripMenuItem
+            // 
+            this.importDoorsReqIFBySettingsToolStripMenuItem.Name = "importDoorsReqIFBySettingsToolStripMenuItem";
+            this.importDoorsReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importDoorsReqIFBySettingsToolStripMenuItem.Text = "ImportDoorsReqIFBySettings";
+            this.importDoorsReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importDoorsReqIFBySettingsToolStripMenuItem_Click);
             // 
             // _helpToolStripMenuItem
             // 
@@ -4210,29 +4221,33 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            EnableImportDialog(false);
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
-            await doorsModule.ImportBySetting(1);
-            EnableImportDialog(true);
-            Cursor.Current = Cursors.Default;
+            await ImportBySettings(1);
 
   
-            MessageBox.Show("See File, settings for the import definitions.","Import DOORS Requirements finished.");
+            MessageBox.Show("See File 1, settings for the import definitions.","Import DOORS *.csv Requirements finished.");
+        }
+
+        private async void importDoorsReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await ImportBySettings(2);
+            MessageBox.Show("See File 2, settings for the import definitions.","Import DOORS *.reqIf Requirements finished.");
         }
 
         private async void importReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await ImportBySettings(4);
+            MessageBox.Show("See File 4, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
+        }
+
+        private async Task ImportBySettings(int listNumber)
         {
             Cursor.Current = Cursors.WaitCursor;
 
             EnableImportDialog(false);
             EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
-            await doorsModule.ImportBySetting(2);
+            await doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-
-
         }
     }
 }

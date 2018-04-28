@@ -422,10 +422,17 @@ namespace EaServices.Doors
                            await Task.Run(() =>
                                 doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
+
                         case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                             var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile) ;
                             await Task.Run(() =>
                                 doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                            break;
+
+                        case FileImportSettingsItem.ImportTypes.ReqIf:
+                            var  reqIf = new ReqIf(_rep, _pkg, item.InputFile) ;
+                            await Task.Run(() =>
+                                reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
                     }
                     

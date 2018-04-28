@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 // ReSharper disable InconsistentNaming
 
 namespace EaServices.Doors
@@ -14,7 +15,8 @@ namespace EaServices.Doors
         public enum ImportTypes
         {
            DoorsCsv,
-           DoorsReqIf
+           DoorsReqIf,
+           ReqIf        // pure ReqIF
         }
         [JsonProperty("ImportType")]
         public ImportTypes ImportType { get; set; }
@@ -126,6 +128,43 @@ namespace EaServices.Doors
         }
         [JsonProperty("ListNo")]
         private string  _listNo;
+
+
+        /// <summary>
+        /// List of Attributes for ReqIF
+        /// </summary>
+        [JsonIgnore]
+        public List<string> AttrList
+        {
+            get => _attrList;
+            set => _attrList = value;
+        }
+        [JsonProperty("AttrList")]
+        private List<string>  _attrList;
+
+        /// <summary>
+        /// ReqIf Attribute to store in Notes
+        /// </summary>
+        [JsonIgnore]
+        public string AttrNotes
+        {
+            get => _attrNotes;
+            set => _attrNotes = value;
+        }
+        [JsonProperty("AttrNotes")]
+        private string  _attrNotes;
+
+        /// <summary>
+        /// ReqIf Attributes to store as name
+        /// </summary>
+        [JsonIgnore]
+        public List<string> AttrNameList
+        {
+            get => _attrNameList;
+            set => _attrNameList = value;
+        }
+        [JsonProperty("AttrNameList")]
+        private List<string>  _attrNameList;
 
         
 
