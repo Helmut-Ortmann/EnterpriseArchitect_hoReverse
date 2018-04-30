@@ -12,6 +12,11 @@ namespace EaServices.Doors
     public class ReqIf : DoorsModule
     {
         readonly FileImportSettingsItem _settings;
+
+        /// <summary>
+        /// Dictionary of Attrubutes
+        /// </summary>
+        Dictionary<string, DatatypeDefinition> _attributes= new Dictionary<string, DatatypeDefinition>();
         public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
             _settings = settings;
@@ -80,9 +85,9 @@ namespace EaServices.Doors
                 oldLevel = objectLevel;
 
 
-                string name = nameColumn != "" ? row[nameColumn].ToString(): row[0].ToString();
-                string notes = notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString();
-                string nameShort = name.Length > 40 ? name.Substring(0, 40) : name;
+                string name = GetAttrValue(nameColumn != "" ? row[nameColumn].ToString(): row[0].ToString());
+                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString());
+                string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
 
                // Check if requirement with Doors ID already exists
                 bool isExistingRequirement = DictPackageRequirements.TryGetValue(objectId, out int elId);
@@ -144,7 +149,7 @@ namespace EaServices.Doors
                     }
                     else
                     {
-                        if (c.Name.Trim() != notesColumn)  TaggedValue.SetUpdate(el, c.Name, c.Value??"");                     
+                        if (c.Name.Trim() != notesColumn)  TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value??""));                     
                     }
                     
                 }
@@ -168,9 +173,13 @@ namespace EaServices.Doors
             DtRequirements.Columns.Add("Id", typeof(string));
             DtRequirements.Columns.Add("Object Level", typeof(string));
            
+            // over all Attributes
             foreach (var attr in reqIf.CoreContent[0].SpecObjects[0].Values)
             {
-                DtRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
+                string attrName = attr.AttributeDefinition.LongName;
+                DatatypeDefinition attrType = attr.AttributeDefinition.DatatypeDefinition;
+                _attributes.Add(attrName, attrType);
+                DtRequirements.Columns.Add(attrName, typeof(string));
             }
         }
 
@@ -211,6 +220,37 @@ namespace EaServices.Doors
                 AddRequirements(dt, child.Children, level + 1);
             }
             
+
+        }
+        /// <summary>
+        /// Get Attribute Value
+        /// </summary>
+        /// <param name="attrName"></param>
+        /// <param name="attrValue"></param>
+        /// <returns></returns>
+        private string GetAttrValue(string attrName, string attrValue)
+        {
+            switch (_attributes[attrName])
+            {
+                case DatatypeDefinitionXHTML s:
+                    return HtmlToText.Convert(attrValue);
+ 
+
+                default:
+                    return attrValue;
+
+            }
+        }
+        /// <summary>
+        /// Get Attribute Value
+        /// </summary>
+        /// <param name="attrValue"></param>
+        /// <returns></returns>
+        private string GetAttrValue(string attrValue)
+        {
+            if (attrValue.Contains("http://www.w3.org/1999/xhtml"))
+                return HtmlToText.Convert(attrValue);
+            else return attrValue;
 
         }
         /// <summary>
