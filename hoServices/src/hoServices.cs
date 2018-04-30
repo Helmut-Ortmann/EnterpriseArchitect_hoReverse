@@ -3284,14 +3284,14 @@ Second Element: Target of move connections and appearances", "Select two element
                 {
                     var shmStartAddr = matchShm.Groups[3].Value;
                     // add Tagged Value "StartAddr"
-                    var tagStart = TaggedValue.AddTaggedValue(shm, "StartAddr");
+                    var tagStart = TaggedValue.Add(shm, "StartAddr");
                     tagStart.Value = shmStartAddr;
                     tagStart.Update();
 
                 }else if (matchShm.Groups[2].Value == "END"){
                     var shmEndAddr = matchShm.Groups[3].Value;
                     // add Tagged Value "StartAddr"
-                    var tagEnd = TaggedValue.AddTaggedValue(shm, "EndAddr");
+                    var tagEnd = TaggedValue.Add(shm, "EndAddr");
                     tagEnd.Value = shmEndAddr;
                     tagEnd.Update();
                 }
@@ -3935,7 +3935,7 @@ Second Element: Target of move connections and appearances", "Select two element
             if (isStruct|isUnion)
             {
                 elTypedef.Stereotype = stereotype;
-                EA.TaggedValue tag = TaggedValue.AddTaggedValue(elTypedef, "typedef");
+                EA.TaggedValue tag = TaggedValue.Add(elTypedef, "typedef");
                 tag.Value = "true";
                 tag.Update();
             }

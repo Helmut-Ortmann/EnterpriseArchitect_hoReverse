@@ -11,6 +11,10 @@ namespace EaServices.Doors
 {
     public class DoorsCsv : DoorsModule
     {
+        /// <summary>
+        /// The Setting of the current item to import
+        /// </summary>
+        FileImportSettingsItem _settings;
         public DoorsCsv(string jsonFilePath, EA.Repository rep) : base(jsonFilePath, rep)
         {
         }
@@ -19,6 +23,11 @@ namespace EaServices.Doors
         }
         public DoorsCsv(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
         {
+        }
+
+        public DoorsCsv(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
+        {
+            _settings = settings;
         }
         
         /// <summary>
@@ -34,7 +43,7 @@ namespace EaServices.Doors
             Rep.EnableUIUpdates = false;
 
             // Prepare
-            DtDoorsRequirements = ExpImp.MakeDataTableFromCsvFile(ImportModuleFile, ',');
+            DtRequirements = ExpImp.MakeDataTableFromCsvFile(ImportModuleFile, ',');
 
             base.ReadPackageRequirements();
             CreatePackageDeletedObjects();
@@ -48,7 +57,7 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-            foreach (DataRow row in DtDoorsRequirements.Rows)
+            foreach (DataRow row in DtRequirements.Rows)
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
@@ -131,7 +140,7 @@ namespace EaServices.Doors
                 lastElementId = el.ElementID;
 
                 // handle the remaining columns/ tagged values
-                var cols = from c in DtDoorsRequirements.Columns.Cast<DataColumn>()
+                var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
                            where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                            select new
                            {
@@ -143,7 +152,7 @@ namespace EaServices.Doors
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    TaggedValue.SetTaggedValue(el, c.Name, c.Value);
+                    TaggedValue.SetUpdate(el, c.Name, c.Value);
                 }
             }
 

@@ -11,11 +11,14 @@ namespace EaServices.Doors
 {
     public class DoorsReqIf : DoorsModule
     {
-        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
+        // The settings of the current import ReqIf
+        private FileImportSettingsItem _settings;
+        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
+            _settings = settings;
         }
          /// <summary>
-        /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
+        /// Import and update ReqIF Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
         public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
@@ -36,7 +39,7 @@ namespace EaServices.Doors
             //reqIf.CoreContent[0].Specifications.Dump();
             foreach (Specification el in reqIf.CoreContent[0].Specifications)
             {
-                AddRequirements(DtDoorsRequirements, el.Children,1);
+                AddRequirements(DtRequirements, el.Children,1);
             }
 
 
@@ -54,7 +57,7 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-            foreach (DataRow row in DtDoorsRequirements.Rows)
+            foreach (DataRow row in DtRequirements.Rows)
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
@@ -139,7 +142,7 @@ namespace EaServices.Doors
                 lastElementId = el.ElementID;
 
                 // handle the remaining columns/ tagged values
-                var cols = from c in DtDoorsRequirements.Columns.Cast<DataColumn>()
+                var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
                            where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                            select new
                            {
@@ -151,7 +154,7 @@ namespace EaServices.Doors
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    TaggedValue.SetTaggedValue(el, c.Name, c.Value);
+                    TaggedValue.SetUpdate(el, c.Name, c.Value);
                 }
             }
 
@@ -169,24 +172,24 @@ namespace EaServices.Doors
         private void InitializeDoorsRequirementsTable(ReqIF reqIf)
         {
             // Initialize table
-            DtDoorsRequirements = new DataTable();
-            DtDoorsRequirements.Columns.Add("Id", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Level", typeof(int));
-            DtDoorsRequirements.Columns.Add("Object Number", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Type", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Heading", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Text", typeof(string));
+            DtRequirements = new DataTable();
+            DtRequirements.Columns.Add("Id", typeof(string));
+            DtRequirements.Columns.Add("Object Level", typeof(int));
+            DtRequirements.Columns.Add("Object Number", typeof(string));
+            DtRequirements.Columns.Add("Object Type", typeof(string));
+            DtRequirements.Columns.Add("Object Heading", typeof(string));
+            DtRequirements.Columns.Add("Object Text", typeof(string));
             // 
-            DtDoorsRequirements.Columns.Add("VerificationMethod", typeof(string));
-            DtDoorsRequirements.Columns.Add("RequirementID", typeof(string));
-            DtDoorsRequirements.Columns.Add("LegacyID", typeof(string));
+            DtRequirements.Columns.Add("VerificationMethod", typeof(string));
+            DtRequirements.Columns.Add("RequirementID", typeof(string));
+            DtRequirements.Columns.Add("LegacyID", typeof(string));
 
             foreach (var attr in reqIf.CoreContent[0].SpecObjects[0].Values)
             {
                 if (
                     attr.AttributeDefinition.LongName == "Object Text" ||
                     attr.AttributeDefinition.LongName == "Object Heading") continue;
-                DtDoorsRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
+                DtRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
             }
         }
 

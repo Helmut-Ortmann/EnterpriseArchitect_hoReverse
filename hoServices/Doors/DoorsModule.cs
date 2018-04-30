@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataModels;
+using EA;
 using hoLinqToSql.LinqUtils;
 using hoUtils.ExportImport;
-using hoReverse.hoUtils;
 using LinqToDB.DataProvider;
 using hoUtils.Json;
+using TaggedValue = hoReverse.hoUtils.TaggedValue;
+using Task = System.Threading.Tasks.Task;
 
 namespace EaServices.Doors
 {
@@ -35,7 +36,7 @@ namespace EaServices.Doors
         EA.Package _pkg;
         private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
-        DataTable _dtDoorsRequirements;
+        DataTable _dtRequirements;
         Dictionary<string, int> _dictPackageRequirements = new Dictionary<string,int>();
         private string _jsonFilePath;
 
@@ -60,10 +61,10 @@ namespace EaServices.Doors
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
             ReadImportSettings();
         }
+
         /// <summary>
         /// Initialize DoorsModule for handling a file
         /// </summary>
-        /// <param name="jsonFilePath"></param>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
         /// <param name="importModuleFile"></param>
@@ -73,11 +74,10 @@ namespace EaServices.Doors
             Init(rep, pkg);
         }
 
-        
+
         /// <summary>
         /// Constructor without a file to import. It's used for e.g. checks.
         /// </summary>
-        /// <param name="jsonFilePath"></param>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
         public DoorsModule(EA.Repository rep, EA.Package pkg)
@@ -157,7 +157,7 @@ namespace EaServices.Doors
             _rep.EnableUIUpdates = false;
 
             // Prepare
-            _dtDoorsRequirements = ExpImp.MakeDataTableFromCsvFile(_importModuleFile, ',');
+            _dtRequirements = ExpImp.MakeDataTableFromCsvFile(_importModuleFile, ',');
 
             ReadPackageRequirements();
             CreatePackageDeletedObjects();
@@ -171,7 +171,7 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-            foreach (DataRow row in _dtDoorsRequirements.Rows)
+            foreach (DataRow row in _dtRequirements.Rows)
             {
                 _count += 1;
                 string objectId = row["Id"].ToString();
@@ -220,7 +220,7 @@ namespace EaServices.Doors
                 EA.Element el;
                 if (isExistingRequirement)
                 {
-                    el = (EA.Element) _rep.GetElementByID(elId);
+                    el = _rep.GetElementByID(elId);
                     if (el.Alias != objectId ||
                         el.Name != name ||
                         el.Notes != notes ||
@@ -254,7 +254,7 @@ namespace EaServices.Doors
                 lastElementId = el.ElementID;
 
                 // handle the remaining columns/ tagged values
-                var cols = from c in _dtDoorsRequirements.Columns.Cast<DataColumn>()
+                var cols = from c in _dtRequirements.Columns.Cast<DataColumn>()
                            where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                            select new
                            {
@@ -266,7 +266,7 @@ namespace EaServices.Doors
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    TaggedValue.SetTaggedValue(el, c.Name, c.Value);
+                    TaggedValue.SetUpdate(el, c.Name, c.Value);
                 }
             }
 
@@ -284,12 +284,12 @@ namespace EaServices.Doors
         protected void UpdatePackage()
         {
             EA.Element el = _rep.GetElementByGuid(_pkg.PackageGUID);
-            TaggedValue.SetTaggedValue(el, "Imported", $"{DateTime.Now:G}");
-            TaggedValue.SetTaggedValue(el, "ImportedBy", $"{Environment.UserName}");
-            TaggedValue.SetTaggedValue(el, "ImportedFile", $"{_importModuleFile}");
-            TaggedValue.SetTaggedValue(el, "ImportedCount", $"{_dtDoorsRequirements.Rows.Count}");
-            TaggedValue.SetTaggedValue(el, "ImportedNew", $"{_countNew}");
-            TaggedValue.SetTaggedValue(el, "ImportedChanged", $"{_countChanged}");
+            TaggedValue.SetUpdate(el, "Imported", $"{DateTime.Now:G}");
+            TaggedValue.SetUpdate(el, "ImportedBy", $"{Environment.UserName}");
+            TaggedValue.SetUpdate(el, "ImportedFile", $"{_importModuleFile}");
+            TaggedValue.SetUpdate(el, "ImportedCount", $"{_dtRequirements.Rows.Count}");
+            TaggedValue.SetUpdate(el, "ImportedNew", $"{_countNew}");
+            TaggedValue.SetUpdate(el, "ImportedChanged", $"{_countChanged}");
 
         }
 
@@ -321,15 +321,15 @@ namespace EaServices.Doors
         /// <summary>
         /// Move EA requirements to Package with moved requirements
         /// </summary>
-        public void MoveDeletedRequirements()
+        public virtual void MoveDeletedRequirements()
         {
             var moveEaElements = from m in DictPackageRequirements
-                where !_dtDoorsRequirements.Rows.Cast<DataRow>().Any(x => GetAbsoluteNumerFromDoorsId(x["Id"].ToString()) == m.Key)
+                where !_dtRequirements.Rows.Cast<DataRow>().Any(x => GetAbsoluteNumerFromDoorsId(x["Id"].ToString()) == m.Key)
                 select m.Value;
             foreach (var eaId in moveEaElements)
             {
                 EA.Element el = _rep.GetElementByID(eaId);
-                el.PackageID = _pkgDeletedObjects.PackageID;
+                el.PackageID = PkgDeletedObjects.PackageID;
                 el.ParentID = 0;
                 el.Update();
             }
@@ -386,17 +386,17 @@ namespace EaServices.Doors
         /// <returns>Package created Objects</returns>
         protected EA.Package CreatePackageDeletedObjects()
         {
-            if (_pkgDeletedObjects != null) return _pkgDeletedObjects;
+            if (PkgDeletedObjects != null) return PkgDeletedObjects;
             if (_pkg.Packages.Count > 0)
             {
-                _pkgDeletedObjects = (EA.Package) _pkg.Packages.GetAt(0);
-                return _pkgDeletedObjects;
+                PkgDeletedObjects = (EA.Package) _pkg.Packages.GetAt(0);
+                return PkgDeletedObjects;
             }
 
-            _pkgDeletedObjects = (EA.Package)_pkg.Packages.AddNew(packageNameDeletedObjects, "");
-            _pkgDeletedObjects.Update();
+            PkgDeletedObjects = (EA.Package)_pkg.Packages.AddNew(packageNameDeletedObjects, "");
+            PkgDeletedObjects.Update();
             _pkg.Packages.Refresh();
-            return _pkgDeletedObjects;
+            return PkgDeletedObjects;
 
         }
         /// <summary>
@@ -418,19 +418,19 @@ namespace EaServices.Doors
                     switch (item.ImportType)
                     {
                         case FileImportSettingsItem.ImportTypes.DoorsCsv:
-                           var  doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile) ;
+                           var  doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item) ;
                            await Task.Run(() =>
                                 doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
 
                         case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                            var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile) ;
+                            var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile, item) ;
                             await Task.Run(() =>
                                 doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
 
                         case FileImportSettingsItem.ImportTypes.ReqIf:
-                            var  reqIf = new ReqIf(_rep, _pkg, item.InputFile) ;
+                            var  reqIf = new ReqIf(_rep, _pkg, item.InputFile, item) ;
                             await Task.Run(() =>
                                 reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
@@ -443,37 +443,45 @@ namespace EaServices.Doors
 
         }
 
-        public EA.Repository Rep { get => _rep; set => _rep = value; }
-        public EA.Package Pkg { get => _pkg; set => _pkg = value; }
-        public string ImportModuleFile { get => _importModuleFile; set => _importModuleFile = value; }
+
+        protected EA.Repository Rep { get => _rep; set => _rep = value; }
+        protected EA.Package Pkg { get => _pkg; set => _pkg = value; }
+        protected string ImportModuleFile { get => _importModuleFile; set => _importModuleFile = value; }
         /// <summary>
         /// EA Element-Ids of DOORS IDs
         /// </summary>
         public Dictionary<string, int> DictObjectIdFromDoorsId { get => DictPackageRequirements; set => DictPackageRequirements = value; }
-        public DataTable DtDoorsRequirements { get => _dtDoorsRequirements; set => _dtDoorsRequirements = value; }
 
-        public int Count
+        protected DataTable DtRequirements { get => _dtRequirements; set => _dtRequirements = value; }
+
+        protected int Count
         {
             get { return _count; }
             set { _count = value; }
         }
 
-        public int CountChanged
+        protected int CountChanged
         {
             get { return _countChanged; }
             set { _countChanged = value; }
         }
 
-        public int CountNew
+        protected int CountNew
         {
             get { return _countNew; }
             set { _countNew = value; }
         }
 
-        public Dictionary<string, int> DictPackageRequirements
+        protected Dictionary<string, int> DictPackageRequirements
         {
             get { return _dictPackageRequirements; }
             set { _dictPackageRequirements = value; }
+        }
+
+        protected Package PkgDeletedObjects
+        {
+            get { return _pkgDeletedObjects; }
+            set { _pkgDeletedObjects = value; }
         }
     }
 }

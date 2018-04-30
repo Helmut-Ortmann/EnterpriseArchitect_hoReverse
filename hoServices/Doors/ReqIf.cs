@@ -11,11 +11,13 @@ namespace EaServices.Doors
 {
     public class ReqIf : DoorsModule
     {
-        public ReqIf(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
+        readonly FileImportSettingsItem _settings;
+        public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
+            _settings = settings;
         }
          /// <summary>
-        /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
+        /// Import and update Requirements.
         /// </summary>
         /// async Task
         public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
@@ -30,17 +32,15 @@ namespace EaServices.Doors
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
             var reqIf = deserializer.Deserialize(ImportModuleFile);
 
-            InitializeDoorsRequirementsTable(reqIf);
+            InitializeReqIfRequirementsTable(reqIf);
 
-
-            //reqIf.CoreContent[0].Specifications.Dump();
             foreach (Specification el in reqIf.CoreContent[0].Specifications)
             {
-                AddRequirements(DtDoorsRequirements, el.Children,1);
+                AddRequirements(DtRequirements, el.Children,1);
             }
 
 
-            base.ReadPackageRequirements();
+            ReadPackageRequirements();
             CreatePackageDeletedObjects();
 
             
@@ -54,18 +54,16 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-            foreach (DataRow row in DtDoorsRequirements.Rows)
+
+            string rtfColumn  = _settings.RtfNameList.Count > 0 ? _settings.RtfNameList[0] : "";
+            string nameColumn = _settings.AttrNameList.Count > 0 ? _settings.AttrNameList[0] : "";
+            string notesColumn = _settings.AttrNotes ?? "";
+            foreach (DataRow row in DtRequirements.Rows)
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
-                string reqAbsNumber = objectId;
-                //string reqAbsNumber = GetAbsoluteNumerFromDoorsId(objectId);
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
-                string objectNumber = row["Object Number"].ToString();
-                string objectType = row["Object Type"].ToString();
-                string objectHeading = row["Object Heading"].ToString();
-
-
+ 
                 // Maintain parent ids of level
                 // get parent id
                 if (objectLevel > oldLevel)
@@ -80,37 +78,23 @@ namespace EaServices.Doors
                 }
 
                 oldLevel = objectLevel;
-                string name;
-                string notes;
 
-                // Estimate if header
-                if (objectType == "headline" || !String.IsNullOrWhiteSpace(objectHeading))
-                {
-                    name = $"{objectNumber} {objectHeading}";
-                    notes = row["Object Heading"].ToString();
-                }
-                else
-                {
-                    notes = row["Object Text"].ToString();
-                    string objectShorttext = GetTextExtract(notes);
-                    objectShorttext = objectShorttext.Length > 40 ? objectShorttext.Substring(0, 40) : objectShorttext;
-                    name = objectShorttext;
-                    //name = $"{reqAbsNumber.PadRight(7)} {objectShorttext}";
 
-                }
-                // Check if requirement with Doors ID already exists
-                bool isExistingRequirement = DictPackageRequirements.TryGetValue(reqAbsNumber, out int elId);
+                string name = nameColumn != "" ? row[nameColumn].ToString(): row[0].ToString();
+                string notes = notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString();
+                string nameShort = name.Length > 40 ? name.Substring(0, 40) : name;
+
+               // Check if requirement with Doors ID already exists
+                bool isExistingRequirement = DictPackageRequirements.TryGetValue(objectId, out int elId);
 
 
                 EA.Element el;
                 if (isExistingRequirement)
                 {
-                    el = (EA.Element) Rep.GetElementByID(elId);
+                    el = Rep.GetElementByID(elId);
                     if (el.Alias != objectId ||
-                        el.Name != name ||
-                        el.Notes != notes ||
-                        el.Type != eaObjectType ||
-                        el.Stereotype != eaStereotype)
+                        el.Name != nameShort ||
+                        el.Notes != notes )
                     {
                         el.Status = stateChanged;
                         CountChanged += 1;
@@ -119,14 +103,13 @@ namespace EaServices.Doors
                 else
                 {
                     el = (EA.Element)Pkg.Elements.AddNew(name, "Requirement");
-                    el.Status = stateNew;
                     CountChanged += 1;
                 }
 
 
                 el.Alias = objectId;
                 el.Name = name;
-                el.Multiplicity = reqAbsNumber;
+                el.Multiplicity = objectId;
                 el.Notes = notes;
                 el.TreePos = Count * 10;
                 el.PackageID = Pkg.PackageID;
@@ -139,7 +122,7 @@ namespace EaServices.Doors
                 lastElementId = el.ElementID;
 
                 // handle the remaining columns/ tagged values
-                var cols = from c in DtDoorsRequirements.Columns.Cast<DataColumn>()
+                var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
                            where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                            select new
                            {
@@ -151,7 +134,19 @@ namespace EaServices.Doors
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    TaggedValue.SetTaggedValue(el, c.Name, c.Value);
+                    if (c.Name == rtfColumn)
+                    {
+                        string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
+                        docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
+
+                        HtmlToDocx.Convert( docFile, c.Value??"");
+                        el.LoadLinkedDocument(docFile);
+                    }
+                    else
+                    {
+                        if (c.Name.Trim() != notesColumn)  TaggedValue.SetUpdate(el, c.Name, c.Value??"");                     
+                    }
+                    
                 }
             }
 
@@ -163,30 +158,19 @@ namespace EaServices.Doors
             Rep.ReloadPackage(Pkg.PackageID);
         }
         /// <summary>
-        /// Initialize DOORS Requirement DataTable
+        /// Initialize ReqIF Requirement DataTable
         /// </summary>
         /// <param name="reqIf"></param>
-        private void InitializeDoorsRequirementsTable(ReqIF reqIf)
+        private void InitializeReqIfRequirementsTable(ReqIF reqIf)
         {
             // Initialize table
-            DtDoorsRequirements = new DataTable();
-            DtDoorsRequirements.Columns.Add("Id", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Level", typeof(int));
-            DtDoorsRequirements.Columns.Add("Object Number", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Type", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Heading", typeof(string));
-            DtDoorsRequirements.Columns.Add("Object Text", typeof(string));
-            // 
-            DtDoorsRequirements.Columns.Add("VerificationMethod", typeof(string));
-            DtDoorsRequirements.Columns.Add("RequirementID", typeof(string));
-            DtDoorsRequirements.Columns.Add("LegacyID", typeof(string));
-
+            DtRequirements = new DataTable();
+            DtRequirements.Columns.Add("Id", typeof(string));
+            DtRequirements.Columns.Add("Object Level", typeof(string));
+           
             foreach (var attr in reqIf.CoreContent[0].SpecObjects[0].Values)
             {
-                if (
-                    attr.AttributeDefinition.LongName == "Object Text" ||
-                    attr.AttributeDefinition.LongName == "Object Heading") continue;
-                DtDoorsRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
+                DtRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
             }
         }
 
@@ -197,7 +181,7 @@ namespace EaServices.Doors
         /// <param name="dt"></param>
         /// <param name="children"></param>
         /// <param name="level"></param>
-        public void AddRequirements(DataTable dt, List<SpecHierarchy> children, int level)
+        private void AddRequirements(DataTable dt, List<SpecHierarchy> children, int level)
         {
             if (children == null || children.Count == 0) return;
             foreach (SpecHierarchy child in children)
@@ -228,6 +212,22 @@ namespace EaServices.Doors
             }
             
 
+        }
+        /// <summary>
+        /// Move deleted EA requirements to Package 'DeletedRequirements'
+        /// </summary>
+        public override void MoveDeletedRequirements()
+        {
+            var moveEaElements = from m in DictPackageRequirements
+                where !DtRequirements.Rows.Cast<DataRow>().Any(x => x["Id"].ToString() == m.Key)
+                select m.Value;
+            foreach (var eaId in moveEaElements)
+            {
+                EA.Element el = Rep.GetElementByID(eaId);
+                el.PackageID = PkgDeletedObjects.PackageID;
+                el.ParentID = 0;
+                el.Update();
+            }
         }
     }
 }

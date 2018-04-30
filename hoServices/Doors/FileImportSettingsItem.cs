@@ -166,8 +166,16 @@ namespace EaServices.Doors
         [JsonProperty("AttrNameList")]
         private List<string>  _attrNameList;
 
-        
-
-
+        /// <summary>
+        /// ReqIf Attributes to store as *.rtf
+        /// </summary>
+        [JsonIgnore]
+        public List<string> RtfNameList
+        {
+            get => _rtfNameList;
+            set => _rtfNameList = value;
+        }
+        [JsonProperty("RtfNameList")]
+        private List<string>  _rtfNameList;
     }
 }

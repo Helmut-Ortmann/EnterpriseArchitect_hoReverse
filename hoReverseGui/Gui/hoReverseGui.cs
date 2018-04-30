@@ -252,6 +252,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem importBySettingsToolStripMenuItem;
         private ToolStripMenuItem importDoorsReqIFBySettingsToolStripMenuItem;
         private ToolStripMenuItem importReqIFBySettingsToolStripMenuItem;
+        private ToolStripMenuItem importReqIFBySettings3ToolStripMenuItem;
         private ToolTip _toolTip1;
 
         //public Button txtUserText;
@@ -756,6 +757,8 @@ namespace hoReverse.Reverse
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.importBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importDoorsReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importReqIFBySettings3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -782,7 +785,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.importReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2123,6 +2125,7 @@ namespace hoReverse.Reverse
             this.toolStripSeparator18,
             this.importBySettingsToolStripMenuItem,
             this.importDoorsReqIFBySettingsToolStripMenuItem,
+            this.importReqIFBySettings3ToolStripMenuItem,
             this.importReqIFBySettingsToolStripMenuItem});
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -2212,6 +2215,20 @@ namespace hoReverse.Reverse
             this.importDoorsReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.importDoorsReqIFBySettingsToolStripMenuItem.Text = "ImportDoorsReqIFBySettings";
             this.importDoorsReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importDoorsReqIFBySettingsToolStripMenuItem_Click);
+            // 
+            // importReqIFBySettings3ToolStripMenuItem
+            // 
+            this.importReqIFBySettings3ToolStripMenuItem.Name = "importReqIFBySettings3ToolStripMenuItem";
+            this.importReqIFBySettings3ToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importReqIFBySettings3ToolStripMenuItem.Text = "ImportReqIFBySettings 3";
+            this.importReqIFBySettings3ToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettings3ToolStripMenuItem_Click_1);
+            // 
+            // importReqIFBySettingsToolStripMenuItem
+            // 
+            this.importReqIFBySettingsToolStripMenuItem.Name = "importReqIFBySettingsToolStripMenuItem";
+            this.importReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importReqIFBySettingsToolStripMenuItem.Text = "ImportReqIFBySettings 4";
+            this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettings4ToolStripMenuItem_Click);
             // 
             // _helpToolStripMenuItem
             // 
@@ -2457,13 +2474,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
-            // importReqIFBySettingsToolStripMenuItem
-            // 
-            this.importReqIFBySettingsToolStripMenuItem.Name = "importReqIFBySettingsToolStripMenuItem";
-            this.importReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.importReqIFBySettingsToolStripMenuItem.Text = "ImportReqIFBySettings";
-            this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettingsToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4233,7 +4243,9 @@ Please restart EA. During restart hoTools loads the default settings.",
             MessageBox.Show("See File 2, settings for the import definitions.","Import DOORS *.reqIf Requirements finished.");
         }
 
-        private async void importReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        
+
+        private async void importReqIFBySettings4ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await ImportBySettings(4);
             MessageBox.Show("See File 4, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
@@ -4248,6 +4260,13 @@ Please restart EA. During restart hoTools loads the default settings.",
             await doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
+        }
+
+        private async void importReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            await ImportBySettings(3);
+            MessageBox.Show("See File 3, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
+
         }
     }
 }
