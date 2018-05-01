@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.Math;
 using hoReverse.hoUtils;
 using ReqIFSharp;
 
@@ -25,7 +27,8 @@ namespace EaServices.Doors
         /// Import and update Requirements.
         /// </summary>
         /// async Task
-        public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+        /// public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")
@@ -60,8 +63,6 @@ namespace EaServices.Doors
 
             int oldLevel = 0;
 
-            string rtfColumn  = _settings.RtfNameList.Count > 0 ? _settings.RtfNameList[0] : "";
-            string nameColumn = _settings.AttrNameList.Count > 0 ? _settings.AttrNameList[0] : "";
             string notesColumn = _settings.AttrNotes ?? "";
             foreach (DataRow row in DtRequirements.Rows)
             {
@@ -85,7 +86,7 @@ namespace EaServices.Doors
                 oldLevel = objectLevel;
 
 
-                string name = GetAttrValue(nameColumn != "" ? row[nameColumn].ToString(): row[0].ToString());
+                string name = CombineAttrValues(_settings.AttrNameList, row, 40);
                 string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString());
                 string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
 
@@ -136,21 +137,19 @@ namespace EaServices.Doors
                            }
 
                     ;
+                // Handle *.rtf content
+                string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
+                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
+
+                string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
+                HtmlToDocx.Convert( docFile, rtfValue);
+                el.LoadLinkedDocument(docFile);
+
+
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                    if (c.Name == rtfColumn)
-                    {
-                        string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
-                        docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
-
-                        HtmlToDocx.Convert( docFile, c.Value??"");
-                        el.LoadLinkedDocument(docFile);
-                    }
-                    else
-                    {
-                        if (c.Name.Trim() != notesColumn)  TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value??""));                     
-                    }
+                   if (notesColumn != c.Name) TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value??""));                     
                     
                 }
             }
@@ -249,10 +248,74 @@ namespace EaServices.Doors
         private string GetAttrValue(string attrValue)
         {
             if (attrValue.Contains("http://www.w3.org/1999/xhtml"))
-                return HtmlToText.Convert(attrValue);
+                return HtmlToText.ConvertReqIfXhtml(attrValue);
             else return attrValue;
 
         }
+
+        /// <summary>
+        /// Get Attribute value for a list of attribute names. Limit the output length if length > 0
+        /// </summary>
+        /// <param name="lNames"></param>
+        /// <param name="row"></param>
+        /// <param name="length">The leghth of the output string. Default:40</param>
+        /// <returns></returns>
+        private string CombineAttrValues(List<string> lNames, DataRow row, int length=0)
+        {
+            string attrValue = lNames.Count == 0 ? GetAttrValue(row[0].ToString()):"";
+            string delimeter = "";
+            foreach (var columnName in lNames)
+            {
+
+                try
+                {
+                    attrValue = $"{attrValue}{delimeter}{GetAttrValue(row[columnName].ToString())}";
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Attribute name:\r\n{columnName}\r\n\r\n{e}", "Can't read Attribute!");
+                }
+
+                delimeter = " ";
+            }
+            // linit length
+            return length > 0 && attrValue.Length > length 
+                ? attrValue.Substring(0, length) 
+                : attrValue;
+
+        }
+        /// <summary>
+        /// Combine rtf Attribute values for a list of attribute names.
+        /// </summary>
+        /// <param name="lNames"></param>
+        /// <param name="row"></param>
+        /// <param name="length">The leghth of the output string. Default:40</param>
+        /// <returns></returns>
+        private string CombineRtfAttrValues(List<string> lNames, DataRow row)
+        {
+            string attrRtfValue = lNames.Count == 0 ? GetAttrValue(row[0].ToString()):"";
+            string delimeter = "";
+            foreach (var columnName in lNames)
+            {
+
+                try
+                {
+                    attrRtfValue = $"{attrRtfValue}{delimeter}{row[columnName]}";
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Attribute name:\r\n{columnName}\r\n\r\n{e}", "Can't read Attribute!");
+                }
+
+                delimeter = $@"\r\n<p><br><br><br><\p>\r\n";
+            }
+            // linit length
+            return attrRtfValue;
+
+        }
+
+
+
         /// <summary>
         /// Move deleted EA requirements to Package 'DeletedRequirements'
         /// </summary>

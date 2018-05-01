@@ -148,7 +148,7 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public virtual async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public virtual void ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")
@@ -402,7 +402,7 @@ namespace EaServices.Doors
         /// <summary>
         /// Import according to import settings
         /// </summary>
-        public async Task ImportBySetting(int listNumber)
+        public void ImportBySetting(int listNumber)
         {
             foreach (FileImportSettingsItem item in _importSettings)
             {
@@ -419,20 +419,23 @@ namespace EaServices.Doors
                     {
                         case FileImportSettingsItem.ImportTypes.DoorsCsv:
                            var  doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item) ;
-                           await Task.Run(() =>
-                                doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                           doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
+                           //await Task.Run(() =>
+                           //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
 
                         case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                             var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile, item) ;
-                            await Task.Run(() =>
-                                doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                            doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
+                            //await Task.Run(() =>
+                            //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
 
                         case FileImportSettingsItem.ImportTypes.ReqIf:
                             var  reqIf = new ReqIf(_rep, _pkg, item.InputFile, item) ;
-                            await Task.Run(() =>
-                                reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                            reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
+                            //await Task.Run(() =>
+                            //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
                     }
                     

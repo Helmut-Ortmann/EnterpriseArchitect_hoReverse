@@ -16,27 +16,7 @@ namespace EaServices.Doors
         public static void Convert(string docXFile, string xhtml)
         {
 		
-            // remove namespace http://www.w3.org/1999/xhtml
-            Regex regNameSpaceXhtml = new Regex(@"xmlns:(\w*)=""http://www.w3.org/1999/xhtml"">");
-            Match match = regNameSpaceXhtml.Match(xhtml);
-            if (match.Success == true)
-            {
-                xhtml = xhtml.Replace($"{match.Groups[1].Value}:", "");
-
-                
-            }
-            // <object data=" ==> <img src="
-            // <object/> ==> <img/>
-            Regex regObjectToImg = new Regex(@"<object.*</object>");
-            match = regObjectToImg.Match(xhtml);
-            if (match.Success == true)
-            {
-                string found = match.Groups[0].Value;
-                found = found.Replace("<object ", "<img ");
-                found = found.Replace("</object>", "</img>");
-                found = found.Replace(@" data=""", @" src=""");
-                xhtml = xhtml.Replace(match.Groups[0].Value, found);
-            }
+            xhtml = XhtmlFromReqIf(xhtml);
 
 
             // write to *.docx
@@ -65,6 +45,36 @@ namespace EaServices.Doors
 //			 return "Error finding xhtml namespace";
 //		}
 
+        }
+        /// <summary>
+        /// Make XHTML from ReqIF xhtml. In fact remove namespace
+        /// </summary>
+        /// <param name="xhtml"></param>
+        /// <returns></returns>
+        public static string XhtmlFromReqIf(string xhtml)
+        {
+            // remove namespace http://www.w3.org/1999/xhtml
+            Regex regNameSpaceXhtml = new Regex(@"xmlns:(\w*)=""http://www.w3.org/1999/xhtml"">");
+            Match match = regNameSpaceXhtml.Match(xhtml);
+            if (match.Success == true)
+            {
+                xhtml = xhtml.Replace($"{match.Groups[1].Value}:", "");
+            }
+
+            // <object data=" ==> <img src="
+            // <object/> ==> <img/>
+            Regex regObjectToImg = new Regex(@"<object.*</object>");
+            match = regObjectToImg.Match(xhtml);
+            if (match.Success == true)
+            {
+                string found = match.Groups[0].Value;
+                found = found.Replace("<object ", "<img ");
+                found = found.Replace("</object>", "</img>");
+                found = found.Replace(@" data=""", @" src=""");
+                xhtml = xhtml.Replace(match.Groups[0].Value, found);
+            }
+
+            return xhtml;
         }
     }
 }

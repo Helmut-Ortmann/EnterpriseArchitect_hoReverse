@@ -15,6 +15,11 @@ namespace EaServices.Doors
 		    return ConvertDoc(doc);
 	    }
 
+        public static string ConvertReqIfXhtml(string reqIfHhtml)
+        {
+            return ConvertHtml(HtmlToDocx.XhtmlFromReqIf(reqIfHhtml));
+        }
+
         public static string ConvertHtml(string html)
 	    {
 		    HtmlDocument doc = new HtmlDocument();

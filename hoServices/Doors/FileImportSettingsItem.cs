@@ -136,9 +136,10 @@ namespace EaServices.Doors
         [JsonIgnore]
         public List<string> AttrList
         {
-            get => _attrList;
+            get => _attrList ?? new List<string>();
             set => _attrList = value;
         }
+
         [JsonProperty("AttrList")]
         private List<string>  _attrList;
 
@@ -160,7 +161,7 @@ namespace EaServices.Doors
         [JsonIgnore]
         public List<string> AttrNameList
         {
-            get => _attrNameList;
+            get => _attrNameList ?? new List<string>();
             set => _attrNameList = value;
         }
         [JsonProperty("AttrNameList")]
@@ -172,8 +173,9 @@ namespace EaServices.Doors
         [JsonIgnore]
         public List<string> RtfNameList
         {
-            get => _rtfNameList;
+            get => _rtfNameList ?? new List<string>();
             set => _rtfNameList = value;
+           
         }
         [JsonProperty("RtfNameList")]
         private List<string>  _rtfNameList;
