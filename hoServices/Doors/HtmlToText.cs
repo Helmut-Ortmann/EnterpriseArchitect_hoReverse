@@ -14,10 +14,15 @@ namespace EaServices.Doors
 		    doc.Load(path);
 		    return ConvertDoc(doc);
 	    }
-
+        /// <summary>
+        /// Convert ReqIF XHTML to text 
+        /// </summary>
+        /// <param name="reqIfHhtml"></param>
+        /// <returns></returns>
         public static string ConvertReqIfXhtml(string reqIfHhtml)
         {
-            return ConvertHtml(HtmlToDocx.XhtmlFromReqIf(reqIfHhtml));
+            var xhtml = HtmlToDocx.XhtmlFromReqIf(reqIfHhtml);
+            return ConvertHtml(HtmlToDocx.DeleteObjects(xhtml));
         }
 
         public static string ConvertHtml(string html)

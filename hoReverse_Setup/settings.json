@@ -368,8 +368,8 @@
   "Importer":
   [
       {
-          "Description"     :  "Import Requirements from Doors",
-          "Tooltip"         :  "Use EA Multiplicity as DOORS absolute number",
+          "Name"            :  "Import Requirements from Doors",
+          "Description"     :  "Use EA Multiplicity as DOORS absolute number",
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/requirements.csv" ,
           "PackageGuid"     :  "{F1D2E81B-F934-434c-8E7B-864579E8D92E}" ,

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DocumentFormat.OpenXml.Math;
 using hoReverse.hoUtils;
 using ReqIFSharp;
 
@@ -15,10 +12,6 @@ namespace EaServices.Doors
     {
         readonly FileImportSettingsItem _settings;
 
-        /// <summary>
-        /// Dictionary of Attrubutes
-        /// </summary>
-        Dictionary<string, DatatypeDefinition> _attributes= new Dictionary<string, DatatypeDefinition>();
         public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
             _settings = settings;
@@ -139,11 +132,27 @@ namespace EaServices.Doors
                     ;
                 // Handle *.rtf content
                 string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
-                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
+                bool IsGenerateDocx = true;
+                if (IsGenerateDocx)
+                    docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
+                else
+                    docFile = System.IO.Path.Combine(docFile, "xxxxxxx.rtf");
 
                 string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
-                HtmlToDocx.Convert( docFile, rtfValue);
-                el.LoadLinkedDocument(docFile);
+                if (docFile.EndsWith(".rtf"))
+                    HtmlToDocx.ConvertSautin(docFile, rtfValue);
+                else HtmlToDocx.Convert( docFile, rtfValue);
+                try
+                {
+                    if (! el.LoadLinkedDocument(docFile))
+                        MessageBox.Show($@"File: {docFile}{Environment.NewLine}Error: '{el.GetLastError()}'",@"Error loading Linked Document");
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"File: '{docFile}'", @"Can't store *.docx fike, break!!!");
+                    return ;
+                }
+                
 
 
                 // Update/Create Tagged value
@@ -155,11 +164,24 @@ namespace EaServices.Doors
             }
 
             MoveDeletedRequirements();
-            UpdatePackage();
+            UpdatePackage(reqIf);
 
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+        }
+
+
+        /// <summary>
+        /// Update Package with Standard and ReqIF Properties
+        /// </summary>
+        /// <param name="reqIf"></param>
+        protected void UpdatePackage(ReqIF reqIf)
+        {
+            EA.Element el = Rep.GetElementByGuid(Pkg.PackageGUID);
+            GetModuleProperties(reqIf, el);
+
+            base.UpdatePackage();
         }
         /// <summary>
         /// Initialize ReqIF Requirement DataTable
@@ -168,17 +190,23 @@ namespace EaServices.Doors
         private void InitializeReqIfRequirementsTable(ReqIF reqIf)
         {
             // Initialize table
+            // Standard columns
             DtRequirements = new DataTable();
             DtRequirements.Columns.Add("Id", typeof(string));
             DtRequirements.Columns.Add("Object Level", typeof(string));
+
+            // get list of all used attributes
+            var blackList = new String[] { };// {"TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars","TableLeftBorder","TableLinkIndicators","TableRightBorder","TableShowAttrs","TableTopBorder"};
+            var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
+                from attr in obj.Values
+                where ! blackList.Any(bl=>bl == attr.AttributeDefinition.LongName)
+				
+                select new { Name = attr.AttributeDefinition.LongName, Type=attr.AttributeDefinition.DatatypeDefinition.ToString()}).Distinct();
            
             // over all Attributes
-            foreach (var attr in reqIf.CoreContent[0].SpecObjects[0].Values)
+            foreach (var attr in qAttr)
             {
-                string attrName = attr.AttributeDefinition.LongName;
-                DatatypeDefinition attrType = attr.AttributeDefinition.DatatypeDefinition;
-                _attributes.Add(attrName, attrType);
-                DtRequirements.Columns.Add(attrName, typeof(string));
+                DtRequirements.Columns.Add(attr.Name, typeof(string));
             }
         }
 
@@ -200,19 +228,28 @@ namespace EaServices.Doors
                 row["Object Level"] = level;
 
                 List<AttributeValue> columns = specObject.Values;
-                for (int i = 0; i < columns.Count; i++)
+                foreach (var column in columns)
                 {
                     try
-                    {
-                        row[columns[i].AttributeDefinition.LongName] = columns[i].ObjectValue.ToString();
+                    {   // Handle enums
+                        if (column.AttributeDefinition is AttributeDefinitionEnumeration)
+                        {
+                            List<EnumValue> enumValues = (List<EnumValue>) column.ObjectValue;
+                            string values = "";
+                            foreach (var enumValue in enumValues)
+                            {
+                                values = $"{enumValue.LongName}{Environment.NewLine}";
+                            }
+                            row[column.AttributeDefinition.LongName] = values;
+                        } else row[column.AttributeDefinition.LongName] = column.ObjectValue.ToString();
+                        
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"AttrName: '{columns[i].AttributeDefinition.LongName}'\r\n\r\n{e}", 
-                            "Exception add ReqIF Attribute");
+                        MessageBox.Show($@"AttrName: '{column.AttributeDefinition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}", 
+                            @"Exception add ReqIF Attribute");
                         continue;
                     }
-                    
                 }
 
                 dt.Rows.Add(row);
@@ -222,24 +259,20 @@ namespace EaServices.Doors
 
         }
         /// <summary>
-        /// Get Attribute Value
+        /// Add Tagged Values with Module Properties to Package/Object
         /// </summary>
-        /// <param name="attrName"></param>
-        /// <param name="attrValue"></param>
-        /// <returns></returns>
-        private string GetAttrValue(string attrName, string attrValue)
+        /// <param name="reqIf"></param>
+        /// <param name="pkg"></param>
+        private void GetModuleProperties(ReqIF reqIf, EA.Element el)
         {
-            switch (_attributes[attrName])
+            var moduleProperties = from obj in reqIf.CoreContent[0].Specifications[0].Values
+                select new { Value = obj.ObjectValue.ToString(), Name = obj.AttributeDefinition.LongName, Type = obj.AttributeDefinition.GetType() };
+            foreach (var property in moduleProperties)
             {
-                case DatatypeDefinitionXHTML s:
-                    return HtmlToText.Convert(attrValue);
- 
-
-                default:
-                    return attrValue;
-
+                TaggedValue.SetUpdate(el, property.Name, GetAttrValue(property.Value ?? ""));
             }
         }
+
         /// <summary>
         /// Get Attribute Value
         /// </summary>
@@ -307,7 +340,7 @@ namespace EaServices.Doors
                     MessageBox.Show($"Attribute name:\r\n{columnName}\r\n\r\n{e}", "Can't read Attribute!");
                 }
 
-                delimeter = $@"\r\n<p><br><br><br><\p>\r\n";
+                delimeter = $@"<p><br><br><br></p>";
             }
             // linit length
             return attrRtfValue;

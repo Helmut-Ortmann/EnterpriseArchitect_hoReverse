@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoReverseRoot", "hoReverseRoot\hoReverseRoot.csproj", "{7874DA41-0F27-48EA-9C56-E4876A5262DB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{930CBB5E-6394-4789-B87F-70091F19D1AD} = {930CBB5E-6394-4789-B87F-70091F19D1AD}
+		{FED206AF-E583-48C6-9952-BAD2C41B3AA4} = {FED206AF-E583-48C6-9952-BAD2C41B3AA4}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoMaintenance", "hoMaintenance\hoMaintenance.csproj", "{930CBB5E-6394-4789-B87F-70091F19D1AD}"

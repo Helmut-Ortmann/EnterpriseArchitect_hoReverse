@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-// ReSharper disable InconsistentNaming
 
 namespace EaServices.Doors
 {
     /// <summary>
     /// Settings item for file import like '*.csv' from DOORS 9.6 compatible export
     /// </summary>
-    public class FileImportSettingsItem
+    public class FileImportSettingsItem : hoUtils.Json.IMenuItem
     {
         /// <summary>
         /// The type to import
@@ -109,13 +108,13 @@ namespace EaServices.Doors
         /// Tooltip
         /// </summary>
         [JsonIgnore]
-        public string Tooltip
+        public string Name
         {
-            get => _tooltip;
-            set => _tooltip = value;
+            get => _name;
+            set => _name = value;
         }
-        [JsonProperty("Tooltip")]
-        private string  _tooltip;
+        [JsonProperty("Name")]
+        private string  _name;
 
         /// <summary>
         /// ListNo. The number of the list to group lists.

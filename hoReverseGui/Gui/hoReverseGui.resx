@@ -120,6 +120,9 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
+  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>130, 17</value>
+  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -210,6 +213,31 @@ If the diagram items selected (Elements, Packages) the hoReverse sorts them alph
   <metadata name="_menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>226, 17</value>
   </metadata>
+  <data name="doorsImportcsvToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Import DOORS *.csv file into selected package, comma separated.
+
+The DOORS requirement import/update function requires the following columns:
+- Object Level
+- Object Number
+- ID
+- State
+- Objecttype
+
+The function works in background and you can proceed writing.</value>
+  </data>
+  <data name="doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Import DOORS *.csv file into selected package, comma separated, using the file dialog.
+
+
+The DOORS requirement import/update function requires the following columns:
+- Object Level
+- Object Number
+- ID
+- State
+- Objecttype
+
+The function works in background and you can proceed writing.</value>
+  </data>
   <data name="settingsDiagramStylesToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Change settings 'Bulk change Diagram Style' or' Element' (Settings.json):
 - Opens the Settings.json file to edit it
@@ -370,31 +398,6 @@ Interface </value>
 4. Click on Set/Change VC *.xml file
 5. Enter new *.xml file path
 6. Check-in the parent Package</value>
-  </data>
-  <data name="doorsImportcsvToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Import DOORS *.csv file into selected package, comma separated.
-
-The DOORS requirement import/update function requires the following columns:
-- Object Level
-- Object Number
-- ID
-- State
-- Objecttype
-
-The function works in background and you can proceed writing.</value>
-  </data>
-  <data name="doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Import DOORS *.csv file into selected package, comma separated, using the file dialog.
-
-
-The DOORS requirement import/update function requires the following columns:
-- Object Level
-- Object Number
-- ID
-- State
-- Objecttype
-
-The function works in background and you can proceed writing.</value>
   </data>
   <metadata name="_toolStrip6.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>572, 17</value>

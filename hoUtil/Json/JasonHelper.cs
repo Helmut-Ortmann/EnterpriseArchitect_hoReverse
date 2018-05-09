@@ -12,26 +12,26 @@ namespace hoUtils.Json
         /// Get configuration from json. Usually it's advisable not to throw an error.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="search"></param>
+        /// <param name="settings"></param>
         /// <param name="jsonChapter">"DiagramStyle", "DiagramObjectStyle","DiagramLinkStyle", "AutoIncrement"</param>
         /// <param name="ignoreError"></param>
-        public static  IList<T> GetConfigurationItems<T>(JObject search, string jsonChapter, bool ignoreError=true)
+        public static  IList<T> GetConfigurationItems<T>(JObject settings, string jsonChapter, bool ignoreError=true)
         {
             try
             {
 
-                IList<JToken> results = search[jsonChapter].Children().ToList();
+                IList<JToken> results = settings[jsonChapter].Children().ToList();
 
                 // serialize JSON results into .NET objects
-                IList<T> searchResults = new List<T>();
+                IList<T> items = new List<T>();
                 foreach (JToken result in results)
                 {
                     // JToken.ToObject is a helper method that uses JsonSerializer internally
                     T searchResult = result.ToObject<T>();
                     if (searchResult == null) continue;
-                    searchResults.Add(searchResult);
+                    items.Add(searchResult);
                 }
-                return searchResults.ToList();
+                return items.ToList();
             }
             catch (Exception e)
             {
@@ -54,6 +54,58 @@ The other features should work!
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Create a ToolStripItem with DropDownitems for each configured item.
+        /// The Tag property contains the item for which the menu item runs. If no configuration is available insert a text as a hint to a missing configuration.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="nameRoot"></param>
+        /// <param name="toolTipRoot"></param>
+        /// <param name="eventHandler"></param>
+        /// <returns></returns>
+        public static ToolStripMenuItem ConstructStyleToolStripMenuDiagram<T>(List<T> items, string nameRoot, string toolTipRoot, EventHandler eventHandler)
+        {
+            ToolStripMenuItem insertTemplateMenuItem = new ToolStripMenuItem
+            {
+                Text = nameRoot,
+                ToolTipText = toolTipRoot
+            };
+            // Add item of possible style as items in drop down
+            if (items == null)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem
+                {
+                    Text = $@"Settings for '{typeof(T)}' not found!",
+                    ToolTipText = $@"Setting Settings.Json not available{Environment.NewLine}Chapter: '{typeof(T)}'{Environment.NewLine}Consider resetting to factory settings or create your own styles{Environment.NewLine}File: '%appdata%\ho\...\Settings.Json'",
+
+                };
+                insertTemplateMenuItem.DropDownItems.Add(item);
+
+            }
+            else
+            {
+                string listNoOld = "";
+                foreach (T style in items)
+                {
+
+                    var menuItem = style as IMenuItem;
+                    if (menuItem == null || menuItem.ListNo == listNoOld) continue;
+                    listNoOld = menuItem.ListNo;
+                    ToolStripMenuItem item = new ToolStripMenuItem
+                    {
+                        Text = menuItem.Name,
+                        ToolTipText = menuItem.Description,
+                        Tag = menuItem
+                    };
+                    item.Click += eventHandler;
+                    insertTemplateMenuItem.DropDownItems.Add(item);
+                }
+            }
+
+            return insertTemplateMenuItem;
+
         }
 
 
@@ -80,7 +132,7 @@ Consider resetting to Factory Settings.
 {e}
 
 ",
-                    "Can't import 'setting.json'.");
+                    @"Can't import 'setting.json'.");
                 return null;
             }
         }

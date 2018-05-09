@@ -137,7 +137,7 @@ namespace EaServices.Doors
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"{e}", "Can't determine EA Elements of Doors requirements.");
+                    MessageBox.Show($"Package: '{_pkg.Name}\r\n\r\n'{e}", "Can't determine EA Requirements of Doors Requirements.");
                 }
             }
 
@@ -281,7 +281,7 @@ namespace EaServices.Doors
         /// <summary>
         /// Update import package with: 
         /// </summary>
-        protected void UpdatePackage()
+        protected virtual void UpdatePackage()
         {
             EA.Element el = _rep.GetElementByGuid(_pkg.PackageGUID);
             TaggedValue.SetUpdate(el, "Imported", $"{DateTime.Now:G}");
@@ -402,12 +402,20 @@ namespace EaServices.Doors
         /// <summary>
         /// Import according to import settings
         /// </summary>
-        public void ImportBySetting(int listNumber)
+        public bool ImportBySetting(int listNumber)
         {
             foreach (FileImportSettingsItem item in _importSettings)
             {
                 _pkg = _rep.GetPackageByGuid(item.PackageGuid);
+                if (_pkg == null)
+                {
+                    MessageBox.Show($@"Package of import list {listNumber} with GUID='{item.PackageGuid}' not availbale.{Environment.NewLine}Check Import settings in Settings.Json.",
+                        @"Package to import into isn't available, break!");
+                    return false;
+                }
+
                 _importModuleFile = item.InputFile;
+                
                 string eaObjectType = item.ObjectType;
                 string eaStereotype = item.Stereotype;
                 string eaStatusNew = item.StatusNew;
@@ -415,6 +423,11 @@ namespace EaServices.Doors
 
                 if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
+                    if (!System.IO.File.Exists(_importModuleFile))
+                    {
+                        MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
+                        return false;
+                    }
                     switch (item.ImportType)
                     {
                         case FileImportSettingsItem.ImportTypes.DoorsCsv:
@@ -443,6 +456,8 @@ namespace EaServices.Doors
                 }
 
             }
+
+            return true;
 
         }
 
