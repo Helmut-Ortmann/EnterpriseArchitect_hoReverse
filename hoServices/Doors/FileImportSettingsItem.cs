@@ -178,5 +178,31 @@ namespace EaServices.Doors
         }
         [JsonProperty("RtfNameList")]
         private List<string>  _rtfNameList;
+
+        /// <summary>
+        /// ReqIf Attributes to store as Alias
+        /// </summary>
+        [JsonIgnore]
+        public List<string> AliasList
+        {
+            get => _aliasList ?? new List<string>();
+            set => _aliasList = value;
+
+        }
+        [JsonProperty("AliasList")]
+        private List<string> _aliasList;
+
+        /// <summary>
+        /// Id which build the ID stored in Multiplicity to identify the requirement
+        /// </summary>
+        [JsonIgnore]
+        public List<string> IdList
+        {
+            get => _idList ?? new List<string>();
+            set => _idList = value;
+
+        }
+        [JsonProperty("IdList")]
+        private List<string> _idList;
     }
 }

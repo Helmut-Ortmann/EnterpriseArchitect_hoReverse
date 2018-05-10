@@ -2155,7 +2155,7 @@ namespace hoReverse.Reverse
             this.doorsImportcsvToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.doorsImportcsvToolStripMenuItem.Text = "Doors Import *.csv";
             this.doorsImportcsvToolStripMenuItem.ToolTipText = resources.GetString("doorsImportcsvToolStripMenuItem.ToolTipText");
-            this.doorsImportcsvToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvToolStripMenuItem_Click);
+            this.doorsImportcsvToolStripMenuItem.Click += new System.EventHandler(this.DoorsImportcsvToolStripMenuItem_Click);
             // 
             // doorsImportcsvWithFileDialogToolStripMenuItem
             // 
@@ -2163,7 +2163,7 @@ namespace hoReverse.Reverse
             this.doorsImportcsvWithFileDialogToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.doorsImportcsvWithFileDialogToolStripMenuItem.Text = "Doors Import *.csv with file Dialog";
             this.doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText = resources.GetString("doorsImportcsvWithFileDialogToolStripMenuItem.ToolTipText");
-            this.doorsImportcsvWithFileDialogToolStripMenuItem.Click += new System.EventHandler(this.doorsImportcsvWithFileDialogToolStripMenuItem_Click);
+            this.doorsImportcsvWithFileDialogToolStripMenuItem.Click += new System.EventHandler(this.DoorsImportcsvWithFileDialogToolStripMenuItem_Click);
             // 
             // checkDOORSRequirementsToolStripMenuItem
             // 
@@ -2194,7 +2194,7 @@ namespace hoReverse.Reverse
             this.importDoorsReqIFBySettingsToolStripMenuItem.Name = "importDoorsReqIFBySettingsToolStripMenuItem";
             this.importDoorsReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.importDoorsReqIFBySettingsToolStripMenuItem.Text = "ImportDoorsReqIFBySettings";
-            this.importDoorsReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importDoorsReqIFBySettingsToolStripMenuItem_Click);
+            this.importDoorsReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportDoorsReqIFBySettingsToolStripMenuItem_Click);
             // 
             // importReqIFBySettings3ToolStripMenuItem
             // 
@@ -2208,7 +2208,7 @@ namespace hoReverse.Reverse
             this.importReqIFBySettingsToolStripMenuItem.Name = "importReqIFBySettingsToolStripMenuItem";
             this.importReqIFBySettingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.importReqIFBySettingsToolStripMenuItem.Text = "ImportReqIFBySettings 4";
-            this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettings4ToolStripMenuItem_Click);
+            this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings4ToolStripMenuItem_Click);
             // 
             // _helpToolStripMenuItem
             // 
@@ -2480,7 +2480,7 @@ namespace hoReverse.Reverse
             this.importReqIFBySettings5ToolStripMenuItem.Name = "importReqIFBySettings5ToolStripMenuItem";
             this.importReqIFBySettings5ToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.importReqIFBySettings5ToolStripMenuItem.Text = "ImportReqIFBySettings 5";
-            this.importReqIFBySettings5ToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettings5ToolStripMenuItem_Click);
+            this.importReqIFBySettings5ToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings5ToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -3757,7 +3757,8 @@ namespace hoReverse.Reverse
 You find the saved settings in: '{Path.GetDirectoryName(AddinSettings.CurrentConfig.FilePath)}':
 - User.Config.tmp
 - Settings.Json.tmp
-", "Do you want to reset your configuration?", MessageBoxButtons.OKCancel);
+",
+                @"Do you want to reset your configuration?", MessageBoxButtons.OKCancel);
 
             if (result == DialogResult.OK)
             {
@@ -3768,7 +3769,7 @@ You find the saved settings in: '{Path.GetDirectoryName(AddinSettings.CurrentCon
                         } saved to *.tmp´and deleted.
 
 Please restart EA. During restart hoTools loads the default settings.",
-                    "Configuration reset to default. Please Restart!");
+                    @"Configuration reset to default. Please Restart!");
             }
         }
 
@@ -3809,17 +3810,16 @@ Please restart EA. During restart hoTools loads the default settings.",
 
             // Get selected package
             // Only for new elements
-            object contextPackage;
-            EA.ObjectType objectType = _repository.GetContextItem(out contextPackage);
+            EA.ObjectType objectType = _repository.GetContextItem(out var contextPackage);
             if (!objectType.Equals(EA.ObjectType.otPackage))
             {
-                MessageBox.Show("Select a package for the newly created stuff, break!!!");
+                MessageBox.Show(@"Select a package for the newly created stuff, break!!!");
                 return;
             }
             EA.Package pkg = (EA.Package)contextPackage;
             if (pkg.IsModel)
             {
-                MessageBox.Show("Don't select a Model (root package), break!!!");
+                MessageBox.Show(@"Don't select a Model (root package), break!!!");
                 return;
             }
             AutoCpp autoCpp = new AutoCpp(_repository, pkg );
@@ -3853,13 +3853,13 @@ Please restart EA. During restart hoTools loads the default settings.",
             EA.ObjectType objectType = _repository.GetContextItem(out var contextPackage);
             if (!objectType.Equals(EA.ObjectType.otPackage))
             {
-                MessageBox.Show("Select a package for the newly created stuff, break!!!");
+                MessageBox.Show(@"Select a package for the newly created stuff, break!!!");
                 return;
             }
             EA.Package pkg = (EA.Package)contextPackage;
             if (pkg.IsModel)
             {
-                MessageBox.Show("Don't select a Model (root package), break!!!");
+                MessageBox.Show(@"Don't select a Model (root package), break!!!");
                 return;
             }
             AutoCpp autoCpp = new AutoCpp(_repository, pkg);
@@ -3886,8 +3886,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         private void _vCRemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            object pkg;
-            if (EA.ObjectType.otPackage == _repository.GetContextItem(out pkg))
+            if (EA.ObjectType.otPackage == _repository.GetContextItem(out var pkg))
             {
                 HoService.VcControlRemove((EA.Package)pkg);
             }
@@ -3935,8 +3934,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// <param name="e"></param>
         private void getToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            object  eaObject;
-            if (_repository.GetContextItem(out eaObject) == ObjectType.otElement)
+            if (_repository.GetContextItem(out var eaObject) == ObjectType.otElement)
             {
                 EA.Element component = (EA.Element) eaObject;
                 if (component.Type == "Component" || component.Type == "Class")
@@ -4007,7 +4005,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             if (_autoCppIsRunning)
             {
-                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
+                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
 
             }
             else
@@ -4037,7 +4035,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         {
             if (_autoCppIsRunning)
             {
-                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
+                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
 
             }
             else
@@ -4117,7 +4115,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             if (!_addinSettings.isFolderPathCSourceCode()) return;
             if (_autoCppIsRunning)
             {
-                MessageBox.Show($"The Code inventory is {progressBar1.Value}% finished", "Code inventory not finished, retry!");
+                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
 
             }
             else
@@ -4168,7 +4166,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void doorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void DoorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType type = _repository.GetContextItem(out var item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4178,7 +4176,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
             if (!File.Exists(filePath))
             {
-                MessageBox.Show($"{filePath}", "*.csv to import DOORS requirements doesn't exists");
+                MessageBox.Show($@"{filePath}", @"*.csv to import DOORS requirements doesn't exists");
                 return;
             }
 
@@ -4198,7 +4196,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void doorsImportcsvWithFileDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void DoorsImportcsvWithFileDialogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType type = _repository.GetContextItem(out var item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4206,10 +4204,13 @@ Please restart EA. During restart hoTools loads the default settings.",
             EA.Package pkg = (EA.Package) item;
             
             string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
-            OpenFileDialog theDialog = new OpenFileDialog();
-            theDialog.Title = "Open DOORS requirement *.csv File, comma separated";
-            theDialog.Filter = "CSV files|*.csv";
-            theDialog.InitialDirectory = @"C:\";
+            OpenFileDialog theDialog =
+                new OpenFileDialog
+                {
+                    Title = @"Open DOORS requirement *.csv File, comma separated",
+                    Filter = @"CSV files|*.csv",
+                    InitialDirectory = @"C:\"
+                };
             if (theDialog.ShowDialog() != DialogResult.OK) return;
 
             filePath = theDialog.FileName.ToString();
@@ -4217,7 +4218,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
             if (!File.Exists(filePath))
             {
-                MessageBox.Show($"{filePath}", "*.csv to import DOORS requirements doesn't exists");
+                MessageBox.Show($@"{filePath}", @"*.csv to import DOORS requirements doesn't exists");
                 return;
             }
 
@@ -4269,26 +4270,26 @@ Please restart EA. During restart hoTools loads the default settings.",
             ImportBySettings(1);
 
   
-            MessageBox.Show("See File 1, settings for the import definitions.","Import DOORS *.csv Requirements finished.");
+            MessageBox.Show(@"See File 1, settings for the import definitions.",@"Import DOORS *.csv Requirements finished.");
         }
 
-        private async void importDoorsReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ImportDoorsReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(2);
-            MessageBox.Show("See File 2, settings for the import definitions.","Import DOORS *.reqIf Requirements finished.");
+            MessageBox.Show(@"See File 2, settings for the import definitions.",@"Import DOORS *.reqIf Requirements finished.");
         }
 
         
 
-        private async void importReqIFBySettings4ToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ImportReqIFBySettings4ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(4);
-            MessageBox.Show("See File 4, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
+            MessageBox.Show(@"See File 4, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
         }
-        private async void importReqIFBySettings5ToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ImportReqIFBySettings5ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(5);
-            MessageBox.Show("See File 5, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
+            MessageBox.Show(@"See File 5, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
         }
 
         private void ImportBySettings(int listNumber, bool withMessage=false)
@@ -4305,7 +4306,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-            if (withMessage)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json", $@"Imported list={listNumber}, finished.");
+            if (withMessage)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported list={listNumber}, finished.");
         }
 
         private void importReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)

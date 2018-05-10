@@ -61,6 +61,8 @@ namespace EaServices.Doors
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
+                
+                
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
  
                 // Maintain parent ids of level
@@ -78,7 +80,7 @@ namespace EaServices.Doors
 
                 oldLevel = objectLevel;
 
-
+                string alias = CombineAttrValues(_settings.AliasList, row, 40); ;
                 string name = CombineAttrValues(_settings.AttrNameList, row, 40);
                 string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString());
                 string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
@@ -106,9 +108,9 @@ namespace EaServices.Doors
                 }
 
 
-                el.Alias = objectId;
+                el.Alias = CombineAttrValues(_settings.AttrNameList, row, 40);
                 el.Name = name;
-                el.Multiplicity = objectId;
+                el.Multiplicity = CombineAttrValues(_settings.IdList, row, 40);
                 el.Notes = notes;
                 el.TreePos = Count * 10;
                 el.PackageID = Pkg.PackageID;
@@ -130,31 +132,11 @@ namespace EaServices.Doors
                            }
 
                     ;
-                // Handle *.rtf content
-                string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
-                bool IsGenerateDocx = true;
-                if (IsGenerateDocx)
-                    docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
-                else
-                    docFile = System.IO.Path.Combine(docFile, "xxxxxxx.rtf");
-
+                // Handle *.rtf/*.docx content
                 string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
-                if (docFile.EndsWith(".rtf"))
-                    HtmlToDocx.ConvertSautin(docFile, rtfValue);
-                else HtmlToDocx.Convert( docFile, rtfValue);
-                try
-                {
-                    if (! el.LoadLinkedDocument(docFile))
-                        MessageBox.Show($@"File: {docFile}{Environment.NewLine}Error: '{el.GetLastError()}'",@"Error loading Linked Document");
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($@"File: '{docFile}'", @"Can't store *.docx fike, break!!!");
-                    return ;
-                }
+
+                UpdateLinkedDocument(el, rtfValue);
                 
-
-
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
@@ -183,6 +165,57 @@ namespace EaServices.Doors
 
             base.UpdatePackage();
         }
+
+        /// <summary>
+        /// Update EA linked document with xhtmlValue. 
+        /// </summary>
+        /// <param name="el">EA Element to update linked document</param>
+        /// <param name="xhtmlValue">The XHTML value in XHTML or flat string format</param>
+        /// <returns></returns>
+        protected bool UpdateLinkedDocument(EA.Element el, string xhtmlValue)
+        {
+            // Handle *.rtf content
+            string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
+            bool IsGenerateDocx = true;
+            if (IsGenerateDocx)
+                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
+            else
+                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.rtf");
+
+            if (docFile.EndsWith(".rtf"))
+                HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
+            else HtmlToDocx.Convert(docFile, xhtmlValue);
+            try
+            {
+                bool res = el.LoadLinkedDocument(docFile);
+                if (!res)
+                    MessageBox.Show($@"ImportFile: '{ImportModuleFile}'
+Id: '{el.Multiplicity}'
+Name: '{el.Name}'
+Err: '{el.GetLastError()}'
+RtfDocxFile:'{docFile}
+
+XHTML:'{xhtmlValue}",
+                        @"Error loading Linked Document, break current requirement, continue!");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"ImportFile: '{ImportModuleFile}'
+Id: '{el.Multiplicity}'
+Name: '{el.Name}'
+RtfDocxFile:'{docFile}'
+
+XHTML:'{xhtmlValue}
+
+{e}",
+                    @"Error loading Linked Document, break current requirement, continue");
+                return false;
+            }
+
+            return true;
+
+        }
+
         /// <summary>
         /// Initialize ReqIF Requirement DataTable
         /// </summary>

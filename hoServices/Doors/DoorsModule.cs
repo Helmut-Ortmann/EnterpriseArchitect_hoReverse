@@ -132,12 +132,11 @@ namespace EaServices.Doors
                             Value = grp.Max(x => x.Object_ID)
 
                         }).ToDictionary(x=>x.Name, x=>x.Value);
-                    //DataTable dt = notUniqueRequirements.ToDataTable();
-                    //_dictPackageRequirements = notUniqueRequirements.ToDictionary(x=>x.Name, x=>x.Value);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Package: '{_pkg.Name}\r\n\r\n'{e}", "Can't determine EA Requirements of Doors Requirements.");
+                    MessageBox.Show($@"Package: '{_pkg.Name}{Environment.NewLine}{Environment.NewLine}'{e}", 
+                        @"Can't determine EA Requirements of Doors Requirements.");
                 }
             }
 
@@ -372,7 +371,7 @@ namespace EaServices.Doors
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"{e}", "Error reading EA Repository, break!!");
+                    MessageBox.Show($@"{e}", @"Error reading EA Repository, break!!");
                     return false;
                 }
 
