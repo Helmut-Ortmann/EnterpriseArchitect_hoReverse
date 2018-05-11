@@ -115,14 +115,14 @@ namespace EaServices.Doors
                         el.Type != eaObjectType ||
                         el.Stereotype != eaStereotype)
                     {
-                        el.Status = stateChanged;
+                        if (stateChanged !="") el.Status = stateChanged;
                         CountChanged += 1;
                     }
                 }
                 else
                 {
                     el = (EA.Element)Pkg.Elements.AddNew(name, "Requirement");
-                    el.Status = stateNew;
+                    if (stateNew != "") el.Status = stateNew;
                     CountChanged += 1;
                 }
 

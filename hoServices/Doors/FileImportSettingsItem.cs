@@ -15,7 +15,8 @@ namespace EaServices.Doors
         {
            DoorsCsv,
            DoorsReqIf,
-           ReqIf        // pure ReqIF
+           ReqIf,        // pure ReqIF
+           XML
         }
         [JsonProperty("ImportType")]
         public ImportTypes ImportType { get; set; }
@@ -69,7 +70,7 @@ namespace EaServices.Doors
         private string  _stereotype;
 
         /// <summary>
-        /// StatusNew
+        /// StatusNew. Sets the EA Element Property: 'Status'. If 'None' or blank no EA Status is updated
         /// </summary>
         [JsonIgnore]
         public string StatusNew
@@ -81,7 +82,7 @@ namespace EaServices.Doors
         private string  _statusNew;
 
         /// <summary>
-        /// StatusNew
+        /// Status Changed. Sets the EA Element Property: 'Status'. If 'None' or blank no EA Status is updated
         /// </summary>
         [JsonIgnore]
         public string StatusChanged
@@ -93,7 +94,7 @@ namespace EaServices.Doors
         private string  _statusChanged;
 
         /// <summary>
-        /// Description
+        /// Description to viziualize as Tooltip
         /// </summary>
         [JsonIgnore]
         public string Description
@@ -105,7 +106,7 @@ namespace EaServices.Doors
         private string  _description;
 
         /// <summary>
-        /// Tooltip
+        /// Name of the Importer to visualize in Menu
         /// </summary>
         [JsonIgnore]
         public string Name

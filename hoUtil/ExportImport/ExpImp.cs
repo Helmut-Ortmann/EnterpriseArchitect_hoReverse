@@ -13,7 +13,43 @@ namespace hoUtils.ExportImport
 {
     public static class ExpImp
     {
-         /// <summary>
+        /// <summary>
+        /// Make Data Table from *.csv file. It uses the delimiter from Windows settings
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="separator">default: curent TextInfo.ListSeparator</param>
+        /// <returns></returns>
+        public static DataTable MakeDataTableFromXmkFile(string fileName)
+        {
+            var table = new DataTable();
+
+            try
+            {
+                // open without lock
+                using (FileStream fs = new FileStream(fileName, FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.ReadWrite))
+                {
+                    using (var streamReader = new StreamReader(fs))
+                    using (var reader = new CsvReader(streamReader))
+                    {
+                        reader.ValueSeparator = separator; // this will be used between each value
+                        reader.ReadHeaderRecord();
+                        table.Fill(reader);
+                    }
+                    return table;
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Seperator:'{separator}'\r\n {e.Message}", @"Cant't convert file content to Excel");
+                return null;
+            }
+
+
+        }
+        /// <summary>
         /// Make Data Table from *.csv file. It uses the delimiter from Windows settings
         /// </summary>
         /// <param name="fileName"></param>

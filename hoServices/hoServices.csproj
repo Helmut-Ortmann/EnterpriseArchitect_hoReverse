@@ -145,6 +145,7 @@
     <Compile Include="Doors\HtmlToText.cs" />
     <Compile Include="Doors\ImportSettings.cs" />
     <Compile Include="Doors\ReqIf.cs" />
+    <Compile Include="Doors\Xml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">
       <SubType>Form</SubType>

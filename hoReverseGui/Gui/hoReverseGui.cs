@@ -4312,7 +4312,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void importReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
            ImportBySettings(3);
-            MessageBox.Show("See File 3, settings for the import definitions.","Import ReqIf *.reqIf Requirements finished.");
+            MessageBox.Show(@"See File 3, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
 
         }
     }

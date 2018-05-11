@@ -97,13 +97,14 @@ namespace EaServices.Doors
                         el.Name != nameShort ||
                         el.Notes != notes )
                     {
-                        el.Status = stateChanged;
+                        if (stateChanged != "") el.Status = stateChanged;
                         CountChanged += 1;
                     }
                 }
                 else
                 {
                     el = (EA.Element)Pkg.Elements.AddNew(name, "Requirement");
+                    if (stateNew != "") el.Status = stateNew;
                     CountChanged += 1;
                 }
 

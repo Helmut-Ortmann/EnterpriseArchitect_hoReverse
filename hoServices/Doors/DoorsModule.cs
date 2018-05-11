@@ -226,14 +226,14 @@ namespace EaServices.Doors
                         el.Type != eaObjectType ||
                         el.Stereotype != eaStereotype)
                     {
-                        el.Status = stateChanged;
+                        if (stateChanged != "") el.Status = stateChanged;
                         _countChanged += 1;
                     }
                 }
                 else
                 {
                     el = (EA.Element)_pkg.Elements.AddNew(name, "Requirement");
-                    el.Status = stateNew;
+                    if (stateNew != "") el.Status = stateNew;
                     _countChanged += 1;
                 }
 
@@ -417,8 +417,8 @@ namespace EaServices.Doors
                 
                 string eaObjectType = item.ObjectType;
                 string eaStereotype = item.Stereotype;
-                string eaStatusNew = item.StatusNew;
-                string eaStatusChanged = item.StatusChanged;
+                string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None" ? "": item.StatusNew;
+                string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None" ? "" : item.StatusChanged; ;
 
                 if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
