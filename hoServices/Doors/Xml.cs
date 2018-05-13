@@ -9,23 +9,23 @@ using hoUtils.ExportImport;
 
 namespace EaServices.Doors
 {
-    public class DoorsCsv : DoorsModule
+    public class Xml : DoorsModule
     {
         /// <summary>
         /// The Setting of the current item to import
         /// </summary>
         FileImportSettingsItem _settings;
-        public DoorsCsv(string jsonFilePath, EA.Repository rep) : base(jsonFilePath, rep)
+        public Xml(string jsonFilePath, EA.Repository rep) : base(jsonFilePath, rep)
         {
         }
-        public DoorsCsv(EA.Repository rep, EA.Package pkg) : base(rep, pkg)
+        public Xml(EA.Repository rep, EA.Package pkg) : base(rep, pkg)
         {
         }
-        public DoorsCsv(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
+        public Xml(EA.Repository rep, EA.Package pkg, string importFile) : base(rep, pkg, importFile)
         {
         }
 
-        public DoorsCsv(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
+        public Xml(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
             _settings = settings;
         }

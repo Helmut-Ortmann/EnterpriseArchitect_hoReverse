@@ -364,7 +364,7 @@ namespace EaServices.Doors
                         }).ToDataTable();
 
                     // Make EA xml
-                    string xml = Xml.MakeXmlFromDataTable(falseRequirements);
+                    string xml = hoLinqToSql.LinqUtils.Xml.MakeXmlFromDataTable(falseRequirements);
                     // Output to EA
                     _rep.RunModelSearch("", "", "", xml);
                     return falseRequirements.Rows.Count == 0;
