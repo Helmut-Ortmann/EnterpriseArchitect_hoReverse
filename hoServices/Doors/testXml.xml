@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEST>
+    <HEADER IDENTIFIER="rmf-d59519b5-79a2-4309-8fcb-923f57cc795c">
+        <CREATION-TIME>2018-05-03T06:32:09</CREATION-TIME>
+        <REPOSITORY-ID>4e7c971411315592</REPOSITORY-ID>
+        <REQ-IF-TOOL-ID>IBM Rational DOORS</REQ-IF-TOOL-ID>
+        <REQ-IF-VERSION>1.0</REQ-IF-VERSION>
+        <SOURCE-TOOL-ID>IBM Rational DOORS</SOURCE-TOOL-ID>
+        <TITLE>IBM Rational DOORS, 03 May 2018</TITLE>
+    </HEADER>
+    <CONTENT>
+        <Module>
+            <TEXT>My lovely Module</TEXT>
+            <TYPE>UNIT Test</TYPE>
+            <STATUS>Approved</STATUS>
+            <COMMENT/>
+            <ForeignID>5555</ForeignID>
+            <ForeignModifiedBy>me</ForeignModifiedBy>
+            <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+        </Module>
+        <CHILDREN>
+            <Hierarchy>
+                <OBJECT>
+                    <TEXT>My lovely Heading 1</TEXT>
+                    <TYPE>HEADING</TYPE>
+                    <STATUS>Approved</STATUS>
+                    <RESULT/>
+                    <COMMENT/>
+                    <ForeignID>5000</ForeignID>
+                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                </OBJECT>
+                <CHILDREN>
+                    <Hierarchy>
+                        <OBJECT>
+                            <TEXT>My lovely Heading 1.1</TEXT>
+                            <TYPE>HEADING</TYPE>
+                            <STATUS>Approved</STATUS>
+                            <RESULT/>
+                            <COMMENT/>
+                            <ForeignID>5001</ForeignID>
+                            <ForeignModifiedBy>me</ForeignModifiedBy>
+                            <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                        </OBJECT>
+                        <CHILDREN>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Test beneath 1.1</TEXT>
+                                    <TYPE>INFO</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>5002</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Test 1 beneath 1.1</TEXT>
+                                    <TYPE>TEST</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>5003</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Test 2 beneath 1.1</TEXT>
+                                    <TYPE>TEST</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>5004</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Test 3 beneath 1.1</TEXT>
+                                    <TYPE>TEST</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>5055</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                        </CHILDREN>
+                    </Hierarchy>
+                    <Hierarchy>
+                        <OBJECT>
+                            <TEXT>My lovely Heading 1.2</TEXT>
+                            <TYPE>HEADING</TYPE>
+                            <STATUS>Approved</STATUS>
+                            <RESULT>OK</RESULT>
+                            <COMMENT/>
+                            <ForeignID>5056</ForeignID>
+                            <ForeignModifiedBy>me</ForeignModifiedBy>
+                            <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                        </OBJECT>
+                        <CHILDREN>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Requirement</TEXT>
+                                    <TYPE>REQUIREMENT</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>1</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely Requirement</TEXT>
+                                    <TYPE>REQUIREMENT</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>2</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely test</TEXT>
+                                    <TYPE>TEST</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>3</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>My lovely test</TEXT>
+                                    <TYPE>TEST</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>OK</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>4</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>1.2.1</TEXT>
+                                    <TYPE>HEADER</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>K</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>11</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                                <CHILDREN>
+                                    <Hierarchy>
+                                        <OBJECT>
+                                            <TEXT>test beneath 1.2.1</TEXT>
+                                            <TYPE>TEST</TYPE>
+                                            <STATUS>Approved</STATUS>
+                                            <RESULT>OK</RESULT>
+                                            <COMMENT/>
+                                            <ForeignID>11</ForeignID>
+                                            <ForeignModifiedBy>me</ForeignModifiedBy>
+                                            <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                        </OBJECT>
+                                    </Hierarchy>
+                                </CHILDREN>
+                            </Hierarchy>
+                            <Hierarchy>
+                                <OBJECT>
+                                    <TEXT>1.2.2</TEXT>
+                                    <TYPE>HEADER</TYPE>
+                                    <STATUS>Approved</STATUS>
+                                    <RESULT>K</RESULT>
+                                    <COMMENT/>
+                                    <ForeignID>12</ForeignID>
+                                    <ForeignModifiedBy>me</ForeignModifiedBy>
+                                    <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                </OBJECT>
+                            </Hierarchy>
+                        </CHILDREN>
+                    </Hierarchy>
+                </CHILDREN>
+            </Hierarchy>
+        </CHILDREN>
+    </CONTENT>
+</TEST>

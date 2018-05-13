@@ -33,7 +33,7 @@ namespace hoUtils.ExportImport
                     using (var streamReader = new StreamReader(fs))
                     using (var reader = new CsvReader(streamReader))
                     {
-                        reader.ValueSeparator = separator; // this will be used between each value
+                        //reader.ValueSeparator = separator; // this will be used between each value
                         reader.ReadHeaderRecord();
                         table.Fill(reader);
                     }
@@ -43,7 +43,7 @@ namespace hoUtils.ExportImport
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Seperator:'{separator}'\r\n {e.Message}", @"Cant't convert file content to Excel");
+                MessageBox.Show($"'\r\n {e.Message}", @"Cant't convert file content to Excel");
                 return null;
             }
 
