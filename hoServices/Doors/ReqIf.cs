@@ -80,7 +80,7 @@ namespace EaServices.Doors
 
                 oldLevel = objectLevel;
 
-                string alias = CombineAttrValues(_settings.AliasList, row, 40); ;
+                string alias = CombineAttrValues(_settings.AliasList, row, 40);
                 string name = CombineAttrValues(_settings.AttrNameList, row, 40);
                 string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString());
                 string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
@@ -93,7 +93,7 @@ namespace EaServices.Doors
                 if (isExistingRequirement)
                 {
                     el = Rep.GetElementByID(elId);
-                    if (el.Alias != objectId ||
+                    if (el.Alias != alias ||
                         el.Name != nameShort ||
                         el.Notes != notes )
                     {
@@ -109,7 +109,7 @@ namespace EaServices.Doors
                 }
 
 
-                el.Alias = CombineAttrValues(_settings.AttrNameList, row, 40);
+                el.Alias = alias;
                 el.Name = name;
                 el.Multiplicity = CombineAttrValues(_settings.IdList, row, 40);
                 el.Notes = notes;

@@ -449,6 +449,13 @@ namespace EaServices.Doors
                             //await Task.Run(() =>
                             //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                             break;
+
+                        case FileImportSettingsItem.ImportTypes.XmlStruct:
+                            var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
+                            xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
+                            //await Task.Run(() =>
+                            //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                            break;
                     }
                     
                     
@@ -459,7 +466,7 @@ namespace EaServices.Doors
             return true;
 
         }
-
+       
 
         protected EA.Repository Rep { get => _rep; set => _rep = value; }
         protected EA.Package Pkg { get => _pkg; set => _pkg = value; }

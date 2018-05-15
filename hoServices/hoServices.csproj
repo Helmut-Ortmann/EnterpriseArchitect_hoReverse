@@ -145,7 +145,7 @@
     <Compile Include="Doors\HtmlToText.cs" />
     <Compile Include="Doors\ImportSettings.cs" />
     <Compile Include="Doors\ReqIf.cs" />
-    <Compile Include="Doors\Xml.cs" />
+    <Compile Include="Doors\XmlStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">
       <SubType>Form</SubType>
@@ -253,6 +253,7 @@
     <Content Include="docs\MySqlParameter.xml" />
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
+    <Content Include="Doors\testXml.xml" />
     <Content Include="LinqToDB.Templates\CopyMe.SQLite.tt.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

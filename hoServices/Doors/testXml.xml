@@ -19,7 +19,7 @@
             <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
         </Module>
         <CHILDREN>
-            <Hierarchy>
+            <HIERARCHY>
                 <OBJECT>
                     <TEXT>My lovely Heading 1</TEXT>
                     <TYPE>HEADING</TYPE>
@@ -31,7 +31,7 @@
                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                 </OBJECT>
                 <CHILDREN>
-                    <Hierarchy>
+                    <HIERARCHY>
                         <OBJECT>
                             <TEXT>My lovely Heading 1.1</TEXT>
                             <TYPE>HEADING</TYPE>
@@ -43,7 +43,7 @@
                             <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                         </OBJECT>
                         <CHILDREN>
-                            <Hierarchy>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Test beneath 1.1</TEXT>
                                     <TYPE>INFO</TYPE>
@@ -54,8 +54,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Test 1 beneath 1.1</TEXT>
                                     <TYPE>TEST</TYPE>
@@ -66,9 +66,9 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
+                            </HIERARCHY>
 
-                            <Hierarchy>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Test 2 beneath 1.1</TEXT>
                                     <TYPE>TEST</TYPE>
@@ -79,8 +79,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Test 3 beneath 1.1</TEXT>
                                     <TYPE>TEST</TYPE>
@@ -91,10 +91,10 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
+                            </HIERARCHY>
                         </CHILDREN>
-                    </Hierarchy>
-                    <Hierarchy>
+                    </HIERARCHY>
+                    <HIERARCHY>
                         <OBJECT>
                             <TEXT>My lovely Heading 1.2</TEXT>
                             <TYPE>HEADING</TYPE>
@@ -106,7 +106,7 @@
                             <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                         </OBJECT>
                         <CHILDREN>
-                            <Hierarchy>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Requirement</TEXT>
                                     <TYPE>REQUIREMENT</TYPE>
@@ -117,8 +117,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely Requirement</TEXT>
                                     <TYPE>REQUIREMENT</TYPE>
@@ -129,8 +129,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely test</TEXT>
                                     <TYPE>TEST</TYPE>
@@ -141,8 +141,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>My lovely test</TEXT>
                                     <TYPE>TEST</TYPE>
@@ -153,8 +153,8 @@
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>1.2.1</TEXT>
                                     <TYPE>HEADER</TYPE>
@@ -166,36 +166,48 @@
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
                                 <CHILDREN>
-                                    <Hierarchy>
+                                    <HIERARCHY>
                                         <OBJECT>
-                                            <TEXT>test beneath 1.2.1</TEXT>
+                                            <TEXT>test 1 beneath 1.2.1</TEXT>
                                             <TYPE>TEST</TYPE>
                                             <STATUS>Approved</STATUS>
                                             <RESULT>OK</RESULT>
-                                            <COMMENT/>
-                                            <ForeignID>11</ForeignID>
+                                            <COMMENT>My comment 1 </COMMENT>
+                                            <ForeignID>12</ForeignID>
                                             <ForeignModifiedBy>me</ForeignModifiedBy>
                                             <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                         </OBJECT>
-                                    </Hierarchy>
+                                    </HIERARCHY>
+                                    <HIERARCHY>
+                                        <OBJECT>
+                                            <TEXT>test 2 beneath 1.2.1</TEXT>
+                                            <TYPE>TEST</TYPE>
+                                            <STATUS>Approved</STATUS>
+                                            <RESULT>OK</RESULT>
+                                            <COMMENT>My comment 2 </COMMENT>
+                                            <ForeignID>13</ForeignID>
+                                            <ForeignModifiedBy>me</ForeignModifiedBy>
+                                            <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
+                                        </OBJECT>
+                                    </HIERARCHY>
                                 </CHILDREN>
-                            </Hierarchy>
-                            <Hierarchy>
+                            </HIERARCHY>
+                            <HIERARCHY>
                                 <OBJECT>
                                     <TEXT>1.2.2</TEXT>
                                     <TYPE>HEADER</TYPE>
                                     <STATUS>Approved</STATUS>
                                     <RESULT>K</RESULT>
                                     <COMMENT/>
-                                    <ForeignID>12</ForeignID>
+                                    <ForeignID>14</ForeignID>
                                     <ForeignModifiedBy>me</ForeignModifiedBy>
                                     <ForeignModifiedOn>5.12.2018 00:00:00</ForeignModifiedOn>
                                 </OBJECT>
-                            </Hierarchy>
+                            </HIERARCHY>
                         </CHILDREN>
-                    </Hierarchy>
+                    </HIERARCHY>
                 </CHILDREN>
-            </Hierarchy>
+            </HIERARCHY>
         </CHILDREN>
     </CONTENT>
 </TEST>

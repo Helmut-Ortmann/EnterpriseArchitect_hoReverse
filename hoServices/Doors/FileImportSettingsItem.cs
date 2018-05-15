@@ -16,7 +16,8 @@ namespace EaServices.Doors
            DoorsCsv,
            DoorsReqIf,
            ReqIf,        // pure ReqIF
-           XML
+           XmlStruct,    // Structured XML
+           XmlFlat       // Flat XML
         }
         [JsonProperty("ImportType")]
         public ImportTypes ImportType { get; set; }
