@@ -9,7 +9,7 @@
         <TITLE>IBM Rational DOORS, 03 May 2018</TITLE>
     </HEADER>
     <CONTENT>
-        <Module>
+        <MODULE>
             <TEXT>My lovely Module</TEXT>
             <TYPE>UNIT Test</TYPE>
             <STATUS>Approved</STATUS>

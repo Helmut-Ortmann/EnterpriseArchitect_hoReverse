@@ -5,11 +5,12 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using hoReverse.hoUtils;
+using LinqToDB.SqlQuery;
 
 namespace EaServices.Doors
 {
     /// <summary>
-    /// Import a structered Xml. This structured xml is similiar to ReqIF
+    /// Import a structered Xml. This structured xml is similiar to ReqIF. See also 'hoServices\Doors\XmlStructReference.xml'
     /// -
     /// </summary>
     public class XmlStruct : DoorsModule
@@ -43,6 +44,7 @@ namespace EaServices.Doors
         private readonly string xmlHierarchyName = "HIERARCHY";
         private readonly string xmlChildrenName = "CHILDREN";
         private readonly string xmlModuleName = "MODULE";
+        private readonly string xmlHeaderName = "HEADER";
 
         /// <summary>
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
@@ -57,7 +59,18 @@ namespace EaServices.Doors
             Rep.EnableUIUpdates = false;
 
             // Read xml file
-            var xElFile = XElement.Parse(HoUtil.ReadAllText(ImportModuleFile));
+            XElement xElFile;
+            try
+            {
+                xElFile = XElement.Parse(HoUtil.ReadAllText(ImportModuleFile));
+            }
+            catch (Exception e)
+            {
+                Rep.BatchAppend = false;
+                Rep.EnableUIUpdates = true;
+                MessageBox.Show($@"File: {ImportModuleFile}{Environment.NewLine}{Environment.NewLine}{e}", @"Can't import structured *.xml");
+                return;
+            }
 
             InitializeXmlStructTable(xElFile);
 
@@ -177,15 +190,6 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
-
-
-
-            MoveDeletedRequirements();
-            UpdatePackage();
-
-            Rep.BatchAppend = false;
-            Rep.EnableUIUpdates = true;
-            Rep.ReloadPackage(Pkg.PackageID);
         }
 
         /// <summary>
@@ -230,7 +234,7 @@ namespace EaServices.Doors
                 {
                     row[attribute.Name.ToString()] = attribute.Value;
                 }
-
+                row["Id"] = CombineAttrValues(_settings.IdList, row, 40);
                 DtRequirements.Rows.Add(row);
 
                 if (elHierarchy.Element(xmlChildrenName) != null)
@@ -278,12 +282,16 @@ namespace EaServices.Doors
         }
 
         /// <summary>
-        /// Update import package with file properties/attributes
+        /// Update import package with file properties/attributes of HEADER and MODULE
         /// </summary>
         private  void UpdatePackage(XElement xElFile)
         {
-            var fileAttres = from attr in xElFile.Descendants(xmlModuleName).Elements()
-                select new {Name = attr.Name, Value = attr.Value};
+            var fileAttres = (from attr in xElFile.Descendants(xmlModuleName).Elements()
+                select new {Name = attr.Name, Value = attr.Value})
+                    .Union
+                    (from attr in xElFile.Descendants(xmlHeaderName).Elements()
+                        select new { Name = attr.Name, Value = attr.Value })
+                ;
             foreach (var attr in fileAttres)
             {
                 EA.Element el = Rep.GetElementByGuid(Pkg.PackageGUID);
