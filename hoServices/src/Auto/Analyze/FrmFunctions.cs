@@ -66,7 +66,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             _printDocument1.DefaultPageSettings.Margins = margins;
 
             // ReSharper disable once RedundantDelegateCreation
-            _printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            _printDocument1.PrintPage += new PrintPageEventHandler(PrintDocument1_PrintPage);
         }
 
         private void ShowFolder()
@@ -173,7 +173,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
 
 {e}",
 
-                    "The filter you have defined is invalid!");
+                    @"The filter you have defined is invalid!");
                 _bsFunctions.Filter = "";
             }
 
@@ -181,7 +181,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
 
         }
 
-        private void txtFilterFunction_KeyPress(object sender, KeyPressEventArgs e)
+        private void TxtFilterFunction_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
@@ -190,13 +190,13 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
             }
         }
 
-        private void chkOnlyMacros_CheckedChanged(object sender, EventArgs e)
+        private void ChkOnlyMacros_CheckedChanged(object sender, EventArgs e)
         {
             FilterGrid();
 
         }
 
-        private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowImplementationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartCodeFile(sender, "FilePath", "LineStart");
 
@@ -207,11 +207,11 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void copyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyCellValuesToClipboard(sender, "Interface");
         }
-        private void copyCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyCalleeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyCellValuesToClipboard(sender, "FileNameCallee");
         }
@@ -275,7 +275,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CaptureScreen();
             _printDocument1.Print();
@@ -297,7 +297,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void printDocument1_PrintPage(System.Object sender,
+        private void PrintDocument1_PrintPage(System.Object sender,
             System.Drawing.Printing.PrintPageEventArgs e)
         {
             // One page rectangle
@@ -315,7 +315,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
             e.Graphics.DrawImage(_memoryImage, m);
         }
 
-        private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AnalyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiAnalyzeC();
         }
@@ -325,7 +325,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
             this.TopMost = true;
         }
 
-        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396");
         }
@@ -336,7 +336,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// <param name="sender"></param>
         /// <param name="e"></param>
         // Enter a cell
-        private void grdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        private void GrdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1 && e.ColumnIndex != -1)
 

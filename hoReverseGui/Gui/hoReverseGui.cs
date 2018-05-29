@@ -403,7 +403,7 @@ namespace hoReverse.Reverse
                 if (_repository.ConnectionString.Contains("WLE") )
                 {
                     // Check if source folder exists
-                    if (!_addinSettings.isFolderPathCSourceCode()) return;
+                    if (!_addinSettings.IsFolderPathCSourceCode()) return;
                     _autoToolStripMenuItem.Visible = true;
                     progressBar1.Visible = true;
 
@@ -470,12 +470,12 @@ namespace hoReverse.Reverse
 
         #region EventHandler
 
-        void btnDisplayBehavior_Click(object sender, EventArgs e)
+        void BtnDisplayBehavior_Click(object sender, EventArgs e)
         {
             HoService.DisplayOperationForSelectedElement(_repository, HoService.DisplayMode.Behavior);
         }
 
-        void btnLocateOperation_Click(object sender, EventArgs e)
+        void BtnLocateOperation_Click(object sender, EventArgs e)
         {
             HoService.DisplayOperationForSelectedElement(_repository, HoService.DisplayMode.Method);
         }
@@ -483,20 +483,20 @@ namespace hoReverse.Reverse
 
 
 
-        void btnLocateType_Click(object sender, EventArgs e)
+        void BtnLocateType_Click(object sender, EventArgs e)
         {
             HoService.LocateType(_repository);
         }
 
 
 
-        void btnShowSpecification_Click(object sender, EventArgs e)
+        void BtnShowSpecification_Click(object sender, EventArgs e)
         {
             HoService.ShowSpecification(_repository);
         }
 
 
-        void btnUpdateActivityParameter_Click(object sender, EventArgs e)
+        void BtnUpdateActivityParameter_Click(object sender, EventArgs e)
         {
 
 
@@ -517,7 +517,7 @@ namespace hoReverse.Reverse
             }
         }
 
-        void btnFindUsage_Click(object sender, EventArgs e)
+        void BtnFindUsage_Click(object sender, EventArgs e)
         {
             HoService.FindUsage(_repository);
         }
@@ -531,34 +531,34 @@ namespace hoReverse.Reverse
         // TV = "Line Style: Tree Vertical";
         // OS = "Line Style: Orthogonal Square";
 
-        void btnLH_Click(object sender, EventArgs e)
+        void BtnLH_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "LH");
         }
 
-        void btnLV_Click(object sender, EventArgs e)
+        void BtnLV_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "LV");
         }
 
 
-        void btnTH_Click(object sender, EventArgs e)
+        void BtnTH_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "TH");
         }
 
-        void btnTV_Click(object sender, EventArgs e)
+        void BtnTV_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "TV");
         }
 
-        void btnOS_Click(object sender, EventArgs e)
+        void BtnOS_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "OS");
         }
 
         // Shift + Enter runs a search
-        void txtUserText_KeyDown(object sender, KeyEventArgs e)
+        void TxtUserText_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && e.Shift)
             {
@@ -801,7 +801,7 @@ namespace hoReverse.Reverse
             this._btnLh.Text = "LH";
             this._toolTip.SetToolTip(this._btnLh, "Lateral Horizontal");
             this._btnLh.UseVisualStyleBackColor = true;
-            this._btnLh.Click += new System.EventHandler(this.btnLH_Click);
+            this._btnLh.Click += new System.EventHandler(this.BtnLH_Click);
             // 
             // _btnLv
             // 
@@ -812,7 +812,7 @@ namespace hoReverse.Reverse
             this._btnLv.Text = "LV";
             this._toolTip.SetToolTip(this._btnLv, "Lateral Vertical");
             this._btnLv.UseVisualStyleBackColor = true;
-            this._btnLv.Click += new System.EventHandler(this.btnLV_Click);
+            this._btnLv.Click += new System.EventHandler(this.BtnLV_Click);
             // 
             // _btnTv
             // 
@@ -823,7 +823,7 @@ namespace hoReverse.Reverse
             this._btnTv.Text = "TV";
             this._toolTip.SetToolTip(this._btnTv, "Tree Vertical");
             this._btnTv.UseVisualStyleBackColor = true;
-            this._btnTv.Click += new System.EventHandler(this.btnTV_Click);
+            this._btnTv.Click += new System.EventHandler(this.BtnTV_Click);
             // 
             // BtnTh
             // 
@@ -834,7 +834,7 @@ namespace hoReverse.Reverse
             this.BtnTh.Text = "TH";
             this._toolTip.SetToolTip(this.BtnTh, "Tree Horizontal");
             this.BtnTh.UseVisualStyleBackColor = true;
-            this.BtnTh.Click += new System.EventHandler(this.btnTH_Click);
+            this.BtnTh.Click += new System.EventHandler(this.BtnTH_Click);
             // 
             // _btnOs
             // 
@@ -845,7 +845,7 @@ namespace hoReverse.Reverse
             this._btnOs.Text = "OS";
             this._toolTip.SetToolTip(this._btnOs, "Orthogonal Square");
             this._btnOs.UseVisualStyleBackColor = true;
-            this._btnOs.Click += new System.EventHandler(this.btnOS_Click);
+            this._btnOs.Click += new System.EventHandler(this.BtnOS_Click);
             // 
             // _btnDisplayBehavior
             // 
@@ -856,7 +856,7 @@ namespace hoReverse.Reverse
             this._btnDisplayBehavior.Text = "DisplayBehavior";
             this._toolTip.SetToolTip(this._btnDisplayBehavior, "Display behavior of an operation (activity, statemachine, interaction)");
             this._btnDisplayBehavior.UseVisualStyleBackColor = true;
-            this._btnDisplayBehavior.Click += new System.EventHandler(this.btnDisplayBehavior_Click);
+            this._btnDisplayBehavior.Click += new System.EventHandler(this.BtnDisplayBehavior_Click);
             // 
             // _btnLocateOperation
             // 
@@ -867,7 +867,7 @@ namespace hoReverse.Reverse
             this._btnLocateOperation.Text = "Locate Operation";
             this._toolTip.SetToolTip(this._btnLocateOperation, "Locate the linked operation for a behavior (statechart, activity, interaction)");
             this._btnLocateOperation.UseVisualStyleBackColor = true;
-            this._btnLocateOperation.Click += new System.EventHandler(this.btnLocateOperation_Click);
+            this._btnLocateOperation.Click += new System.EventHandler(this.BtnLocateOperation_Click);
             // 
             // _btnAddElementNote
             // 
@@ -902,7 +902,7 @@ namespace hoReverse.Reverse
             this._btnLocateType.Text = "Locate Type";
             this._toolTip.SetToolTip(this._btnLocateType, "Locate to the type of the selected element");
             this._btnLocateType.UseVisualStyleBackColor = true;
-            this._btnLocateType.Click += new System.EventHandler(this.btnLocateType_Click);
+            this._btnLocateType.Click += new System.EventHandler(this.BtnLocateType_Click);
             // 
             // _btnFindUsage
             // 
@@ -913,7 +913,7 @@ namespace hoReverse.Reverse
             this._btnFindUsage.Text = "Find Usage";
             this._toolTip.SetToolTip(this._btnFindUsage, "Find the usage of the selected element");
             this._btnFindUsage.UseVisualStyleBackColor = true;
-            this._btnFindUsage.Click += new System.EventHandler(this.btnFindUsage_Click);
+            this._btnFindUsage.Click += new System.EventHandler(this.BtnFindUsage_Click);
             // 
             // _btnDisplaySpecification
             // 
@@ -924,7 +924,7 @@ namespace hoReverse.Reverse
             this._btnDisplaySpecification.Text = "Specification";
             this._toolTip.SetToolTip(this._btnDisplaySpecification, "Display the Specification according to file property");
             this._btnDisplaySpecification.UseVisualStyleBackColor = true;
-            this._btnDisplaySpecification.Click += new System.EventHandler(this.btnShowSpecification_Click);
+            this._btnDisplaySpecification.Click += new System.EventHandler(this.BtnShowSpecification_Click);
             // 
             // _btnComposite
             // 
@@ -935,7 +935,7 @@ namespace hoReverse.Reverse
             this._btnComposite.Text = "Composite";
             this._toolTip.SetToolTip(this._btnComposite, "Navigate between Element and Composite Diagram");
             this._btnComposite.UseVisualStyleBackColor = true;
-            this._btnComposite.Click += new System.EventHandler(this.btnComposite_Click);
+            this._btnComposite.Click += new System.EventHandler(this.BtnComposite_Click);
             // 
             // _btnOr
             // 
@@ -946,7 +946,7 @@ namespace hoReverse.Reverse
             this._btnOr.Text = "OR";
             this._toolTip.SetToolTip(this._btnOr, "Orthogonal Rounded");
             this._btnOr.UseVisualStyleBackColor = true;
-            this._btnOr.Click += new System.EventHandler(this.btnOR_Click);
+            this._btnOr.Click += new System.EventHandler(this.BtnOR_Click);
             // 
             // _btnA
             // 
@@ -957,7 +957,7 @@ namespace hoReverse.Reverse
             this._btnA.Text = "A";
             this._toolTip.SetToolTip(this._btnA, "Orthogonal Rounded");
             this._btnA.UseVisualStyleBackColor = true;
-            this._btnA.Click += new System.EventHandler(this.btnA_Click);
+            this._btnA.Click += new System.EventHandler(this.BtnA_Click);
             // 
             // _btnD
             // 
@@ -968,7 +968,7 @@ namespace hoReverse.Reverse
             this._btnD.Text = "D";
             this._toolTip.SetToolTip(this._btnD, "Direct");
             this._btnD.UseVisualStyleBackColor = true;
-            this._btnD.Click += new System.EventHandler(this.btnD_Click);
+            this._btnD.Click += new System.EventHandler(this.BtnD_Click);
             // 
             // _btnC
             // 
@@ -979,7 +979,7 @@ namespace hoReverse.Reverse
             this._btnC.Text = "C";
             this._toolTip.SetToolTip(this._btnC, "Custom line");
             this._btnC.UseVisualStyleBackColor = true;
-            this._btnC.Click += new System.EventHandler(this.btnC_Click);
+            this._btnC.Click += new System.EventHandler(this.BtnC_Click);
             // 
             // _btnUpdateActivityParameter
             // 
@@ -990,7 +990,7 @@ namespace hoReverse.Reverse
             this._btnUpdateActivityParameter.Text = "Update Parameter";
             this._toolTip.SetToolTip(this._btnUpdateActivityParameter, "Update Operation and Activity Parameter from operation");
             this._btnUpdateActivityParameter.UseVisualStyleBackColor = true;
-            this._btnUpdateActivityParameter.Click += new System.EventHandler(this.btnUpdateActivityParameter_Click);
+            this._btnUpdateActivityParameter.Click += new System.EventHandler(this.BtnUpdateActivityParameter_Click);
             // 
             // _btnBack
             // 
@@ -1001,7 +1001,7 @@ namespace hoReverse.Reverse
             this._btnBack.Text = "<";
             this._toolTip.SetToolTip(this._btnBack, "Diagram back");
             this._btnBack.UseVisualStyleBackColor = true;
-            this._btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            this._btnBack.Click += new System.EventHandler(this.BtnBack_Click);
             // 
             // _btnFrwrd
             // 
@@ -1012,7 +1012,7 @@ namespace hoReverse.Reverse
             this._btnFrwrd.Text = ">";
             this._toolTip.SetToolTip(this._btnFrwrd, "Diagram forward");
             this._btnFrwrd.UseVisualStyleBackColor = true;
-            this._btnFrwrd.Click += new System.EventHandler(this.btnFrwrd_Click);
+            this._btnFrwrd.Click += new System.EventHandler(this.BtnFrwrd_Click);
             // 
             // _btnBookmarkAdd
             // 
@@ -1023,7 +1023,7 @@ namespace hoReverse.Reverse
             this._btnBookmarkAdd.Text = "+";
             this._toolTip.SetToolTip(this._btnBookmarkAdd, "Add bookmark");
             this._btnBookmarkAdd.UseVisualStyleBackColor = true;
-            this._btnBookmarkAdd.Click += new System.EventHandler(this.btnBookmarkAdd_Click);
+            this._btnBookmarkAdd.Click += new System.EventHandler(this.BtnBookmarkAdd_Click);
             // 
             // _btnBookmarkRemove
             // 
@@ -1034,7 +1034,7 @@ namespace hoReverse.Reverse
             this._btnBookmarkRemove.Text = "-";
             this._toolTip.SetToolTip(this._btnBookmarkRemove, "Remove bookmark");
             this._btnBookmarkRemove.UseVisualStyleBackColor = true;
-            this._btnBookmarkRemove.Click += new System.EventHandler(this.btnBookmarkRemove_Click);
+            this._btnBookmarkRemove.Click += new System.EventHandler(this.BtnBookmarkRemove_Click);
             // 
             // _btnBookmarkBack
             // 
@@ -1045,7 +1045,7 @@ namespace hoReverse.Reverse
             this._btnBookmarkBack.Text = "<";
             this._toolTip.SetToolTip(this._btnBookmarkBack, "Back in bookmark history");
             this._btnBookmarkBack.UseVisualStyleBackColor = true;
-            this._btnBookmarkBack.Click += new System.EventHandler(this.btnBookmarkBack_Click);
+            this._btnBookmarkBack.Click += new System.EventHandler(this.BtnBookmarkBack_Click);
             // 
             // _btnBookmarkFrwrd
             // 
@@ -1056,7 +1056,7 @@ namespace hoReverse.Reverse
             this._btnBookmarkFrwrd.Text = ">";
             this._toolTip.SetToolTip(this._btnBookmarkFrwrd, "Forward in bookmark history");
             this._btnBookmarkFrwrd.UseVisualStyleBackColor = true;
-            this._btnBookmarkFrwrd.Click += new System.EventHandler(this.btnBookmarkFrwrd_Click);
+            this._btnBookmarkFrwrd.Click += new System.EventHandler(this.BtnBookmarkFrwrd_Click);
             // 
             // _btnInsert
             // 
@@ -1067,7 +1067,7 @@ namespace hoReverse.Reverse
             this._btnInsert.Text = "I";
             this._toolTip.SetToolTip(this._btnInsert, resources.GetString("_btnInsert.ToolTip"));
             this._btnInsert.UseVisualStyleBackColor = true;
-            this._btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            this._btnInsert.Click += new System.EventHandler(this.BtnInsert_Click);
             // 
             // _btnAction
             // 
@@ -1100,7 +1100,7 @@ namespace hoReverse.Reverse
             this._btnMerge.Text = "M";
             this._toolTip.SetToolTip(this._btnMerge, "Create a Merge beneath selected object");
             this._btnMerge.UseVisualStyleBackColor = true;
-            this._btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
+            this._btnMerge.Click += new System.EventHandler(this.BtnMerge_Click);
             // 
             // _btnDecisionFromText
             // 
@@ -1122,7 +1122,7 @@ namespace hoReverse.Reverse
             this._btnBookmark.Text = "Bookmarks:";
             this._toolTip.SetToolTip(this._btnBookmark, "Show bookmarks");
             this._btnBookmark.UseVisualStyleBackColor = true;
-            this._btnBookmark.Click += new System.EventHandler(this.btnBookmarks_Click);
+            this._btnBookmark.Click += new System.EventHandler(this.BtnBookmarks_Click);
             // 
             // _btnHistory
             // 
@@ -1133,7 +1133,7 @@ namespace hoReverse.Reverse
             this._btnHistory.Text = "History:";
             this._toolTip.SetToolTip(this._btnHistory, "Show history");
             this._btnHistory.UseVisualStyleBackColor = true;
-            this._btnHistory.Click += new System.EventHandler(this.btnHistory_Click);
+            this._btnHistory.Click += new System.EventHandler(this.BtnHistory_Click);
             // 
             // _btnActivityCompositeFromText
             // 
@@ -1144,7 +1144,7 @@ namespace hoReverse.Reverse
             this._btnActivityCompositeFromText.Text = "ActC";
             this._toolTip.SetToolTip(this._btnActivityCompositeFromText, "Create Activity with Composite Diagram and text beneath selected element");
             this._btnActivityCompositeFromText.UseVisualStyleBackColor = true;
-            this._btnActivityCompositeFromText.Click += new System.EventHandler(this.btnActivityCompositeFromText_Click);
+            this._btnActivityCompositeFromText.Click += new System.EventHandler(this.BtnActivityCompositeFromText_Click);
             // 
             // _btnActivity
             // 
@@ -1156,7 +1156,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnActivity, "Create an Activity beneath selected object.\r\n\r\nThis is useful for e.g. FOR or WHI" +
         "LE loop");
             this._btnActivity.UseVisualStyleBackColor = true;
-            this._btnActivity.Click += new System.EventHandler(this.btnActivityFromText_Click);
+            this._btnActivity.Click += new System.EventHandler(this.BtnActivityFromText_Click);
             // 
             // _btnNoteFromText
             // 
@@ -1168,7 +1168,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnNoteFromText, "Insert text into Element Note.\r\n\r\nIt remove \"//\", \'/*\' and \'*/\'");
             this._btnNoteFromText.UseVisualStyleBackColor = true;
             this._btnNoteFromText.Visible = false;
-            this._btnNoteFromText.Click += new System.EventHandler(this.btnNoteFromText_Click);
+            this._btnNoteFromText.Click += new System.EventHandler(this.BtnNoteFromText_Click);
             // 
             // _btnFinal
             // 
@@ -1181,7 +1181,7 @@ namespace hoReverse.Reverse
         "he Activity to fit the enclosed Nodes.\r\n\r\nIf Structural Element: Insert & update" +
         "s C- functions from code.");
             this._btnFinal.UseVisualStyleBackColor = true;
-            this._btnFinal.Click += new System.EventHandler(this.btnFinal_Click);
+            this._btnFinal.Click += new System.EventHandler(this.BtnFinal_Click);
             // 
             // _btnBezier
             // 
@@ -1192,7 +1192,7 @@ namespace hoReverse.Reverse
             this._btnBezier.Text = "B";
             this._toolTip.SetToolTip(this._btnBezier, "Linestyle Bezier");
             this._btnBezier.UseVisualStyleBackColor = true;
-            this._btnBezier.Click += new System.EventHandler(this.btnBezier_Click);
+            this._btnBezier.Click += new System.EventHandler(this.BtnBezier_Click);
             // 
             // _contextMenuStripTextField
             // 
@@ -1220,7 +1220,7 @@ namespace hoReverse.Reverse
             this.endIfMacroToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this.endIfMacroToolStripMenuItem.Text = "#endif";
             this.endIfMacroToolStripMenuItem.ToolTipText = "Write #endif into selected element";
-            this.endIfMacroToolStripMenuItem.Click += new System.EventHandler(this.endifMacroToolStripMenuItem_Click);
+            this.endIfMacroToolStripMenuItem.Click += new System.EventHandler(this.EndifMacroToolStripMenuItem_Click);
             // 
             // externToolStripMenuItem
             // 
@@ -1228,7 +1228,7 @@ namespace hoReverse.Reverse
             this.externToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this.externToolStripMenuItem.Text = "extern Function/Variable";
             this.externToolStripMenuItem.ToolTipText = "Set the stereotype <<extern>> for function/variable";
-            this.externToolStripMenuItem.Click += new System.EventHandler(this.externToolStripMenuItem_Click);
+            this.externToolStripMenuItem.Click += new System.EventHandler(this.ExternToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -1241,7 +1241,7 @@ namespace hoReverse.Reverse
             this._deleteToolStripMenuItemTextField.Size = new System.Drawing.Size(229, 22);
             this._deleteToolStripMenuItemTextField.Text = "&Delete";
             this._deleteToolStripMenuItemTextField.ToolTipText = "Delete the text box.";
-            this._deleteToolStripMenuItemTextField.Click += new System.EventHandler(this.deleteToolStripMenuItemTextField_Click);
+            this._deleteToolStripMenuItemTextField.Click += new System.EventHandler(this.DeleteToolStripMenuItemTextField_Click);
             // 
             // _quickSearchToolStripMenuItem
             // 
@@ -1249,7 +1249,7 @@ namespace hoReverse.Reverse
             this._quickSearchToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._quickSearchToolStripMenuItem.Text = "&Quick Search";
             this._quickSearchToolStripMenuItem.ToolTipText = "Call the quick search.";
-            this._quickSearchToolStripMenuItem.Click += new System.EventHandler(this.quickSearchToolStripMenuItem_Click);
+            this._quickSearchToolStripMenuItem.Click += new System.EventHandler(this.QuickSearchToolStripMenuItem_Click);
             // 
             // _insertBeneathNodeToolStripMenuItem
             // 
@@ -1257,7 +1257,7 @@ namespace hoReverse.Reverse
             this._insertBeneathNodeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._insertBeneathNodeToolStripMenuItem.Text = "&Insert Code";
             this._insertBeneathNodeToolStripMenuItem.ToolTipText = "Insert Code beneatch selected node in Activity Diagram";
-            this._insertBeneathNodeToolStripMenuItem.Click += new System.EventHandler(this.insertBeneathNodeToolStripMenuItem_Click);
+            this._insertBeneathNodeToolStripMenuItem.Click += new System.EventHandler(this.InsertBeneathNodeToolStripMenuItem_Click);
             // 
             // _addActivityToolStripMenuItem
             // 
@@ -1265,7 +1265,7 @@ namespace hoReverse.Reverse
             this._addActivityToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._addActivityToolStripMenuItem.Text = "&Activity";
             this._addActivityToolStripMenuItem.ToolTipText = "Add Activity beneath selected Node";
-            this._addActivityToolStripMenuItem.Click += new System.EventHandler(this.addActivityToolStripMenuItem_Click);
+            this._addActivityToolStripMenuItem.Click += new System.EventHandler(this.AddActivityToolStripMenuItem_Click);
             // 
             // _addCompositeActivityToolStripMenuItem
             // 
@@ -1273,7 +1273,7 @@ namespace hoReverse.Reverse
             this._addCompositeActivityToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._addCompositeActivityToolStripMenuItem.Text = "&Composite Activity";
             this._addCompositeActivityToolStripMenuItem.ToolTipText = "Add Composite Activity beneatch selected Node";
-            this._addCompositeActivityToolStripMenuItem.Click += new System.EventHandler(this.addCompositeActivityToolStripMenuItem_Click);
+            this._addCompositeActivityToolStripMenuItem.Click += new System.EventHandler(this.AddCompositeActivityToolStripMenuItem_Click);
             // 
             // _addFinalToolStripMenuItem
             // 
@@ -1281,7 +1281,7 @@ namespace hoReverse.Reverse
             this._addFinalToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._addFinalToolStripMenuItem.Text = "&Final";
             this._addFinalToolStripMenuItem.ToolTipText = "Add Final beneath selected Node";
-            this._addFinalToolStripMenuItem.Click += new System.EventHandler(this.addFinalToolStripMenuItem_Click);
+            this._addFinalToolStripMenuItem.Click += new System.EventHandler(this.AddFinalToolStripMenuItem_Click);
             // 
             // _addMergeToolStripMenuItem
             // 
@@ -1289,7 +1289,7 @@ namespace hoReverse.Reverse
             this._addMergeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._addMergeToolStripMenuItem.Text = "&Merge";
             this._addMergeToolStripMenuItem.ToolTipText = "Add merge beneath selected node";
-            this._addMergeToolStripMenuItem.Click += new System.EventHandler(this.addMergeToolStripMenuItem_Click);
+            this._addMergeToolStripMenuItem.Click += new System.EventHandler(this.AddMergeToolStripMenuItem_Click);
             // 
             // _showAllPortsToolStripMenuItem
             // 
@@ -1297,7 +1297,7 @@ namespace hoReverse.Reverse
             this._showAllPortsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._showAllPortsToolStripMenuItem.Text = "&Show all ports";
             this._showAllPortsToolStripMenuItem.ToolTipText = "Show all ports of selected classifier";
-            this._showAllPortsToolStripMenuItem.Click += new System.EventHandler(this.showAllPortsToolStripMenuItem_Click);
+            this._showAllPortsToolStripMenuItem.Click += new System.EventHandler(this.ShowAllPortsToolStripMenuItem_Click);
             // 
             // _insertTextIntoNodeToolStripMenuItem
             // 
@@ -1305,7 +1305,7 @@ namespace hoReverse.Reverse
             this._insertTextIntoNodeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this._insertTextIntoNodeToolStripMenuItem.Text = "&Insert text into Element Notes";
             this._insertTextIntoNodeToolStripMenuItem.ToolTipText = "Insert text into seleted Element Notes";
-            this._insertTextIntoNodeToolStripMenuItem.Click += new System.EventHandler(this.insertTextIntoNodeToolStripMenuItem_Click);
+            this._insertTextIntoNodeToolStripMenuItem.Click += new System.EventHandler(this.InsertTextIntoNodeToolStripMenuItem_Click);
             // 
             // _btnNoMerge
             // 
@@ -1316,7 +1316,7 @@ namespace hoReverse.Reverse
             this._btnNoMerge.Text = "nM";
             this._toolTip.SetToolTip(this._btnNoMerge, "Create a no Merge beneath/right  selected object");
             this._btnNoMerge.UseVisualStyleBackColor = true;
-            this._btnNoMerge.Click += new System.EventHandler(this.btnNoMerge_Click);
+            this._btnNoMerge.Click += new System.EventHandler(this.BtnNoMerge_Click);
             // 
             // _btnSplitNodes
             // 
@@ -1327,7 +1327,7 @@ namespace hoReverse.Reverse
             this._btnSplitNodes.Text = "S";
             this._toolTip.SetToolTip(this._btnSplitNodes, resources.GetString("_btnSplitNodes.ToolTip"));
             this._btnSplitNodes.UseVisualStyleBackColor = true;
-            this._btnSplitNodes.Click += new System.EventHandler(this.btnSplitNodes_Click);
+            this._btnSplitNodes.Click += new System.EventHandler(this.BtnSplitNodes_Click);
             // 
             // _btnSplitAll
             // 
@@ -1340,7 +1340,7 @@ namespace hoReverse.Reverse
         "ment\r\n- Click on SA (disconnect all nodes)\r\n-  hoReverse disconnect all connecto" +
         "rs from this element.");
             this._btnSplitAll.UseVisualStyleBackColor = true;
-            this._btnSplitAll.Click += new System.EventHandler(this.btnSplitAll_Click);
+            this._btnSplitAll.Click += new System.EventHandler(this.BtnSplitAll_Click);
             // 
             // _btnWriteText
             // 
@@ -1363,7 +1363,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnGuardNo, "Make a [no] Guard for an existing Control Flow\r\nConnect two selected Diagram node" +
         " with a [no] Control Flow\r\n");
             this._btnGuardNo.UseVisualStyleBackColor = true;
-            this._btnGuardNo.Click += new System.EventHandler(this.btnNoGuard_Click);
+            this._btnGuardNo.Click += new System.EventHandler(this.BtnNoGuard_Click);
             // 
             // _btnGuardYes
             // 
@@ -1375,7 +1375,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnGuardYes, "Make a [yes] Guard for an existing Control Flow\r\nConnect two selected Diagram nod" +
         "e with a [yes] Control Flow");
             this._btnGuardYes.UseVisualStyleBackColor = true;
-            this._btnGuardYes.Click += new System.EventHandler(this.btnYesGuard_Click);
+            this._btnGuardYes.Click += new System.EventHandler(this.BtnYesGuard_Click);
             // 
             // _btnGuardSpace
             // 
@@ -1387,7 +1387,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnGuardSpace, "Set connector to Blank if exists or\r\njoin selected diagram nodes with last select" +
         "ed node.");
             this._btnGuardSpace.UseVisualStyleBackColor = true;
-            this._btnGuardSpace.Click += new System.EventHandler(this.btnBlankGuard_Click);
+            this._btnGuardSpace.Click += new System.EventHandler(this.BtnBlankGuard_Click);
             // 
             // _btnFeatureUp
             // 
@@ -1400,7 +1400,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnFeatureUp, "Feature (Attribute, Method) up\r\n\r\nNote:\r\nIn settings the automatic ordering has t" +
         "o be disabled (Feture, Attribute, Method/Operation).\r\n");
             this._btnFeatureUp.UseVisualStyleBackColor = true;
-            this._btnFeatureUp.Click += new System.EventHandler(this.btnFeatureUp_Click);
+            this._btnFeatureUp.Click += new System.EventHandler(this.BtnFeatureUp_Click);
             // 
             // _btnFeatureDown
             // 
@@ -1413,7 +1413,7 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this._btnFeatureDown, "Feature (Attribute, Method) down\r\n\r\nNote:\r\nIn settings the automatic ordering has" +
         " to be disabled (Feature, Attribute, Method/Operation).");
             this._btnFeatureDown.UseVisualStyleBackColor = true;
-            this._btnFeatureDown.Click += new System.EventHandler(this.btnFeatureDown_Click);
+            this._btnFeatureDown.Click += new System.EventHandler(this.BtnFeatureDown_Click);
             // 
             // _btnAddNoteAndLink
             // 
@@ -1490,7 +1490,7 @@ namespace hoReverse.Reverse
             this._saveToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._saveToolStripMenuItem.Text = "&Save";
             this._saveToolStripMenuItem.ToolTipText = "Save bookmarks and history";
-            this._saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this._saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -1503,7 +1503,7 @@ namespace hoReverse.Reverse
             this._settingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._settingsToolStripMenuItem.Text = "Settings";
             this._settingsToolStripMenuItem.ToolTipText = "Opens the setting menu";
-            this._settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this._settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // _setting2ConnectorToolStripMenuItem
             // 
@@ -1511,7 +1511,7 @@ namespace hoReverse.Reverse
             this._setting2ConnectorToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._setting2ConnectorToolStripMenuItem.Text = "Setting: Default Linestyle";
             this._setting2ConnectorToolStripMenuItem.ToolTipText = "Set the default Linestyle for diagrams";
-            this._setting2ConnectorToolStripMenuItem.Click += new System.EventHandler(this.setting2ConnectorToolStripMenuItem_Click);
+            this._setting2ConnectorToolStripMenuItem.Click += new System.EventHandler(this.Setting2ConnectorToolStripMenuItem_Click);
             // 
             // settingsDiagramStylesToolStripMenuItem
             // 
@@ -1519,7 +1519,7 @@ namespace hoReverse.Reverse
             this.settingsDiagramStylesToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.settingsDiagramStylesToolStripMenuItem.Text = "Settings \'Bulk change Diagram Style\', \'Element\' (Settings.json)";
             this.settingsDiagramStylesToolStripMenuItem.ToolTipText = resources.GetString("settingsDiagramStylesToolStripMenuItem.ToolTipText");
-            this.settingsDiagramStylesToolStripMenuItem.Click += new System.EventHandler(this.settingsDiagramStylesToolStripMenuItem_Click);
+            this.settingsDiagramStylesToolStripMenuItem.Click += new System.EventHandler(this.SettingsDiagramStylesToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -1532,7 +1532,7 @@ namespace hoReverse.Reverse
             this.reloadSettingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.reloadSettingsToolStripMenuItem.Text = "Reload Settings from Settings.json";
             this.reloadSettingsToolStripMenuItem.ToolTipText = "Load Settings.json from %appdata%\\ho\\hoReverse\\Settings.json";
-            this.reloadSettingsToolStripMenuItem.Click += new System.EventHandler(this.reloadSettingsToolStripMenuItem_Click);
+            this.reloadSettingsToolStripMenuItem.Click += new System.EventHandler(this.ReloadSettingsToolStripMenuItem_Click);
             // 
             // resetFactorySettingsToolStripMenuItem
             // 
@@ -1541,7 +1541,7 @@ namespace hoReverse.Reverse
             this.resetFactorySettingsToolStripMenuItem.Text = "ResetFactorySettings";
             this.resetFactorySettingsToolStripMenuItem.ToolTipText = "Reset the user.config to reset to delivery configuration.\r\n\r\nPlease restart. hoRe" +
     "verse will  create a new user.config with the default settings.";
-            this.resetFactorySettingsToolStripMenuItem.Click += new System.EventHandler(this.resetFactorySettingsToolStripMenuItem_Click);
+            this.resetFactorySettingsToolStripMenuItem.Click += new System.EventHandler(this.ResetFactorySettingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
             // 
@@ -1554,7 +1554,7 @@ namespace hoReverse.Reverse
             this._clearToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this._clearToolStripMenuItem.Text = "Clear Diagram History and Bookmarks";
             this._clearToolStripMenuItem.ToolTipText = "Delete all history and diagram entries for all projects.";
-            this._clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            this._clearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
             // 
             // _doToolStripMenuItem
             // 
@@ -1584,7 +1584,7 @@ namespace hoReverse.Reverse
             this._createActivityForOperationToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._createActivityForOperationToolStripMenuItem.Text = "&Create/Update Activity for Operation";
             this._createActivityForOperationToolStripMenuItem.ToolTipText = resources.GetString("_createActivityForOperationToolStripMenuItem.ToolTipText");
-            this._createActivityForOperationToolStripMenuItem.Click += new System.EventHandler(this.createActivityForOperationToolStripMenuItem_Click);
+            this._createActivityForOperationToolStripMenuItem.Click += new System.EventHandler(this.CreateActivityForOperationToolStripMenuItem_Click);
             // 
             // _updateMethodParametersToolStripMenuItem
             // 
@@ -1593,7 +1593,7 @@ namespace hoReverse.Reverse
             this._updateMethodParametersToolStripMenuItem.Text = "&Update Activity from Method";
             this._updateMethodParametersToolStripMenuItem.ToolTipText = "Updates the Activities according to selected contexts by:\r\n- Activity Name\r\n- Act" +
     "ivity Parameter\r\n";
-            this._updateMethodParametersToolStripMenuItem.Click += new System.EventHandler(this.updateMethodParametersToolStripMenuItem_Click);
+            this._updateMethodParametersToolStripMenuItem.Click += new System.EventHandler(this.UpdateMethodParametersToolStripMenuItem_Click);
             // 
             // _toolStripSeparator3
             // 
@@ -1606,7 +1606,7 @@ namespace hoReverse.Reverse
             this._showFolderToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._showFolderToolStripMenuItem.Text = "&Show folder";
             this._showFolderToolStripMenuItem.ToolTipText = "Show folder (sourse file, controled package)";
-            this._showFolderToolStripMenuItem.Click += new System.EventHandler(this.showFolderToolStripMenuItem_Click);
+            this._showFolderToolStripMenuItem.Click += new System.EventHandler(this.ShowFolderToolStripMenuItem_Click);
             // 
             // setFolderToolStripMenuItem
             // 
@@ -1615,7 +1615,7 @@ namespace hoReverse.Reverse
             this.setFolderToolStripMenuItem.Text = "Set Folder";
             this.setFolderToolStripMenuItem.ToolTipText = "Set the Folder of a package  to easily access code.\r\n\r\nThe folder is used for imp" +
     "lementations. \r\nSo make sure you have assigned a Package language like \r\nC,C++.";
-            this.setFolderToolStripMenuItem.Click += new System.EventHandler(this.setFolderToolStripMenuItem_Click);
+            this.setFolderToolStripMenuItem.Click += new System.EventHandler(this.SetFolderToolStripMenuItem_Click);
             // 
             // _toolStripSeparator4
             // 
@@ -1627,7 +1627,7 @@ namespace hoReverse.Reverse
             this._copyGuidSqlToClipboardToolStripMenuItem.Name = "_copyGuidSqlToClipboardToolStripMenuItem";
             this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._copyGuidSqlToClipboardToolStripMenuItem.Text = "&Copy GUID + SQL to clipboard";
-            this._copyGuidSqlToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyGuidSqlToClipboardToolStripMenuItem_Click);
+            this._copyGuidSqlToClipboardToolStripMenuItem.Click += new System.EventHandler(this.CopyGuidSqlToClipboardToolStripMenuItem_Click);
             // 
             // _createSharedMemoryToolStripMenuItem
             // 
@@ -1637,7 +1637,7 @@ namespace hoReverse.Reverse
             this._createSharedMemoryToolStripMenuItem.ToolTipText = "Create shared memory from:\r\n#define SP_SHM_HW_MIC_START     0x40008000u\r\n#define " +
     "SP_SHM_HW_MIC_END       0x400083FFu\r\nas class+interface shared memory and:\r\nthe " +
     "associated Realisation dependency.\r\n";
-            this._createSharedMemoryToolStripMenuItem.Click += new System.EventHandler(this.createSharedMemoryToolStripMenuItem_Click);
+            this._createSharedMemoryToolStripMenuItem.Click += new System.EventHandler(this.CreateSharedMemoryToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1652,7 +1652,7 @@ namespace hoReverse.Reverse
             this.standardDiagramToolStripMenuItem.ToolTipText = "Sets the diagram standards for selected:\r\n- Diagram\r\n- Element, recursive\r\n- Pack" +
     "age, recursive,\r\n\r\nParameters:\r\n- Diagram fit to one page\r\n- No qualifiers\r\n- Ou" +
     "tput Parameters with name and parameter";
-            this.standardDiagramToolStripMenuItem.Click += new System.EventHandler(this.standardDiagramToolStripMenuItem_Click);
+            this.standardDiagramToolStripMenuItem.Click += new System.EventHandler(this.StandardDiagramToolStripMenuItem_Click);
             // 
             // toolStripSeparator8
             // 
@@ -1665,7 +1665,7 @@ namespace hoReverse.Reverse
             this.moveUsageToElementToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.moveUsageToElementToolStripMenuItem.Text = "Move usage to element";
             this.moveUsageToElementToolStripMenuItem.ToolTipText = resources.GetString("moveUsageToElementToolStripMenuItem.ToolTipText");
-            this.moveUsageToElementToolStripMenuItem.Click += new System.EventHandler(this.moveUsageToElementToolStripMenuItem_Click);
+            this.moveUsageToElementToolStripMenuItem.Click += new System.EventHandler(this.MoveUsageToElementToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -1680,7 +1680,7 @@ namespace hoReverse.Reverse
             this.sortAlphabeticToolStripMenuItem.ToolTipText = "Sort the selected diagram elements in alphabetic order:\r\n- Ports, Pins, Parameter" +
     "s\r\n- Elements, Packages\r\n\r\nIt ignores:\r\n- ProvidedInterface\r\n- RequiredInterface" +
     "";
-            this.sortAlphabeticToolStripMenuItem.Click += new System.EventHandler(this.sortAlphabeticToolStripMenuItem_Click);
+            this.sortAlphabeticToolStripMenuItem.Click += new System.EventHandler(this.SortAlphabeticToolStripMenuItem_Click);
             // 
             // toolStripSeparator11
             // 
@@ -1723,7 +1723,7 @@ namespace hoReverse.Reverse
             this._insertAttributeToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._insertAttributeToolStripMenuItem.Text = "&Insert / update  attributes";
             this._insertAttributeToolStripMenuItem.ToolTipText = resources.GetString("_insertAttributeToolStripMenuItem.ToolTipText");
-            this._insertAttributeToolStripMenuItem.Click += new System.EventHandler(this.insertAttributeToolStripMenuItem_Click);
+            this._insertAttributeToolStripMenuItem.Click += new System.EventHandler(this.InsertAttributeToolStripMenuItem_Click);
             // 
             // _insertTypedefStructToolStripMenuItem
             // 
@@ -1731,7 +1731,7 @@ namespace hoReverse.Reverse
             this._insertTypedefStructToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._insertTypedefStructToolStripMenuItem.Text = "Create typedef struct/union/enum";
             this._insertTypedefStructToolStripMenuItem.ToolTipText = resources.GetString("_insertTypedefStructToolStripMenuItem.ToolTipText");
-            this._insertTypedefStructToolStripMenuItem.Click += new System.EventHandler(this.insertTypedefStructToolStripMenuItem_Click);
+            this._insertTypedefStructToolStripMenuItem.Click += new System.EventHandler(this.InsertTypedefStructToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -1745,7 +1745,7 @@ namespace hoReverse.Reverse
             this._insertFunctionToolStripMenuItem.Text = "&Insert/ update function";
             this._insertFunctionToolStripMenuItem.ToolTipText = "Insert & updates C- functions from code\r\n\r\nIf the function exists hoReverse updat" +
     "es parameter and return value.";
-            this._insertFunctionToolStripMenuItem.Click += new System.EventHandler(this.insertFunctionToolStripMenuItem_Click);
+            this._insertFunctionToolStripMenuItem.Click += new System.EventHandler(this.InsertFunctionToolStripMenuItem_Click);
             // 
             // insertFunctionMakeDuplicatesToolStripMenuItem
             // 
@@ -1754,7 +1754,7 @@ namespace hoReverse.Reverse
             this.insertFunctionMakeDuplicatesToolStripMenuItem.Text = "Insert function (make duplicates)";
             this.insertFunctionMakeDuplicatesToolStripMenuItem.ToolTipText = "Insert C- functions from code\r\n\r\nIf the function exists hoReverse inserts a new f" +
     "unction.";
-            this.insertFunctionMakeDuplicatesToolStripMenuItem.Click += new System.EventHandler(this.insertFunctionMakeDuplicatesToolStripMenuItem_Click);
+            this.insertFunctionMakeDuplicatesToolStripMenuItem.Click += new System.EventHandler(this.InsertFunctionMakeDuplicatesToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -1783,7 +1783,7 @@ namespace hoReverse.Reverse
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Text = "Delete invisible <<use> dependencies";
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.ToolTipText = "Delete for selected Class / Interface <<use>> dependencies which are not linked t" +
     "o diagramobjects on the current diagram.";
-            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Click += new System.EventHandler(this.deleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click);
+            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Click += new System.EventHandler(this.DeleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1796,7 +1796,7 @@ namespace hoReverse.Reverse
             this._generateComponentPortsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._generateComponentPortsToolStripMenuItem.Text = "&GenerateComponentPorts";
             this._generateComponentPortsToolStripMenuItem.ToolTipText = resources.GetString("_generateComponentPortsToolStripMenuItem.ToolTipText");
-            this._generateComponentPortsToolStripMenuItem.Click += new System.EventHandler(this.generateComponentPortsToolStripMenuItem_Click);
+            this._generateComponentPortsToolStripMenuItem.Click += new System.EventHandler(this.GenerateComponentPortsToolStripMenuItem_Click);
             // 
             // _hideAllPortsToolStripMenuItem
             // 
@@ -1812,7 +1812,7 @@ namespace hoReverse.Reverse
             this._showAllPortsActivityParametersToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._showAllPortsActivityParametersToolStripMenuItem.Text = "Show all ports / activity parameters";
             this._showAllPortsActivityParametersToolStripMenuItem.ToolTipText = "Show all ports/activity parameters  for classifier (Component, Activity)";
-            this._showAllPortsActivityParametersToolStripMenuItem.Click += new System.EventHandler(this.showAllPortsActivityParametersToolStripMenuItem_Click);
+            this._showAllPortsActivityParametersToolStripMenuItem.Click += new System.EventHandler(this.ShowAllPortsActivityParametersToolStripMenuItem_Click);
             // 
             // _toolStripSeparator7
             // 
@@ -1838,7 +1838,7 @@ namespace hoReverse.Reverse
             this._setMacroToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._setMacroToolStripMenuItem.Text = "Set Macro";
             this._setMacroToolStripMenuItem.ToolTipText = resources.GetString("_setMacroToolStripMenuItem.ToolTipText");
-            this._setMacroToolStripMenuItem.Click += new System.EventHandler(this.setMacroToolStripMenuItem_Click);
+            this._setMacroToolStripMenuItem.Click += new System.EventHandler(this.SetMacroToolStripMenuItem_Click);
             // 
             // _addMacroToolStripMenuItem
             // 
@@ -1854,7 +1854,7 @@ namespace hoReverse.Reverse
             this._delMacroToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
             this._delMacroToolStripMenuItem.Text = "Del Macro";
             this._delMacroToolStripMenuItem.ToolTipText = "Delete all macros/stereotypes for the selected item.";
-            this._delMacroToolStripMenuItem.Click += new System.EventHandler(this.delMacroToolStripMenuItem_Click);
+            this._delMacroToolStripMenuItem.Click += new System.EventHandler(this.DelMacroToolStripMenuItem_Click);
             // 
             // _toolStripSeparator
             // 
@@ -1868,7 +1868,7 @@ namespace hoReverse.Reverse
             this._copyReleaseInformationToClipboardToolStripMenuItem.Text = "&Copy release information to Clipboard";
             this._copyReleaseInformationToClipboardToolStripMenuItem.ToolTipText = "Copy release information of *.c and *.h files to Clipboard:\r\n- Select Module\r\n- F" +
     "or all elements on the diagram the release information is printed";
-            this._copyReleaseInformationToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyReleaseInformationToClipboardToolStripMenuItem_Click);
+            this._copyReleaseInformationToClipboardToolStripMenuItem.Click += new System.EventHandler(this.CopyReleaseInformationToClipboardToolStripMenuItem_Click);
             // 
             // toolStripSeparator16
             // 
@@ -1910,7 +1910,7 @@ namespace hoReverse.Reverse
             this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Visible = false;
-            this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.inventoryToolStripMenuItem_Click);
+            this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.InventoryToolStripMenuItem_Click);
             // 
             // _getToolStripMenuItem
             // 
@@ -1918,7 +1918,7 @@ namespace hoReverse.Reverse
             this._getToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this._getToolStripMenuItem.Text = "GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
-            this._getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
+            this._getToolStripMenuItem.Click += new System.EventHandler(this.GetToolStripMenuItem_Click);
             // 
             // makeRunnableToolStripMenuItem
             // 
@@ -1927,7 +1927,7 @@ namespace hoReverse.Reverse
             this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
             this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
             this.makeRunnableToolStripMenuItem.Visible = false;
-            this.makeRunnableToolStripMenuItem.Click += new System.EventHandler(this.makeRunnableToolStripMenuItem_Click);
+            this.makeRunnableToolStripMenuItem.Click += new System.EventHandler(this.MakeRunnableToolStripMenuItem_Click);
             // 
             // makeServicePortToolStripMenuItem
             // 
@@ -1935,7 +1935,7 @@ namespace hoReverse.Reverse
             this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
             this.makeServicePortToolStripMenuItem.Visible = false;
-            this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.makeServicePortToolStripMenuItem_Click);
+            this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.MakeServicePortToolStripMenuItem_Click);
             // 
             // makeCalloutToolStripMenuItem
             // 
@@ -1943,7 +1943,7 @@ namespace hoReverse.Reverse
             this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Visible = false;
-            this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.makeCalloutToolStripMenuItem_Click);
+            this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.MakeCalloutToolStripMenuItem_Click);
             // 
             // toolStripSeparator12
             // 
@@ -1956,7 +1956,7 @@ namespace hoReverse.Reverse
             this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions for EA-Element";
             this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = resources.GetString("showExternalComponentFunctionsToolStripMenuItem.ToolTipText");
-            this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showExternalComponentFunctionsToolStripMenuItem_Click);
+            this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowExternalComponentFunctionsToolStripMenuItem_Click);
             // 
             // showProvidedRequiredFunctionsForSourceToolStripMenuItem
             // 
@@ -1964,7 +1964,7 @@ namespace hoReverse.Reverse
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Text = "Show Provided / Required Functions for File/Folder";
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText = resources.GetString("showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText");
-            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Click += new System.EventHandler(this.showProvidedRequiredFunctionsForSourceToolStripMenuItem_Click);
+            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Click += new System.EventHandler(this.ShowProvidedRequiredFunctionsForSourceToolStripMenuItem_Click);
             // 
             // showFunctionsToolStripMenuItem
             // 
@@ -1973,7 +1973,7 @@ namespace hoReverse.Reverse
             this.showFunctionsToolStripMenuItem.Text = "Show all Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
     "+ Code with up to date VC Code symbol database";
-            this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.showFunctionsToolStripMenuItem_Click);
+            this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowFunctionsToolStripMenuItem_Click);
             // 
             // toolStripSeparator13
             // 
@@ -1987,7 +1987,7 @@ namespace hoReverse.Reverse
             this.showSymbolDataBaseFoldersToolStripMenuItem.Text = "Show Symbol VC-Code DataBase Folders";
             this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
     "lete the whole folder. VS-Code will recreate it!";
-            this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.showSymbolDataBaseFoldersToolStripMenuItem_Click);
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.ShowSymbolDataBaseFoldersToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
             // 
@@ -2014,7 +2014,7 @@ namespace hoReverse.Reverse
             this._svnLogToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
             this._svnLogToolStripMenuItem.Text = "&Show Tortoise Log";
             this._svnLogToolStripMenuItem.ToolTipText = "Opend the Tortoise Log window";
-            this._svnLogToolStripMenuItem.Click += new System.EventHandler(this.svnLogToolStripMenuItem_Click);
+            this._svnLogToolStripMenuItem.Click += new System.EventHandler(this.SvnLogToolStripMenuItem_Click);
             // 
             // _svnTortoiseRepobrowserToolStripMenuItem
             // 
@@ -2022,7 +2022,7 @@ namespace hoReverse.Reverse
             this._svnTortoiseRepobrowserToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
             this._svnTortoiseRepobrowserToolStripMenuItem.Text = "&Show Tortoise Repo Browser";
             this._svnTortoiseRepobrowserToolStripMenuItem.ToolTipText = "Opens the Tortoise Repo Browser for the selected package";
-            this._svnTortoiseRepobrowserToolStripMenuItem.Click += new System.EventHandler(this.svnTortoiseRepobrowserToolStripMenuItem_Click);
+            this._svnTortoiseRepobrowserToolStripMenuItem.Click += new System.EventHandler(this.SvnTortoiseRepobrowserToolStripMenuItem_Click);
             // 
             // _showDirectoryToolStripMenuItem
             // 
@@ -2030,7 +2030,7 @@ namespace hoReverse.Reverse
             this._showDirectoryToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
             this._showDirectoryToolStripMenuItem.Text = "&Show Directory (VC or Code)";
             this._showDirectoryToolStripMenuItem.ToolTipText = "Show Version Control directory of *.xml file or oh code";
-            this._showDirectoryToolStripMenuItem.Click += new System.EventHandler(this.showDirectoryToolStripMenuItem_Click);
+            this._showDirectoryToolStripMenuItem.Click += new System.EventHandler(this.ShowDirectoryToolStripMenuItem_Click);
             // 
             // _toolStripSeparator1
             // 
@@ -2043,7 +2043,7 @@ namespace hoReverse.Reverse
             this._getVcLatestrecursiveToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
             this._getVcLatestrecursiveToolStripMenuItem.Text = "&GetVCLatest (recursive)";
             this._getVcLatestrecursiveToolStripMenuItem.ToolTipText = "GetAllLatest for package (recursive)";
-            this._getVcLatestrecursiveToolStripMenuItem.Click += new System.EventHandler(this.getVcLastestRecursiveToolStripMenuItem_Click);
+            this._getVcLatestrecursiveToolStripMenuItem.Click += new System.EventHandler(this.GetVcLastestRecursiveToolStripMenuItem_Click);
             // 
             // _setSvnKeywordsToolStripMenuItem
             // 
@@ -2051,7 +2051,7 @@ namespace hoReverse.Reverse
             this._setSvnKeywordsToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
             this._setSvnKeywordsToolStripMenuItem.Text = "&Set svn keywords";
             this._setSvnKeywordsToolStripMenuItem.ToolTipText = "Set the svn Module Package keywords for a VC package";
-            this._setSvnKeywordsToolStripMenuItem.Click += new System.EventHandler(this.setSvnKeywordsToolStripMenuItem_Click);
+            this._setSvnKeywordsToolStripMenuItem.Click += new System.EventHandler(this.SetSvnKeywordsToolStripMenuItem_Click);
             // 
             // _setSvnTaggedValuesToolStripMenuItem1
             // 
@@ -2060,7 +2060,7 @@ namespace hoReverse.Reverse
             this._setSvnTaggedValuesToolStripMenuItem1.Text = "&Set svn Module Tagged Values";
             this._setSvnTaggedValuesToolStripMenuItem1.ToolTipText = "Set module package tagged values of a module package.\r\n\r\nModule Package\r\n   Archi" +
     "ctecture\r\n      Structure\r\n         Module\r\n\r\nTags:\r\nsvnDate\r\nsvnRevision";
-            this._setSvnTaggedValuesToolStripMenuItem1.Click += new System.EventHandler(this.setSvnTaggedValuesToolStripMenuItem1_Click);
+            this._setSvnTaggedValuesToolStripMenuItem1.Click += new System.EventHandler(this.SetSvnTaggedValuesToolStripMenuItem1_Click);
             // 
             // _setSvnTaggedValuesToolStripMenuItem
             // 
@@ -2070,7 +2070,7 @@ namespace hoReverse.Reverse
             this._setSvnTaggedValuesToolStripMenuItem.ToolTipText = "Sets svn module package Tagged Values for a Version controlled Package (recursive" +
     ") which is a module package. \r\n\r\nA module package contains subpackages Architect" +
     "ure\\Structure\\Module and Behavior\r\n";
-            this._setSvnTaggedValuesToolStripMenuItem.Click += new System.EventHandler(this.setSvnTaggedValuesToolStripMenuItem_Click);
+            this._setSvnTaggedValuesToolStripMenuItem.Click += new System.EventHandler(this.SetSvnTaggedValuesToolStripMenuItem_Click);
             // 
             // _toolStripSeparator2
             // 
@@ -2083,7 +2083,7 @@ namespace hoReverse.Reverse
             this._changeXmlPathToolStripMenuItem1.Size = new System.Drawing.Size(291, 22);
             this._changeXmlPathToolStripMenuItem1.Text = "&ChangeXmlPath";
             this._changeXmlPathToolStripMenuItem1.ToolTipText = resources.GetString("_changeXmlPathToolStripMenuItem1.ToolTipText");
-            this._changeXmlPathToolStripMenuItem1.Click += new System.EventHandler(this.changeXmlPathToolStripMenuItem_Click);
+            this._changeXmlPathToolStripMenuItem1.Click += new System.EventHandler(this.ChangeXmlPathToolStripMenuItem_Click);
             // 
             // _toolStripSeparator5
             // 
@@ -2118,7 +2118,7 @@ namespace hoReverse.Reverse
             this._vCGetStateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCGetStateToolStripMenuItem.Text = "&VC get state";
             this._vCGetStateToolStripMenuItem.ToolTipText = "Show the VC package state in a messagage box.\r\n- How has checked out the package";
-            this._vCGetStateToolStripMenuItem.Click += new System.EventHandler(this.vCGetStateToolStripMenuItem_Click);
+            this._vCGetStateToolStripMenuItem.Click += new System.EventHandler(this.VCGetStateToolStripMenuItem_Click);
             // 
             // _vCResyncToolStripMenuItem
             // 
@@ -2127,7 +2127,7 @@ namespace hoReverse.Reverse
             this._vCResyncToolStripMenuItem.Text = "&VC Resync";
             this._vCResyncToolStripMenuItem.ToolTipText = "Resynchronice svn VC package state for package(recursive).\r\n- Select Package\r\n- S" +
     "elect Model for whole Model (root package)";
-            this._vCResyncToolStripMenuItem.Click += new System.EventHandler(this.vCResyncToolStripMenuItem_Click);
+            this._vCResyncToolStripMenuItem.Click += new System.EventHandler(this.VCResyncToolStripMenuItem_Click);
             // 
             // _vCxmiReconsileToolStripMenuItem
             // 
@@ -2135,7 +2135,7 @@ namespace hoReverse.Reverse
             this._vCxmiReconsileToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this._vCxmiReconsileToolStripMenuItem.Text = "VC XMI reconsile";
             this._vCxmiReconsileToolStripMenuItem.ToolTipText = "Scan all XMI packages and reconsile deleted objects or connectors.";
-            this._vCxmiReconsileToolStripMenuItem.Click += new System.EventHandler(this.vCXMIReconsileToolStripMenuItem_Click);
+            this._vCxmiReconsileToolStripMenuItem.Click += new System.EventHandler(this.VCXMIReconsileToolStripMenuItem_Click);
             // 
             // _vCRemoveToolStripMenuItem
             // 
@@ -2172,7 +2172,7 @@ namespace hoReverse.Reverse
             this.checkDOORSRequirementsToolStripMenuItem.Text = "Check DOORS Requirements";
             this.checkDOORSRequirementsToolStripMenuItem.ToolTipText = "Select a package with imported DOORS requirements and run the check.\r\n\r\nIt shows:" +
     "\r\n- All not unique DOORS Requirements";
-            this.checkDOORSRequirementsToolStripMenuItem.Click += new System.EventHandler(this.checkDOORSRequirementsToolStripMenuItem_Click);
+            this.checkDOORSRequirementsToolStripMenuItem.Click += new System.EventHandler(this.CheckDOORSRequirementsToolStripMenuItem_Click);
             // 
             // toolStripSeparator18
             // 
@@ -2201,7 +2201,7 @@ namespace hoReverse.Reverse
             this.importReqIFBySettings3ToolStripMenuItem.Name = "importReqIFBySettings3ToolStripMenuItem";
             this.importReqIFBySettings3ToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.importReqIFBySettings3ToolStripMenuItem.Text = "ImportReqIFBySettings 3";
-            this.importReqIFBySettings3ToolStripMenuItem.Click += new System.EventHandler(this.importReqIFBySettings3ToolStripMenuItem_Click_1);
+            this.importReqIFBySettings3ToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings3ToolStripMenuItem_Click_1);
             // 
             // importReqIFBySettingsToolStripMenuItem
             // 
@@ -2231,7 +2231,7 @@ namespace hoReverse.Reverse
             this._aboutToolStripMenuItem.Name = "_aboutToolStripMenuItem";
             this._aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this._aboutToolStripMenuItem.Text = "&About";
-            this._aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this._aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // toolStripSeparator15
             // 
@@ -2244,7 +2244,7 @@ namespace hoReverse.Reverse
             this._helpF1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this._helpF1ToolStripMenuItem.Text = "&Help / WiKi";
             this._helpF1ToolStripMenuItem.ToolTipText = "Show help / WiKi";
-            this._helpF1ToolStripMenuItem.Click += new System.EventHandler(this.helpF1ToolStripMenuItem_Click);
+            this._helpF1ToolStripMenuItem.Click += new System.EventHandler(this.HelpF1ToolStripMenuItem_Click);
             // 
             // readmeToolStripMenuItem
             // 
@@ -2252,7 +2252,7 @@ namespace hoReverse.Reverse
             this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.ToolTipText = "Show readme";
-            this.readmeToolStripMenuItem.Click += new System.EventHandler(this.readmeToolStripMenuItem_Click);
+            this.readmeToolStripMenuItem.Click += new System.EventHandler(this.ReadmeToolStripMenuItem_Click);
             // 
             // repoToolStripMenuItem
             // 
@@ -2260,7 +2260,7 @@ namespace hoReverse.Reverse
             this.repoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.repoToolStripMenuItem.Text = "Repo";
             this.repoToolStripMenuItem.ToolTipText = "Show GitHub repository";
-            this.repoToolStripMenuItem.Click += new System.EventHandler(this.repoToolStripMenuItem_Click);
+            this.repoToolStripMenuItem.Click += new System.EventHandler(this.RepoToolStripMenuItem_Click);
             // 
             // hoToolsToolStripMenuItem
             // 
@@ -2275,7 +2275,7 @@ namespace hoReverse.Reverse
             this.lineStyleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.lineStyleToolStripMenuItem.Text = "LineStyle";
             this.lineStyleToolStripMenuItem.ToolTipText = "Show WiKi LineStyle";
-            this.lineStyleToolStripMenuItem.Click += new System.EventHandler(this.lineStyleToolStripMenuItem_Click);
+            this.lineStyleToolStripMenuItem.Click += new System.EventHandler(this.LineStyleToolStripMenuItem_Click);
             // 
             // toolStripSeparator14
             // 
@@ -2287,7 +2287,7 @@ namespace hoReverse.Reverse
             this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
             this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.analyzeCCToolStripMenuItem.Text = "AnalyzeC/C++";
-            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.AnalyzeCCToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -2295,7 +2295,7 @@ namespace hoReverse.Reverse
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(24, 20);
             this.helpToolStripMenuItem.Text = "?";
             this.helpToolStripMenuItem.ToolTipText = "WiKi";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // _toolStripContainer1
             // 
@@ -2339,7 +2339,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn11.Name = "_toolStripBtn11";
             this._toolStripBtn11.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn11.Text = "1";
-            this._toolStripBtn11.Click += new System.EventHandler(this.toolStripBtn11_Click);
+            this._toolStripBtn11.Click += new System.EventHandler(this.ToolStripBtn11_Click);
             // 
             // _toolStripBtn12
             // 
@@ -2349,7 +2349,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn12.Name = "_toolStripBtn12";
             this._toolStripBtn12.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn12.Text = "2";
-            this._toolStripBtn12.Click += new System.EventHandler(this.toolStripBtn12_Click);
+            this._toolStripBtn12.Click += new System.EventHandler(this.ToolStripBtn12_Click);
             // 
             // _toolStripBtn13
             // 
@@ -2359,7 +2359,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn13.Name = "_toolStripBtn13";
             this._toolStripBtn13.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn13.Text = "3";
-            this._toolStripBtn13.Click += new System.EventHandler(this.toolStripBtn13_Click);
+            this._toolStripBtn13.Click += new System.EventHandler(this.ToolStripBtn13_Click);
             // 
             // _toolStripBtn14
             // 
@@ -2369,7 +2369,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn14.Name = "_toolStripBtn14";
             this._toolStripBtn14.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn14.Text = "4";
-            this._toolStripBtn14.Click += new System.EventHandler(this.toolStripBtn14_Click);
+            this._toolStripBtn14.Click += new System.EventHandler(this.ToolStripBtn14_Click);
             // 
             // _toolStripBtn15
             // 
@@ -2379,7 +2379,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn15.Name = "_toolStripBtn15";
             this._toolStripBtn15.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn15.Text = "5";
-            this._toolStripBtn15.Click += new System.EventHandler(this.toolStripBtn15_Click);
+            this._toolStripBtn15.Click += new System.EventHandler(this.ToolStripBtn15_Click);
             // 
             // _toolStrip1
             // 
@@ -2395,7 +2395,7 @@ namespace hoReverse.Reverse
             this._toolStrip1.Name = "_toolStrip1";
             this._toolStrip1.Size = new System.Drawing.Size(127, 25);
             this._toolStrip1.TabIndex = 0;
-            this._toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
+            this._toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ToolStrip1_ItemClicked);
             // 
             // _toolStripBtn1
             // 
@@ -2405,7 +2405,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn1.Name = "_toolStripBtn1";
             this._toolStripBtn1.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn1.Text = "1";
-            this._toolStripBtn1.Click += new System.EventHandler(this.toolStripBtn1_Click);
+            this._toolStripBtn1.Click += new System.EventHandler(this.ToolStripBtn1_Click);
             // 
             // _toolStripBtn2
             // 
@@ -2415,7 +2415,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn2.Name = "_toolStripBtn2";
             this._toolStripBtn2.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn2.Text = "2";
-            this._toolStripBtn2.Click += new System.EventHandler(this.toolStripBtn2_Click);
+            this._toolStripBtn2.Click += new System.EventHandler(this.ToolStripBtn2_Click);
             // 
             // _toolStripBtn3
             // 
@@ -2425,7 +2425,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn3.Name = "_toolStripBtn3";
             this._toolStripBtn3.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn3.Text = "3";
-            this._toolStripBtn3.Click += new System.EventHandler(this.toolStripBtn3_Click);
+            this._toolStripBtn3.Click += new System.EventHandler(this.ToolStripBtn3_Click);
             // 
             // _toolStripBtn4
             // 
@@ -2435,7 +2435,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn4.Name = "_toolStripBtn4";
             this._toolStripBtn4.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn4.Text = "4";
-            this._toolStripBtn4.Click += new System.EventHandler(this.toolStripBtn4_Click);
+            this._toolStripBtn4.Click += new System.EventHandler(this.ToolStripBtn4_Click);
             // 
             // _toolStripBtn5
             // 
@@ -2445,15 +2445,15 @@ namespace hoReverse.Reverse
             this._toolStripBtn5.Name = "_toolStripBtn5";
             this._toolStripBtn5.Size = new System.Drawing.Size(23, 22);
             this._toolStripBtn5.Text = "5";
-            this._toolStripBtn5.Click += new System.EventHandler(this.toolStripBtn5_Click);
+            this._toolStripBtn5.Click += new System.EventHandler(this.ToolStripBtn5_Click);
             // 
             // backgroundWorker
             // 
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
             // TxtUserText
             // 
@@ -2472,8 +2472,8 @@ namespace hoReverse.Reverse
         "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
         "lon as in C.");
             this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.txtUserText_MouseDoubleClick);
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
             // 
             // importReqIFBySettings5ToolStripMenuItem
             // 
@@ -2669,13 +2669,13 @@ namespace hoReverse.Reverse
 
 
 
-        private void btnNoteFromText_Click(object sender, EventArgs e)
+        private void BtnNoteFromText_Click(object sender, EventArgs e)
         {
             HoService.CreateNoteFromText(_repository, TxtUserText.Text);
         }
 
 
-        private void btnActivityCompositeFromText_Click(object sender, EventArgs e)
+        private void BtnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
             HoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
 
@@ -2686,57 +2686,57 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnActivityFromText_Click(object sender, EventArgs e)
+        private void BtnActivityFromText_Click(object sender, EventArgs e)
         {
             HoService.CreateActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
         }
 
-        void btnC_Click(object sender, EventArgs e)
+        void BtnC_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "C");
         }
 
 
-        void btnD_Click(object sender, EventArgs e)
+        void BtnD_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "D");
         }
 
 
 
-        void btnA_Click(object sender, EventArgs e)
+        void BtnA_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "A");
         }
 
 
-        void btnOR_Click(object sender, EventArgs e)
+        void BtnOR_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "OR");
         }
 
-        private void btnBezier_Click(object sender, EventArgs e)
+        private void BtnBezier_Click(object sender, EventArgs e)
         {
             HoService.SetLineStyle(_repository, "B");
         }
 
-        private void btnComposite_Click(object sender, EventArgs e)
+        private void BtnComposite_Click(object sender, EventArgs e)
         {
             HoService.NavigateComposite(_repository);
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)
         {
             _history.Back();
         }
 
-        private void btnFrwrd_Click(object sender, EventArgs e)
+        private void BtnFrwrd_Click(object sender, EventArgs e)
         {
             _history.Frwrd();
         }
 
         //------- Bookmark ----------------------------//
-        private void btnBookmarkAdd_Click(object sender, EventArgs e)
+        private void BtnBookmarkAdd_Click(object sender, EventArgs e)
         {
             EA.ObjectType ot = _repository.GetContextItemType();
             string guid;
@@ -2760,7 +2760,7 @@ namespace hoReverse.Reverse
             }
         }
 
-        private void btnBookmarkRemove_Click(object sender, EventArgs e)
+        private void BtnBookmarkRemove_Click(object sender, EventArgs e)
         {
             EA.ObjectType ot = _repository.GetContextItemType();
             string guid = "";
@@ -2772,17 +2772,17 @@ namespace hoReverse.Reverse
             _bookmark.Remove(ot, guid);
         }
 
-        private void btnBookmarkBack_Click(object sender, EventArgs e)
+        private void BtnBookmarkBack_Click(object sender, EventArgs e)
         {
             _bookmark.Back();
         }
 
-        private void btnBookmarkFrwrd_Click(object sender, EventArgs e)
+        private void BtnBookmarkFrwrd_Click(object sender, EventArgs e)
         {
             _bookmark.Frwrd();
         }
 
-        private void btnBookmarks_Click(object sender, EventArgs e)
+        private void BtnBookmarks_Click(object sender, EventArgs e)
         {
             ShowHistory();
         }
@@ -2805,12 +2805,12 @@ namespace hoReverse.Reverse
             }
         }
 
-        private void btnHistory_Click(object sender, EventArgs e)
+        private void BtnHistory_Click(object sender, EventArgs e)
         {
             ShowHistory();
         }
 
-        private void btnFinal_Click(object sender, EventArgs e)
+        private void BtnFinal_Click(object sender, EventArgs e)
         {
             EA.Element el = HoUtil.GetElementFromContextObject(_repository);
             if (el == null) return;
@@ -2821,19 +2821,19 @@ namespace hoReverse.Reverse
 
         }
 
-        private void btnAction_Click(object sender, EventArgs e)
+        private void BtnAction_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
 
         }
 
-        private void btnDecision_Click(object sender, EventArgs e)
+        private void BtnDecision_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
 
         }
 
-        private void btnMerge_Click(object sender, EventArgs e)
+        private void BtnMerge_Click(object sender, EventArgs e)
         {
             HoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "");
         }
@@ -2844,7 +2844,7 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnInsert_Click(object sender, EventArgs e)
+        private void BtnInsert_Click(object sender, EventArgs e)
         {
 
 
@@ -2872,39 +2872,39 @@ namespace hoReverse.Reverse
 
         }
 
-        private void btnActionFromText_Click(object sender, EventArgs e)
+        private void BtnActionFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
 
         }
 
-        private void btnDecisionFromText_Click(object sender, EventArgs e)
+        private void BtnDecisionFromText_Click(object sender, EventArgs e)
         {
             string decisionName = TxtUserText.Text.Trim();
             HoService.CreateDecisionFromText(_repository, decisionName);
         }
 
 
-        private void txtUserText_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void TxtUserText_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // force cr lf at line end
             TxtUserText.Text = Clipboard.GetText().Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
 
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Save();
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _history.RemoveAll();
             _bookmark.RemoveAll();
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _frmSettings = new SettingsForm(AddinSettings, this);
             _frmSettings.ShowDialog(this);
@@ -2916,7 +2916,7 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string[] dllNames = new string[]
             {
@@ -2944,12 +2944,12 @@ namespace hoReverse.Reverse
         }
 
 
-        private void createActivityForOperationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CreateActivityForOperationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateActivityForOperation(_repository);
         }
 
-        private void btnShowPort_Click(object sender, EventArgs e)
+        private void BtnShowPort_Click(object sender, EventArgs e)
         {
             HoService.ShowEmbeddedElementsGui(_repository, "");
         }
@@ -2957,88 +2957,88 @@ namespace hoReverse.Reverse
         // show folder for:
         // - controlled package
         // - source file
-        private void showFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.ShowFolder(_repository, isTotalCommander: AddinSettings.FileManagerIsTotalCommander);
         }
 
 
-        private void getVcLastestRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GetVcLastestRecursiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.GetVcLatestRecursive(_repository);
         }
 
-        private void copyGuidSqlToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyGuidSqlToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CopyGuidSqlToClipboard(_repository);
         }
 
-        private void createSharedMemoryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CreateSharedMemoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateSharedMemoryFromText(_repository, TxtUserText.Text);
         }
 
 
-        private void updateMethodParametersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UpdateMethodParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.UpdateActivityMethodParameterWrapper(_repository);
         }
 
-        private void helpF1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpF1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Open GitHub Wiki
             WikiRef.Wiki();
         }
 
-        private void deleteToolStripMenuItemTextField_Click(object sender, EventArgs e)
+        private void DeleteToolStripMenuItemTextField_Click(object sender, EventArgs e)
         {
             TxtUserText.Text = "";
         }
 
-        private void quickSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        private void QuickSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
         }
 
-        private void insertTextIntoNodeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertTextIntoNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateNoteFromText(_repository, TxtUserText.Text);
         }
 
-        private void insertBeneathNodeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertBeneathNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InsertFromText();
         }
 
-        private void addCompositeActivityToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddCompositeActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
         }
 
-        private void addActivityToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
         }
 
-        private void addFinalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddFinalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
         }
 
-        private void addMergeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddMergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
         }
 
-        private void showAllPortsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowAllPortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.ShowEmbeddedElementsGui(_repository);
         }
 
         // no/else merge
-        private void btnNoMerge_Click(object sender, EventArgs e)
+        private void BtnNoMerge_Click(object sender, EventArgs e)
         {
             //EaService.createDiagramObjectFromContext(m_repository, "", "MergeNode", "no");
             HoService.InsertDiagramElementAndConnect(_repository, "MergeNode", "", "no");
@@ -3159,13 +3159,13 @@ namespace hoReverse.Reverse
             }
         }
 
-        private void changeXmlPathToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeXmlPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.SetNewXmlPath(_repository);
 
         }
 
-        private void insertAttributeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertAttributeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.InsertAttributeService(_repository, TxtUserText.Text);
 
@@ -3173,7 +3173,7 @@ namespace hoReverse.Reverse
 
 
 
-        private void insertTypedefStructToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertTypedefStructToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateTypeDefStructFromTextService(_repository, TxtUserText.Text);
         }
@@ -3182,32 +3182,32 @@ namespace hoReverse.Reverse
         
 
 
-        private void toolStripBtn1_Click(object sender, EventArgs e)
+        private void ToolStripBtn1_Click(object sender, EventArgs e)
         {
             RunService(0);
 
 
         }
 
-        private void toolStripBtn2_Click(object sender, EventArgs e)
+        private void ToolStripBtn2_Click(object sender, EventArgs e)
         {
             RunService(1);
         }
 
-        private void toolStripBtn3_Click(object sender, EventArgs e)
+        private void ToolStripBtn3_Click(object sender, EventArgs e)
         {
             RunService(2);
 
         }
 
-        private void toolStripBtn4_Click(object sender, EventArgs e)
+        private void ToolStripBtn4_Click(object sender, EventArgs e)
         {
 
             RunService(3);
 
         }
 
-        private void toolStripBtn5_Click(object sender, EventArgs e)
+        private void ToolStripBtn5_Click(object sender, EventArgs e)
         {
 
             RunService(4);
@@ -3268,33 +3268,33 @@ namespace hoReverse.Reverse
             }
         }
 
-        private void toolStripBtn11_Click(object sender, EventArgs e)
+        private void ToolStripBtn11_Click(object sender, EventArgs e)
         {
             RunSearch(0);
 
         }
 
-        private void toolStripBtn12_Click(object sender, EventArgs e)
+        private void ToolStripBtn12_Click(object sender, EventArgs e)
         {
             RunSearch(1);
         }
 
-        private void toolStripBtn13_Click(object sender, EventArgs e)
+        private void ToolStripBtn13_Click(object sender, EventArgs e)
         {
             RunSearch(2);
         }
 
-        private void toolStripBtn14_Click(object sender, EventArgs e)
+        private void ToolStripBtn14_Click(object sender, EventArgs e)
         {
             RunSearch(3);
         }
 
-        private void toolStripBtn15_Click(object sender, EventArgs e)
+        private void ToolStripBtn15_Click(object sender, EventArgs e)
         {
             RunSearch(4);
         }
 
-        private void setSvnTaggedValuesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetSvnTaggedValuesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.SetTaggedValueGui(_repository);
 
@@ -3302,7 +3302,7 @@ namespace hoReverse.Reverse
 
         }
 
-        private void setSvnKeywordsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetSvnKeywordsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType oType = _repository.GetContextItemType();
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
@@ -3311,7 +3311,7 @@ namespace hoReverse.Reverse
             HoService.SetSvnProperty(_repository, pkg);
         }
 
-        private void svnLogToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SvnLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType oType = _repository.GetContextItemType();
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
@@ -3320,7 +3320,7 @@ namespace hoReverse.Reverse
             HoService.GotoSvnLog(_repository, pkg);
         }
 
-        private void svnTortoiseRepobrowserToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SvnTortoiseRepobrowserToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType oType = _repository.GetContextItemType();
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
@@ -3329,12 +3329,12 @@ namespace hoReverse.Reverse
             HoService.GotoSvnBrowser(_repository, pkg);
         }
 
-        private void showDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.ShowFolder(_repository, isTotalCommander: _addinSettings.FileManagerIsTotalCommander);
         }
 
-        private void setSvnTaggedValuesToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SetSvnTaggedValuesToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             EA.ObjectType oType = _repository.GetContextItemType();
             if (!oType.Equals(EA.ObjectType.otPackage)) return;
@@ -3343,48 +3343,48 @@ namespace hoReverse.Reverse
             HoService.SetDirectoryTaggedValues(_repository, pkg);
         }
 
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void ToolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
 
-        private void btnNoGuard_Click(object sender, EventArgs e)
+        private void BtnNoGuard_Click(object sender, EventArgs e)
         {
             HoService.NoGuard(_repository, "no");
         }
 
-        private void btnYesGuard_Click(object sender, EventArgs e)
+        private void BtnYesGuard_Click(object sender, EventArgs e)
         {
             HoService.NoGuard(_repository, "yes");
         }
 
-        private void btnBlankGuard_Click(object sender, EventArgs e)
+        private void BtnBlankGuard_Click(object sender, EventArgs e)
         {
             HoService.NoGuard(_repository, "");
         }
 
 
-        private void btnJoinNodes_Click(object sender, EventArgs e)
+        private void BtnJoinNodes_Click(object sender, EventArgs e)
         {
             HoService.JoinDiagramObjectsToLastSelected(_repository);
         }
 
-        private void btnSplitNodes_Click(object sender, EventArgs e)
+        private void BtnSplitNodes_Click(object sender, EventArgs e)
         {
             HoService.SplitDiagramObjectsToLastSelected(_repository);
         }
 
-        private void makeNestedOfToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeNestedOfToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.MakeNested(_repository);
         }
 
-        private void btnSplitAll_Click(object sender, EventArgs e)
+        private void BtnSplitAll_Click(object sender, EventArgs e)
         {
             HoService.SplitAllDiagramObjectsToLastSelected(_repository);
         }
 
-        private void deleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -3394,7 +3394,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                MessageBox.Show(e10.ToString(), @"Error insert Attributes");
             }
             finally
             {
@@ -3410,25 +3410,25 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void generateComponentPortsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GenerateComponentPortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.GenerateComponentPortsService(_repository);
 
 
         }
 
-        private void vCResyncToolStripMenuItem_Click(object sender, EventArgs e)
+        private void VCResyncToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.UpdateVcStateOfSelectedPackageRecursiveService(_repository);
 
         }
 
-        private void vCXMIReconsileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void VCXMIReconsileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.VcReconcile(_repository);
         }
 
-        private void vCGetStateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void VCGetStateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.VcGetState(_repository);
 
@@ -3438,17 +3438,17 @@ namespace hoReverse.Reverse
 
 
 
-        private void copyReleaseInformationToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyReleaseInformationToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CopyReleaseInfoOfModuleService(_repository);
         }
 
-        private void showAllPortsActivityParametersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowAllPortsActivityParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.ShowEmbeddedElementsGui(_repository, "");
         }
 
-        private void setting2ConnectorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Setting2ConnectorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _frmSettings2 = new Settings2.Settings2Forms(AddinSettings, this);
             _frmSettings2.ShowDialog(this);
@@ -3484,7 +3484,7 @@ namespace hoReverse.Reverse
 
         }
 
-        private void setMacroToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = TxtUserText.Text.Trim();
             if (s == "") s = "define";
@@ -3498,7 +3498,7 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void delMacroToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DelMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetMacro("");
 
@@ -3514,7 +3514,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error generating used interfaces for selected Class/Interface");
+                MessageBox.Show(e10.ToString(), @"Error generating used interfaces for selected Class/Interface");
             }
             finally
             {
@@ -3523,18 +3523,18 @@ namespace hoReverse.Reverse
 
         }
 
-        private void btnFeatureUp_Click(object sender, EventArgs e)
+        private void BtnFeatureUp_Click(object sender, EventArgs e)
         {
             HoService.FeatureUp(_repository);
         }
 
 
-        private void btnFeatureDown_Click(object sender, EventArgs e)
+        private void BtnFeatureDown_Click(object sender, EventArgs e)
         {
             HoService.FeatureDown(_repository);
         }
 
-        private void setFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.SetFolder(_repository);
         }
@@ -3585,12 +3585,12 @@ namespace hoReverse.Reverse
             TxtUserText.Text = HoService.CopyContextNameToClipboard(_repository);
         }
 
-        private void endifMacroToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EndifMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WriteFromText("#endif");
         }
 
-        private void externToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExternToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string s = "extern";
             SetMacro(s);
@@ -3631,7 +3631,7 @@ namespace hoReverse.Reverse
             HoService.HideEmbeddedElements(_repository);
         }
 
-        private void standardDiagramToolStripMenuItem_Click(object sender, EventArgs e)
+        private void StandardDiagramToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // the styles to set, don't use semicolon
             string[] styleEx = new string[3];
@@ -3739,17 +3739,17 @@ namespace hoReverse.Reverse
             HoService.ChangeDiagramStyle(_repository, styleEx, changeScope);
         }
 
-        private void settingsDiagramStylesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsDiagramStylesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoUtil.StartFile(_jasonFilePath);
         }
 
-        private void reloadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReloadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetValueSettingsFromJson();
         }
 
-        private void resetFactorySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ResetFactorySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show(
                 $@"hoTools deletes 'User.config' and 'Settings.json'. After Restart hoTools, you have the initial settings.
@@ -3773,13 +3773,13 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
         }
 
-        private void insertFunctionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertFunctionToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
             HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
 
         }
-        private void insertFunctionMakeDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InsertFunctionMakeDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text, makeDuplicateOperations:true);
         }
@@ -3843,7 +3843,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
 
-        private void inventoryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DateTime startDate = DateTime.Now;
             Cursor.Current = Cursors.WaitCursor;
@@ -3896,32 +3896,32 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void moveUsageToElementToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MoveUsageToElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.MoveUsage(_repository);
         }
 
-        private void sortAlphabeticToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SortAlphabeticToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HoService.SortAlphabetic(_repository);
         }
 
-        private void repoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RepoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.Repo();
         }
 
-        private void readmeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReadmeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.ReadMe();
         }
 
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.Wiki();
         }
 
-        private void lineStyleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LineStyleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiLineStyle();
         }
@@ -3932,7 +3932,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void getToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_repository.GetContextItem(out var eaObject) == ObjectType.otElement)
             {
@@ -3951,17 +3951,17 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void makeRunnableToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeRunnableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetStereotype("Runnable");
 
         }
-        private void makeServicePortToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeServicePortToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetStereotype("Service");
         }
 
-        private void makeCalloutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MakeCalloutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetStereotype(@"Callout");
         }
@@ -3982,8 +3982,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
             else
             {
-                Object obj;
-                EA.ObjectType type = _repository.GetContextItem(out obj);
+                EA.ObjectType type = _repository.GetContextItem(out var obj);
                 if (type == EA.ObjectType.otElement)
                 {
                     EA.Element port = (EA.Element)obj;
@@ -4001,7 +4000,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showExternalComponentFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowExternalComponentFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_autoCppIsRunning)
             {
@@ -4010,10 +4009,9 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
             else
             {
-                if (!_addinSettings.isFolderPathCSourceCode()) return;
+                if (!_addinSettings.IsFolderPathCSourceCode()) return;
                 Cursor.Current = Cursors.WaitCursor;
-                Object obj;
-                EA.ObjectType type = _repository.GetContextItem(out obj);
+                EA.ObjectType type = _repository.GetContextItem(out var obj);
                 if (type == EA.ObjectType.otElement)
                 {
                     EA.Element element = (EA.Element) obj;
@@ -4031,7 +4029,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showProvidedRequiredFunctionsForSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowProvidedRequiredFunctionsForSourceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_autoCppIsRunning)
             {
@@ -4040,7 +4038,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
             else
             {
-                if (!_addinSettings.isFolderPathCSourceCode()) return;
+                if (!_addinSettings.IsFolderPathCSourceCode()) return;
                 Cursor.Current = Cursors.WaitCursor;
                 string fileFolderName = GetFolderOrFile(_addinSettings.FolderPathCSourceCode);
 
@@ -4056,7 +4054,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             // it updates the progress by sending the percentage:
             // backgroundWorker.ReportProgress(percentage);
@@ -4068,7 +4066,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void BackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             // Handle completed
             //if (e.Cancelled)
@@ -4096,7 +4094,7 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
         // Report progress bar changed
-        private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void BackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
             // Set the text.
@@ -4110,9 +4108,9 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!_addinSettings.isFolderPathCSourceCode()) return;
+            if (!_addinSettings.IsFolderPathCSourceCode()) return;
             if (_autoCppIsRunning)
             {
                 MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
@@ -4126,12 +4124,12 @@ Please restart EA. During restart hoTools loads the default settings.",
             }
         }
 
-        private void showSymbolDataBaseFoldersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowSymbolDataBaseFoldersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             hoUtils.HoUtil.StartApp("explorer.exe", VcDbUtilities.GetVcPathSymbolDataBases());
         }
 
-        private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AnalyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiAnalyzeC(); 
         }
@@ -4151,9 +4149,9 @@ Please restart EA. During restart hoTools loads the default settings.",
                 FileName = "Folder Selection.",
                 InitialDirectory = rootFolder,
                 RestoreDirectory = true,
-                Title = "Open folder or *.c|*.cpp file to analyze",
+                Title = @"Open folder or *.c|*.cpp file to analyze",
                 DefaultExt = ".c",
-                Filter = "C-files (*.c)|*.c|CPP-Files (*.cpp)|*.cpp|All files and folders|*"
+                Filter = @"C-files (*.c)|*.c|CPP-Files (*.cpp)|*.cpp|All files and folders|*"
             };
             if (dlg.ShowDialog() == DialogResult.OK) return dlg.FileName.ToUpper();
             return "";
@@ -4237,7 +4235,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void checkDOORSRequirementsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CheckDOORSRequirementsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType type = _repository.GetContextItem(out var item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4309,7 +4307,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             if (withMessage)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported list={listNumber}, finished.");
         }
 
-        private void importReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private void ImportReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
            ImportBySettings(3);
             MessageBox.Show(@"See File 3, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");

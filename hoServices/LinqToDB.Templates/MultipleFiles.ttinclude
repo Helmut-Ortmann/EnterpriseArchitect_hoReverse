@@ -20,7 +20,7 @@ void SaveOutput(string fileName, int fileType = 1)
 	var dir        = Path.GetDirectoryName(Host.TemplateFile);
 	var output     = Path.Combine(dir, fileName);
 	var newContent = GenerationEnvironment.ToString();
-	var oldContent = File.Exists(output) ? output) : "";
+	var oldContent = File.Exists(output) ? File.ReadAllText(output) : "";
 
 	if (!CompareContent(newContent, oldContent))
 	{

@@ -130,8 +130,7 @@ namespace hoReverse.Services
         public static void CopyFqToClipboard(Repository rep)
         {
             string strFq = "";
-            object o;
-            ObjectType type = rep.GetContextItem(out o);
+            ObjectType type = rep.GetContextItem(out var o);
             try
             {
                 switch (type)
@@ -274,8 +273,7 @@ Second Element: Target of move connections and appearances", "Select two element
         public static void CopyGuidToClipboard(Repository rep)
         {
             string strGuid = "";
-            object o;
-            ObjectType type = rep.GetContextItem(out o);
+            ObjectType type = rep.GetContextItem(out var o);
             switch (type)
             {
                 case ObjectType.otElement:
@@ -324,8 +322,7 @@ Second Element: Target of move connections and appearances", "Select two element
         public static void CopyIdToClipboard(Repository rep)
         {
             string id = "";
-            object o;
-            EA.ObjectType type = rep.GetContextItem(out o);
+            EA.ObjectType type = rep.GetContextItem(out var o);
             switch (type)
             {
                 case EA.ObjectType.otElement:
@@ -377,8 +374,7 @@ Second Element: Target of move connections and appearances", "Select two element
             string strGuid = "";
             string type = "";
             string name = "";
-            object o;
-            EA.ObjectType objType = rep.GetContextItem(out o);
+            EA.ObjectType objType = rep.GetContextItem(out var o);
             switch (objType)
             {
                 case EA.ObjectType.otElement:
@@ -4672,7 +4668,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 string fileName = HoUtil.GetVccFilePath(rep, pkg);
                 OpenFileDialog openFileDialogXml = new OpenFileDialog
                 {
-                    Filter = "xml files (*.xml)|*.xml",
+                    Filter = @"xml files (*.xml)|*.xml",
                     FileName = Path.GetFileName(fileName),
                     InitialDirectory = Path.GetDirectoryName(fileName)
                 };
@@ -4706,10 +4702,10 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                     }
                     catch (Exception e1)
                     {
-                        MessageBox.Show(e1.ToString(), "Error writing '"+path+"'"); 
+                        MessageBox.Show(e1.ToString(), $@"Error writing '{path}'"); 
                     }
 
-                    MessageBox.Show(path , "Changed"); 
+                    MessageBox.Show(path , @"Changed"); 
                 }
                
             }
@@ -5496,7 +5492,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             string path = HoUtil.GetGenFilePathElement(rep, el);
             if (path == "")
             {
-                MessageBox.Show("No file defined in property for: '" + el.Name + "':" + el.Type);
+                MessageBox.Show(@"No file defined in property for: '" + el.Name + @"':" + el.Type);
                 return "";
             }
             try
@@ -5505,7 +5501,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString(), "Error Reading file '" + el.Name + "':" + el.Type);
+                MessageBox.Show(e.ToString(), @"Error Reading file '" + el.Name + @"':" + el.Type);
                 return "";
             }
             string extension = ".c";
@@ -5664,7 +5660,7 @@ ElementType:{el.Type}",
 ElementName: {el.Name}
 ElementType:{el.Type}",
 
-                    $"Code file name for Element  '{el.Name}' probably wrong!");
+                    $@"Code file name for Element  '{el.Name}' probably wrong!");
                 return lEl;
             }
 
@@ -5676,7 +5672,8 @@ ElementType:{el.Type}",
             catch (Exception e)
             {
                 Clipboard.SetText(e.ToString());
-                MessageBox.Show(e + "\n\nsee Clipboard!", "Error Reading file '" + el.Name + "':" + el.Type);
+                MessageBox.Show($@"{Environment.NewLine}see Clipboard!{Environment.NewLine}{Environment.NewLine}{e}",
+                    @"Error Reading file '" + el.Name + @"':" + el.Type);
                 return lEl;
             }
             lEl = GetInterfacesFromText(rep, rep.GetPackageByID(el.PackageID), text, addMissingInterface:true);

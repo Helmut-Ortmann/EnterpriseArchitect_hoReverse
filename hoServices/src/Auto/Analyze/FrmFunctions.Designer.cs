@@ -105,7 +105,7 @@
             this.printScreenToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.printScreenToolStripMenuItem.Text = "Print Screen";
             this.printScreenToolStripMenuItem.ToolTipText = "Print Screen in landscape";
-            this.printScreenToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            this.printScreenToolStripMenuItem.Click += new System.EventHandler(this.PrintToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -128,14 +128,14 @@
             this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
             this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
-            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.AnalyzeCCToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.filterToolStripMenuItem.Text = "Filter";
-            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            this.filterToolStripMenuItem.Click += new System.EventHandler(this.FilterToolStripMenuItem_Click);
             // 
             // dataGridView1
             // 
@@ -155,7 +155,7 @@
             this.dataGridView1.TabIndex = 1;
             this.toolTip1.SetToolTip(this.dataGridView1, "Grid of the inventorized *.c and header files:\r\n- Implementations from *.c or *.c" +
         "pp\r\n- Macros from *.h or *.hpp");
-            this.dataGridView1.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdInterfaces_CellMouseEnter);
+            this.dataGridView1.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GrdInterfaces_CellMouseEnter);
             // 
             // contextMenuStrip1
             // 
@@ -172,7 +172,7 @@
             this.openImplementationToolStripMenuItem.Text = "Open Implementation";
             this.openImplementationToolStripMenuItem.ToolTipText = "Open the implementation in the editor.\r\n\r\nhoReverse copies the function name to c" +
     "lipboard for reuse in editor.";
-            this.openImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
+            this.openImplementationToolStripMenuItem.Click += new System.EventHandler(this.ShowImplementationToolStripMenuItem_Click);
             // 
             // copySelectedFunctionsToolStripMenuItem
             // 
@@ -180,7 +180,7 @@
             this.copySelectedFunctionsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.copySelectedFunctionsToolStripMenuItem.Text = "Copy selected Functions";
             this.copySelectedFunctionsToolStripMenuItem.ToolTipText = "Copy the selected functions to Clipboard";
-            this.copySelectedFunctionsToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
+            this.copySelectedFunctionsToolStripMenuItem.Click += new System.EventHandler(this.CopyInterfaceToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -222,7 +222,7 @@
             this.chkOnlyImplementations.Text = "Implented  by C-Function";
             this.toolTip1.SetToolTip(this.chkOnlyImplementations, "If checked only Implementations are shown");
             this.chkOnlyImplementations.UseVisualStyleBackColor = true;
-            this.chkOnlyImplementations.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            this.chkOnlyImplementations.CheckedChanged += new System.EventHandler(this.ChkOnlyMacros_CheckedChanged);
             // 
             // chkOnlyMacros
             // 
@@ -234,7 +234,7 @@
             this.chkOnlyMacros.Text = "macros";
             this.toolTip1.SetToolTip(this.chkOnlyMacros, "If checked only Macros are shown");
             this.chkOnlyMacros.UseVisualStyleBackColor = true;
-            this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.ChkOnlyMacros_CheckedChanged);
             // 
             // txtFilterFile
             // 
@@ -243,7 +243,7 @@
             this.txtFilterFile.Size = new System.Drawing.Size(129, 20);
             this.txtFilterFile.TabIndex = 2;
             this.toolTip1.SetToolTip(this.txtFilterFile, resources.GetString("txtFilterFile.ToolTip"));
-            this.txtFilterFile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
+            this.txtFilterFile.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterFunction_KeyPress);
             // 
             // txtFilterImplementation
             // 
@@ -252,7 +252,7 @@
             this.txtFilterImplementation.Size = new System.Drawing.Size(129, 20);
             this.txtFilterImplementation.TabIndex = 2;
             this.toolTip1.SetToolTip(this.txtFilterImplementation, resources.GetString("txtFilterImplementation.ToolTip"));
-            this.txtFilterImplementation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
+            this.txtFilterImplementation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterFunction_KeyPress);
             // 
             // txtFilterFunction
             // 
@@ -261,7 +261,7 @@
             this.txtFilterFunction.Size = new System.Drawing.Size(129, 20);
             this.txtFilterFunction.TabIndex = 2;
             this.toolTip1.SetToolTip(this.txtFilterFunction, resources.GetString("txtFilterFunction.ToolTip"));
-            this.txtFilterFunction.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterFunction_KeyPress);
+            this.txtFilterFunction.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterFunction_KeyPress);
             // 
             // label2
             // 

@@ -61,7 +61,7 @@ namespace hoReverse.hoUtils.Diagrams
 Consider Resetting to factory settings
 - File, Reset Factory Settings!!!'
 
-{e}", "Can't import Diagram Styles from Settings.json");
+{e}", @"Can't import Diagram Styles from Settings.json");
                 return;
             }
 

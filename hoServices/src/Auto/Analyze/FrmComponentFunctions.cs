@@ -73,7 +73,7 @@ namespace hoReverse.Services.AutoCpp.Analyze
             _printDocument1.DefaultPageSettings.Margins = margins;
 
             // ReSharper disable once RedundantDelegateCreation
-            _printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            _printDocument1.PrintPage += new PrintPageEventHandler(PrintDocument1_PrintPage);
         }
 
         private void FrmComponentFunctions_Load(object sender, System.EventArgs e)
@@ -268,7 +268,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
 
 {e}", 
                     
-                    "The filter you have defined is invalid!");
+                    @"The filter you have defined is invalid!");
                 _bsProvidedInterfaces.Filter = "";
                 _bsRequiredInterfaces.Filter = "";
             }
@@ -277,12 +277,12 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         
 
 
-        private void btnOk_Click(object sender, System.EventArgs e)
+        private void BtnOk_Click(object sender, System.EventArgs e)
         {
             this.Close();
         }
 
-        private void btnCancel_Click(object sender, System.EventArgs e)
+        private void BtnCancel_Click(object sender, System.EventArgs e)
         {
             this.Close();
         }
@@ -291,7 +291,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void chkOnlyMacros_CheckedChanged(object sender, System.EventArgs e)
+        private void ChkOnlyMacros_CheckedChanged(object sender, System.EventArgs e)
         {
             FilterGrid();
         }
@@ -300,12 +300,12 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void chkOnlyCalledInterfaces_CheckedChanged(object sender, System.EventArgs e)
+        private void ChkOnlyCalledInterfaces_CheckedChanged(object sender, System.EventArgs e)
         {
             FilterGrid();
         }
 
-        private void txtFilterPathCallee_KeyPress(object sender, KeyPressEventArgs e)
+        private void TxtFilterPathCallee_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
@@ -314,7 +314,7 @@ Not allowed are wildcard '*' or '%' amidst the filter string.
             }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             string description = @"
 Prerequisitions:
@@ -332,21 +332,21 @@ VC Code C/C++ has an SQLite Database for each C/C++ folder which stores all Symb
 C/C++ updates this Symbol Database when you edit/open a C/C++ file 
 
 ";
-            MessageBox.Show(description.Trim(), "Analyze Code your EA model is based on!");
+            MessageBox.Show(description.Trim(), @"Analyze Code your EA model is based on!");
 
         }
 
-        private void filterToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void FilterToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             string httpFilter = "https://msdn.microsoft.com/en-us/library/system.data.datacolumn.expression%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396";
             Process.Start(httpFilter);
         }
 
-        private void showCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowCalleeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartCodeFile(sender, "FilePathCallee");
         }
-        private void showImplementationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowImplementationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartCodeFile(sender, "FilePath",  "LineStart");
             
@@ -358,11 +358,11 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void copyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyCellValuesToClipboard(sender, "Interface");
         }
-        private void copyCalleeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyCalleeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyCellValuesToClipboard(sender, "FileNameCallee");
         }
@@ -429,7 +429,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
 
         private int GetLineNumber(string file, string functionName)
         {
-            string code = File.ReadAllText(file);
+            string code = HoUtil.ReadAllText(file);
             Regex rx = new Regex($@"\b{functionName}\b\s*\([^;{{}}]*;");
             Match match = rx.Match(code);
             if (match.Success)
@@ -462,7 +462,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CaptureScreen();
             _printDocument1.Print();
@@ -484,7 +484,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void printDocument1_PrintPage(System.Object sender,
+        private void PrintDocument1_PrintPage(System.Object sender,
             System.Drawing.Printing.PrintPageEventArgs e)
         {
             // One page rectangle
@@ -502,7 +502,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             e.Graphics.DrawImage(_memoryImage, m);
         }
 
-        private void analyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AnalyzeCCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiAnalyzeC();
         }
@@ -519,7 +519,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
         /// <param name="sender"></param>
         /// <param name="e"></param>
         // Enter a cell
-        private void grdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        private void GrdInterfaces_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1 && e.ColumnIndex != -1)
 
@@ -535,7 +535,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
 
         }
 
-        private void filterToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void FilterToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/Analyze#filter");
 

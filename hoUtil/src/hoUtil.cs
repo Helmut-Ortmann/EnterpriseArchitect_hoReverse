@@ -1431,7 +1431,7 @@ namespace hoReverse.hoUtils
             {
                 return s;
             }
-            return File.ReadAllText(s);
+            return HoUtil.ReadAllText(s);
         }
 
         public static void OpenBehaviorForElement(Repository repository, EA.Element el)
@@ -1819,7 +1819,7 @@ Helmut.Ortmann@hoModeler.de
             {
                 MessageBox.Show($@"Can't read '{filePath}'
 
-{e}", "Can't read file");
+{e}", @"Can't read file");
                 return "";
             }
         }

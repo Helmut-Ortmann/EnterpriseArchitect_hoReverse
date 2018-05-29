@@ -88,8 +88,7 @@ namespace EaServices.Doors
             Count = 0;
             CountChanged = 0;
             CountNew = 0;
-            List<int> parentElementIdsPerLevel = new List<int>();
-            parentElementIdsPerLevel.Add(0);
+            List<int> parentElementIdsPerLevel = new List<int> {0};
             int parentElementId = 0;
             int lastElementId = 0;
 

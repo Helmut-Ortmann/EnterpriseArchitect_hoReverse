@@ -1153,13 +1153,13 @@ namespace hoReverse
         
          
         
-        void btnRemoveAll_Click(object sender, EventArgs e)
+        void BtnRemoveAll_Click(object sender, EventArgs e)
         {
             if (_history == null) return; // not initialized
             _history.RemoveAll();
         }
   
-        void btnBookmarkAdd_Click(object sender, EventArgs e)
+        void BtnBookmarkAdd_Click(object sender, EventArgs e)
         {
             EA.ObjectType ot = _repository.GetContextItemType();
             string guid = "";
@@ -1183,7 +1183,7 @@ namespace hoReverse
 
 
         }
-        void btnBookmarkRemove_Click(object sender, EventArgs e)
+        void BtnBookmarkRemove_Click(object sender, EventArgs e)
         {
             EA.ObjectType ot = _repository.GetContextItemType();
             string guid = "";
@@ -1195,28 +1195,28 @@ namespace hoReverse
             _bookmark.Remove(ot, guid);
         }
 
-        void btnBookmarkRemoveAll_Click(object sender, EventArgs e)
+        void BtnBookmarkRemoveAll_Click(object sender, EventArgs e)
         {
             _bookmark.RemoveAll();
         }
 
-        void btnFinal_Click(object sender, EventArgs e)
+        void BtnFinal_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "StateNode", "101");
 
         }
 
-        void btnAction_Click(object sender, EventArgs e)
+        void BtnAction_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "Action", "");
 
         }
         
-        void btnDecision_Click(object sender, EventArgs e)
+        void BtnDecision_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "Decision", "");
         }
-        void btnMerge_Click(object sender, EventArgs e)
+        void BtnMerge_Click(object sender, EventArgs e)
         {
             HoService.CreateDiagramObjectFromContext(_repository, "", "MergeNode", "");
         }
@@ -1234,7 +1234,7 @@ namespace hoReverse
         /// - Port/required & provided interface
         /// 
 
-        void btnInsert_Click(object sender, EventArgs e)
+        void BtnInsert_Click(object sender, EventArgs e)
         {
             EA.Diagram dia = _repository.GetCurrentDiagram();
             if (dia == null) return;
@@ -1249,7 +1249,7 @@ namespace hoReverse
             }
         }
   
-        void btnActionFromText_Click(object sender, EventArgs e)
+        void BtnActionFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
@@ -1257,7 +1257,7 @@ namespace hoReverse
         }
 
         // enter text to element
-        void btnNoteFromText_Click(object sender, EventArgs e)
+        void BtnNoteFromText_Click(object sender, EventArgs e)
         {
             if (_repository.GetContextItemType().Equals(EA.ObjectType.otElement) )
             {
@@ -1272,13 +1272,13 @@ namespace hoReverse
             }
         }
 
-        void btnActivityFromText_Click(object sender, EventArgs e)
+        void BtnActivityFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
 
         }
-        void btnActivityCompositeFromText_Click(object sender, EventArgs e)
+        void BtnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
             string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
@@ -1286,24 +1286,24 @@ namespace hoReverse
         }
 
 
-        void btnDecisionFromText_Click(object sender, EventArgs e)
+        void BtnDecisionFromText_Click(object sender, EventArgs e)
         {
             string decisionName = _hoReverseGui.TxtUserText.Text.Trim();
             decisionName = HoService.CreateDecisionFromText(_repository, decisionName);
 
         }
 
-        void aboutToolStripMenuIte_Click(object sender, EventArgs e) 
+        void AboutToolStripMenuIte_Click(object sender, EventArgs e) 
         {
             ShowAbout();
         }
-        void createActivityForOperationToolStripMenuIte_Click(object sender, EventArgs e)
+        void CreateActivityForOperationToolStripMenuIte_Click(object sender, EventArgs e)
         {
             HoService.CreateActivityForOperation(_repository);
         }
         //---------------------------------------------------------------------------------------------------------------
         // Search for Elements, Operation, Attributes, GUID
-        void txtUserText_KeyPress(object sender, EventArgs e)
+        void TxtUserText_KeyPress(object sender, EventArgs e)
         {
             // get the search vom setting
             string searchName = _addinSettings.QuickSearchName;

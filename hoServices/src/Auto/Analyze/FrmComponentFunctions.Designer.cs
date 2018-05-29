@@ -103,7 +103,7 @@
             this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printToolStripMenuItem.Text = "Print";
             this.printToolStripMenuItem.ToolTipText = "Print to stadard printer in landscape ";
-            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            this.printToolStripMenuItem.Click += new System.EventHandler(this.PrintToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -121,7 +121,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
@@ -129,7 +129,7 @@
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.filterToolStripMenuItem.Text = "Filter Microsoft Reference";
             this.filterToolStripMenuItem.ToolTipText = "Microsoft page which describes filter.";
-            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            this.filterToolStripMenuItem.Click += new System.EventHandler(this.FilterToolStripMenuItem_Click);
             // 
             // analyzeCCToolStripMenuItem
             // 
@@ -137,7 +137,7 @@
             this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.analyzeCCToolStripMenuItem.Text = "Analyze C/C++";
             this.analyzeCCToolStripMenuItem.ToolTipText = "Basics to analyze C/C++";
-            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.analyzeCCToolStripMenuItem_Click);
+            this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.AnalyzeCCToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -194,7 +194,7 @@
             this.txtFilterFunctionName.Size = new System.Drawing.Size(263, 20);
             this.txtFilterFunctionName.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterFunctionName, resources.GetString("txtFilterFunctionName.ToolTip"));
-            this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
+            this.txtFilterFunctionName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathImpl
             // 
@@ -203,7 +203,7 @@
             this.txtFilterPathImpl.Size = new System.Drawing.Size(197, 20);
             this.txtFilterPathImpl.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathImpl, resources.GetString("txtFilterPathImpl.ToolTip"));
-            this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
+            this.txtFilterPathImpl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterPathCallee_KeyPress);
             // 
             // txtFilterPathCallee
             // 
@@ -212,7 +212,7 @@
             this.txtFilterPathCallee.Size = new System.Drawing.Size(219, 20);
             this.txtFilterPathCallee.TabIndex = 8;
             this.toolTip1.SetToolTip(this.txtFilterPathCallee, resources.GetString("txtFilterPathCallee.ToolTip"));
-            this.txtFilterPathCallee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterPathCallee_KeyPress);
+            this.txtFilterPathCallee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtFilterPathCallee_KeyPress);
             // 
             // chkOnlyCalledInterfaces
             // 
@@ -224,7 +224,7 @@
             this.chkOnlyCalledInterfaces.Text = "Callee ";
             this.toolTip1.SetToolTip(this.chkOnlyCalledInterfaces, "Check if you want to see only functions called from outside the component");
             this.chkOnlyCalledInterfaces.UseVisualStyleBackColor = true;
-            this.chkOnlyCalledInterfaces.CheckedChanged += new System.EventHandler(this.chkOnlyCalledInterfaces_CheckedChanged);
+            this.chkOnlyCalledInterfaces.CheckedChanged += new System.EventHandler(this.ChkOnlyCalledInterfaces_CheckedChanged);
             // 
             // chkOnlyMacros
             // 
@@ -236,7 +236,7 @@
             this.chkOnlyMacros.Text = "Macros";
             this.toolTip1.SetToolTip(this.chkOnlyMacros, "If checked only functions redefined by macros are shown.");
             this.chkOnlyMacros.UseVisualStyleBackColor = true;
-            this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.chkOnlyMacros_CheckedChanged);
+            this.chkOnlyMacros.CheckedChanged += new System.EventHandler(this.ChkOnlyMacros_CheckedChanged);
             // 
             // txtVcSymbolDb
             // 
@@ -303,7 +303,7 @@
             this.btnOk.TabIndex = 0;
             this.btnOk.Text = "Ok";
             this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            this.btnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // btnCancel
             // 
@@ -313,7 +313,7 @@
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
             // tabControl1
             // 
@@ -351,7 +351,7 @@
             this.grdProvidedInterfaces.ShowCellToolTips = false;
             this.grdProvidedInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdProvidedInterfaces.TabIndex = 2;
-            this.grdProvidedInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdInterfaces_CellMouseEnter);
+            this.grdProvidedInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GrdInterfaces_CellMouseEnter);
             // 
             // contextMenuStrip1
             // 
@@ -370,7 +370,7 @@
             this.showImplementationToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.showImplementationToolStripMenuItem.Text = "Open Implementation";
             this.showImplementationToolStripMenuItem.ToolTipText = resources.GetString("showImplementationToolStripMenuItem.ToolTipText");
-            this.showImplementationToolStripMenuItem.Click += new System.EventHandler(this.showImplementationToolStripMenuItem_Click);
+            this.showImplementationToolStripMenuItem.Click += new System.EventHandler(this.ShowImplementationToolStripMenuItem_Click);
             // 
             // showCalleeToolStripMenuItem
             // 
@@ -378,7 +378,7 @@
             this.showCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.showCalleeToolStripMenuItem.Text = "Open Callee";
             this.showCalleeToolStripMenuItem.ToolTipText = resources.GetString("showCalleeToolStripMenuItem.ToolTipText");
-            this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.showCalleeToolStripMenuItem_Click);
+            this.showCalleeToolStripMenuItem.Click += new System.EventHandler(this.ShowCalleeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -391,7 +391,7 @@
             this.copyInterfaceToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.copyInterfaceToolStripMenuItem.Text = "Copy Interface/Function";
             this.copyInterfaceToolStripMenuItem.ToolTipText = "Copy all selected Interfaces/Function Names to Clipboard";
-            this.copyInterfaceToolStripMenuItem.Click += new System.EventHandler(this.copyInterfaceToolStripMenuItem_Click);
+            this.copyInterfaceToolStripMenuItem.Click += new System.EventHandler(this.CopyInterfaceToolStripMenuItem_Click);
             // 
             // copyCalleeToolStripMenuItem
             // 
@@ -399,7 +399,7 @@
             this.copyCalleeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.copyCalleeToolStripMenuItem.Text = "Copy Callee File-Names";
             this.copyCalleeToolStripMenuItem.ToolTipText = "Copy all selected Callees  File-Names to Clipboard";
-            this.copyCalleeToolStripMenuItem.Click += new System.EventHandler(this.copyCalleeToolStripMenuItem_Click);
+            this.copyCalleeToolStripMenuItem.Click += new System.EventHandler(this.CopyCalleeToolStripMenuItem_Click);
             // 
             // tabPageRequired
             // 
@@ -426,14 +426,14 @@
             this.grdRequiredInterfaces.ShowCellToolTips = false;
             this.grdRequiredInterfaces.Size = new System.Drawing.Size(1174, 212);
             this.grdRequiredInterfaces.TabIndex = 0;
-            this.grdRequiredInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdInterfaces_CellMouseEnter);
+            this.grdRequiredInterfaces.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GrdInterfaces_CellMouseEnter);
             // 
             // filterToolStripMenuItem1
             // 
             this.filterToolStripMenuItem1.Name = "filterToolStripMenuItem1";
             this.filterToolStripMenuItem1.Size = new System.Drawing.Size(209, 22);
             this.filterToolStripMenuItem1.Text = "Filter";
-            this.filterToolStripMenuItem1.Click += new System.EventHandler(this.filterToolStripMenuItem1_Click);
+            this.filterToolStripMenuItem1.Click += new System.EventHandler(this.FilterToolStripMenuItem1_Click);
             // 
             // FrmComponentFunctions
             // 

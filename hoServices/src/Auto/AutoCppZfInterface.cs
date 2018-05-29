@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -320,8 +321,8 @@ namespace hoReverse.Services.AutoCpp
             {
                 if (!File.Exists(fileName))
                 {
-                    MessageBox.Show($"File:\r\n'{fileName}'\r\n\r\nRoot:\r\n{_folderRoot}",
-                        "Can't open implementation of provided interface, skip!!!");
+                    MessageBox.Show($@"File:{Environment.NewLine}'{fileName}'{Environment.NewLine}{Environment.NewLine}Root:{Environment.NewLine}{_folderRoot}",
+                        @"Can't open implementation of provided interface, skip!!!");
                    continue;
                 }
                 // only files in implementation

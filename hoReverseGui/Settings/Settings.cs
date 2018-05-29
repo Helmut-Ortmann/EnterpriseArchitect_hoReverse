@@ -141,8 +141,7 @@ namespace hoReverse.Settings
         {
             get
             {
-                bool result;
-                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["ShowHistory"].Value, out result))
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["ShowHistory"].Value, out bool result))
                 {
                     return result;
                 }
@@ -162,8 +161,7 @@ namespace hoReverse.Settings
         {
             get
             {
-                bool result;
-                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["ShowBookmark"].Value, out result))
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["ShowBookmark"].Value, out var result))
                 {
                     return result;
                 }
@@ -187,8 +185,7 @@ namespace hoReverse.Settings
         {
             get
             {
-                bool result;
-                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["UseCallBehaviorAction"].Value, out result))
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["UseCallBehaviorAction"].Value, out var result))
                 {
                     return result;
                 }
@@ -205,8 +202,7 @@ namespace hoReverse.Settings
         {
             get
             {
-                bool result;
-                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["FileManagerIsTotalCommander"].Value, out result))
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["FileManagerIsTotalCommander"].Value, out var result))
                 {
                     return result;
                 }
@@ -226,10 +222,11 @@ namespace hoReverse.Settings
         /// Check if folder exists
         /// </summary>
         /// <returns></returns>
-        public bool isFolderPathCSourceCode()
+        public bool IsFolderPathCSourceCode()
         {
            if (System.IO.Directory.Exists(FolderPathCSourceCode)) return true;
-            MessageBox.Show($"You can set the C/C++ Directory in Settings\r\nDirectory: '{FolderPathCSourceCode}' doesn't exists!", "C/C++ Source code folder doesn't exists, break!!!");
+            MessageBox.Show($@"You can set the C/C++ Directory in Settings{Environment.NewLine}Directory: '{FolderPathCSourceCode}' doesn't exists!", 
+                @"C/C++ Source code folder doesn't exists, break!!!");
             return false;
 
         }
@@ -334,8 +331,7 @@ namespace hoReverse.Settings
         {
             get
             {
-                bool result;
-                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["WithTabWindow"].Value, out result))
+                if (bool.TryParse(this.CurrentConfig.AppSettings.Settings["WithTabWindow"].Value, out var result))
                 {
                     return result;
                 }

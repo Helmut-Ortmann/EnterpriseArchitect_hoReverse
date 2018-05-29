@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.IO;
+using hoReverse.hoUtils;
 
 namespace hoUtil
 {
@@ -795,7 +796,7 @@ namespace hoUtil
                 }
                 else
                 {
-                    return System.IO.File.ReadAllText(s);
+                    return HoUtil.ReadAllText(s);
                 }
             }
             

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using hoReverse.hoUtils;
 using Newtonsoft.Json.Linq;
 
 namespace hoUtils.Json
@@ -120,7 +121,7 @@ The other features should work!
             try
             {
                 // Read JSON
-                string text = System.IO.File.ReadAllText(jsonFilePath);
+                string text = HoUtil.ReadAllText(jsonFilePath);
                 return JObject.Parse(text);
             }
             catch (Exception e)
