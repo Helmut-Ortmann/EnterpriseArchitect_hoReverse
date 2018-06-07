@@ -127,10 +127,10 @@ namespace hoReverse
             {
                 _addinSettings = new AddinSettings();
                 _addinSettingsStatic = _addinSettings;
-                if (_addinSettings == null) MessageBox.Show("user.config couldn't been installed!", "Installation error");
+                if (_addinSettings == null) MessageBox.Show(@"user.config couldn't been installed!", @"Installation error");
             } catch (Exception e)
             {
-                MessageBox.Show("Error initializing settings:"+ e);
+                MessageBox.Show(@"Error initializing settings:"+ e);
             }
             menuHeader = "-" + _addinSettings.ProductName;
             menuOptions = new string[] { 
@@ -300,8 +300,8 @@ namespace hoReverse
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.ToString(), "Error start search '" + sh.SearchName +
-                           " " + sh.SearchTerm + "'");
+                        MessageBox.Show(e.ToString(), @"Error start search '" + sh.SearchName +
+                           @" " + sh.SearchTerm + @"'");
                     }
             }
 
@@ -373,6 +373,7 @@ namespace hoReverse
         /// </summary>
         /// <param name="repository">An EA.Repository object representing the currently open Enterprise Architect model.
         /// Poll its members to retrieve model data and user interface status information.</param>
+        /// <param name="eventProperties"></param>
         /// <returns>Return True if the connector has been updated during this notification. Return False otherwise.</returns>
         public override bool EA_OnPostNewConnector(EA.Repository repository, EA.EventProperties eventProperties)
         {
@@ -441,13 +442,10 @@ namespace hoReverse
         {
             InitializeForRepository(repository);
             // open last diagram
-            if (_history != null)
-            {
-                EaHistoryListEntry entry = _history.GetLatest();
-                if (entry != null)
-                    Reverse.HoReverseGui.OpenDiagram(_repository, entry.Guid, true);
-            }
-                //base.EA_FileOpen(Repository);
+            EaHistoryListEntry entry = _history?.GetLatest();
+            if (entry != null)
+                Reverse.HoReverseGui.OpenDiagram(_repository, entry.Guid, true);
+            //base.EA_FileOpen(Repository);
         }
         public override void EA_FileClose(EA.Repository repository)
         {
@@ -909,7 +907,7 @@ namespace hoReverse
                     }
                     catch (Exception e10)
                     {
-                        MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                        MessageBox.Show(e10.ToString(), @"Error insert Attributes");
                     }
                     finally
                     {
@@ -930,7 +928,7 @@ namespace hoReverse
                     }
                     catch (Exception e10)
                     {
-                        MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                        MessageBox.Show(e10.ToString(), @"Error insert Attributes");
                     }
                     finally
                     {
@@ -1043,7 +1041,8 @@ namespace hoReverse
                                 }
 
                             }
-                            MessageBox.Show($"Kopiert:{countInserted}\r\nErrors:{countError}");
+                            MessageBox.Show($@"Kopiert:{countInserted}
+Errors:{countError}");
                         }
 
 
@@ -1126,8 +1125,8 @@ namespace hoReverse
                 {
                     MessageBox.Show(e.Message);
                 }
-            if (_hoReverseGui == null) MessageBox.Show($"Prog-id='hoReverse.ReverseGui'",
-                "Addin hoReverseGUI could not be instantiated");
+            if (_hoReverseGui == null) MessageBox.Show(@"Prog-id='hoReverse.ReverseGui'",
+                @"Addin hoReverseGUI could not be instantiated");
             else
             {
                 _hoReverseGui.Repository = _repository;
@@ -1137,10 +1136,7 @@ namespace hoReverse
 
 
                 _hoReverseGui.AddinSettings = _addinSettings;
-                
-
-                
-                _hoReverseGui.Focus();
+                 _hoReverseGui.Focus();
                 _hoReverseGui.Show();
 
                                
@@ -1155,8 +1151,7 @@ namespace hoReverse
         
         void BtnRemoveAll_Click(object sender, EventArgs e)
         {
-            if (_history == null) return; // not initialized
-            _history.RemoveAll();
+            _history?.RemoveAll();
         }
   
         void BtnBookmarkAdd_Click(object sender, EventArgs e)
@@ -1266,7 +1261,6 @@ namespace hoReverse
                 s0 = Regex.Replace(s0, @"\/\*", "//"); // /* ==> //
                 s0 = Regex.Replace(s0, @"\*\/", "");   // delete */
                 el.Notes = s0;
-                //el.Notes = el.Notes + "\r\n Text1 ssssssssssss fffffffffff\r\nText2 ggggggg gggggggggggggggg";
                 
                 el.Update();
             }
@@ -1313,7 +1307,7 @@ namespace hoReverse
             }
             catch (Exception e1)
             {
-                MessageBox.Show("Search name:'" + searchName + "'", e1.Message);
+                MessageBox.Show(@"Search name:'" + searchName + @"'", e1.Message);
             }
         }
 
@@ -1326,7 +1320,7 @@ namespace hoReverse
         /// <param name="args">the arguments</param>
         public override void EA_OnStartValidation(EA.Repository repository, object args)
         {
-            MessageBox.Show("Validation started");
+            MessageBox.Show(@"Validation started");
         }
         /// <summary>
         /// Called when EA ends model validation. Just shows a message box
@@ -1335,7 +1329,7 @@ namespace hoReverse
         /// <param name="args">the arguments</param>
         public override void EA_OnEndValidation(EA.Repository repository, object args)
         {
-            MessageBox.Show("Validation ended");
+            MessageBox.Show(@"Validation ended");
         }
      }
 }

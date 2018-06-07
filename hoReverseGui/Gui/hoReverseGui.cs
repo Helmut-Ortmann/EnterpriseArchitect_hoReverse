@@ -3236,10 +3236,8 @@ namespace hoReverse.Reverse
 
         private void RunSearch(int pos)
         {
-            if (_addinSettings.ShortcutsSearch[pos] is EaAddinShortcutSearch)
+            if (_addinSettings.ShortcutsSearch[pos] is EaAddinShortcutSearch sh)
             {
-
-                EaAddinShortcutSearch sh = (EaAddinShortcutSearch) _addinSettings.ShortcutsSearch[pos];
                 if (sh.keySearchName == "") return;
                 try
                 {
@@ -3250,7 +3248,7 @@ namespace hoReverse.Reverse
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.ToString(), "Error start search '" + sh.keySearchName +
+                    MessageBox.Show(e.ToString(), @"Error start search '" + sh.keySearchName +
                                                   " " + sh.keySearchTerm + "'");
                 }
             }
@@ -3258,10 +3256,8 @@ namespace hoReverse.Reverse
 
         private void RunService(int pos)
         {
-            if (_addinSettings.ShortcutsServices[pos] is ServicesCallConfig)
+            if (_addinSettings.ShortcutsServices[pos] is ServicesCallConfig sh)
             {
-
-                ServicesCallConfig sh = (ServicesCallConfig) _addinSettings.ShortcutsServices[pos];
                 if (sh.Method == null) return;
                 sh.Invoke(_repository, TxtUserText.Text);
 

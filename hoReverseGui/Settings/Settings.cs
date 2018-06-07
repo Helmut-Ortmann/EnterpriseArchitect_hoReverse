@@ -351,10 +351,8 @@ namespace hoReverse.Settings
             for (int i = 0; i< l.Length;i++)
             {
                 if (l[i] == null) continue;
-                if (l[i] is EaAddinShortcutSearch)
+                if (l[i] is EaAddinShortcutSearch el)
                 {
-                   
-                    EaAddinShortcutSearch el = (EaAddinShortcutSearch)l[i];
                     string basicKey = "Key" + el.keyPos;
                     this.CurrentConfig.AppSettings.Settings[basicKey + "Text"].Value = el.keyText;
                     this.CurrentConfig.AppSettings.Settings[basicKey + "Type"].Value = "Search";
@@ -579,8 +577,7 @@ namespace hoReverse.Settings
 
                 foreach (Attribute attr in method.GetCustomAttributes(true))
                 {
-                    var serviceOperation = attr as ServiceOperationAttribute;
-                    if (null != serviceOperation)
+                    if (attr is ServiceOperationAttribute serviceOperation)
                     {
                         AllServices.Add(new ServiceCall(method, serviceOperation.Guid, serviceOperation.Description, serviceOperation.Help, serviceOperation.IsTextRequired));
                     }
