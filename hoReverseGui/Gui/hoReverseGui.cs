@@ -4177,8 +4177,8 @@ Please restart EA. During restart hoTools loads the default settings.",
             EnableImportDialog(false);
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_repository, pkg, filePath);
-            doorsModule.ImportUpdateRequirements();
+            DoorsCsv doorsModule = new DoorsCsv(_repository, pkg, filePath);
+            doorsModule.ImportUpdateRequirements("Requirement","","");
             EnableImportDialog(true);
 
 
@@ -4219,8 +4219,8 @@ Please restart EA. During restart hoTools loads the default settings.",
             Cursor.Current = Cursors.WaitCursor;
             EnableImportDialog(false);
             // Generate Requirements
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule( _repository, pkg, filePath);
-            doorsModule.ImportUpdateRequirements();
+           DoorsCsv doorsModule = new DoorsCsv( _repository, pkg, filePath);
+            doorsModule.ImportUpdateRequirements("Requirement","","");
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
 
