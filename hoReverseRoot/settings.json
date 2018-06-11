@@ -349,7 +349,7 @@
   // Tooltip:     A tooltip for the list of files to import
   // ListNo:      The ListNumber to import. Equal ListNo are handled as one group to import together
   // InputFile:   The Path of the file to import
-  // PackageGuid: The Guid for the package to import into
+  // PackageGuidList: The list of Guid for the package to import into (e.g. DOORS ModuleA and ModuleB in a *.reqifz file)
   // ObjectType:  The EA ObjectType to create for each imported row (e.g. 'Requirement')
   // Stereotype:  The EA Stereotype to use for each imported row (e.g. 'Functional Requirement')
   // ImportType:  'DoorsCsv' = Doors *.csv import format for requirements (tested with Doors 9.6)
@@ -372,7 +372,7 @@
           "Tooltip"         :  "Use EA Multiplicity as DOORS absolute number",
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/requirements.csv" ,
-          "PackageGuid"     :  "{F1D2E81B-F934-434c-8E7B-864579E8D92E}" ,
+          "PackageGuidList"     :  ["{F1D2E81B-F934-434c-8E7B-864579E8D92E}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "",
           "ImportType"      :  "DoorsCsv", 
@@ -382,7 +382,7 @@
       {
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/FunctionalRequirements.csv" ,
-          "PackageGuid"     :  "{51680E85-010F-459b-9848-C811BBA54C73}" ,
+          "PackageGuidList"     :  ["{51680E85-010F-459b-9848-C811BBA54C73}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "FunctionalRequirement",
           "ImportType"      :  "DoorsCsv",
@@ -394,7 +394,7 @@
           "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
           "ListNo"          :  "2", 
           "InputFile"       :  "d:/temp/reqIF/FLR_BT_SWRS.reqif" ,
-          "PackageGuid"     :  "{4A61F344-65CB-4a5f-B93C-9E6A7F4FF0E6}" ,
+          "PackageGuidList"     :  ["{4A61F344-65CB-4a5f-B93C-9E6A7F4FF0E6}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "",
           "ImportType"      :  "DoorsReqIF", 
@@ -406,7 +406,7 @@
           "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
           "ListNo"          :  "3", 
           "InputFile"       :  "d:/hoData/Knowledge/ReqIF/datatype-configuration-example.reqifz" ,
-          "PackageGuid"     :  "{32162683-3A69-4214-8F0E-E06B2351F075}" ,
+          "PackageGuidList"     :  ["{32162683-3A69-4214-8F0E-E06B2351F075}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "FunctionalRequirement",
           "ImportType"      :  "DoorsReqIF",
@@ -418,7 +418,7 @@
           "Tooltip"         :  "Use EA Multiplicity as reqIF identifier",
           "ListNo"          :  "4", 
           "InputFile"       :  "d:/hoData/Knowledge/ReqIF/subset26-chapter3.reqifz" ,
-          "PackageGuid"     :  "{A33CC410-0CF1-45d5-ABE9-30DDB089B2BA}" ,
+          "PackageGuidList"     :  ["{A33CC410-0CF1-45d5-ABE9-30DDB089B2BA}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "FunctionalRequirement",
           "ImportType"      :  "DoorsReqIF",

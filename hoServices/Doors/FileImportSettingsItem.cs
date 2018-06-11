@@ -38,13 +38,13 @@ namespace EaServices.Doors
         /// PackageGuid
         /// </summary>
         [JsonIgnore]
-        public string PackageGuid
+        public List<string> PackageGuidList
         {
-            get => _packageGuid;
-            set => _packageGuid = value;
+            get => _packageGuidList ?? new List<string>();
+            set => _packageGuidList = value;
         }
-        [JsonProperty("PackageGuid")]
-        private string  _packageGuid;
+        [JsonProperty("PackageGuidList")]
+        private List<string>  _packageGuidList;
 
         /// <summary>
         /// ObjectType

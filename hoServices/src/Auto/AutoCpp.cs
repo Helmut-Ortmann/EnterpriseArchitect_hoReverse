@@ -18,8 +18,7 @@ namespace hoReverse.Services.AutoCpp
 {
     public partial class AutoCpp
     {
-        
-
+        private const string Tab = "\t";
         private static string designRootPackageGuid = "{0DEBD6C4-F4DE-4084-881F-4E19304B2B93}";
         private static string[] processFiles =
         {
@@ -81,7 +80,7 @@ namespace hoReverse.Services.AutoCpp
             {
                 MessageBox.Show($@"Root package of existing design isnt't valid.
 GUID={designRootPackageGuid}
-Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, invalid root package");
+Change variable: 'designRootPackageGuid=...'", @"Cant inventory existing design, invalid root package");
 
             }
             _designPackagedIds = Package.GetBranch(Rep, "", Rep.GetPackageByGuid(designRootPackageGuid).PackageID);
@@ -231,9 +230,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             if (Files.FileList.ContainsKey(fileName.ToLower()))
             {
                 FileItem fileItem = Files.FileList[fileName.ToLower()];
-                if (fileItem is ModuleItem)
+                if (fileItem is ModuleItem moduleItem)
                 {
-                    ModuleItem moduleItem = (ModuleItem)fileItem;
                     moduleItem.InventoryAddEaModuleReference();
                     moduleItem.InventoryRequiredFunctionsFromTextFile(moduleItem.FilePath, Functions, FunctionsNotFound);
 
@@ -242,7 +240,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             }
             else
             {
-                MessageBox.Show($@"The module '{fileName}' don't exists.", "Module file don't exists.");
+                MessageBox.Show($@"The module '{fileName}' don't exists.", @"Module file don't exists.");
             }
 
             return true;
@@ -257,15 +255,14 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
             if (Files.FileList.ContainsKey(fileName.ToLower()))
             {
                 FileItem fileItem = Files.FileList[fileName.ToLower()];
-                if (fileItem is ModuleItem)
+                if (fileItem is ModuleItem moduleItem)
                 {
-                    ModuleItem moduleItem = (ModuleItem)fileItem;
                     moduleItem.Generate(_pkg);
                 }
             }
             else
             {
-                MessageBox.Show($@"The module '{fileName}' don't exists.", "Module file don't exists.");
+                MessageBox.Show($@"The module '{fileName}' don't exists.", @"Module file don't exists.");
             }
 
             return true;
@@ -307,8 +304,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         public void GenExternalFuntionsOfComponent()
         {
             // get connection string of repository
-            IDataProvider provider;  // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out provider);
+            string connectionString = LinqUtil.GetConnectionString(ConnectionString, out var provider);
             using (var db = new DataModels.VcSymbols.BROWSEVCDB(provider, connectionString))
             {
                 // find all possible external functions
@@ -321,7 +317,7 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
                 string fileName = files.FirstOrDefault()?.Name;
                 if (fileName == "")
                 {
-                    MessageBox.Show($"Component:\t{_component.Name}", "Can't find c-file for component");
+                    MessageBox.Show($@"Component:{Tab}{_component.Name}", @"Can't find c-file for component");
                     return;
                 }
 
@@ -350,8 +346,8 @@ Change variable: 'designRootPackageGuid=...'", "Cant inventory existing design, 
         private EA.Element GetElementFromName(string name)
         {
             // get connection string of repository
-            IDataProvider provider; // the provider to connect to database like Access, ..
-            string connectionString = LinqUtil.GetConnectionString(Rep, out provider);
+            // the provider to connect to database like Access, ..
+            string connectionString = LinqUtil.GetConnectionString(Rep, out IDataProvider provider);
             using (var db = new DataModels.EaDataModel(provider, connectionString))
             {
                 var elGuid = (from n in db.t_object

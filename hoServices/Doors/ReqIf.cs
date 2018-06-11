@@ -16,13 +16,14 @@ namespace EaServices.Doors
         {
             _settings = settings;
         }
-         /// <summary>
+        /// <summary>
         /// Import and update Requirements.
         /// </summary>
-        /// async Task
-        /// public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+        // async Task
+        // public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
         public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
+            int subModuleIndex = 0,
             string stateNew = "",
             string stateChanged = "")
         {
@@ -35,7 +36,8 @@ namespace EaServices.Doors
 
             InitializeReqIfRequirementsTable(reqIf);
 
-            foreach (Specification el in reqIf.CoreContent[0].Specifications)
+            // run for submodule
+            foreach (Specification el in reqIf.CoreContent[subModuleIndex].Specifications)
             {
                 AddRequirements(DtRequirements, el.Children,1);
             }
@@ -291,11 +293,12 @@ XHTML:'{xhtmlValue}
             
 
         }
+
         /// <summary>
         /// Add Tagged Values with Module Properties to Package/Object
         /// </summary>
         /// <param name="reqIf"></param>
-        /// <param name="pkg"></param>
+        /// <param name="el"></param>
         private void GetModuleProperties(ReqIF reqIf, EA.Element el)
         {
             var moduleProperties = from obj in reqIf.CoreContent[0].Specifications[0].Values
@@ -339,7 +342,10 @@ XHTML:'{xhtmlValue}
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Attribute name:\r\n{columnName}\r\n\r\n{e}", "Can't read Attribute!");
+                    MessageBox.Show($@"Attribute name:
+{columnName}
+
+{e}", @"Can't read Attribute!");
                 }
 
                 delimeter = " ";

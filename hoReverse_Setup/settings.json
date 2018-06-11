@@ -349,7 +349,7 @@
   // Tooltip:     A tooltip for the list of files to import
   // ListNo:      The ListNumber to import. Equal ListNo are handled as one group to import together
   // InputFile:   The Path of the file to import
-  // PackageGuid: The Guid for the package to import into
+  // PackageGuidList: The list of Guids for the package to import into (e.g. DOORS *.reqifz with two modules 'ModuleA' and 'ModuleB')
   // ObjectType:  The EA ObjectType to create for each imported row (e.g. 'Requirement')
   // Stereotype:  The EA Stereotype to use for each imported row (e.g. 'Functional Requirement')
   // ImportType:  'DoorsCsv' = Doors *.csv import format for requirements (tested with Doors 9.6)
@@ -372,7 +372,7 @@
           "Description"     :  "Use EA Multiplicity as DOORS absolute number",
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/requirements.csv" ,
-          "PackageGuid"     :  "{F1D2E81B-F934-434c-8E7B-864579E8D92E}" ,
+          "PackageGuidList"     :  ["{F1D2E81B-F934-434c-8E7B-864579E8D92E}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "",
           "ImportType"      :  "DoorsCsv", 
@@ -382,7 +382,7 @@
       {
           "ListNo"          :  "1", 
           "InputFile"       :  "c:/temp/FunctionalRequirements.csv" ,
-          "PackageGuid"     :  "{51680E85-010F-459b-9848-C811BBA54C73}" ,
+          "PackageGuidList"     :  ["{51680E85-010F-459b-9848-C811BBA54C73}"] ,
           "ObjectType"      :  "Requirement", 
           "Stereotype"      :  "FunctionalRequirement",
           "ImportType"      :  "DoorsCsv",

@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.rtf" />
-    <Content Include="LinqToDB.Templates\CopyMe.SQLite.tt.txt" />
     <Content Include="LinqToDB.Templates\DataAnnotations.ttinclude" />
     <Content Include="LinqToDB.Templates\DataModel.ttinclude" />
     <Content Include="LinqToDB.Templates\EditableObject.ttinclude" />
@@ -50,13 +49,13 @@
     <Content Include="LinqToDB.Templates\LinqToDB.PostgreSQL.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.SapHana.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.SqlCe.ttinclude" />
-    <Content Include="LinqToDB.Templates\LinqToDB.SQLite.Tools.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.SQLite.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.SqlServer.SqlTypes.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.SqlServer.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.Sybase.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.Tools.ttinclude" />
     <Content Include="LinqToDB.Templates\LinqToDB.ttinclude" />
+    <Content Include="LinqToDB.Templates\MultipleFiles.ttinclude" />
     <Content Include="LinqToDB.Templates\NotifyDataErrorInfo.ttinclude" />
     <Content Include="LinqToDB.Templates\NotifyPropertyChanged.ttinclude" />
     <Content Include="LinqToDB.Templates\ObsoleteAttributes.ttinclude" />

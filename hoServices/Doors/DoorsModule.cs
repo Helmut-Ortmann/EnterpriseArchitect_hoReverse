@@ -142,6 +142,14 @@ namespace EaServices.Doors
 
         }
 
+        public virtual void ImportUpdateRequirements(string eaObjectType = "Requirement",
+            string eaStereotype = "",
+            int subModuleIndex=0,
+            string stateNew = "",
+            string stateChanged = "")
+        {
+
+        }
 
         /// <summary>
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
@@ -404,60 +412,77 @@ namespace EaServices.Doors
         {
             foreach (FileImportSettingsItem item in _importSettings)
             {
-                _pkg = _rep.GetPackageByGuid(item.PackageGuid);
-                if (_pkg == null)
+                // handle more than one package
+                int subPackageIndex = -1;
+                foreach (string guid in item.PackageGuidList)
                 {
-                    MessageBox.Show($@"Package of import list {listNumber} with GUID='{item.PackageGuid}' not availbale.{Environment.NewLine}Check Import settings in Settings.Json.",
-                        @"Package to import into isn't available, break!");
-                    return false;
-                }
-
-                _importModuleFile = item.InputFile;
-                
-                string eaObjectType = item.ObjectType;
-                string eaStereotype = item.Stereotype;
-                string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None" ? "": item.StatusNew;
-                string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None" ? "" : item.StatusChanged; ;
-
-                if (Convert.ToInt32(item.ListNo) == listNumber)
-                {
-                    if (!System.IO.File.Exists(_importModuleFile))
+                    subPackageIndex += 1;
+                    _pkg = _rep.GetPackageByGuid(guid);
+                    if (_pkg == null)
                     {
-                        MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
+                        MessageBox.Show(
+                            $@"Package of import list {listNumber} with GUID='{guid}' not availbale.{Environment.NewLine}Check Import settings in Settings.Json.",
+                            @"Package to import into isn't available, break!");
                         return false;
                     }
-                    switch (item.ImportType)
+
+                    _importModuleFile = item.InputFile;
+
+                    string eaObjectType = item.ObjectType;
+                    string eaStereotype = item.Stereotype;
+                    string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None"
+                        ? ""
+                        : item.StatusNew;
+                    string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None"
+                        ? ""
+                        : item.StatusChanged;
+                    ;
+
+                    if (Convert.ToInt32(item.ListNo) == listNumber)
                     {
-                        case FileImportSettingsItem.ImportTypes.DoorsCsv:
-                           var  doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item) ;
-                           doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
-                           //await Task.Run(() =>
-                           //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                        break;
+                        if (!System.IO.File.Exists(_importModuleFile))
+                        {
+                            MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
+                            return false;
+                        }
 
-                        case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                            var  doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile, item) ;
-                            doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
-                            //await Task.Run(() =>
-                            //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                            break;
+                        switch (item.ImportType)
+                        {
+                            case FileImportSettingsItem.ImportTypes.DoorsCsv:
+                                var doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item);
+                                doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                                    eaStatusChanged);
+                                //await Task.Run(() =>
+                                //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
 
-                        case FileImportSettingsItem.ImportTypes.ReqIf:
-                            var  reqIf = new ReqIf(_rep, _pkg, item.InputFile, item) ;
-                            reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
-                            //await Task.Run(() =>
-                            //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                            break;
+                            case FileImportSettingsItem.ImportTypes.DoorsReqIf:
+                                var doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile, item);
+                                doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,  eaStatusNew,
+                                    eaStatusChanged);
+                                //await Task.Run(() =>
+                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
 
-                        case FileImportSettingsItem.ImportTypes.XmlStruct:
-                            var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
-                            xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged);
-                            //await Task.Run(() =>
-                            //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                            break;
+                            case FileImportSettingsItem.ImportTypes.ReqIf:
+                                var reqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex, eaStatusNew,
+                                    eaStatusChanged);
+                                //await Task.Run(() =>
+                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+
+                            case FileImportSettingsItem.ImportTypes.XmlStruct:
+                                var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
+                                xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                                    eaStatusChanged);
+                                //await Task.Run(() =>
+                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+                        }
+
+
                     }
-                    
-                    
                 }
 
             }

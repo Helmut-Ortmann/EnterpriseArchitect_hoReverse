@@ -23,6 +23,7 @@ namespace EaServices.Doors
         /// async Task
         public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
+             int subModuleIndex = 0,
             string stateNew = "",
             string stateChanged = "")
         {
@@ -37,7 +38,8 @@ namespace EaServices.Doors
 
 
             //reqIf.CoreContent[0].Specifications.Dump();
-            foreach (Specification el in reqIf.CoreContent[0].Specifications)
+            // over all submodules
+            foreach (Specification el in reqIf.CoreContent[subModuleIndex].Specifications)
             {
                 AddRequirements(DtRequirements, el.Children,1);
             }
@@ -219,8 +221,10 @@ namespace EaServices.Doors
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"AttrName: '{columns[i].AttributeDefinition.LongName}'\r\n\r\n{e}", 
-                            "Exception add ReqIF Attribute");
+                        MessageBox.Show($@"AttrName: '{columns[i].AttributeDefinition.LongName}'
+
+{e}", 
+                            @"Exception add ReqIF Attribute");
                         continue;
                     }
                     
