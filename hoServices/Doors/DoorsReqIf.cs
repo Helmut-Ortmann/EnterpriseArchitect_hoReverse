@@ -34,15 +34,14 @@ namespace EaServices.Doors
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
             var reqIf = deserializer.Deserialize(ImportModuleFile);
 
-            InitializeDoorsRequirementsTable(reqIf);
+            InitializeDoorsRequirementsTable(reqIf, subModuleIndex);
 
 
             //reqIf.CoreContent[0].Specifications.Dump();
             // over all submodules
-            foreach (Specification el in reqIf.CoreContent[subModuleIndex].Specifications)
-            {
-                AddRequirements(DtRequirements, el.Children,1);
-            }
+            Specification elModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+            AddRequirements(DtRequirements, elModule.Children,1);
+
 
 
             base.ReadPackageRequirements();
@@ -167,11 +166,14 @@ namespace EaServices.Doors
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
         }
+
         /// <summary>
-        /// Initialize DOORS Requirement DataTable
+        /// Initialize DOORS Requirement DataTable for the sub module according to subModuleIndex.
+        /// It creates the table and the column names from the DOORS attributes and the standard attributes. 
         /// </summary>
         /// <param name="reqIf"></param>
-        private void InitializeDoorsRequirementsTable(ReqIF reqIf)
+        /// <param name="subModuleIndex"></param>
+        private void InitializeDoorsRequirementsTable(ReqIF reqIf, int subModuleIndex)
         {
             // Initialize table
             DtRequirements = new DataTable();
@@ -186,13 +188,22 @@ namespace EaServices.Doors
             DtRequirements.Columns.Add("RequirementID", typeof(string));
             DtRequirements.Columns.Add("LegacyID", typeof(string));
 
-            foreach (var attr in reqIf.CoreContent[0].SpecObjects[0].Values)
+            // Get all attributes
+            var blackList = new String[] { "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };
+            var attributes = (from obj in reqIf.CoreContent[0].SpecObjects
+                from attr in obj.Values
+                where !blackList.Any(bl => bl == attr.AttributeDefinition.LongName)
+
+                select new { name = attr.AttributeDefinition.LongName, Type = attr.AttributeDefinition.DatatypeDefinition.ToString() }).Distinct();
+            foreach (var attribute in attributes)
             {
                 if (
-                    attr.AttributeDefinition.LongName == "Object Text" ||
-                    attr.AttributeDefinition.LongName == "Object Heading") continue;
-                DtRequirements.Columns.Add(attr.AttributeDefinition.LongName, typeof(string));
+                    attribute.name == "Object Text" ||
+                    attribute.name == "Object Heading") continue;
+                DtRequirements.Columns.Add(attribute.name, typeof(string));
             }
+
+            
         }
 
 
@@ -207,17 +218,17 @@ namespace EaServices.Doors
             if (children == null || children.Count == 0) return;
             foreach (SpecHierarchy child in children)
             {
-                DataRow row = dt.NewRow();
+                DataRow dataRow = dt.NewRow();
                 SpecObject specObject = child.Object;
-                row["Id"] = specObject.Identifier;
-                row["Object Level"] = level;
+                dataRow["Id"] = specObject.Identifier;
+                dataRow["Object Level"] = level;
 
                 List<AttributeValue> columns = specObject.Values;
                 for (int i = 0; i < columns.Count; i++)
                 {
                     try
                     {
-                        row[columns[i].AttributeDefinition.LongName] = columns[i].ObjectValue.ToString();
+                        dataRow[columns[i].AttributeDefinition.LongName] = columns[i].ObjectValue.ToString();
                     }
                     catch (Exception e)
                     {
@@ -230,7 +241,7 @@ namespace EaServices.Doors
                     
                 }
 
-                dt.Rows.Add(row);
+                dt.Rows.Add(dataRow);
                 AddRequirements(dt, child.Children, level + 1);
             }
             

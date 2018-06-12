@@ -113,6 +113,8 @@ namespace EaServices.Doors
 
         /// <summary>
         /// Read Requirements of _pkg into dictionary _dictPackageRequirements.
+        /// - Key: ID according to ReqIF
+        /// - Value: EA ElementID of the requirements
         /// </summary>
         protected void ReadPackageRequirements()
         {
@@ -414,6 +416,7 @@ namespace EaServices.Doors
             {
                 // handle more than one package
                 int subPackageIndex = -1;
+                // handle zip files like
                 foreach (string guid in item.PackageGuidList)
                 {
                     subPackageIndex += 1;
@@ -427,7 +430,6 @@ namespace EaServices.Doors
                     }
 
                     _importModuleFile = item.InputFile;
-
                     string eaObjectType = item.ObjectType;
                     string eaStereotype = item.Stereotype;
                     string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None"
@@ -520,6 +522,9 @@ namespace EaServices.Doors
             set { _countNew = value; }
         }
 
+        /// <summary>
+        /// Dictionary for 'Requirement ID' as string and its EA Object_ID as integer
+        /// </summary>
         protected Dictionary<string, int> DictPackageRequirements
         {
             get { return _dictPackageRequirements; }

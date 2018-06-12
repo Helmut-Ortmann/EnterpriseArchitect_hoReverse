@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.Drawing;
 using hoReverse.hoUtils;
 using ReqIFSharp;
+using Path = System.IO.Path;
 
 namespace EaServices.Doors
 {
@@ -30,23 +33,23 @@ namespace EaServices.Doors
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
 
+            string importFile = Decompress(ImportModuleFile);
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            var reqIf = deserializer.Deserialize(ImportModuleFile);
+            var reqIf = deserializer.Deserialize(importFile);
 
             InitializeReqIfRequirementsTable(reqIf);
 
             // run for submodule
-            foreach (Specification el in reqIf.CoreContent[subModuleIndex].Specifications)
-            {
-                AddRequirements(DtRequirements, el.Children,1);
-            }
+            Specification elModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+            AddRequirements(DtRequirements, elModule.Children,1);
+            
 
 
             ReadPackageRequirements();
             CreatePackageDeletedObjects();
 
-            
+            // Insert/Update requirements
 
             Count = 0;
             CountChanged = 0;
@@ -62,8 +65,8 @@ namespace EaServices.Doors
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
-                
-                
+
+
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
  
                 // Maintain parent ids of level
@@ -112,7 +115,7 @@ namespace EaServices.Doors
 
                 el.Alias = alias;
                 el.Name = name;
-                el.Multiplicity = CombineAttrValues(_settings.IdList, row, 40);
+                el.Multiplicity = objectId;
                 el.Notes = notes;
                 el.TreePos = Count * 10;
                 el.PackageID = Pkg.PackageID;
@@ -137,7 +140,7 @@ namespace EaServices.Doors
                 // Handle *.rtf/*.docx content
                 string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
 
-                UpdateLinkedDocument(el, rtfValue);
+                UpdateLinkedDocument(el, rtfValue, importFile);
                 
                 // Update/Create Tagged value
                 foreach (var c in cols)
@@ -153,6 +156,34 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+        }
+
+
+        /// <summary>
+        /// Decompress the import reqIf file if compressed format (*.reqifz)
+        /// </summary>
+        /// <param name="importReqIfFile"></param>
+        /// <returns></returns>
+        private string Decompress(string importReqIfFile)
+        {
+            // *.reqifz for compressed ReqIf File
+            if (importReqIfFile.ToUpper().EndsWith("Z"))
+            {
+                string extractDirectory = hoUtils.Compression.Zip.ExtractZip(importReqIfFile);
+                string pattern = $"*{Path.GetFileNameWithoutExtension(importReqIfFile)}*";
+                var files = Directory.GetFiles(extractDirectory, pattern);
+                if (files.Length != 1)
+                {
+                    MessageBox.Show($@"Can't find *.reqif file in decompressed folder
+*.reqifz File:  '{importReqIfFile}'
+Pattern      :  '{pattern}'
+Extract folder: '{extractDirectory}'", @"Can't decompress *.reqifz file");
+                }
+
+                return files[0];
+            }
+
+            return importReqIfFile;
         }
 
 
@@ -173,11 +204,13 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="el">EA Element to update linked document</param>
         /// <param name="xhtmlValue">The XHTML value in XHTML or flat string format</param>
+        /// <param name="importFile">If "" or null the use </param>
         /// <returns></returns>
-        protected bool UpdateLinkedDocument(EA.Element el, string xhtmlValue)
+        protected bool UpdateLinkedDocument(EA.Element el, string xhtmlValue, string importFile="")
         {
+            if (String.IsNullOrWhiteSpace(importFile)) importFile = ImportModuleFile;
             // Handle *.rtf content
-            string docFile = $"{System.IO.Path.GetDirectoryName(ImportModuleFile)}";
+            string docFile = $"{System.IO.Path.GetDirectoryName(importFile)}";
             bool IsGenerateDocx = true;
             if (IsGenerateDocx)
                 docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
@@ -191,7 +224,7 @@ namespace EaServices.Doors
             {
                 bool res = el.LoadLinkedDocument(docFile);
                 if (!res)
-                    MessageBox.Show($@"ImportFile: '{ImportModuleFile}'
+                    MessageBox.Show($@"ImportFile: '{importFile}'
 Id: '{el.Multiplicity}'
 Name: '{el.Name}'
 Err: '{el.GetLastError()}'
@@ -202,7 +235,7 @@ XHTML:'{xhtmlValue}",
             }
             catch (Exception e)
             {
-                MessageBox.Show($@"ImportFile: '{ImportModuleFile}'
+                MessageBox.Show($@"ImportFile: '{importFile}'
 Id: '{el.Multiplicity}'
 Name: '{el.Name}'
 RtfDocxFile:'{docFile}'
@@ -376,7 +409,10 @@ XHTML:'{xhtmlValue}
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Attribute name:\r\n{columnName}\r\n\r\n{e}", "Can't read Attribute!");
+                    MessageBox.Show($@"Attribute name:
+{columnName}
+
+{e}", @"Can't read Attribute!");
                 }
 
                 delimeter = $@"<p><br><br><br></p>";

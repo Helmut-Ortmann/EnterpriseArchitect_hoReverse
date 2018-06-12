@@ -19,8 +19,20 @@ namespace EaServices.Doors
             xhtml = XhtmlFromReqIf(xhtml);
             // write to *.docx
             if (String.IsNullOrWhiteSpace(xhtml)) xhtml = "Empty!!!";
-            WordDocument doc = new WordDocument(docXFile);
+            WordDocument doc = null;
+            try
+            {
+                doc = new WordDocument(docXFile);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"File: '{docXFile}'
 
+{e}", @"Can't create WordDocument, already opened?");
+                return;
+            }
+
+            if (doc == null) return;
             var uri = new System.Uri(System.IO.Path.GetDirectoryName(docXFile));
             doc.ImagePath = uri.AbsoluteUri;
 
