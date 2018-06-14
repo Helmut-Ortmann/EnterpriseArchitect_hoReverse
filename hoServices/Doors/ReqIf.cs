@@ -21,6 +21,9 @@ namespace EaServices.Doors
     public class ReqIf : DoorsModule
     {
         readonly FileImportSettingsItem _settings;
+        bool _errorMessage1 = false;
+        readonly String[] _blackList1 = new String[] { "Id", "Object Level", "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
+
         /// <summary>
         /// ReqIF import
         /// </summary>
@@ -49,6 +52,7 @@ namespace EaServices.Doors
         {
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
+            _errorMessage1 = false;
 
             // decompress reqif file and its embedded files
             string importFile = Decompress(ImportModuleFile);
@@ -334,19 +338,22 @@ XHTML:'{xhtmlValue}
         {
             // Initialize table
             // Standard columns
+            var standardAttributes = new string[] { "Id", "Object Level" };
             DtRequirements = new DataTable();
-            DtRequirements.Columns.Add("Id", typeof(string));
-            DtRequirements.Columns.Add("Object Level", typeof(string));
+            foreach (var attr in standardAttributes)
+            {
+                DtRequirements.Columns.Add(attr, typeof(string));
+            }
 
             // get list of all used attributes
-            var blackList = new String[] { "Id", "Object Level", "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
+
             var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
                 from attr in obj.Values
-                where ! blackList.Any(bl=>bl == attr.AttributeDefinition.LongName)
-				
-                select new { Name = attr.AttributeDefinition.LongName}).Distinct();
+                where (! _blackList1.Any(bl=>bl == attr.AttributeDefinition.LongName))  && // ignore blacklist, DOORS table attributes
+				      (! standardAttributes.Any(bl => bl == attr.AttributeDefinition.LongName)) // ignore standard attributes
+                         select new { Name = attr.AttributeDefinition.LongName}).Distinct();
            
-            // Add columns for all Attributes
+            // Add columns for all Attributes, except DOORS table attributes and standard attributes
             foreach (var attr in qAttr)
             {
                 DtRequirements.Columns.Add(attr.Name, typeof(string));
@@ -365,11 +372,25 @@ XHTML:'{xhtmlValue}
         private void AddRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
         {
             if (children == null || children.Count == 0) return;
+
             foreach (SpecHierarchy child in children)
             {
                 DataRow row = dt.NewRow();
                 SpecObject specObject = child.Object;
-                row["Id"] = specObject.Identifier;
+
+                // Limit Identifier length to 50 and output one error message if length exceeds length of 50
+                if (!_errorMessage1 && specObject.Identifier.Length > 50)
+                {
+                    MessageBox.Show($@"Identifier:
+'{specObject.Identifier}'
+
+Length: {specObject.Identifier.Length}
+
+Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Indentifier has length > 50");
+                    _errorMessage1 = true;
+                }
+                row["Id"] = specObject.Identifier.Length > 50 ? specObject.Identifier.Substring(0, 50) : specObject.Identifier;
+
                 row["Object Level"] = level;
 
                 List<AttributeValue> columns = specObject.Values;
