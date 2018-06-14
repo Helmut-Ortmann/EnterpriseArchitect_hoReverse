@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -40,6 +41,10 @@ namespace hoReverse.Reverse
 
     public class HoReverseGui : UserControl, IhoReverseGui, IObjectSafety
     {
+        string Tab = @"\t";
+        // The last MenuItem the mouse hovered upon.
+        private ToolStripMenuItem _lastMenuItem;
+
         private EA.Repository _repository;
         private EaHistoryList _history;
         private EaHistoryList _bookmark;
@@ -462,7 +467,7 @@ namespace hoReverse.Reverse
 
         public int ShowDialog()
         {
-            MessageBox.Show("MessageBox text");
+            MessageBox.Show(@"MessageBox text");
             return 0;
         }
 
@@ -509,7 +514,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Insert Function");
+                MessageBox.Show(e11.ToString(), @"Error Insert Function");
             }
             finally
             {
@@ -666,6 +671,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -756,6 +762,7 @@ namespace hoReverse.Reverse
             this.importDoorsReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importReqIFBySettings3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importReqIFBySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importReqIFBySettings5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -782,8 +789,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
-            this.importReqIFBySettings5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1446,6 +1451,26 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
+            // TxtUserText
+            // 
+            this.TxtUserText.AcceptsReturn = true;
+            this.TxtUserText.AcceptsTab = true;
+            this.TxtUserText.AllowDrop = true;
+            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
+            this.TxtUserText.Multiline = true;
+            this.TxtUserText.Name = "TxtUserText";
+            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
+            this.TxtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
+        "lon as in C.");
+            this.TxtUserText.WordWrap = false;
+            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
+            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
+            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1552,8 +1577,8 @@ namespace hoReverse.Reverse
             // 
             this._clearToolStripMenuItem.Name = "_clearToolStripMenuItem";
             this._clearToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
-            this._clearToolStripMenuItem.Text = "Clear Diagram History and Bookmarks";
-            this._clearToolStripMenuItem.ToolTipText = "Delete all history and diagram entries for all projects.";
+            this._clearToolStripMenuItem.Text = @"Clear Diagram History and Bookmarks";
+            this._clearToolStripMenuItem.ToolTipText = @"Delete all history and diagram entries for all projects.";
             this._clearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
             // 
             // _doToolStripMenuItem
@@ -1607,6 +1632,7 @@ namespace hoReverse.Reverse
             this._showFolderToolStripMenuItem.Text = "&Show folder";
             this._showFolderToolStripMenuItem.ToolTipText = "Show folder (sourse file, controled package)";
             this._showFolderToolStripMenuItem.Click += new System.EventHandler(this.ShowFolderToolStripMenuItem_Click);
+
             // 
             // setFolderToolStripMenuItem
             // 
@@ -2210,6 +2236,13 @@ namespace hoReverse.Reverse
             this.importReqIFBySettingsToolStripMenuItem.Text = "ImportReqIFBySettings 4";
             this.importReqIFBySettingsToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings4ToolStripMenuItem_Click);
             // 
+            // importReqIFBySettings5ToolStripMenuItem
+            // 
+            this.importReqIFBySettings5ToolStripMenuItem.Name = "importReqIFBySettings5ToolStripMenuItem";
+            this.importReqIFBySettings5ToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.importReqIFBySettings5ToolStripMenuItem.Text = "ImportReqIFBySettings 5";
+            this.importReqIFBySettings5ToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings5ToolStripMenuItem_Click);
+            // 
             // _helpToolStripMenuItem
             // 
             this._helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2455,33 +2488,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
-            // TxtUserText
-            // 
-            this.TxtUserText.AcceptsReturn = true;
-            this.TxtUserText.AcceptsTab = true;
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
-        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
-        "lon as in C.");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
-            // 
-            // importReqIFBySettings5ToolStripMenuItem
-            // 
-            this.importReqIFBySettings5ToolStripMenuItem.Name = "importReqIFBySettings5ToolStripMenuItem";
-            this.importReqIFBySettings5ToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.importReqIFBySettings5ToolStripMenuItem.Text = "ImportReqIFBySettings 5";
-            this.importReqIFBySettings5ToolStripMenuItem.Click += new System.EventHandler(this.ImportReqIFBySettings5ToolStripMenuItem_Click);
-            // 
             // HoReverseGui
             // 
             this.Controls.Add(this.progressBar1);
@@ -2591,7 +2597,7 @@ namespace hoReverse.Reverse
                 {
                     if (s.Length > 252)
                     {
-                        MessageBox.Show($"Currunt length: {s.Length}", "Length of name > 252 characters, name truncated!!");
+                        MessageBox.Show($@"Currunt length: {s.Length}", @"Length of name > 252 characters, name truncated!!");
                         s = s.Substring(0, 252);
                     }
                     elSource.Name = s;
@@ -2612,7 +2618,7 @@ namespace hoReverse.Reverse
 
                             if (s.Length > 252)
                             {
-                                MessageBox.Show($"Currunt length: {s.Length}", "Length of guard > 252 characters, guard truncated!!");
+                                MessageBox.Show($@"Currunt length: {s.Length}", @"Length of guard > 252 characters, guard truncated!!");
                                 s = s.Substring(0, 252);
                             }
                             con.TransitionGuard = s;
@@ -2621,7 +2627,7 @@ namespace hoReverse.Reverse
                         {
                             if (s.Length > 252)
                             {
-                                MessageBox.Show($"Currunt length: {s.Length}", "Length of name > 252 characters, name truncated!!");
+                                MessageBox.Show($@"Currunt length: {s.Length}", @"Length of name > 252 characters, name truncated!!");
                                 s = s.Substring(0, 252);
                                 con.Name = s;
                             }
@@ -2635,7 +2641,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                MessageBox.Show(e10.ToString(), @"Error insert Attributes");
             }
             finally
             {
@@ -2861,7 +2867,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                MessageBox.Show(e10.ToString(), @"Error insert Attributes");
             }
             finally
             {
@@ -3143,7 +3149,9 @@ namespace hoReverse.Reverse
                     _importSettings.ImportSettings,
                     "Import *.csv, ReqIF",
                     "Import Requirements (*.csv, ReqIF, DOORS ReqIf)",
-                    Importer_Click));
+                    Importer_Click,
+                    MenuItemHover_MouseHover,  // Optional register the mouse hover event 
+                    "Locate Package",  MenuItemContext_MouseDown));
 
 
 
@@ -3155,7 +3163,7 @@ namespace hoReverse.Reverse
             {
                 MessageBox.Show($@"'{_jasonFilePath}'
 
-{e1}", "Error loading 'Settings.json'");
+{e1}", @"Error loading 'Settings.json'");
             }
         }
 
@@ -3224,7 +3232,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error VcReconsile");
+                MessageBox.Show(e11.ToString(), @"Error VcReconsile");
             }
             finally
             {
@@ -3249,7 +3257,7 @@ namespace hoReverse.Reverse
                 catch (Exception e)
                 {
                     MessageBox.Show(e.ToString(), @"Error start search '" + sh.keySearchName +
-                                                  " " + sh.keySearchTerm + "'");
+                                                  @" " + sh.keySearchTerm + @"'");
                 }
             }
         }
@@ -3471,7 +3479,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error add macro/stereotypes");
+                MessageBox.Show(e10.ToString(), @"Error add macro/stereotypes");
             }
             finally
             {
@@ -3607,7 +3615,7 @@ namespace hoReverse.Reverse
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error set macro/stereotypes");
+                MessageBox.Show(e10.ToString(), @"Error set macro/stereotypes");
             }
             finally
             {
@@ -3696,6 +3704,69 @@ namespace hoReverse.Reverse
                 ImportBySettings(listNumber,withMessage:true);
             else MessageBox.Show($@"{importElement.ListNo}", $@"ListNo in Importer settings.json invalid");
 
+        }
+        /// <summary>
+        /// Locate package of to imported file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void ImporterLocatePackage_Click(object sender, EventArgs e)
+        {
+            MenuItem mItem = sender as MenuItem;
+            if (mItem == null) return;
+
+            // use the last menu item
+            if (_lastMenuItem?.Tag == null) return;
+            FileImportSettingsItem importElement = (FileImportSettingsItem)_lastMenuItem?.Tag;
+
+            // locate package 
+            if (importElement.PackageGuidList.Count == 0)
+            {
+                MessageBox.Show($@"{importElement.ListNo}", $@"Guid in Importer settings.json invalid");
+                return;
+            }
+            string guid = importElement.PackageGuidList[0];
+            EA.Package pkg = _repository.GetPackageByGuid(guid);
+            if (pkg == null)
+            {
+                MessageBox.Show($@"{importElement.ListNo}", $@"Guid in Importer settings.json invalid");
+                return;
+            }
+            _repository.ShowInProjectView(pkg);
+        }
+
+        /// <summary>
+        /// Handle MouseDown events from menue items to output a Package context menue.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MenuItemContext_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) return;
+
+            ToolStripMenuItem mId = (ToolStripMenuItem)sender;
+
+            ContextMenu tsmiContext = new ContextMenu();
+
+            MenuItem item1 = new MenuItem {Text = @"Locate Package"};
+
+
+            tsmiContext.MenuItems.Add(item1);
+
+            item1.Click += new EventHandler(ImporterLocatePackage_Click);
+
+            //hndPass = mID.Text;
+            tsmiContext.Show(_menuStrip1, _menuStrip1.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y)));
+        }
+        /// <summary>
+        /// Remember the last menu item the mouse hovers over.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MenuItemHover_MouseHover(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+                _lastMenuItem = item;
         }
 
         /// <summary>
@@ -3830,11 +3901,12 @@ Please restart EA. During restart hoTools loads the default settings.",
             //autoCpp.Generate();
             string duration = startDate.Subtract(DateTime.Now).Duration().ToString(@"mm\:ss");
 
-            MessageBox.Show($"Function count_____:\t\t{autoCpp.Functions.FunctionList.Count,20:N0}\r\n"+
-                            $"File count/created/deleted:\t{autoCpp.Files.FileList.Count,20:N0}/{autoCpp.CreatedInterfaces}/{autoCpp.DeletedInterfaces}\r\n" +
-                            $"Functions not found:\t\t{autoCpp.FunctionsNotFound.Count,20:N0}\r\n" +
-                            $"Functions added:\t\t{newAttributes,20:N0}\r\n" +
-                            $"Duration:__________:\t\t\t{duration} mm:ss","Generation finished");
+            MessageBox.Show($@"Function count_____:{Tab}{Tab}{autoCpp.Functions.FunctionList.Count,20:N0}
+File count/created/deleted:{Tab}{autoCpp.Files.FileList.Count,20:N0}/{autoCpp.CreatedInterfaces}/{autoCpp.DeletedInterfaces}
+Functions not found:{Tab}{Tab}{autoCpp.FunctionsNotFound.Count,20:N0}
+Functions added:{Tab}{Tab}{newAttributes,20:N0}
+
+Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             Cursor.Current = Cursors.Default;
 
         }
@@ -4309,6 +4381,7 @@ Please restart EA. During restart hoTools loads the default settings.",
             MessageBox.Show(@"See File 3, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
 
         }
+
     }
 }
 

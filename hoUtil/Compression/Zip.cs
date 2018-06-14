@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Windows.Forms;
 
 namespace hoUtils.Compression
 {
@@ -34,20 +35,21 @@ namespace hoUtils.Compression
             // extraction path.
             if (!extractPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 extractPath += Path.DirectorySeparatorChar;
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
             {
-
-                foreach (ZipArchiveEntry entry in archive.Entries)
+                try
                 {
-
-                    // Gets the full path to ensure that relative segments are removed.
-                    string destinationPath = Path.GetFullPath(Path.Combine(extractPath, entry.FullName));
-
-                    // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
-                    // are case-insensitive.
-                    if (destinationPath.StartsWith(extractPath, StringComparison.Ordinal))
-                        entry.ExtractToFile(destinationPath);
+                    archive.ExtractToDirectory(extractPath);
                 }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"Achive: '{extractPath}'
+
+{e}", 
+                        @"Can't extract *.reqifz file");
+                    return "";
+                }
+               
 
                 return extractPath;
             }

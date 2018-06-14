@@ -65,8 +65,14 @@ The other features should work!
         /// <param name="nameRoot"></param>
         /// <param name="toolTipRoot"></param>
         /// <param name="eventHandler"></param>
+        /// <param name="hoverHandler"></param>
+        /// <param name="contextItem">A Context item (right click), optional</param>
+        /// <param name="mouseDownEventHandler"></param>
         /// <returns></returns>
-        public static ToolStripMenuItem ConstructStyleToolStripMenuDiagram<T>(List<T> items, string nameRoot, string toolTipRoot, EventHandler eventHandler)
+        public static ToolStripMenuItem ConstructStyleToolStripMenuDiagram<T>(List<T> items, string nameRoot, string toolTipRoot, EventHandler eventHandler, 
+            EventHandler hoverHandler = null, 
+            string contextItem ="", MouseEventHandler mouseDownEventHandler= null  // Additional context menu
+            )
         {
             ToolStripMenuItem insertTemplateMenuItem = new ToolStripMenuItem
             {
@@ -80,8 +86,9 @@ The other features should work!
                 {
                     Text = $@"Settings for '{typeof(T)}' not found!",
                     ToolTipText = $@"Setting Settings.Json not available{Environment.NewLine}Chapter: '{typeof(T)}'{Environment.NewLine}Consider resetting to factory settings or create your own styles{Environment.NewLine}File: '%appdata%\ho\...\Settings.Json'",
-
                 };
+                
+
                 insertTemplateMenuItem.DropDownItems.Add(item);
 
             }
@@ -101,6 +108,17 @@ The other features should work!
                         Tag = menuItem
                     };
                     item.Click += eventHandler;
+                    // Create a context item with an event handler
+                    if (mouseDownEventHandler != null)
+                    {
+                        item.MouseDown += mouseDownEventHandler;
+                    }
+                    if (hoverHandler != null)
+                    {
+                        item.MouseHover += hoverHandler;
+                    }
+
+
                     insertTemplateMenuItem.DropDownItems.Add(item);
                 }
             }

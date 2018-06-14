@@ -52,6 +52,7 @@ namespace EaServices.Doors
 
             // decompress reqif file and its embedded files
             string importFile = Decompress(ImportModuleFile);
+            if (String.IsNullOrWhiteSpace(importFile)) return;
 
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
@@ -64,16 +65,61 @@ namespace EaServices.Doors
             // Add requirements recursiv for module to requirement table
             InitializeReqIfRequirementsTable(reqIf);
             Specification reqifModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
-            AddRequirementsToDataTable(DtRequirements, reqifModule.Children,1);
-            
-           CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importFile);
+            AddRequirementsToDataTable(DtRequirements, reqifModule.Children, 1);
 
-            MoveDeletedRequirements();
-            UpdatePackage(reqIf);
+            // Check imported ReqIF requirements
+            if (CheckImportedRequirements())
+            {
+                CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importFile);
+
+                MoveDeletedRequirements();
+                UpdatePackage(reqIf);
+            }
 
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+        }
+        /// <summary>
+        /// Check imported requirements:
+        /// - more than one requirements found
+        /// - all needed columns are available
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckImportedRequirements()
+        {
+            bool result = true;
+            if (DtRequirements == null || DtRequirements.Rows.Count == 0)
+            {
+                MessageBox.Show("", @"No requirements imported, break!");
+                return false;
+            }
+
+            List<string> expectedColumns = new List<string>();
+            expectedColumns.AddRange(_settings.AliasList);
+            expectedColumns.AddRange(_settings.AttrList);
+            expectedColumns.AddRange(_settings.RtfNameList);
+            expectedColumns.Add(_settings.AttrNotes);
+
+            foreach (var column in expectedColumns)
+            {
+                if (! DtRequirements.Columns.Contains(column))
+                {
+                    var columns = (from c in DtRequirements.Columns.Cast<DataColumn>()
+                        orderby c.ColumnName
+                        select c.ColumnName).ToArray();
+                        MessageBox.Show($@"Expected Attribute: '{column}'
+
+Available Attributes:
+{string.Join(Environment.NewLine, columns)}",
+                            @"ReqIF import doesn't contain Attribute!");
+                    result = false;
+                }
+            }
+
+            return result;
+
+
         }
 
         /// <summary>
@@ -120,9 +166,9 @@ namespace EaServices.Doors
 
                 oldLevel = objectLevel;
 
-                string alias = CombineAttrValues(_settings.AliasList, row, 40);
-                string name = CombineAttrValues(_settings.AttrNameList, row, 40);
-                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString() : row[1].ToString());
+                CombineAttrValues(_settings.AliasList, row, out string alias, 40);
+                CombineAttrValues(_settings.AttrNameList,  row, out string name, 40);
+                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString()??"" : row[1].ToString()??"");
                 string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
 
                 // Check if requirement with Doors ID already exists
@@ -197,17 +243,21 @@ namespace EaServices.Doors
             if (importReqIfFile.ToUpper().EndsWith("Z"))
             {
                 string extractDirectory = hoUtils.Compression.Zip.ExtractZip(importReqIfFile);
-                string pattern = $"*{Path.GetFileNameWithoutExtension(importReqIfFile)}*";
+                if (String.IsNullOrWhiteSpace(extractDirectory)) return "";
+
+                // extract reqif file from achive
+                string pattern = $"*.reqif";
                 var files = Directory.GetFiles(extractDirectory, pattern);
                 if (files.Length != 1)
                 {
-                    MessageBox.Show($@"Can't find *.reqif file in decompressed folder
-*.reqifz File:  '{importReqIfFile}'
-Pattern      :  '{pattern}'
-Extract folder: '{extractDirectory}'", @"Can't decompress *.reqifz file");
-                }
+                    MessageBox.Show($@"Can't find '*.reqif' file in decompressed folder
 
-                return files[0];
+*.reqifz File :  '{importReqIfFile}'
+Pattern       :  '{pattern}'
+Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompressed folder");
+                }
+                
+                return files.Length > 0 ?files[0] :"";
             }
 
             return importReqIfFile;
@@ -280,7 +330,7 @@ XHTML:'{xhtmlValue}
         /// Initialize ReqIF Requirement DataTable with Columns (standard columns + one for each attribute)
         /// </summary>
         /// <param name="reqIf"></param>
-        private void InitializeReqIfRequirementsTable(ReqIF reqIf)
+        private bool InitializeReqIfRequirementsTable(ReqIF reqIf)
         {
             // Initialize table
             // Standard columns
@@ -289,18 +339,20 @@ XHTML:'{xhtmlValue}
             DtRequirements.Columns.Add("Object Level", typeof(string));
 
             // get list of all used attributes
-            var blackList = new String[] { "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
+            var blackList = new String[] { "Id", "Object Level", "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
             var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
                 from attr in obj.Values
                 where ! blackList.Any(bl=>bl == attr.AttributeDefinition.LongName)
 				
-                select new { Name = attr.AttributeDefinition.LongName, Type=attr.AttributeDefinition.DatatypeDefinition.ToString()}).Distinct();
+                select new { Name = attr.AttributeDefinition.LongName}).Distinct();
            
             // Add columns for all Attributes
             foreach (var attr in qAttr)
             {
                 DtRequirements.Columns.Add(attr.Name, typeof(string));
             }
+
+            return true;
         }
 
 
@@ -384,10 +436,12 @@ XHTML:'{xhtmlValue}
         /// </summary>
         /// <param name="lNames"></param>
         /// <param name="row"></param>
+        /// <param name="value">The combined value</param>
         /// <param name="length">The leghth of the output string. Default:40</param>
-        /// <returns></returns>
-        private string CombineAttrValues(List<string> lNames, DataRow row, int length=0)
+        /// <returns>false for error</returns>
+        private bool CombineAttrValues(List<string> lNames, DataRow row, out string value, int length=0)
         {
+            value = "";
             string attrValue = lNames.Count == 0 ? GetAttrValue(row[0].ToString()):"";
             string delimeter = "";
             foreach (var columnName in lNames)
@@ -403,14 +457,17 @@ XHTML:'{xhtmlValue}
 {columnName}
 
 {e}", @"Can't read Attribute!");
+                    return false;
+
                 }
 
                 delimeter = " ";
             }
             // linit length
-            return length > 0 && attrValue.Length > length 
+            value = length > 0 && attrValue.Length > length 
                 ? attrValue.Substring(0, length) 
                 : attrValue;
+            return true;
 
         }
 

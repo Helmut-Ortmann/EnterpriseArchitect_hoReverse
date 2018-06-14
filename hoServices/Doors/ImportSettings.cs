@@ -62,13 +62,21 @@ Consider Resetting to factory settings
         /// <param name="nameRoot"></param>
         /// <param name="toolTipRoot"></param>
         /// <param name="eventHandler"></param>
+        /// <param name="hoverHandler"></param>
+        /// <param name="contectItem">A Context item (right click), optional</param>
+        /// <param name="mouseDownEventHandlerContext"></param>
         /// <returns></returns>
         public ToolStripMenuItem ConstructImporterMenuItems<T>(List<T> items, string nameRoot, string toolTipRoot,
-            EventHandler eventHandler)
+            EventHandler eventHandler, 
+            EventHandler hoverHandler = null, 
+            string contectItem = "",  MouseEventHandler mouseDownEventHandlerContext = null
+            )
         {
 
             return JasonHelper.ConstructStyleToolStripMenuDiagram(items, nameRoot, toolTipRoot,
-                eventHandler);
+                eventHandler,
+                hoverHandler, 
+                contectItem,  mouseDownEventHandlerContext);
 
 
 
