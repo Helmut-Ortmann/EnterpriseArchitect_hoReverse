@@ -4207,7 +4207,7 @@ Please restart EA. During restart hoTools loads the default settings.",
                 };
             if (theDialog.ShowDialog() != DialogResult.OK) return;
 
-            filePath = theDialog.FileName.ToString();
+            filePath = theDialog.FileName;
 
 
             if (!File.Exists(filePath))

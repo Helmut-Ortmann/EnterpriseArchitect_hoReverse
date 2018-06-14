@@ -258,7 +258,7 @@
             <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.4.0\lib\net40\MariGold.OpenXHTML.dll" />
         </Component>
         <Component Id="ReqIFSharp.dll" Guid="B19B5F34-14FE-4F28-BAE9-A73025277C78">
-            <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.0\lib\net45\ReqIFSharp.dll" />
+            <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.2\lib\net45\ReqIFSharp.dll" />
         </Component>
 
     </ComponentGroup>

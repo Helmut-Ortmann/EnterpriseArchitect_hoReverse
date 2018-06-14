@@ -4,26 +4,43 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using DocumentFormat.OpenXml.Drawing;
 using hoReverse.hoUtils;
 using ReqIFSharp;
 using Path = System.IO.Path;
 
 namespace EaServices.Doors
 {
+    /// <summary>
+    /// Import ReqIf requirements. The subclass ReqIfDoors handles DOORS specific features (currently not used). It handles:
+    /// - *.reqif
+    /// - *.reqifz (compressed)
+    /// - Images like *.png
+    /// - Modules (in settings give two package GUIDs
+    /// Currently ReqIf doesn't support embedded files other than image (no ole, excel, pdf)
+    /// </summary>
     public class ReqIf : DoorsModule
     {
         readonly FileImportSettingsItem _settings;
-
+        /// <summary>
+        /// ReqIF import
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="pkg"></param>
+        /// <param name="importFile"></param>
+        /// <param name="settings"></param>
         public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
             _settings = settings;
         }
+
         /// <summary>
-        /// Import and update Requirements.
+        /// Import and update ReqIF Requirements.
         /// </summary>
-        // async Task
-        // public override async Task ImportUpdateRequirements(string eaObjectType = "Requirement",
+        /// <param name="eaObjectType">EA Object type to create</param>
+        /// <param name="eaStereotype">EA stereotype to create</param>
+        /// <param name="subModuleIndex">ReqIF can handle multiple submodules. This you can define in settings by the list of package GUIDs to import</param>
+        /// <param name="stateNew">The EA state if the EA element is created</param>
+        /// <param name="stateChanged">The EA state if the EA element is changed, currently not used</param>
         public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             int subModuleIndex = 0,
@@ -33,24 +50,43 @@ namespace EaServices.Doors
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
 
+            // decompress reqif file and its embedded files
             string importFile = Decompress(ImportModuleFile);
+
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
             var reqIf = deserializer.Deserialize(importFile);
 
+            // prepare EA, existing requirements to detect deleted and changed requirements
+            ReadEaPackageRequirements();
+            CreateEaPackageDeletedObjects();
+
+            // Add requirements recursiv for module to requirement table
             InitializeReqIfRequirementsTable(reqIf);
-
-            // run for submodule
-            Specification elModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
-            AddRequirements(DtRequirements, elModule.Children,1);
+            Specification reqifModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+            AddRequirementsToDataTable(DtRequirements, reqifModule.Children,1);
             
+           CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importFile);
 
+            MoveDeletedRequirements();
+            UpdatePackage(reqIf);
 
-            ReadPackageRequirements();
-            CreatePackageDeletedObjects();
+            Rep.BatchAppend = false;
+            Rep.EnableUIUpdates = true;
+            Rep.ReloadPackage(Pkg.PackageID);
+        }
 
-            // Insert/Update requirements
-
+        /// <summary>
+        /// Create, update, delete requirements in EA Package from Requirement DataTable. 
+        /// </summary>
+        /// <param name="eaObjectType"></param>
+        /// <param name="eaStereotype"></param>
+        /// <param name="stateNew"></param>
+        /// <param name="stateChanged"></param>
+        /// <param name="importFile"></param>
+        private void CreateUpdateDeleteEaRequirements(string eaObjectType, string eaStereotype, string stateNew,
+            string stateChanged, string importFile)
+        {
             Count = 0;
             CountChanged = 0;
             CountNew = 0;
@@ -59,7 +95,6 @@ namespace EaServices.Doors
             int lastElementId = 0;
 
             int oldLevel = 0;
-
             string notesColumn = _settings.AttrNotes ?? "";
             foreach (DataRow row in DtRequirements.Rows)
             {
@@ -68,7 +103,7 @@ namespace EaServices.Doors
 
 
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
- 
+
                 // Maintain parent ids of level
                 // get parent id
                 if (objectLevel > oldLevel)
@@ -77,6 +112,7 @@ namespace EaServices.Doors
                     else parentElementIdsPerLevel[objectLevel] = lastElementId;
                     parentElementId = lastElementId;
                 }
+
                 if (objectLevel < oldLevel)
                 {
                     parentElementId = parentElementIdsPerLevel[objectLevel];
@@ -86,10 +122,10 @@ namespace EaServices.Doors
 
                 string alias = CombineAttrValues(_settings.AliasList, row, 40);
                 string name = CombineAttrValues(_settings.AttrNameList, row, 40);
-                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString(): row[1].ToString());
+                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString() : row[1].ToString());
                 string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
 
-               // Check if requirement with Doors ID already exists
+                // Check if requirement with Doors ID already exists
                 bool isExistingRequirement = DictPackageRequirements.TryGetValue(objectId, out int elId);
 
 
@@ -99,7 +135,7 @@ namespace EaServices.Doors
                     el = Rep.GetElementByID(elId);
                     if (el.Alias != alias ||
                         el.Name != nameShort ||
-                        el.Notes != notes )
+                        el.Notes != notes)
                     {
                         if (stateChanged != "") el.Status = stateChanged;
                         CountChanged += 1;
@@ -107,7 +143,7 @@ namespace EaServices.Doors
                 }
                 else
                 {
-                    el = (EA.Element)Pkg.Elements.AddNew(name, "Requirement");
+                    el = (EA.Element) Pkg.Elements.AddNew(name, "Requirement");
                     if (stateNew != "") el.Status = stateNew;
                     CountChanged += 1;
                 }
@@ -129,33 +165,24 @@ namespace EaServices.Doors
 
                 // handle the remaining columns/ tagged values
                 var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
-                           where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
-                           select new
-                           {
-                               Name = c.ColumnName,
-                               Value = row[c].ToString()
-                           }
-
+                        where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
+                        select new
+                        {
+                            Name = c.ColumnName,
+                            Value = row[c].ToString()
+                        }
                     ;
                 // Handle *.rtf/*.docx content
                 string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
 
                 UpdateLinkedDocument(el, rtfValue, importFile);
-                
+
                 // Update/Create Tagged value
                 foreach (var c in cols)
                 {
-                   if (notesColumn != c.Name) TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value??""));                     
-                    
+                    if (notesColumn != c.Name) TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value ?? ""));
                 }
             }
-
-            MoveDeletedRequirements();
-            UpdatePackage(reqIf);
-
-            Rep.BatchAppend = false;
-            Rep.EnableUIUpdates = true;
-            Rep.ReloadPackage(Pkg.PackageID);
         }
 
 
@@ -204,7 +231,7 @@ Extract folder: '{extractDirectory}'", @"Can't decompress *.reqifz file");
         /// </summary>
         /// <param name="el">EA Element to update linked document</param>
         /// <param name="xhtmlValue">The XHTML value in XHTML or flat string format</param>
-        /// <param name="importFile">If "" or null the use </param>
+        /// <param name="importFile">If "" or null use the Class settings ImportModuleFile from constructor</param>
         /// <returns></returns>
         protected bool UpdateLinkedDocument(EA.Element el, string xhtmlValue, string importFile="")
         {
@@ -212,10 +239,8 @@ Extract folder: '{extractDirectory}'", @"Can't decompress *.reqifz file");
             // Handle *.rtf content
             string docFile = $"{System.IO.Path.GetDirectoryName(importFile)}";
             bool IsGenerateDocx = true;
-            if (IsGenerateDocx)
-                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.docx");
-            else
-                docFile = System.IO.Path.Combine(docFile, "xxxxxxx.rtf");
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            docFile = System.IO.Path.Combine(docFile, IsGenerateDocx ? "xxxxxxx.docx" : "xxxxxxx.rtf");
 
             if (docFile.EndsWith(".rtf"))
                 HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
@@ -252,7 +277,7 @@ XHTML:'{xhtmlValue}
         }
 
         /// <summary>
-        /// Initialize ReqIF Requirement DataTable
+        /// Initialize ReqIF Requirement DataTable with Columns (standard columns + one for each attribute)
         /// </summary>
         /// <param name="reqIf"></param>
         private void InitializeReqIfRequirementsTable(ReqIF reqIf)
@@ -264,14 +289,14 @@ XHTML:'{xhtmlValue}
             DtRequirements.Columns.Add("Object Level", typeof(string));
 
             // get list of all used attributes
-            var blackList = new String[] { };// {"TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars","TableLeftBorder","TableLinkIndicators","TableRightBorder","TableShowAttrs","TableTopBorder"};
+            var blackList = new String[] { "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
             var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
                 from attr in obj.Values
                 where ! blackList.Any(bl=>bl == attr.AttributeDefinition.LongName)
 				
                 select new { Name = attr.AttributeDefinition.LongName, Type=attr.AttributeDefinition.DatatypeDefinition.ToString()}).Distinct();
            
-            // over all Attributes
+            // Add columns for all Attributes
             foreach (var attr in qAttr)
             {
                 DtRequirements.Columns.Add(attr.Name, typeof(string));
@@ -280,12 +305,12 @@ XHTML:'{xhtmlValue}
 
 
         /// <summary>
-        /// Add ObjSpec childrens to DataTable, recursive with 
+        /// Add requirements recursive to datatable 
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="children"></param>
         /// <param name="level"></param>
-        private void AddRequirements(DataTable dt, List<SpecHierarchy> children, int level)
+        private void AddRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
         {
             if (children == null || children.Count == 0) return;
             foreach (SpecHierarchy child in children)
@@ -316,12 +341,11 @@ XHTML:'{xhtmlValue}
                     {
                         MessageBox.Show($@"AttrName: '{column.AttributeDefinition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}", 
                             @"Exception add ReqIF Attribute");
-                        continue;
                     }
                 }
 
                 dt.Rows.Add(row);
-                AddRequirements(dt, child.Children, level + 1);
+                AddRequirementsToDataTable(dt, child.Children, level + 1);
             }
             
 
@@ -389,12 +413,12 @@ XHTML:'{xhtmlValue}
                 : attrValue;
 
         }
+
         /// <summary>
         /// Combine rtf Attribute values for a list of attribute names.
         /// </summary>
         /// <param name="lNames"></param>
         /// <param name="row"></param>
-        /// <param name="length">The leghth of the output string. Default:40</param>
         /// <returns></returns>
         private string CombineRtfAttrValues(List<string> lNames, DataRow row)
         {
@@ -415,7 +439,7 @@ XHTML:'{xhtmlValue}
 {e}", @"Can't read Attribute!");
                 }
 
-                delimeter = $@"<p><br><br><br></p>";
+                delimeter = @"<p><br><br><br></p>";
             }
             // linit length
             return attrRtfValue;

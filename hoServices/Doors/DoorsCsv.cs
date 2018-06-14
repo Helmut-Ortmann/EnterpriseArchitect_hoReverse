@@ -43,8 +43,8 @@ namespace EaServices.Doors
             // Prepare
             DtRequirements = ExpImp.MakeDataTableFromCsvFile(ImportModuleFile, ',');
 
-            base.ReadPackageRequirements();
-            CreatePackageDeletedObjects();
+            base.ReadEaPackageRequirements();
+            CreateEaPackageDeletedObjects();
 
             Count = 0;
             CountChanged = 0;

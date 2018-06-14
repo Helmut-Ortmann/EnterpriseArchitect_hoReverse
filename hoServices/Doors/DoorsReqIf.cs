@@ -9,13 +9,18 @@ using ReqIFSharp;
 
 namespace EaServices.Doors
 {
-    public class DoorsReqIf : DoorsModule
+    public class DoorsReqIf : ReqIf
     {
-        // The settings of the current import ReqIf
-        private FileImportSettingsItem _settings;
-        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
+        /// <summary>
+        /// Import of ReqIF DOORS Requirements
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="pkg"></param>
+        /// <param name="importFile"></param>
+        /// <param name="settings"></param>
+        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile,  settings)
         {
-            _settings = settings;
+            
         }
          /// <summary>
         /// Import and update ReqIF Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
@@ -44,8 +49,8 @@ namespace EaServices.Doors
 
 
 
-            base.ReadPackageRequirements();
-            CreatePackageDeletedObjects();
+            base.ReadEaPackageRequirements();
+            CreateEaPackageDeletedObjects();
 
             
 

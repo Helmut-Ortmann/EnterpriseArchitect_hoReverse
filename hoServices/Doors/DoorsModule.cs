@@ -116,7 +116,7 @@ namespace EaServices.Doors
         /// - Key: ID according to ReqIF
         /// - Value: EA ElementID of the requirements
         /// </summary>
-        protected void ReadPackageRequirements()
+        protected void ReadEaPackageRequirements()
         {
             // Read all existing EA Requirements of package
             // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
@@ -168,8 +168,8 @@ namespace EaServices.Doors
             // Prepare
             _dtRequirements = ExpImp.MakeDataTableFromCsvFile(_importModuleFile, ',');
 
-            ReadPackageRequirements();
-            CreatePackageDeletedObjects();
+            ReadEaPackageRequirements();
+            CreateEaPackageDeletedObjects();
 
             _count = 0;
             _countChanged = 0;
@@ -392,7 +392,7 @@ namespace EaServices.Doors
         /// Create Package for deleted objects
         /// </summary>
         /// <returns>Package created Objects</returns>
-        protected EA.Package CreatePackageDeletedObjects()
+        protected EA.Package CreateEaPackageDeletedObjects()
         {
             if (PkgDeletedObjects != null) return PkgDeletedObjects;
             if (_pkg.Packages.Count > 0)

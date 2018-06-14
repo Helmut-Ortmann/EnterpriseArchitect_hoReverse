@@ -82,8 +82,8 @@ namespace EaServices.Doors
 
 
 
-            base.ReadPackageRequirements();
-            CreatePackageDeletedObjects();
+            base.ReadEaPackageRequirements();
+            CreateEaPackageDeletedObjects();
 
             Count = 0;
             CountChanged = 0;
