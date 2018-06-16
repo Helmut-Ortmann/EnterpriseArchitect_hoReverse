@@ -89,7 +89,7 @@ namespace hoReverse.Reverse
         private Button _btnAddConstraint;
         private Button _btnLocateType;
         private Button _btnFindUsage;
-        public EnterTextBox TxtUserText;
+        private EnterTextBox _txtUserText;
         private Button _btnDisplaySpecification;
         private Button _btnComposite;
         private Button _btnOr;
@@ -258,9 +258,6 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem importReqIFBySettings5ToolStripMenuItem;
         private ToolTip _toolTip1;
 
-        //public Button txtUserText;
-
-
 
         public void Close()
         {
@@ -392,7 +389,7 @@ namespace hoReverse.Reverse
 
         public string GetText()
         {
-            return TxtUserText.Text;
+            return _txtUserText.Text;
         }
 
         public EA.Repository Repository
@@ -567,7 +564,7 @@ namespace hoReverse.Reverse
         {
             if (e.KeyCode == Keys.Enter && e.Shift)
             {
-                HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
+                HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, _txtUserText.Text);
                 e.Handled = true;
             }
         }
@@ -671,7 +668,7 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TxtUserText = new hoReverse.Reverse.EnterTextBox();
+            this._txtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1451,25 +1448,25 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
-            // TxtUserText
+            // _txtUserText
             // 
-            this.TxtUserText.AcceptsReturn = true;
-            this.TxtUserText.AcceptsTab = true;
-            this.TxtUserText.AllowDrop = true;
-            this.TxtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this.TxtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtUserText.Location = new System.Drawing.Point(160, 50);
-            this.TxtUserText.Multiline = true;
-            this.TxtUserText.Name = "TxtUserText";
-            this.TxtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TxtUserText.Size = new System.Drawing.Size(695, 112);
-            this.TxtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this.TxtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+            this._txtUserText.AcceptsReturn = true;
+            this._txtUserText.AcceptsTab = true;
+            this._txtUserText.AllowDrop = true;
+            this._txtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this._txtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._txtUserText.Location = new System.Drawing.Point(160, 50);
+            this._txtUserText.Multiline = true;
+            this._txtUserText.Name = "_txtUserText";
+            this._txtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this._txtUserText.Size = new System.Drawing.Size(695, 112);
+            this._txtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this._txtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
         "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
         "lon as in C.");
-            this.TxtUserText.WordWrap = false;
-            this.TxtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
-            this.TxtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
+            this._txtUserText.WordWrap = false;
+            this._txtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
+            this._txtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
             // 
             // _menuStrip1
             // 
@@ -2531,7 +2528,7 @@ namespace hoReverse.Reverse
             this.Controls.Add(this._btnA);
             this.Controls.Add(this._btnOr);
             this.Controls.Add(this._btnComposite);
-            this.Controls.Add(this.TxtUserText);
+            this.Controls.Add(this._txtUserText);
             this.Controls.Add(this._btnDisplaySpecification);
             this.Controls.Add(this._btnFindUsage);
             this.Controls.Add(this._btnLocateType);
@@ -2601,7 +2598,6 @@ namespace hoReverse.Reverse
                         s = s.Substring(0, 252);
                     }
                     elSource.Name = s;
-                    //elSource.Notes = TxtUserText.Text;
                     elSource.Update();
                 }
                 // Connector to change
@@ -2663,11 +2659,11 @@ namespace hoReverse.Reverse
             // In activity it 
             if (dia.Type == "Activity")
             {
-                HoService.InsertInActivtyDiagram(_repository, TxtUserText.Text, _addinSettings.UseCallBehaviorAction);
+                HoService.InsertInActivtyDiagram(_repository, _txtUserText.Text, _addinSettings.UseCallBehaviorAction);
             }
             else
             {
-                HoService.InsertInterface(_repository, dia, TxtUserText.Text);
+                HoService.InsertInterface(_repository, dia, _txtUserText.Text);
             }
         }
 
@@ -2677,13 +2673,13 @@ namespace hoReverse.Reverse
 
         private void BtnNoteFromText_Click(object sender, EventArgs e)
         {
-            HoService.CreateNoteFromText(_repository, TxtUserText.Text);
+            HoService.CreateNoteFromText(_repository, _txtUserText.Text);
         }
 
 
         private void BtnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
-            HoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
+            HoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(_txtUserText.Text.Trim()));
 
         }
 
@@ -2694,7 +2690,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void BtnActivityFromText_Click(object sender, EventArgs e)
         {
-            HoService.CreateActivityFromText(_repository, Cutil.RemoveCasts(TxtUserText.Text.Trim()));
+            HoService.CreateActivityFromText(_repository, Cutil.RemoveCasts(_txtUserText.Text.Trim()));
         }
 
         void BtnC_Click(object sender, EventArgs e)
@@ -2821,7 +2817,7 @@ namespace hoReverse.Reverse
             EA.Element el = HoUtil.GetElementFromContextObject(_repository);
             if (el == null) return;
             if ("Interface Class Component".Contains(el.Type))
-                HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
+                HoService.CreateOperationsFromTextService(_repository, _txtUserText.Text);
             else HoService.InsertDiagramElementAndConnect(_repository, "StateNode", "101");
 
 
@@ -2861,7 +2857,7 @@ namespace hoReverse.Reverse
 
                 // Insert Attributes, Structures, Enums
                 if ("Class Interface Component".Contains(el.Type))
-                    HoService.InsertAttributeService(_repository, TxtUserText.Text);
+                    HoService.InsertAttributeService(_repository, _txtUserText.Text);
                 // Insert Behavior
                 else InsertFromText();
             }
@@ -2880,14 +2876,14 @@ namespace hoReverse.Reverse
 
         private void BtnActionFromText_Click(object sender, EventArgs e)
         {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
+            string name = CallOperationAction.RemoveUnwantedStringsFromText(_txtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
 
         }
 
         private void BtnDecisionFromText_Click(object sender, EventArgs e)
         {
-            string decisionName = TxtUserText.Text.Trim();
+            string decisionName = _txtUserText.Text.Trim();
             HoService.CreateDecisionFromText(_repository, decisionName);
         }
 
@@ -2895,7 +2891,7 @@ namespace hoReverse.Reverse
         private void TxtUserText_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // force cr lf at line end
-            TxtUserText.Text = Clipboard.GetText().Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+            _txtUserText.Text = Clipboard.GetText().Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
 
         }
 
@@ -2981,7 +2977,7 @@ namespace hoReverse.Reverse
 
         private void CreateSharedMemoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.CreateSharedMemoryFromText(_repository, TxtUserText.Text);
+            HoService.CreateSharedMemoryFromText(_repository, _txtUserText.Text);
         }
 
 
@@ -2998,17 +2994,17 @@ namespace hoReverse.Reverse
 
         private void DeleteToolStripMenuItemTextField_Click(object sender, EventArgs e)
         {
-            TxtUserText.Text = "";
+            _txtUserText.Text = "";
         }
 
         private void QuickSearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, TxtUserText.Text);
+            HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, _txtUserText.Text);
         }
 
         private void InsertTextIntoNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.CreateNoteFromText(_repository, TxtUserText.Text);
+            HoService.CreateNoteFromText(_repository, _txtUserText.Text);
         }
 
         private void InsertBeneathNodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3018,13 +3014,13 @@ namespace hoReverse.Reverse
 
         private void AddCompositeActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
+            string name = CallOperationAction.RemoveUnwantedStringsFromText(_txtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
         }
 
         private void AddActivityToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(TxtUserText.Text.Trim());
+            string name = CallOperationAction.RemoveUnwantedStringsFromText(_txtUserText.Text.Trim());
             HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
         }
 
@@ -3175,7 +3171,7 @@ namespace hoReverse.Reverse
 
         private void InsertAttributeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.InsertAttributeService(_repository, TxtUserText.Text);
+            HoService.InsertAttributeService(_repository, _txtUserText.Text);
 
         }
 
@@ -3183,7 +3179,7 @@ namespace hoReverse.Reverse
 
         private void InsertTypedefStructToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.CreateTypeDefStructFromTextService(_repository, TxtUserText.Text);
+            HoService.CreateTypeDefStructFromTextService(_repository, _txtUserText.Text);
         }
 
 
@@ -3251,7 +3247,7 @@ namespace hoReverse.Reverse
                 {
                     // Use Search Term from Configuration or from GUI
                     string searchTerm = sh.keySearchTerm.Trim();
-                    if (searchTerm.ToLower().Equals("<search term>")) searchTerm = TxtUserText.Text;
+                    if (searchTerm.ToLower().Equals("<search term>")) searchTerm = _txtUserText.Text;
                     _repository.RunModelSearch(sh.keySearchName, searchTerm, "", "");
                 }
                 catch (Exception e)
@@ -3267,7 +3263,7 @@ namespace hoReverse.Reverse
             if (_addinSettings.ShortcutsServices[pos] is ServicesCallConfig sh)
             {
                 if (sh.Method == null) return;
-                sh.Invoke(_repository, TxtUserText.Text);
+                sh.Invoke(_repository, _txtUserText.Text);
 
             }
         }
@@ -3465,7 +3461,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void _btnWriteText_Click(object sender, EventArgs e)
         {
-            WriteFromText(TxtUserText.Text);
+            WriteFromText(_txtUserText.Text);
 
         }
 
@@ -3474,7 +3470,7 @@ namespace hoReverse.Reverse
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                HoService.AddMacroFromText(_repository, TxtUserText.Text);
+                HoService.AddMacroFromText(_repository, _txtUserText.Text);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
@@ -3490,7 +3486,7 @@ namespace hoReverse.Reverse
 
         private void SetMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = TxtUserText.Text.Trim();
+            string s = _txtUserText.Text.Trim();
             if (s == "") s = "define";
             SetMacro(s);
 
@@ -3586,7 +3582,7 @@ namespace hoReverse.Reverse
         private void _btnCopy_Click(object sender, EventArgs e)
         {
             
-            TxtUserText.Text = HoService.CopyContextNameToClipboard(_repository);
+            _txtUserText.Text = HoService.CopyContextNameToClipboard(_repository);
         }
 
         private void EndifMacroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3712,8 +3708,7 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         void ImporterLocatePackage_Click(object sender, EventArgs e)
         {
-            MenuItem mItem = sender as MenuItem;
-            if (mItem == null) return;
+            if (!(sender is MenuItem mItem)) return;
 
             // use the last menu item
             if (_lastMenuItem?.Tag == null) return;
@@ -3843,12 +3838,12 @@ Please restart EA. During restart hoTools loads the default settings.",
         private void InsertFunctionToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text);
+            HoService.CreateOperationsFromTextService(_repository, _txtUserText.Text);
 
         }
         private void InsertFunctionMakeDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoService.CreateOperationsFromTextService(_repository, TxtUserText.Text, makeDuplicateOperations:true);
+            HoService.CreateOperationsFromTextService(_repository, _txtUserText.Text, makeDuplicateOperations:true);
         }
         /// <summary>
         /// Change diagram link style for selected diagram links 

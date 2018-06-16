@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
 using ReqIFSharp;
-using Path = System.IO.Path;
 
 namespace EaServices.Doors
 {
@@ -20,9 +20,11 @@ namespace EaServices.Doors
     /// </summary>
     public class ReqIf : DoorsModule
     {
+        private readonly string Tab = "\t";
         readonly FileImportSettingsItem _settings;
-        bool _errorMessage1 = false;
-        readonly String[] _blackList1 = new String[] { "Id", "Object Level", "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
+        bool _errorMessage1;
+        // Attributes not to import
+        readonly String[] _blackList1 = new String[] { "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
 
         /// <summary>
         /// ReqIF import
@@ -101,7 +103,7 @@ namespace EaServices.Doors
 
             List<string> expectedColumns = new List<string>();
             expectedColumns.AddRange(_settings.AliasList);
-            expectedColumns.AddRange(_settings.AttrList);
+            expectedColumns.AddRange(_settings.AttrNameList);
             expectedColumns.AddRange(_settings.RtfNameList);
             expectedColumns.Add(_settings.AttrNotes);
 
@@ -170,10 +172,10 @@ Available Attributes:
 
                 oldLevel = objectLevel;
 
-                CombineAttrValues(_settings.AliasList, row, out string alias, 40);
-                CombineAttrValues(_settings.AttrNameList,  row, out string name, 40);
-                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString()??"" : row[1].ToString()??"");
-                string nameShort = GetAttrValue(name.Length > 40 ? name.Substring(0, 40) : name);
+                CombineAttrValues(_settings.AliasList, row, out string alias, 40, makeName:true);
+                CombineAttrValues(_settings.AttrNameList,  row, out string name, 40, makeName: true);
+                string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString() : row[1].ToString());
+
 
                 // Check if requirement with Doors ID already exists
                 bool isExistingRequirement = DictPackageRequirements.TryGetValue(objectId, out int elId);
@@ -184,7 +186,7 @@ Available Attributes:
                 {
                     el = Rep.GetElementByID(elId);
                     if (el.Alias != alias ||
-                        el.Name != nameShort ||
+                        el.Name != name ||
                         el.Notes != notes)
                     {
                         if (stateChanged != "") el.Status = stateChanged;
@@ -250,7 +252,7 @@ Available Attributes:
                 if (String.IsNullOrWhiteSpace(extractDirectory)) return "";
 
                 // extract reqif file from achive
-                string pattern = $"*.reqif";
+                string pattern = "*.reqif";
                 var files = Directory.GetFiles(extractDirectory, pattern);
                 if (files.Length != 1)
                 {
@@ -304,10 +306,12 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
                 bool res = el.LoadLinkedDocument(docFile);
                 if (!res)
                     MessageBox.Show($@"ImportFile: '{importFile}'
-Id: '{el.Multiplicity}'
-Name: '{el.Name}'
-Err: '{el.GetLastError()}'
-RtfDocxFile:'{docFile}
+
+EA GUID           {Tab}: '{el.ElementGUID}'
+EA Multiplicity   {Tab}: '{el.Multiplicity}'
+Name:             {Tab}: '{el.Name}'
+EaLastError       {Tab}: '{el.GetLastError()}'
+RtfDocxFile:      {Tab}: '{docFile}'
 
 XHTML:'{xhtmlValue}",
                         @"Error loading Linked Document, break current requirement, continue!");
@@ -351,7 +355,7 @@ XHTML:'{xhtmlValue}
                 from attr in obj.Values
                 where (! _blackList1.Any(bl=>bl == attr.AttributeDefinition.LongName))  && // ignore blacklist, DOORS table attributes
 				      (! standardAttributes.Any(bl => bl == attr.AttributeDefinition.LongName)) // ignore standard attributes
-                         select new { Name = attr.AttributeDefinition.LongName}).Distinct();
+                select new { Name = attr.AttributeDefinition.LongName}).Distinct();
            
             // Add columns for all Attributes, except DOORS table attributes and standard attributes
             foreach (var attr in qAttr)
@@ -397,7 +401,11 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                 foreach (var column in columns)
                 {
                     try
-                    {   // Handle enums
+                    {   
+                        // Handle blacklist
+                        if (_blackList1.Contains(column.AttributeDefinition.LongName)) continue;
+
+                        // Handle enums
                         if (column.AttributeDefinition is AttributeDefinitionEnumeration)
                         {
                             List<EnumValue> enumValues = (List<EnumValue>) column.ObjectValue;
@@ -440,16 +448,16 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
         }
 
         /// <summary>
-        /// Get Attribute Value
+        /// Get Attribute Value. It converts xhtml and if makeName = true it removes multiple white spaces and control sequences from string
         /// </summary>
         /// <param name="attrValue"></param>
+        /// <param name="makeName">True: Remove multiple whitespaces, control characters</param>
         /// <returns></returns>
-        private string GetAttrValue(string attrValue)
+        private string GetAttrValue(string attrValue, bool makeName=false)
         {
-            if (attrValue.Contains("http://www.w3.org/1999/xhtml"))
-                return HtmlToText.ConvertReqIfXhtml(attrValue);
-            else return attrValue;
-
+            // convert xhtml or use the origianl text
+            var text = attrValue.Contains("http://www.w3.org/1999/xhtml") ? HtmlToText.ConvertReqIfXhtml(attrValue) : attrValue;
+            return makeName ? MakeNameFromString(text) : text;
         }
 
         /// <summary>
@@ -459,18 +467,18 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
         /// <param name="row"></param>
         /// <param name="value">The combined value</param>
         /// <param name="length">The leghth of the output string. Default:40</param>
+        /// <param name="makeName"></param>
         /// <returns>false for error</returns>
-        private bool CombineAttrValues(List<string> lNames, DataRow row, out string value, int length=0)
+        private bool CombineAttrValues(List<string> lNames, DataRow row, out string value, int length=0, bool makeName=false)
         {
-            value = "";
-            string attrValue = lNames.Count == 0 ? GetAttrValue(row[0].ToString()):"";
+            value = lNames.Count == 0 ? GetAttrValue(row[0].ToString()):"";
             string delimeter = "";
             foreach (var columnName in lNames)
             {
 
                 try
                 {
-                    attrValue = $"{attrValue}{delimeter}{GetAttrValue(row[columnName].ToString())}";
+                    value = $"{value}{delimeter}{GetAttrValue(row[columnName].ToString())}";
                 }
                 catch (Exception e)
                 {
@@ -484,10 +492,12 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
 
                 delimeter = " ";
             }
+            // make name
+            value = makeName ? MakeNameFromString(value, length) : value;
             // linit length
-            value = length > 0 && attrValue.Length > length 
-                ? attrValue.Substring(0, length) 
-                : attrValue;
+            value = length > 0 && value.Length > length 
+                ? value.Substring(0, length) 
+                : value;
             return true;
 
         }

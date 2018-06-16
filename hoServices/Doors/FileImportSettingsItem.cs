@@ -13,17 +13,19 @@ namespace EaServices.Doors
         /// </summary>
         public enum ImportTypes
         {
-           DoorsCsv,
-           DoorsReqIf,
+           DoorsCsv,     // DOORS standard *.csv format
+           DoorsReqIf,   // DOORS ReqIF format
            ReqIf,        // pure ReqIF
-           XmlStruct,    // Structured XML
-           XmlFlat       // Flat XML
+           XmlStruct,    // Structured XML, use it e.g. for test
+           XmlFlat       // Flat XML, currently not used
         }
         [JsonProperty("ImportType")]
         public ImportTypes ImportType { get; set; }
 
         /// <summary>
-        /// The file to import
+        /// The file to import. 
+        ///
+        /// Example: myImport.reqifz, myImport.csv, myImport.xml
         /// </summary>
         [JsonIgnore]
         public string InputFile
@@ -35,7 +37,7 @@ namespace EaServices.Doors
         private string _inputFile;
 
         /// <summary>
-        /// PackageGuid
+        /// List of PackageGuids. hoReverse puts the Requirements beneath this package.
         /// </summary>
         [JsonIgnore]
         public List<string> PackageGuidList
@@ -59,7 +61,7 @@ namespace EaServices.Doors
         private string  _objectType;
 
         /// <summary>
-        /// Stereotype
+        /// Stereotype to use when creating the EA Element for a requirement/test
         /// </summary>
         [JsonIgnore]
         public string Stereotype
@@ -83,7 +85,10 @@ namespace EaServices.Doors
         private string  _statusNew;
 
         /// <summary>
+        /// Only used for *.csv import format.
+        /// 
         /// Status Changed. Sets the EA Element Property: 'Status'. If 'None' or blank no EA Status is updated
+        ///
         /// </summary>
         [JsonIgnore]
         public string StatusChanged
@@ -95,7 +100,7 @@ namespace EaServices.Doors
         private string  _statusChanged;
 
         /// <summary>
-        /// Description to viziualize as Tooltip
+        /// Description to viziualize as Tooltip in hoReverse Menu
         /// </summary>
         [JsonIgnore]
         public string Description
@@ -120,6 +125,7 @@ namespace EaServices.Doors
 
         /// <summary>
         /// ListNo. The number of the list to group lists.
+        /// Use such lists to import more than one file at a time. If so, give the grouped list the same number
         /// </summary>
         [JsonIgnore]
         public string ListNo
@@ -130,19 +136,6 @@ namespace EaServices.Doors
         [JsonProperty("ListNo")]
         private string  _listNo;
 
-
-        /// <summary>
-        /// List of Attributes for ReqIF
-        /// </summary>
-        [JsonIgnore]
-        public List<string> AttrList
-        {
-            get => _attrList ?? new List<string>();
-            set => _attrList = value;
-        }
-
-        [JsonProperty("AttrList")]
-        private List<string>  _attrList;
 
         /// <summary>
         /// ReqIf Attribute to store in Notes
@@ -157,7 +150,7 @@ namespace EaServices.Doors
         private string  _attrNotes;
 
         /// <summary>
-        /// ReqIf Attributes to store as name
+        /// List of ReqIf Attributes to store as name
         /// </summary>
         [JsonIgnore]
         public List<string> AttrNameList
@@ -169,7 +162,7 @@ namespace EaServices.Doors
         private List<string>  _attrNameList;
 
         /// <summary>
-        /// ReqIf Attributes to store as *.rtf
+        /// List of ReqIf Attributes to store as *.rtf
         /// </summary>
         [JsonIgnore]
         public List<string> RtfNameList
@@ -182,7 +175,7 @@ namespace EaServices.Doors
         private List<string>  _rtfNameList;
 
         /// <summary>
-        /// ReqIf Attributes to store as Alias
+        /// List of ReqIf Attributes to store as Alias
         /// </summary>
         [JsonIgnore]
         public List<string> AliasList
@@ -195,7 +188,9 @@ namespace EaServices.Doors
         private List<string> _aliasList;
 
         /// <summary>
-        /// Id which build the ID stored in Multiplicity to identify the requirement
+        /// List of Attributes which build the ID stored in Multiplicity to identify the requirement (length less than 50). Only ImportType: "XmlStruct"
+        ///
+        /// Only used for type: xml
         /// </summary>
         [JsonIgnore]
         public List<string> IdList

@@ -387,6 +387,18 @@ namespace EaServices.Doors
 
             }
         }
+        /// <summary>
+        /// make a name from a string. Remove control characters, multiple white spaces. It's also possible to limit the string length
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="length">0 if not cut to length</param>
+        /// <returns></returns>
+        protected string MakeNameFromString(string text, int length = 0)
+        {
+            text = Regex.Replace(text, @"\s+", " ");
+            text = new string(text.Where(c => char.IsLetterOrDigit(c) || (c >= ' ' && c <= byte.MaxValue)).ToArray());
+            return length > 0 && text.Length > length ? text.Substring(0, length) : text;
+        }
 
         /// <summary>
         /// Create Package for deleted objects

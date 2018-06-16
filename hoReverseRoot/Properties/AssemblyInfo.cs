@@ -35,4 +35,4 @@ using System.Resources;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.1.6")]     // don't change, otherwise you have to update the component information in Files.wxs
 [assembly: AssemblyFileVersion("2.1.6")] // make same as ProductVersion in Product.wxs
-[assembly: NeutralResourcesLanguage("en-150")]
+[assembly: NeutralResourcesLanguage("en")]

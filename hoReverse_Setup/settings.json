@@ -341,20 +341,34 @@
     }
 	
   ],
-  // Importer settings::
-  // Import files into EA according to this specification
+   // Importer settings to import ReqIf, DoorsCsv, DoorsReqIF, xmlStruct into EA packages:
+  // - Specify import rules to import a type of file into one or more EA Packages.
+  // - see class: 'FileImportSettingsItem'
   //
-  // Rules:: A File path may be written with either '\', or '/'
-  // Description: A description for the list of files to import
-  // Tooltip:     A tooltip for the list of files to import
-  // ListNo:      The ListNumber to import. Equal ListNo are handled as one group to import together
-  // InputFile:   The Path of the file to import
-  // PackageGuidList: The list of Guids for the package to import into (e.g. DOORS *.reqifz with two modules 'ModuleA' and 'ModuleB')
-  // ObjectType:  The EA ObjectType to create for each imported row (e.g. 'Requirement')
-  // Stereotype:  The EA Stereotype to use for each imported row (e.g. 'Functional Requirement')
-  // ImportType:  'DoorsCsv' = Doors *.csv import format for requirements (tested with Doors 9.6)
-  // StatusNew:   The status after creation
-  // StatusChanged: The status after update
+  // Rules: 
+  // - A File path may be written with either '\', or '/'
+  //
+  // Settings:
+  // - Name:            The name in the EA menu to use this particular specification  
+  // - Description:     Further description visualied as tooltip in the menu description
+  // - ListNo:          hoReverse imports all specifications with the same ListNo with one click in the EA Menu 
+  // - InputFile:       The Path of the file to import, you have to use the extensions (*.csv, *.reqif,, *.reqifz, *.xml) depending on the particular 'ImportType'
+  // - PackageGuidList: The list of Guids for the packages to import into. The compressed *.reqifz format allows/demands one GUID for each imported 'Module'. The other file types only support one GUID/package.
+  // - ObjectType:      The valid EA ObjectType to create for each imported row (e.g. 'Requirement').
+  // - Stereotype:      The EA Stereotype to use for each imported row (e.g. 'Functional Requirement')
+  // - ImportType:      'DoorsCsv'   = Doors *.csv import format for requirements (tested with Doors 9.6)
+  //                    'DoorsReqIf' = DOORS reqif format (*.reqif, *.reqifz)
+  //                    'ReqIf'      = ReqIf format (*.reqif, *.reqifz)
+  //                    'XmlStruct'  = Structured xml for requirements, tests or so
+  // - StatusNew:       The EA status property to set for new EA element
+  // - StatusChanged:   The EA status property to set for changed EA elements (only supported for ImportType 'DoorsCsv')
+  // - RtfNameList      ["Object Text",],
+  // - AttrNameList     ["RequirementID", "Object Heading", "Object Text"],
+  // - AttrNotes        The attribute name to import into the EA property 'Note', e.g. "Object Text"
+  // - RtfNameList      List of attribute names to import into the EA property 'Linked Document', e.g.  ["Object Text",]
+  // - AliasList        List of attribute names to import into the EA property 'Alias', e.g. ["RequirementID"] or ["ReqIF.ForeignID"]
+  // - AttrNameList     List of attribute names to import into the EA property 'Name', e.g.  ["RequirementID", "Object Heading", "Object Text"]
+  // - IdList           List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
   //
   // DoorsCsv:
   // - Export to *.csv

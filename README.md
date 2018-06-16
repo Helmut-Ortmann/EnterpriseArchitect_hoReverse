@@ -35,6 +35,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3. Import Requirements, Tests (*.ReqIf, *.reqIfz, *.csv, *.xml)
+-  Import requirements into EA Package (ReqIF, DOORS ReqIf, DOORS *.csv, structured *.xml)
+-  Bug fixing 
+
 2.1.10 Error fixing
 -  Create CallBehaviour Action with SQL error fixed
 -  Service Copy ID of Element, Package, Diagram, .. copied

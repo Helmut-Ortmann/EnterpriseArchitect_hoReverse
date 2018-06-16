@@ -1229,87 +1229,9 @@ Errors:{countError}");
         /// - Port/required & provided interface
         /// 
 
-        void BtnInsert_Click(object sender, EventArgs e)
-        {
-            EA.Diagram dia = _repository.GetCurrentDiagram();
-            if (dia == null) return;
+        
 
-            if (dia.Type == "Activity")
-            {
-                HoService.InsertInActivtyDiagram(_repository, _hoReverseGui.TxtUserText.Text);
-            }
-            else
-            {
-                HoService.InsertInterface(_repository, dia, _hoReverseGui.TxtUserText.Text);
-            }
-        }
-  
-        void BtnActionFromText_Click(object sender, EventArgs e)
-        {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            HoService.CreateDiagramObjectFromContext(_repository, name, "Action", "");
-
-        }
-
-        // enter text to element
-        void BtnNoteFromText_Click(object sender, EventArgs e)
-        {
-            if (_repository.GetContextItemType().Equals(EA.ObjectType.otElement) )
-            {
-                EA.Element el = (EA.Element)_repository.GetContextObject();
-                string s0 = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim(), false);
-                s0 = Regex.Replace(s0, @"\/\*", "//"); // /* ==> //
-                s0 = Regex.Replace(s0, @"\*\/", "");   // delete */
-                el.Notes = s0;
-                
-                el.Update();
-            }
-        }
-
-        void BtnActivityFromText_Click(object sender, EventArgs e)
-        {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=no");
-
-        }
-        void BtnActivityCompositeFromText_Click(object sender, EventArgs e)
-        {
-            string name = CallOperationAction.RemoveUnwantedStringsFromText(_hoReverseGui.TxtUserText.Text.Trim());
-            HoService.CreateDiagramObjectFromContext(_repository, name, "Activity", "Comp=yes");
-
-        }
-
-
-        void BtnDecisionFromText_Click(object sender, EventArgs e)
-        {
-            string decisionName = _hoReverseGui.TxtUserText.Text.Trim();
-            decisionName = HoService.CreateDecisionFromText(_repository, decisionName);
-
-        }
-
-        void AboutToolStripMenuIte_Click(object sender, EventArgs e) 
-        {
-            ShowAbout();
-        }
-        void CreateActivityForOperationToolStripMenuIte_Click(object sender, EventArgs e)
-        {
-            HoService.CreateActivityForOperation(_repository);
-        }
-        //---------------------------------------------------------------------------------------------------------------
-        // Search for Elements, Operation, Attributes, GUID
-        void TxtUserText_KeyPress(object sender, EventArgs e)
-        {
-            // get the search vom setting
-            string searchName = _addinSettings.QuickSearchName;
-            try
-            {
-                _repository.RunModelSearch(searchName, _hoReverseGui.TxtUserText.Text.Trim(), "", "");
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(@"Search name:'" + searchName + @"'", e1.Message);
-            }
-        }
+        
 
 
 

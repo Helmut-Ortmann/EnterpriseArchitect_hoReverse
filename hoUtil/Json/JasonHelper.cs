@@ -98,8 +98,7 @@ The other features should work!
                 foreach (T style in items)
                 {
 
-                    var menuItem = style as IMenuItem;
-                    if (menuItem == null || menuItem.ListNo == listNoOld) continue;
+                    if (!(style is IMenuItem menuItem) || menuItem.ListNo == listNoOld) continue;
                     listNoOld = menuItem.ListNo;
                     ToolStripMenuItem item = new ToolStripMenuItem
                     {
