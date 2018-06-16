@@ -119,11 +119,11 @@ namespace EaServices.Doors
 
                 oldLevel = objectLevel;
 
-                string objectId = CombineAttrValues(_settings.IdList, row, 40);
-                string alias = CombineAttrValues(_settings.AliasList, row, 40);
-                string name = CombineAttrValues(_settings.AttrNameList, row, 40);
+                string objectId = CombineAttrValues(_settings.IdList, row, ShortNameLength);
+                string alias = CombineAttrValues(_settings.AliasList, row, ShortNameLength);
+                string name = CombineAttrValues(_settings.AttrNameList, row, ShortNameLength);
                 string notes = notesColumn != "" ? row[notesColumn].ToString() : row[1].ToString();
-                string nameShort = name.Length > 40 ? name.Substring(0, 40) : name;
+                string nameShort = name.Length > ShortNameLength ? name.Substring(0, ShortNameLength) : name;
 
                 // Check if requirement with Doors ID already exists
                 bool isExistingRequirement = DictPackageRequirements.TryGetValue(objectId, out int elId);
@@ -233,7 +233,7 @@ namespace EaServices.Doors
                 {
                     row[attribute.Name.ToString()] = attribute.Value;
                 }
-                row["Id"] = CombineAttrValues(_settings.IdList, row, 40);
+                row["Id"] = CombineAttrValues(_settings.IdList, row, ShortNameLength);
                 DtRequirements.Rows.Add(row);
 
                 if (elHierarchy.Element(xmlChildrenName) != null)
@@ -248,7 +248,7 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="lNames"></param>
         /// <param name="row"></param>
-        /// <param name="length">The leghth of the output string. Default:40</param>
+        /// <param name="length">The leghth of the output string. Default:ShortNameLength</param>
         /// <returns></returns>
         protected string CombineAttrValues(List<string> lNames, DataRow row, int length = 0)
         {

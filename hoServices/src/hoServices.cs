@@ -3354,7 +3354,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 int lengthStereotype = 40;
                 if (String.IsNullOrWhiteSpace(txt) || txt.Length > lengthStereotype || txt.Contains("\n") || txt.Contains("\t"))
                 {
-                    MessageBox.Show($"- Stereotype longer than {lengthStereotype} or{Environment.NewLine}- invalid characters like Linefeed, Tabulator{Environment.NewLine}Stereotype ='{txt}'", "Invalid Stereotype");
+                    MessageBox.Show($@"- Stereotype longer than {lengthStereotype} or{Environment.NewLine}- invalid characters like Linefeed, Tabulator{Environment.NewLine}Stereotype ='{txt}'", "Invalid Stereotype");
                     return;
                 }
                 SetMacro(rep,txt);
@@ -4724,7 +4724,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e + "\n\n" , "Error VC reconcile");
+                    MessageBox.Show($@"{e}{Environment.NewLine}" , @"Error VC reconcile");
                 }
                 finally
                 {

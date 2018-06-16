@@ -1,14 +1,15 @@
 ﻿//---------------------------------------------------------------------------------------------------------------
 // Settings.json
 //---------------------------------------------------------------------------------------------------------------
-// Settings to::
-// - Set Diagram styles
+// Settings for:
+// - Bulk change Diagram, Diagram-Object,.. styles
 // - Bulk change of EA items
+// - Importer (Requirements, tests, from *.csv, *.reqf, *.reqifz, *.xml)
 //
 // Distribution::
-// - Original: Setup
-// - hoReverseRoot: Debug
-// - %appdata%Roaming\ho\hoReverse  Debug + Operating mode
+// - Original/Factory Settings:                 Project Setup
+// - Debug:                                     Project hoReverseRoot or hoToolsRoot
+// - Current: %appdata%Roaming\ho\hoReverse  Debug + Operating mode
 {
 
   "DiagramStyle":

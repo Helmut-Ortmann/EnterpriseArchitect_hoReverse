@@ -172,8 +172,8 @@ Available Attributes:
 
                 oldLevel = objectLevel;
 
-                CombineAttrValues(_settings.AliasList, row, out string alias, 40, makeName:true);
-                CombineAttrValues(_settings.AttrNameList,  row, out string name, 40, makeName: true);
+                CombineAttrValues(_settings.AliasList, row, out string alias, ShortNameLength, makeName:true);
+                CombineAttrValues(_settings.AttrNameList,  row, out string name, ShortNameLength, makeName: true);
                 string notes = GetAttrValue(notesColumn != "" ? row[notesColumn].ToString() : row[1].ToString());
 
 

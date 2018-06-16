@@ -35,7 +35,7 @@ Let's discuss it, but it works.
 
 ## News
 
-3. Import Requirements, Tests (*.ReqIf, *.reqIfz, *.csv, *.xml)
+3. [Import Requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf), Tests (Doors, *.ReqIf, *.reqIfz, *.csv, *.xml)
 -  Import requirements into EA Package (ReqIF, DOORS ReqIf, DOORS *.csv, structured *.xml)
 -  Bug fixing 
 

@@ -101,7 +101,7 @@ namespace EaServices.Doors
                 {
                     notes = row["Object Text"].ToString();
                     string objectShorttext = GetTextExtract(notes);
-                    objectShorttext = objectShorttext.Length > 40 ? objectShorttext.Substring(0, 40) : objectShorttext;
+                    objectShorttext = objectShorttext.Length > ShortNameLength ? objectShorttext.Substring(0, ShortNameLength) : objectShorttext;
                     name = objectShorttext;
                     //name = $"{reqAbsNumber.PadRight(7)} {objectShorttext}";
 

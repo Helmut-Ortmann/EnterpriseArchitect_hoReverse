@@ -28,6 +28,7 @@ namespace EaServices.Doors
     /// </summary>
     public class DoorsModule
     {
+        public const int ShortNameLength = 60; 
         int _count = 0;
         int _countChanged = 0;
         int _countNew = 0;
@@ -217,7 +218,7 @@ namespace EaServices.Doors
                 {
                     notes = row["Object Text"].ToString();
                     string objectShorttext = GetTextExtract(notes);
-                    objectShorttext = objectShorttext.Length > 40 ? objectShorttext.Substring(0, 40) : objectShorttext;
+                    objectShorttext = objectShorttext.Length > ShortNameLength ? objectShorttext.Substring(0, ShortNameLength) : objectShorttext;
                     name = $"{reqAbsNumber.PadRight(7)} {objectShorttext}";
 
                 }
@@ -324,7 +325,7 @@ namespace EaServices.Doors
             // extract doors requirement id (number)
             Regex exFirstLine = new Regex("[^\r]*");
             string objectShorttext = exFirstLine.Match(longText).Value;
-            return objectShorttext.Length > 40 ? objectShorttext.Substring(0,40) : objectShorttext;
+            return objectShorttext.Length > ShortNameLength ? objectShorttext.Substring(0, ShortNameLength) : objectShorttext;
         }
         /// <summary>
         /// Move EA requirements to Package with moved requirements
@@ -450,7 +451,7 @@ namespace EaServices.Doors
                     string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None"
                         ? ""
                         : item.StatusChanged;
-                    ;
+
 
                     if (Convert.ToInt32(item.ListNo) == listNumber)
                     {
@@ -471,7 +472,7 @@ namespace EaServices.Doors
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new DoorsReqIf(_rep, _pkg, item.InputFile, item);
+                                var doorsReqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
                                 doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,  eaStatusNew,
                                     eaStatusChanged);
                                 //await Task.Run(() =>
