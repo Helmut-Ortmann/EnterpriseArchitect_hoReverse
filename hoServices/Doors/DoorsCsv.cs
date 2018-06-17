@@ -32,13 +32,15 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")
         {
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
+
+            bool result = true;
 
             // Prepare
             DtRequirements = ExpImp.MakeDataTableFromCsvFile(ImportModuleFile, ',');
@@ -159,6 +161,7 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+            return result;
         }
     }
 

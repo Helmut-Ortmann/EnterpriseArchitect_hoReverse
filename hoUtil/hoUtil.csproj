@@ -154,6 +154,7 @@
     <Compile Include="Diagram\DiagramObjectStyleItem.cs" />
     <Compile Include="Diagram\DiagramStyle.cs" />
     <Compile Include="Diagram\DiagramStyleItem.cs" />
+    <Compile Include="DirectoryExtension.cs" />
     <Compile Include="EaCollection\Collection.cs" />
     <Compile Include="ExportImport\ExpImp.cs" />
     <Compile Include="Extension\EaExtensionClass.cs" />

@@ -26,12 +26,13 @@ namespace EaServices.Doors
         /// Import and update ReqIF Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
              int subModuleIndex = 0,
             string stateNew = "",
             string stateChanged = "")
-        {
+         {
+             bool result = true;
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
 
@@ -169,7 +170,8 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
-        }
+             return result;
+         }
 
         /// <summary>
         /// Initialize DOORS Requirement DataTable for the sub module according to subModuleIndex.

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using hoReverse.hoUtils;
-using LinqToDB.SqlQuery;
 
 namespace EaServices.Doors
 {
@@ -50,11 +49,12 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")
         {
+            bool result = true;
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
 
@@ -69,7 +69,7 @@ namespace EaServices.Doors
                 Rep.BatchAppend = false;
                 Rep.EnableUIUpdates = true;
                 MessageBox.Show($@"File: {ImportModuleFile}{Environment.NewLine}{Environment.NewLine}{e}", @"Can't import structured *.xml");
-                return;
+                return false;
             }
 
             InitializeXmlStructTable(xElFile);
@@ -77,12 +77,12 @@ namespace EaServices.Doors
             // Go through hierarchy and store in DataTable
             var level = 1;
             var children = xElFile.Descendants(xmlChildrenName).FirstOrDefault(); //.Dump();
-            OutputChildren(children, level);
+            if (OutputChildren(children, level) == false) return false;
 
 
 
 
-            base.ReadEaPackageRequirements();
+            ReadEaPackageRequirements();
             CreateEaPackageDeletedObjects();
 
             Count = 0;
@@ -189,6 +189,7 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+            return result;
         }
 
         /// <summary>
@@ -221,12 +222,33 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="xeChildren"></param>
         /// <param name="level"></param>
-        void OutputChildren(XElement xeChildren, int level)
+        bool OutputChildren(XElement xeChildren, int level)
         {
             // 
             foreach (var elHierarchy in xeChildren.Elements(xmlHierarchyName))
             {
-                XElement xObject = elHierarchy.Descendants(xmlObjectName).FirstOrDefault();
+                XElement xObject;
+                try
+                {
+                    xObject = elHierarchy.Descendants(xmlObjectName).FirstOrDefault();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"Can't find in xml:
+'{xmlObjectName}'
+
+{e}", @"Can't deserialize xml, break");
+                    return false;
+                }
+
+                if (xObject == null)
+                {
+                    MessageBox.Show($@"Can't find in xml:
+'{xmlObjectName}'", @"Can't deserialize xml, break");
+                    return false;
+                }
+
+
                 DataRow row = DtRequirements.NewRow();
                 row["Object Level"] = level;
                 foreach (var attribute in xObject.Elements())
@@ -238,9 +260,11 @@ namespace EaServices.Doors
 
                 if (elHierarchy.Element(xmlChildrenName) != null)
                 {
-                    OutputChildren(elHierarchy.Element(xmlChildrenName), level + 1);
+                    if (OutputChildren(elHierarchy.Element(xmlChildrenName), level + 1) == false) return false;
                 }
             }
+
+            return true;
         }
 
         /// <summary>

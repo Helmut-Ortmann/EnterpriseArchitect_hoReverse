@@ -4352,21 +4352,28 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             MessageBox.Show(@"See File 5, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
         }
 
-        private void ImportBySettings(int listNumber, bool withMessage=false)
+
+        /// <summary>
+        /// Import by settings
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <param name="withMessage"></param>
+        private bool ImportBySettings(int listNumber, bool withMessage=false)
         {
             if (_repository == null || String.IsNullOrEmpty(_repository.ConnectionString))
             {
                 MessageBox.Show("", @"No repository loaded, break!!");
-                return;
+                return false;
             }
             Cursor.Current = Cursors.WaitCursor;
 
             EnableImportDialog(false);
-            EaServices.Doors.DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
-            doorsModule.ImportBySetting(listNumber);
+            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            bool result = doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-            if (withMessage)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported list={listNumber}, finished.");
+            if (withMessage && result)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported list={listNumber}, finished.");
+            return result;
         }
 
         private void ImportReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)

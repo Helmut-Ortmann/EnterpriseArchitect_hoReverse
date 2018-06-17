@@ -37,6 +37,20 @@ namespace EaServices.Doors
         private string _inputFile;
 
         /// <summary>
+        /// The dictionary to store the embedded files. 
+        ///
+        /// Example: myImport.reqifz, myImport.csv, myImport.xml
+        /// </summary>
+        [JsonIgnore]
+        public string EmbeddedFileStorageDictionary
+        {
+            get => _embeddedFileStorageDictionary?.Replace(@"\", "/") ?? "";
+            set => _embeddedFileStorageDictionary = value;
+        }
+        [JsonProperty("EmbeddedFileStorageDictionary")]
+        private string _embeddedFileStorageDictionary;
+
+        /// <summary>
         /// List of PackageGuids. hoReverse puts the Requirements beneath this package.
         /// </summary>
         [JsonIgnore]

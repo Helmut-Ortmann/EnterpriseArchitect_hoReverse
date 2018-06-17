@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
 using ReqIFSharp;
+using Path = System.IO.Path;
 
 namespace EaServices.Doors
 {
@@ -46,37 +46,50 @@ namespace EaServices.Doors
         /// <param name="subModuleIndex">ReqIF can handle multiple submodules. This you can define in settings by the list of package GUIDs to import</param>
         /// <param name="stateNew">The EA state if the EA element is created</param>
         /// <param name="stateChanged">The EA state if the EA element is changed, currently not used</param>
-        public override void ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
             int subModuleIndex = 0,
             string stateNew = "",
             string stateChanged = "")
         {
-            Rep.BatchAppend = true;
-            Rep.EnableUIUpdates = false;
-            _errorMessage1 = false;
+            bool result = true;
+           _errorMessage1 = false;
 
             // decompress reqif file and its embedded files
-            string importFile = Decompress(ImportModuleFile);
-            if (String.IsNullOrWhiteSpace(importFile)) return;
+            string importReqIfFile = Decompress(ImportModuleFile);
+            if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
+
+            // copy the files to target
+            if (_settings.EmbeddedFileStorageDictionary != "")
+            {
+                string sourceDir = Path.GetDirectoryName(importReqIfFile);
+                hoUtils.DirectoryExtension.CreateEmptyFolder(_settings.EmbeddedFileStorageDictionary);
+                hoUtils.DirectoryExtension.DirectoryCopy(sourceDir, _settings.EmbeddedFileStorageDictionary,
+                    copySubDirs: true);
+            }
 
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            var reqIf = deserializer.Deserialize(importFile);
+            var reqIf = deserializer.Deserialize(importReqIfFile);
 
             // prepare EA, existing requirements to detect deleted and changed requirements
             ReadEaPackageRequirements();
             CreateEaPackageDeletedObjects();
 
+
+
             // Add requirements recursiv for module to requirement table
             InitializeReqIfRequirementsTable(reqIf);
             Specification reqifModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+
+            Rep.BatchAppend = true;
+            Rep.EnableUIUpdates = false;
             AddRequirementsToDataTable(DtRequirements, reqifModule.Children, 1);
 
             // Check imported ReqIF requirements
             if (CheckImportedRequirements())
             {
-                CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importFile);
+                CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importReqIfFile);
 
                 MoveDeletedRequirements();
                 UpdatePackage(reqIf);
@@ -85,6 +98,7 @@ namespace EaServices.Doors
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+            return result && (!_errorMessage1);
         }
         /// <summary>
         /// Check imported requirements:
@@ -242,7 +256,7 @@ Available Attributes:
         /// Decompress the import reqIf file if compressed format (*.reqifz)
         /// </summary>
         /// <param name="importReqIfFile"></param>
-        /// <returns></returns>
+        /// <returns>The path to the *.reqif file</returns>
         private string Decompress(string importReqIfFile)
         {
             // *.reqifz for compressed ReqIf File
@@ -294,6 +308,35 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
             if (String.IsNullOrWhiteSpace(importFile)) importFile = ImportModuleFile;
             // Handle *.rtf content
             string docFile = $"{System.IO.Path.GetDirectoryName(importFile)}";
+
+            // store embedded file
+            if (_settings.EmbeddedFileStorageDictionary != "" && xhtmlValue.Contains("object data="))
+            {
+                List<string> embeddedFiles = HtmlToDocx.GetEmbeddedFiles(xhtmlValue);
+
+                // delete all existing files
+                for (int i = el.Files.Count-1; i > -1; i--)
+                {
+                    el.Files.Delete((short)i);
+                }
+                foreach (var file in embeddedFiles)
+                {
+                    string f = Path.Combine(_settings.EmbeddedFileStorageDictionary, file);
+                    EA.File eaFile = (EA.File)el.Files.AddNew(f, "");
+                    el.Files.Refresh();
+                    eaFile.Type = "Local File";
+                    eaFile.Notes = $@"*.{Path.GetExtension(file)}
+{file}
+{f}";
+                
+                    eaFile.Update();
+                    el.Update();
+
+                }
+            }
+
+
+
             bool IsGenerateDocx = true;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             docFile = System.IO.Path.Combine(docFile, IsGenerateDocx ? "xxxxxxx.docx" : "xxxxxxx.rtf");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MariGold.OpenXHTML;
@@ -19,7 +20,7 @@ namespace EaServices.Doors
             xhtml = XhtmlFromReqIf(xhtml);
             // write to *.docx
             if (String.IsNullOrWhiteSpace(xhtml)) xhtml = "Empty!!!";
-            WordDocument doc = null;
+            WordDocument doc;
             try
             {
                 doc = new WordDocument(docXFile);
@@ -146,7 +147,7 @@ namespace EaServices.Doors
             // remove namespace http://www.w3.org/1999/xhtml
             Regex regNameSpaceXhtml = new Regex(@"xmlns:([^=]*)=""http://www.w3.org/1999/xhtml"">");
             Match match = regNameSpaceXhtml.Match(xhtml);
-            if (match.Success == true)
+            if (match.Success)
             {
                 xhtml = xhtml.Replace($"{match.Groups[1].Value}:", "");
             }
@@ -193,6 +194,27 @@ namespace EaServices.Doors
             }
 
             return xhtml;
+        }
+        /// <summary>
+        /// Get embedded files as List of file paths
+        /// </summary>
+        /// <param name="xhtml"></param>
+        /// <returns>List of file paths</returns>
+        public static List<string> GetEmbeddedFiles(string xhtml)
+        {
+            List<string> embeddedFileList = new List<string>();
+            // group[1] = path; group[2] = type
+            string s = @"object\s+data=""([^""]*)""\s+type=""([^""]*)""";
+     
+            Regex rx = new Regex( s);
+            Match match = rx.Match(xhtml);
+            while (match.Success)
+            {
+                if (! match.Groups[2].Value.StartsWith("image/"))
+                    embeddedFileList.Add(match.Groups[1].Value);
+                match = match.NextMatch();
+            }
+            return embeddedFileList;
         }
     }
 }
