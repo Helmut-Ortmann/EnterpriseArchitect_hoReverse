@@ -309,7 +309,7 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
             // Handle *.rtf content
             string docFile = $"{System.IO.Path.GetDirectoryName(importFile)}";
 
-            // store embedded file
+            // store embedded files
             if (_settings.EmbeddedFileStorageDictionary != "" && xhtmlValue.Contains("object data="))
             {
                 List<string> embeddedFiles = HtmlToDocx.GetEmbeddedFiles(xhtmlValue);
@@ -322,6 +322,12 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
                 foreach (var file in embeddedFiles)
                 {
                     string f = Path.Combine(_settings.EmbeddedFileStorageDictionary, file);
+
+                    // make an ole object of *.ole files
+                    if (_settings.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf)
+                    {
+                        OleDoors.Save(hoReverse.hoUtils.HoUtil.ReadAllText(f), f);
+                    }
                     EA.File eaFile = (EA.File)el.Files.AddNew(f, "");
                     el.Files.Refresh();
                     eaFile.Type = "Local File";

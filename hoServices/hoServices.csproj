@@ -124,6 +124,7 @@
   <ItemGroup>
     <Compile Include="Doors\DoorsCsv.cs" />
     <Compile Include="Doors\DoorsModule.cs" />
+    <Compile Include="Doors\DoorsOle.cs" />
     <Compile Include="Doors\DoorsReqIf.cs" />
     <Compile Include="Doors\FileImportSettingsItem.cs" />
     <Compile Include="Doors\HtmlToDocx.cs" />

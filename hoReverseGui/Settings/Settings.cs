@@ -114,7 +114,7 @@ namespace hoReverse.Settings
             //defaultConfig.AppSettings.Settings["menuOwnerEnabled"].Value
             if (DefaultConfig.AppSettings.Settings.Count == 0)
             {
-                MessageBox.Show("No default settings in '" + DefaultConfig.FilePath + "' found!", "Installation wasn't successful!");
+                MessageBox.Show(@"No default settings in '" + DefaultConfig.FilePath + @"' found!", @"Installation wasn't successful!");
             }
             foreach (KeyValueConfigurationElement configEntry in DefaultConfig.AppSettings.Settings)
             {

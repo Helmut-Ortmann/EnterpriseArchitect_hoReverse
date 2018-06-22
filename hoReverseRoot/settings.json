@@ -349,6 +349,8 @@
   // Rules: 
   // - A File path may be written with either '\', or '/'
   //
+  // Importer for DOORS csv, ReqIF (DOORS and more), structured xml (in testing)
+  //
   // Settings:
   // - Name:            The name in the EA menu to use this particular specification  
   // - Description:     Further description visualied as tooltip in the menu description
@@ -369,7 +371,11 @@
   // - RtfNameList      List of attribute names to import into the EA property 'Linked Document', e.g.  ["Object Text",]
   // - AliasList        List of attribute names to import into the EA property 'Alias', e.g. ["RequirementID"] or ["ReqIF.ForeignID"]
   // - AttrNameList     List of attribute names to import into the EA property 'Name', e.g.  ["RequirementID", "Object Heading", "Object Text"]
-  // - IdList"          List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
+  // - EmbeddedFileStorageDictionary
+  //                    Dictionary of embedded files to store. If blank or empty then don't store 
+  //                    DOORS: Doors stores files as *.ole files which currently can't be opened
+  // - IdList"          Only "XmlStruct":
+  //                    List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
   //
   // DoorsCsv:
   // - Export to *.csv

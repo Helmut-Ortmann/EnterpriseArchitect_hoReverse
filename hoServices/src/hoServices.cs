@@ -2667,6 +2667,16 @@ Second Element: Target of move connections and appearances", "Select two element
 
 
         #region createActionFromText
+        /// <summary>
+        /// Create Action from text. If a call action and a method/activity exists it creates a CallOperation- or a CallBehavior Action. If not it creates a simple Action.
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="s1"></param>
+        /// <param name="offsetHorizental"></param>
+        /// <param name="offsetVertical"></param>
+        /// <param name="guardString"></param>
+        /// <param name="removeModuleNameFromMethodName"></param>
+        /// <param name="useCallBehaviorAction"></param>
         private static void CreateActionFromText(Repository rep, string s1, int offsetHorizental = 0, int offsetVertical = 0, string guardString = "", 
             bool removeModuleNameFromMethodName= false,
             bool useCallBehaviorAction=false)
@@ -2738,8 +2748,8 @@ Second Element: Target of move connections and appearances", "Select two element
                     }
                 }
                 else
-                {   // no Method name
-                    CreateDiagramObjectFromContext(rep, methodString, actionType, methodName, offsetHorizental, offsetVertical, guardString);
+                {   // no Method name, use simple Action (atomic)
+                    CreateDiagramObjectFromContext(rep, methodString, "Action", methodName, offsetHorizental, offsetVertical, guardString);
                 }
             }
             
