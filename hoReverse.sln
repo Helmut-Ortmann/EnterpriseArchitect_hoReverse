@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoLinqToSql", "..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj", "{FED206AF-E583-48C6-9952-BAD2C41B3AA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReqIf", "ReqIf\ReqIf.csproj", "{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +193,22 @@ Global
 		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|x86.ActiveCfg = Release|x86
 		{FED206AF-E583-48C6-9952-BAD2C41B3AA4}.Release|x86.Build.0 = Release|x86
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|ia64.ActiveCfg = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|ia64.Build.0 = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|ia64.ActiveCfg = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|ia64.Build.0 = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{127DEDDD-62B3-40C7-8A64-F061BCB6F4F0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

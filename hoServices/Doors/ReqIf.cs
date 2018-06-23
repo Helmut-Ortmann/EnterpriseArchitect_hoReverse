@@ -21,6 +21,7 @@ namespace EaServices.Doors
     public class ReqIf : DoorsModule
     {
         private readonly string Tab = "\t";
+        
         readonly FileImportSettingsItem _settings;
         bool _errorMessage1;
         // Attributes not to import
@@ -59,8 +60,8 @@ namespace EaServices.Doors
             string importReqIfFile = Decompress(ImportModuleFile);
             if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
 
-            // copy the files to target
-            if (_settings.EmbeddedFileStorageDictionary != "")
+            // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+            if (_settings.EmbeddedFileStorageDictionary != "" && subModuleIndex == 0)
             {
                 string sourceDir = Path.GetDirectoryName(importReqIfFile);
                 hoUtils.DirectoryExtension.CreateEmptyFolder(_settings.EmbeddedFileStorageDictionary);
@@ -241,6 +242,7 @@ Available Attributes:
                 // Handle *.rtf/*.docx content
                 string rtfValue = CombineRtfAttrValues(_settings.RtfNameList, row);
 
+                // Update EA linked documents by graphics and embedded elements
                 UpdateLinkedDocument(el, rtfValue, importFile);
 
                 // Update/Create Tagged value
@@ -297,7 +299,7 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
         }
 
         /// <summary>
-        /// Update EA linked document with xhtmlValue. 
+        /// Update EA linked document with xhtmlValue. It handles graphics and embedded files
         /// </summary>
         /// <param name="el">EA Element to update linked document</param>
         /// <param name="xhtmlValue">The XHTML value in XHTML or flat string format</param>
@@ -324,19 +326,25 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
                     string f = Path.Combine(_settings.EmbeddedFileStorageDictionary, file);
 
                     // make an ole object of *.ole files
+                    string filePathNew = "";
                     if (_settings.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf)
                     {
-                        OleDoors.Save(hoReverse.hoUtils.HoUtil.ReadAllText(f), f);
+                        filePathNew = OleDoors.Save(hoReverse.hoUtils.HoUtil.ReadAllText(f), f, ignoreNotSupportedFiles:false);
                     }
-                    EA.File eaFile = (EA.File)el.Files.AddNew(f, "");
-                    el.Files.Refresh();
-                    eaFile.Type = "Local File";
-                    eaFile.Notes = $@"*.{Path.GetExtension(file)}
-{file}
-{f}";
-                
-                    eaFile.Update();
-                    el.Update();
+
+                    if (filePathNew != "")
+                    {
+                        EA.File eaFile = (EA.File) el.Files.AddNew(filePathNew, "");
+                        el.Files.Refresh();
+                        eaFile.Type = "Local File";
+                        eaFile.Notes = $@"*{Path.GetExtension(filePathNew)}
+Name:{Tab}'{Path.GetFileName(filePathNew)}'
+Path:{Tab}'{Path.GetDirectoryName(filePathNew)}'
+Origin:{Tab}'{Path.GetFileName(f)}'";
+
+                        eaFile.Update();
+                        el.Update();
+                    }
 
                 }
             }
