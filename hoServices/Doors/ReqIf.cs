@@ -216,19 +216,31 @@ Available Attributes:
                 }
 
 
-                el.Alias = alias;
-                el.Name = name;
-                el.Multiplicity = objectId;
-                el.Notes = notes;
-                el.TreePos = Count * 10;
-                el.PackageID = Pkg.PackageID;
-                el.ParentID = parentElementId;
-                el.Type = eaObjectType;
-                el.Stereotype = eaStereotype;
+                try
+                {
+                    el.Alias = alias;
+                    el.Name = name;
+                    el.Multiplicity = objectId;
+                    el.Notes = notes;
+                    el.TreePos = Count * 10;
+                    el.PackageID = Pkg.PackageID;
+                    el.ParentID = parentElementId;
+                    el.Type = eaObjectType;
+                    el.Stereotype = eaStereotype;
 
-                el.Update();
-                Pkg.Elements.Refresh();
-                lastElementId = el.ElementID;
+                    el.Update();
+                    Pkg.Elements.Refresh();
+                    lastElementId = el.ElementID;
+                }
+                catch (Exception e)
+                {
+                    if (MessageBox.Show($@"Name: '{name}'
+Alias: '{alias}
+ObjectId/Multiplicity: '{objectId}", @"Error update EA Element, skip!",
+                            MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    break;
+                    else continue;
+                }
 
                 // handle the remaining columns/ tagged values
                 var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
