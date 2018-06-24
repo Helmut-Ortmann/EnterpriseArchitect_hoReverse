@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Remoting.Messaging;
+using LinqToDB.Common;
 using Newtonsoft.Json;
 
 namespace EaServices.Doors
@@ -8,6 +11,14 @@ namespace EaServices.Doors
     /// </summary>
     public class FileImportSettingsItem : hoUtils.Json.IMenuItem
     {
+        public enum VerbosityType
+        {
+            Silent,       // ignore false OLE, not supported
+            Verbose
+        }
+        [JsonProperty("Verbosity"), DefaultValue("Silent")]
+        public VerbosityType Verbosity  { get; set; }
+
         /// <summary>
         /// The type to import
         /// </summary>

@@ -32,6 +32,61 @@ namespace hoUtils.DirFile
 
             return true;
         }
+
+        /// <summary>
+        /// Copy file and output error message
+        /// </summary>
+        /// <param name="targetFilePath"></param>
+        /// <param name="errorMessage"></param>
+        /// <param name="sourceFilePath"></param>
+        /// <returns></returns>
+        public static bool FileCopy(string sourceFilePath, string targetFilePath, string errorMessage = "Can't copy file!")
+        {
+            try
+            {
+                File.Copy(sourceFilePath, targetFilePath,overwrite:true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Source:
+{GetMessageFromFile(sourceFilePath)}
+
+Taget:
+{GetMessageFromFile(targetFilePath)}
+
+{e}", errorMessage);
+                return false;
+            }
+
+            return true;
+        }
+        /// <summary>
+        /// Copy file and output error message
+        /// </summary>
+        /// <param name="targetFilePath"></param>
+        /// <param name="errorMessage"></param>
+        /// <param name="sourceFilePath"></param>
+        /// <returns></returns>
+        public static bool FileMove(string sourceFilePath, string targetFilePath, string errorMessage = "Can't move file!")
+        {
+            try
+            {
+                File.Move(sourceFilePath, targetFilePath);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Source:
+{GetMessageFromFile(sourceFilePath)}
+
+Taget:
+{GetMessageFromFile(targetFilePath)}
+
+{e}", errorMessage);
+                return false;
+            }
+
+            return true;
+        }
         /// <summary>
         /// Write all bytes
         /// </summary>
@@ -39,7 +94,7 @@ namespace hoUtils.DirFile
         /// <param name="bytes"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        public static bool WriteAllBytes(string file, byte[] bytes, string errorMessage="Cant write in file")
+        public static bool WriteAllBytes(string file, byte[] bytes, string errorMessage="Cant write into file")
         {
             try
             {
@@ -60,13 +115,18 @@ namespace hoUtils.DirFile
         /// <param name="errorMessage"></param>
         /// <param name="e"></param>
         /// <returns>false</returns>
-        public static bool FileErrorMessage(string file,  string errorMessage, Exception e )
+        public static bool FileErrorMessage(string file, string errorMessage, Exception e)
         {
-            MessageBox.Show($@"File: '{Path.GetFileName(file)}'
-Dictionary: '{Path.GetDirectoryName(file)}'
+            MessageBox.Show($@"{GetMessageFromFile(file)}
 
 {e}", errorMessage);
             return false;
+        }
+
+        public static string GetMessageFromFile(string filePath)
+        {
+            return $@"File: '{Path.GetFileName(filePath)}'
+Dictionary: '{Path.GetDirectoryName(filePath)}'";
 
         }
     }

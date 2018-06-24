@@ -30,6 +30,7 @@ namespace EaServices.Doors
     {
         public const int ShortNameLength = 60; 
         int _count = 0;
+        int _countAll = 0;
         int _countChanged = 0;
         int _countNew = 0;
 
@@ -173,6 +174,7 @@ namespace EaServices.Doors
             CreateEaPackageDeletedObjects();
 
             _count = 0;
+            _countAll = 0;
             _countChanged = 0;
             _countNew = 0;
             List<int> parentElementIdsPerLevel = new List<int> {0};

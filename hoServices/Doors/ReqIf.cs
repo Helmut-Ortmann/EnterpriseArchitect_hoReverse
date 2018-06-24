@@ -329,7 +329,7 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
                     string filePathNew = "";
                     if (_settings.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf)
                     {
-                        filePathNew = OleDoors.Save(hoReverse.hoUtils.HoUtil.ReadAllText(f), f, ignoreNotSupportedFiles:false);
+                        filePathNew = OleDoors.Save(HoUtil.ReadAllText(f), f, ignoreNotSupportedFiles:_settings.Verbosity == FileImportSettingsItem.VerbosityType.Silent);
                     }
 
                     if (filePathNew != "")

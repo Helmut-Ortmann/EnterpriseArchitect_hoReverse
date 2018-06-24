@@ -2,8 +2,8 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
+using hoReverse.hoUtils;
 using OpenMcdf;
 
 namespace EaServices.Doors
@@ -25,7 +25,7 @@ namespace EaServices.Doors
         private const string Header = "d0cf11e0";
 
         /// <summary>
-        /// Save DOORS ole file. Only supported files.
+        /// Save DOORS ole file in target format. If target format isn't supported the pure OLE file is stored.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="filePath"></param>
@@ -44,13 +44,18 @@ namespace EaServices.Doors
                 return "";
             }
 
+            // Check if header is available
+            // if not use the file extension .error
             int start = text.IndexOf(Header, StringComparison.Ordinal);
             if (start < 0)
             {
-                MessageBox.Show($@"File: '{filePath}'
+                if (! ignoreNotSupportedFiles)
+                    MessageBox.Show($@"File: '{filePath}'
 CFB Header should be: '{Header}'
 No CFB Header detected", $@"File does not contain a CFB formatted file., break");
-                return "";
+                string newFilePath = $@"{filePath}.error";
+                hoUtils.DirFile.DirFiles.FileMove(filePath, newFilePath);
+                return newFilePath;
             }
 
             int end = text.IndexOf('}', start);
@@ -85,20 +90,23 @@ No CFB Header detected", $@"File does not contain a CFB formatted file., break")
             // Extension not supported
             if (ext == "")
             {
-                if (ignoreNotSupportedFiles)
-                    return filePath;
-                else
+                string newFilePath = $@"{filePath}.notSupported";
+                if (! ignoreNotSupportedFiles)
                 {
                     MessageBox.Show($@"File: '{filePath}'
 File type not supported: '{typeText}'
 
 Supported ole types: '{String.Join(", ", lTypes)}'
 
+Copied to:
+{hoUtils.DirFile.DirFiles.GetMessageFromFile(newFilePath)}
 
 ", @"Can't convert *.ole to file, not supported type!");
-
-                    return filePath;
+               
                 }
+                
+                hoUtils.DirFile.DirFiles.FileMove(filePath, newFilePath);
+                return newFilePath;
 
             }
             string filePathNew = Path.Combine(Path.GetDirectoryName(filePath), $"{Path.GetFileNameWithoutExtension(filePath)}{ext}");
