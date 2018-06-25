@@ -35,6 +35,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.0.1 ReqIF *.pdf, *.wmf files supported
+-  error fixing and minor improvements
+
 3. [Import Requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf), Tests (Doors, *.ReqIf, *.reqIfz, *.csv, *.xml)
 -  Import requirements into EA Package (ReqIF, DOORS ReqIf, DOORS *.csv, structured *.xml)
 -  Bug fixing 

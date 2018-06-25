@@ -261,6 +261,9 @@
             <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.2\lib\net45\ReqIFSharp.dll" />
         </Component>
 
+      <Component Id="OpenMcdf.dll" Guid="1ECCD40A-235E-4D5F-AFBA-E326AE8FB826">
+        <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

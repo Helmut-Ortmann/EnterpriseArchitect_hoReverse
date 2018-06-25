@@ -2926,15 +2926,25 @@ namespace hoReverse.Reverse
                 "hoServices.dll",
                 "hoLinqToSql.dll",
                 "hoUtils.dll",
+                "HtmlAgilityPack.dll",
                 "Newtonsoft.Json.dll",
                 "linq2db.dll",
+                "MariGold.HtmlParser.dll",
+                "MariGold.OpenXHTML.dll",
                 "MySql.Data.dll",
                 "Microsoft.SqlServer.Types.dll",
                 "Oracle.ManagedDataAccess.dll",
                 "Npgsql.dll",
                 "Sybase.AdoNet2.AseClient.dll",
                 "SQLite.Interop.dll",
-                "System.Data.SQLite.dll"
+                "System.Data.SQLite.dll",
+                "OpenMcdf.dll",
+                "ReqIFSharp.dll",
+                "ClosedXml.dll",
+                "DocumentFormat.OpenXml.dll",
+                "KBCsv.dll",
+                "KBCsv.Extensions.Data.dll"
+
             };
             HoUtil.AboutMessage("C - Reverse Engineering Workbench",
                 "About hoReverse Workbench",

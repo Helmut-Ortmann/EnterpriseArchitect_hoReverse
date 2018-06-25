@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Text.RegularExpressions;
 using OpenMcdf;
+using hoUtils.DirFile;
 
 namespace EaServices.Doors
 {
@@ -29,6 +30,7 @@ namespace EaServices.Doors
         //
         // Parse *.rtf files:
         // https://www.codeproject.com/Articles/27431/Writing-Your-Own-RTF-Converter
+        // https://github.com/decalage2/oletools/wiki
 
         // Define other methods and classes here
         private const string CfbHeader = "d0cf11e0";   //  Microsoft CFB format
@@ -69,7 +71,7 @@ namespace EaServices.Doors
 CFB CfbHeader should be: '{CfbHeader}'
 No CFB or WMF file found", @"File does not contain a CFB or WMF formatted file., break");
                 string newFilePath = $@"{filePath}.error";
-                hoUtils.DirFile.DirFiles.FileMove(filePath, newFilePath);
+                DirFiles.FileMove(filePath, newFilePath);
                 return newFilePath;
             }
 
@@ -106,7 +108,7 @@ No CFB or WMF file found", @"File does not contain a CFB or WMF formatted file.,
             string filePathNew =
                 Path.Combine(Path.GetDirectoryName(filePath), $"{Path.GetFileNameWithoutExtension(filePath)}{ext}");
             StoreAsAsciiFile(text, start, end, filePathNew);
-            if (hoUtils.DirFile.DirFiles.FileDelete(filePath)) return filePathNew;
+            if (DirFiles.FileDelete(filePath)) return filePathNew;
             else return "";
         }
 
@@ -158,12 +160,12 @@ File type not supported: '{typeText}'
 Supported ole types: '{String.Join(", ", lTypes)}'
 
 Copied to:
-{hoUtils.DirFile.DirFiles.GetMessageFromFile(newFilePath)}
+{DirFiles.GetMessageFromFile(newFilePath)}
 
 ", @"Can't convert *.ole to file, not supported type!");
                 }
 
-                hoUtils.DirFile.DirFiles.FileMove(filePath, newFilePath);
+                DirFiles.FileMove(filePath, newFilePath);
                 return newFilePath;
             }
 
@@ -179,11 +181,11 @@ Copied to:
                 using (CompoundFile cf = new CompoundFile(filePathNew))
                 {
                     CFStream foundStream = cf.RootStorage.GetStream("CONTENTS");
-                    hoUtils.DirFile.DirFiles.WriteAllBytes(filePathNew, foundStream.GetData().ToArray());
+                    DirFiles.WriteAllBytes(filePathNew, foundStream.GetData().ToArray());
                 }
             }
 
-            if (hoUtils.DirFile.DirFiles.FileDelete(filePath)) return filePathNew;
+            if (DirFiles.FileDelete(filePath)) return filePathNew;
             else return "";
         }
 
@@ -211,7 +213,7 @@ Copied to:
                     highByte = !highByte;
                 }
 
-                File.WriteAllBytes(filePathNew, bytes.ToArray());
+                DirFiles.WriteAllBytes(filePathNew, bytes.ToArray());
             }
         }
 

@@ -424,7 +424,7 @@ namespace EaServices.Doors
 
         }
         /// <summary>
-        /// Import according to import settings
+        /// Import all jobs of the current list number with the respectively defined settings.
         /// </summary>
         public bool ImportBySetting(int listNumber)
         {
