@@ -1,6 +1,6 @@
 hoReverse 
 
-*  [Import](wike\ImportExport) ([ReqIF](wike\ReqIF), [Doors CSV](ImportDoorsCsv), [Structures xml](ImportStructuredXml))
+*  [Import](wiki/ImportExport) ([ReqIF](wiki/ReqIF), [Doors CSV](wiki/ImportDoorsCsv), [Structures xml](wiki/ImportStructuredXml))
 *  [Reverse Engineer C/C++ Code](#the-roots)
 *  [Features to improve everyday life](#the-roots)
 
