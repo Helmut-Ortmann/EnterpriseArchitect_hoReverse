@@ -32,8 +32,9 @@ namespace hoReverse.hoUtils
             return false;
 
         }
+
         /// <summary>
-        /// Get Tagged Value with 'Name'. If tagged value doesn't exists a new one is created. Don't forget to write the value and update.
+        /// Get Tagged Value with 'Name'. If tagged value doesn't exists than create a new one. Don't forget to write the value and update.
         /// </summary>
         /// <param name="el"></param>
         /// <param name="name"></param>
@@ -47,13 +48,35 @@ namespace hoReverse.hoUtils
                     return taggedValue;
                 }
             }
-
+            
             // create tagged value
-            EA.TaggedValue tg = (EA.TaggedValue)el.TaggedValues.AddNew(name, "Tag");
+            EA.TaggedValue tg = (EA.TaggedValue) el.TaggedValues.AddNew(name, "Tag");
             el.TaggedValues.Refresh();
 
             return tg;
+            
         }
+        /// <summary>
+        /// Get Tagged Value with 'Name'.
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetTaggedValue(EA.Element el, string name)
+        {
+            foreach (EA.TaggedValue taggedValue in el.TaggedValues)
+            {
+                if (taggedValue.Name == name)
+                {
+                    return GetTaggedValue(taggedValue);
+                }
+            }
+
+            return "";
+
+
+        }
+
 
         /// <summary>
         /// Set Tagged Value with 'Name' to a value. If tagged value doesn't exists a new one is created. If the  

@@ -29,13 +29,17 @@ namespace EaServices.Doors
     public class DoorsModule
     {
         public const int ShortNameLength = 60; 
-        int _count = 0;
-        int _countAll = 0;
-        int _countChanged = 0;
-        int _countNew = 0;
+        protected int _count = 0;
+        protected int _countAll = 0;
+        protected int _countPkg = 0;
+        protected int _countItems = 0;
+        protected int _countChanged = 0;
+        protected int _countNew = 0;
+        protected int _level = -1;
 
         string _importModuleFile;
         EA.Package _pkg;
+
         private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
         DataTable _dtRequirements;
@@ -154,7 +158,10 @@ namespace EaServices.Doors
         {
             return false;
         }
-
+        public virtual bool ExportUpdateRequirements(int subModuleIndex = 0)
+        {
+            return true;
+        }
         /// <summary>
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
@@ -423,15 +430,80 @@ namespace EaServices.Doors
             return PkgDeletedObjects;
 
         }
+
         /// <summary>
-        /// Export the ReqIF settings. Currently only changed tagged values are supported
+        /// Export all jobs of the current list number with the respectively defined settings. Currently only changed tagged values are exported/updated.
         /// </summary>
         /// <param name="listNumber"></param>
         /// <returns></returns>
         public bool ExportBySetting(int listNumber)
         {
-            return false;
+            bool result = true;
+            _level = -1;
+            _count = 0;
+            _countAll = 0;
+            _countPkg = 0;
+            _countItems = 0;
+            foreach (FileImportSettingsItem item in _importSettings)
+            {
+                if (Convert.ToInt32(item.ListNo) == listNumber)
+                {
+                    if (!System.IO.File.Exists(_importModuleFile))
+                    {
+                        MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
+                        return false;
+                    }
+                    // handle more than one package
+                    int subPackageIndex = -1;
+                    // handle zip files like
+                    foreach (string guid in item.PackageGuidList)
+                    {
+                        subPackageIndex += 1;
+                        _pkg = _rep.GetPackageByGuid(guid);
+                        if (_pkg == null)
+                        {
+                            MessageBox.Show(
+                                $@"Package of export list {listNumber} with GUID='{guid}' not available.
+{item.Description}
+{item.Name}
+
+    Check Import settings in Settings.Json.",
+                                @"Package to import into isn't available, break!");
+                            return false;
+                        }
+
+                        _importModuleFile = item.InputFile;
+
+                    
+
+                        switch (item.ImportType)
+                        {
+
+                            case FileImportSettingsItem.ImportTypes.DoorsReqIf:
+                                var doorsReqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                result = result && doorsReqIf.ExportUpdateRequirements(subPackageIndex);
+                                //await Task.Run(() =>
+                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+
+                            case FileImportSettingsItem.ImportTypes.ReqIf:
+                                var reqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                result = result && reqIf.ExportUpdateRequirements(subPackageIndex);
+                                //await Task.Run(() =>
+                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+
+                        }
+
+
+                    }
+                }
+            }
+
+            return true;
         }
+
+        
         /// <summary>
         /// Import all jobs of the current list number with the respectively defined settings.
         /// </summary>
@@ -440,17 +512,24 @@ namespace EaServices.Doors
             bool result = true;
             foreach (FileImportSettingsItem item in _importSettings)
             {
-                // handle more than one package
-                int subPackageIndex = -1;
-                // handle zip files like
-                foreach (string guid in item.PackageGuidList)
+                if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
-                    subPackageIndex += 1;
-                    _pkg = _rep.GetPackageByGuid(guid);
-                    if (_pkg == null)
+                    if (!System.IO.File.Exists(_importModuleFile))
                     {
-                        MessageBox.Show(
-                            $@"Package of import list {listNumber} with GUID='{guid}' not available.
+                        MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
+                        return false;
+                    }
+                    // handle more than one package
+                    int subPackageIndex = -1;
+                    // handle zip files like
+                    foreach (string guid in item.PackageGuidList)
+                    {
+                        subPackageIndex += 1;
+                        _pkg = _rep.GetPackageByGuid(guid);
+                        if (_pkg == null)
+                        {
+                            MessageBox.Show(
+                                $@"Package of import list {listNumber} with GUID='{guid}' not available.
 {item.Description}
 {item.Name}
 
@@ -470,13 +549,7 @@ Check Import settings in Settings.Json.",
                         : item.StatusChanged;
 
 
-                    if (Convert.ToInt32(item.ListNo) == listNumber)
-                    {
-                        if (!System.IO.File.Exists(_importModuleFile))
-                        {
-                            MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
-                            return false;
-                        }
+                    
 
                         switch (item.ImportType)
                         {

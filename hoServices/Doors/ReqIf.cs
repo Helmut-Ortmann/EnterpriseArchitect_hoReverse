@@ -20,7 +20,9 @@ namespace EaServices.Doors
     /// </summary>
     public class ReqIf : DoorsModule
     {
-        private readonly string Tab = "\t";
+        readonly string Tab = "\t";
+        ReqIF _reqIf = null;
+       int _subModuleIndex = 0;
         
         readonly FileImportSettingsItem _settings;
         bool _errorMessage1;
@@ -37,6 +39,89 @@ namespace EaServices.Doors
         public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile)
         {
             _settings = settings;
+        }
+        /// <summary>
+        /// Export updated Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
+        /// </summary>
+        /// <param name="subModuleIndex"></param>
+        /// <returns></returns>
+        public override bool ExportUpdateRequirements(int subModuleIndex = 0)
+        {
+            _subModuleIndex = subModuleIndex;
+            _errorMessage1 = false;
+            // decompress reqif file and its embedded files
+            string importReqIfFile = Decompress(ImportModuleFile);
+            if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
+
+            // Deserialize
+            ReqIFDeserializer deserializer = new ReqIFDeserializer();
+            _reqIf = deserializer.Deserialize(importReqIfFile);
+
+
+            foreach (EA.Element el in Pkg.Elements)
+            {
+                _level = 0;
+                UpdateReqIfForElementRecursive(el);
+            }
+            return true;
+        }
+        /// <summary>
+        /// Recursive update an element
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public bool UpdateReqIfForElementRecursive(EA.Element el)
+        {
+            string name = el.Name;
+            string alias = el.Alias;
+            _count += 1;
+            _countAll += 1;
+            UpdateReqIfForElement(el);
+
+
+            if (el.Elements.Count > 0)
+            {
+                _level += 1;
+                foreach (EA.Element childEl in el.Elements)
+                {
+                    if (!UpdateReqIfForElementRecursive(childEl)) return false;
+                }
+                _level -= 1;
+            }
+            return true;
+
+        }
+        /// <summary>
+        /// UpdateReqIf for an element
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public bool UpdateReqIfForElement(EA.Element el)
+        {
+            string id = TaggedValue.GetTaggedValue(el, "Id");
+            var specObj = _reqIf.CoreContent[_subModuleIndex].SpecObjects.SingleOrDefault(x => x.Identifier == id);
+            // update values of ReqIF Attributes by TaggedValues
+            foreach (string tvName in _settings.WriteAttrNameList)
+            {
+                string value = TaggedValue.GetTaggedValue(el, tvName);
+                if (value == "")
+                {
+                    if (_errorMessage1) continue;
+                    _errorMessage1 = true;
+                    MessageBox.Show($@"Tagged Value='{tvName}'
+All tagged values to update ReqIF:
+'{_settings.WriteAttrNameList}'",@"Can't read tagged value");
+                    continue;
+                }
+                // update value
+                var attrValueObject = specObj.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == tvName);
+                var attrType = attrValueObject.AttributeDefinition.GetType();//specObj.Values[0].AttributeDefinition.LongName;
+                var attrValue = attrValueObject.ObjectValue; //specObj.Values[0].ObjectValue;
+            }
+
+            //var specType = (SpecObjectType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecObjectType));
+            return true;
+
         }
 
         /// <summary>
