@@ -58,7 +58,7 @@ Consider Resetting to factory settings
         /// Create a ToolStripItem with DropDownitems for each importable feature .
         /// The Tag property contains the style. If no configuration is available insert a text as a hint to a missing configuration.
         /// </summary>
-        /// <param name="items"></param>
+        /// <param name="items">List of items to visualize as toolstrip menue <see cref="T"/></param>
         /// <param name="nameRoot"></param>
         /// <param name="toolTipRoot"></param>
         /// <param name="eventHandler"></param>

@@ -424,6 +424,15 @@ namespace EaServices.Doors
 
         }
         /// <summary>
+        /// Export the ReqIF settings. Currently only changed tagged values are supported
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <returns></returns>
+        public bool ExportBySetting(int listNumber)
+        {
+            return false;
+        }
+        /// <summary>
         /// Import all jobs of the current list number with the respectively defined settings.
         /// </summary>
         public bool ImportBySetting(int listNumber)
@@ -441,7 +450,11 @@ namespace EaServices.Doors
                     if (_pkg == null)
                     {
                         MessageBox.Show(
-                            $@"Package of import list {listNumber} with GUID='{guid}' not availbale.{Environment.NewLine}Check Import settings in Settings.Json.",
+                            $@"Package of import list {listNumber} with GUID='{guid}' not available.
+{item.Description}
+{item.Name}
+
+Check Import settings in Settings.Json.",
                             @"Package to import into isn't available, break!");
                         return false;
                     }
