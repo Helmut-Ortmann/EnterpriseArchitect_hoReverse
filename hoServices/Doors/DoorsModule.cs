@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DataModels;
 using EA;
 using hoLinqToSql.LinqUtils;
+using hoUtils.DirFile;
 using hoUtils.ExportImport;
 using LinqToDB.DataProvider;
 using hoUtils.Json;
@@ -448,7 +449,9 @@ namespace EaServices.Doors
             {
                 if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
-                    _importModuleFile = item.InputFile;
+                    // Copy input file to export file
+                    if (! DirFiles.FileCopy(item.InputFile, item.ExportFile)) return false;
+                    _importModuleFile = item.ExportFile;
                     if (!System.IO.File.Exists(_importModuleFile))
                     {
                         MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
@@ -487,22 +490,18 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                             return false;
                         }
 
-                        _importModuleFile = item.InputFile;
-
-                    
-
                         switch (item.ImportType)
                         {
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                var doorsReqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && doorsReqIf.ExportUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                var reqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIf.ExportUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));

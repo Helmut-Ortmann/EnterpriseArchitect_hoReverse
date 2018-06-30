@@ -46,6 +46,19 @@ namespace EaServices.Doors
         }
         [JsonProperty("InputFile")]
         private string _inputFile;
+        /// <summary>
+        /// The file to export. 
+        ///
+        /// Example: myImport.reqifz, myImport.csv, myImport.xml
+        /// </summary>
+        [JsonIgnore]
+        public string ExportFile
+        {
+            get => _exportFile?.Replace(@"\", "/") ?? "";
+            set => _exportFile = value;
+        }
+        [JsonProperty("ExportFile")]
+        private string _exportFile;
 
         /// <summary>
         /// The dictionary to store the embedded files. 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
@@ -76,11 +77,8 @@ Packages (per module one package/guid) are defined in Settings.json:
                 if (! UpdateReqIfForElementRecursive(el)) return false;
             }
 
-            // serialize
-            var serializer = new ReqIFSerializer(false);
-
-            serializer.Serialize(_reqIf, $"__{importReqIfFile}", null);
-            return true;
+            // serialize ReqIF
+            return SerializeReqIf(ImportModuleFile);
         }
         /// <summary>
         /// Recursive update an element
@@ -107,6 +105,28 @@ Packages (per module one package/guid) are defined in Settings.json:
             }
             return true;
 
+        }
+        /// <summary>
+        /// Serialize ReqIF
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        bool SerializeReqIf(string zipPath)
+        {
+            var serializer = new ReqIFSerializer(false);
+            string pathSerialize = Path.Combine(Path.GetDirectoryName(zipPath), $"_{Path.GetFileNameWithoutExtension(zipPath)}.reqif");
+            try
+            {
+                serializer.Serialize(_reqIf, pathSerialize, null);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Path:
+'{pathSerialize}'", @"Error serialize ReqIF, break!");
+                return false;
+            }
+            Compress(zipPath, pathSerialize);
+            return true;
         }
         /// <summary>
         /// UpdateReqIf for an element
@@ -161,19 +181,24 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
         private bool ChangeValueReqIf(SpecObject specObject, string name, string eaValue)
         {
             AttributeValue attrValueObject = specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name);
+
+            // Attribute not part of ReqIF, skip
+            if (attrValueObject == null) return true;
             var attrType = attrValueObject.AttributeDefinition;//specObj.Values[0].AttributeDefinition.LongName;
             object attrValue = attrValueObject.ObjectValue;
             if (attrType is AttributeDefinitionXHTML)
             switch (attrType)
             {
                 case  AttributeDefinitionXHTML xhtml:
-                string    xhtmlcontent = @"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">Headline A11111</reqif-xhtml:div>";
-                   var t = new AttributeValueXHTML();
-                    t.TheValue = xhtmlcontent;
-                    attrValueObject.ObjectValue = t;
+                    // handle new line
+                    eaValue = eaValue.Replace("\r\n", "<br>");
+
+                    string    xhtmlcontent = $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{eaValue}</reqif-xhtml:div>";
+                    attrValueObject.ObjectValue = xhtmlcontent;
                 break;
 
                 case AttributeDefinitionString simpleString:
+                    attrValueObject.ObjectValue = eaValue;
                     break;
                 }
             return true;
@@ -405,9 +430,22 @@ ObjectId/Multiplicity: '{objectId}", @"Error update EA Element, skip!",
             }
         }
 
+        /// <summary>
+        /// Compress the exported file
+        /// </summary>
+        /// <param name="zipFile">The path of the zip achive</param>
+        /// <param name="fileName">The file to zip</param>
+        void Compress(string zipFile, string fileName)
+        {
+            if (File.Exists(zipFile)) File.Delete(zipFile);
+            using (var zip = ZipFile.Open(zipFile, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
+            }
+        }
 
         /// <summary>
-        /// Decompress the import reqIf file if compressed format (*.reqifz)
+        /// Decompress the import/export reqIf file if compressed format (*.reqifz)
         /// </summary>
         /// <param name="importReqIfFile"></param>
         /// <returns>The path to the *.reqif file</returns>
