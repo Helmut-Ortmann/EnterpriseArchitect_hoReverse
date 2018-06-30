@@ -57,12 +57,29 @@ namespace EaServices.Doors
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
             _reqIf = deserializer.Deserialize(importReqIfFile);
 
+            // Modules
+            if (subModuleIndex >= _reqIf.CoreContent[0].Specifications.Count)
+            {
+                MessageBox.Show($@"File: '{importReqIfFile}'
+Contains: {_reqIf.CoreContent.Count} modules
+Requested: {_reqIf.CoreContent.Count}
+Packages (per module one package/guid) are defined in Settings.json: 
+
+", @"More packages defined as Modules are in ReqIF file, break!");
+                return false;
+            }
+
 
             foreach (EA.Element el in Pkg.Elements)
             {
                 _level = 0;
-                UpdateReqIfForElementRecursive(el);
+                if (! UpdateReqIfForElementRecursive(el)) return false;
             }
+
+            // serialize
+            var serializer = new ReqIFSerializer(false);
+
+            serializer.Serialize(_reqIf, $"__{importReqIfFile}", null);
             return true;
         }
         /// <summary>
@@ -76,7 +93,7 @@ namespace EaServices.Doors
             string alias = el.Alias;
             _count += 1;
             _countAll += 1;
-            UpdateReqIfForElement(el);
+            if (! UpdateReqIfForElement(el)) return false;
 
 
             if (el.Elements.Count > 0)
@@ -99,29 +116,67 @@ namespace EaServices.Doors
         public bool UpdateReqIfForElement(EA.Element el)
         {
             string id = TaggedValue.GetTaggedValue(el, "Id");
-            var specObj = _reqIf.CoreContent[_subModuleIndex].SpecObjects.SingleOrDefault(x => x.Identifier == id);
+            SpecObject specObj;
+            try
+            {
+                specObj = _reqIf.CoreContent[0].SpecObjects.SingleOrDefault(x => x.Identifier == id);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"File: '{ImportModuleFile}'
+Module in ReqIF: '{_subModuleIndex}'
+
+{e}", @"Error getting identifier from ReqIF");
+                return false;
+            }
+
+            if (specObj == null)
+            {
+                MessageBox.Show($@"File: '{ImportModuleFile}'
+Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
+                return false;
+
+            }
             // update values of ReqIF Attributes by TaggedValues
             foreach (string tvName in _settings.WriteAttrNameList)
             {
-                string value = TaggedValue.GetTaggedValue(el, tvName);
-                if (value == "")
-                {
-                    if (_errorMessage1) continue;
-                    _errorMessage1 = true;
-                    MessageBox.Show($@"Tagged Value='{tvName}'
-All tagged values to update ReqIF:
-'{_settings.WriteAttrNameList}'",@"Can't read tagged value");
-                    continue;
-                }
+                string tvValue = TaggedValue.GetTaggedValue(el, tvName);
+                if (tvValue == "") continue;
+                
                 // update value
-                var attrValueObject = specObj.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == tvName);
-                var attrType = attrValueObject.AttributeDefinition.GetType();//specObj.Values[0].AttributeDefinition.LongName;
-                var attrValue = attrValueObject.ObjectValue; //specObj.Values[0].ObjectValue;
+                if (! ChangeValueReqIf(specObj, tvName, tvValue)) return false;
             }
 
             //var specType = (SpecObjectType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecObjectType));
             return true;
 
+        }
+        /// <summary>
+        /// Change ReqIF value of the specObject and the attribut value
+        /// </summary>
+        /// <param name="specObject"></param>
+        /// <param name="name"></param>
+        /// <param name="eaValue"></param>
+        /// <returns></returns>
+        private bool ChangeValueReqIf(SpecObject specObject, string name, string eaValue)
+        {
+            AttributeValue attrValueObject = specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name);
+            var attrType = attrValueObject.AttributeDefinition;//specObj.Values[0].AttributeDefinition.LongName;
+            object attrValue = attrValueObject.ObjectValue;
+            if (attrType is AttributeDefinitionXHTML)
+            switch (attrType)
+            {
+                case  AttributeDefinitionXHTML xhtml:
+                string    xhtmlcontent = @"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">Headline A11111</reqif-xhtml:div>";
+                   var t = new AttributeValueXHTML();
+                    t.TheValue = xhtmlcontent;
+                    attrValueObject.ObjectValue = t;
+                break;
+
+                case AttributeDefinitionString simpleString:
+                    break;
+                }
+            return true;
         }
 
         /// <summary>

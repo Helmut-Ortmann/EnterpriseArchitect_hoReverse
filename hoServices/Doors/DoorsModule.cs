@@ -448,11 +448,26 @@ namespace EaServices.Doors
             {
                 if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
+                    _importModuleFile = item.InputFile;
                     if (!System.IO.File.Exists(_importModuleFile))
                     {
                         MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
                         return false;
                     }
+                    // check if there are columns to update
+                    if (item.WriteAttrNameList.Count == 0)
+                    {
+                        var attributesToVisualize = String.Join(", ",item.WriteAttrNameList.ToArray());
+                        MessageBox.Show($@"File: '{_importModuleFile}'
+
+Attributes to write ('{nameof(item.WriteAttrNameList)}'):
+'{attributesToVisualize}'
+", @"No Attributes to write in 'Setting.json' defined");
+                        return false;
+
+                    }
+
+
                     // handle more than one package
                     int subPackageIndex = -1;
                     // handle zip files like
@@ -514,6 +529,7 @@ namespace EaServices.Doors
             {
                 if (Convert.ToInt32(item.ListNo) == listNumber)
                 {
+                    _importModuleFile = item.InputFile;
                     if (!System.IO.File.Exists(_importModuleFile))
                     {
                         MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
@@ -538,7 +554,7 @@ Check Import settings in Settings.Json.",
                         return false;
                     }
 
-                    _importModuleFile = item.InputFile;
+                    
                     string eaObjectType = item.ObjectType;
                     string eaStereotype = item.Stereotype;
                     string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None"
