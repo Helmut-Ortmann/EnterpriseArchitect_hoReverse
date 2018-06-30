@@ -24,7 +24,9 @@ namespace EaServices.Doors
         readonly string Tab = "\t";
         ReqIF _reqIf = null;
        int _subModuleIndex = 0;
-        
+
+        ExportFields _exportFields;
+
         readonly FileImportSettingsItem _settings;
         bool _errorMessage1;
         // Attributes not to import
@@ -50,6 +52,7 @@ namespace EaServices.Doors
         {
             _subModuleIndex = subModuleIndex;
             _errorMessage1 = false;
+            _exportFields = new ExportFields(_settings.WriteAttrNameList);
             // decompress reqif file and its embedded files
             string importReqIfFile = Decompress(ImportModuleFile);
             if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
@@ -158,12 +161,14 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
 
             }
             // update values of ReqIF Attributes by TaggedValues
-            foreach (string tvName in _settings.WriteAttrNameList)
+            foreach (string tvName in _exportFields.GetFields())
             {
                 string tvValue = TaggedValue.GetTaggedValue(el, tvName);
                 if (tvValue == "") continue;
-                
+
                 // update value
+                string macroValue = _exportFields.GetMacroValue(el, tvName);
+                if (macroValue != "") tvValue = macroValue;
                 if (! ChangeValueReqIf(specObj, tvName, tvValue)) return false;
             }
 
