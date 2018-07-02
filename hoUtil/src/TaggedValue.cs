@@ -76,7 +76,21 @@ namespace hoReverse.hoUtils
 
 
         }
+        /// <summary>
+        /// If tagged value doesn't exists a new one is created.  
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue CreateTv(EA.Element el, string name)
+        {
 
+            EA.TaggedValue tg = Add(el, name);
+            tg.Update();
+
+            return tg;
+        }
 
         /// <summary>
         /// Set Tagged Value with 'Name' to a value. If tagged value doesn't exists a new one is created. If the  

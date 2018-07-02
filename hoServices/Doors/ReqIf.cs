@@ -225,6 +225,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
         {
             bool result = true;
            _errorMessage1 = false;
+            _exportFields = new ExportFields(_settings.WriteAttrNameList);
 
             // decompress reqif file and its embedded files
             string importReqIfFile = Decompress(ImportModuleFile);
@@ -697,7 +698,10 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                 select new { Value = obj.ObjectValue.ToString(), Name = obj.AttributeDefinition.LongName, Type = obj.AttributeDefinition.GetType() };
             foreach (var property in moduleProperties)
             {
-                TaggedValue.SetUpdate(el, property.Name, GetAttrValue(property.Value ?? ""));
+                // if writable don't overwrite value, only create TV
+                if (_exportFields.IsWritableValue(property.Value))
+                TaggedValue.CreateTv(el, property.Value);
+                else TaggedValue.SetUpdate(el, property.Name, GetAttrValue(property.Value ?? ""));
             }
         }
 
