@@ -34,6 +34,15 @@ namespace EaServices.Doors
 
         }
         /// <summary>
+        /// returns true if the tagged Value with the name 'name' is writable.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool IsWritableValue(string name)
+        {
+            return _fields.SingleOrDefault(x => x.Split('=')[0] == name)!=null;
+        }
+        /// <summary>
         /// Get Macro value of the fiels
         /// </summary>
         /// <param name="el"></param>
