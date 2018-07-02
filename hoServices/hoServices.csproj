@@ -130,7 +130,7 @@
     <Compile Include="Doors\DoorsModule.cs" />
     <Compile Include="Doors\DoorsOle.cs" />
     <Compile Include="Doors\DoorsReqIf.cs" />
-    <Compile Include="Doors\ExportFileds.cs" />
+    <Compile Include="Doors\ExportFields.cs" />
     <Compile Include="Doors\FileImportSettingsItem.cs" />
     <Compile Include="Doors\HtmlToDocx.cs" />
     <Compile Include="Doors\HtmlToText.cs" />

@@ -22,8 +22,8 @@ namespace EaServices.Doors
     public class ReqIf : DoorsModule
     {
         readonly string Tab = "\t";
-        ReqIF _reqIf = null;
-       int _subModuleIndex = 0;
+        ReqIF _reqIf;
+       int _subModuleIndex;
 
         ExportFields _exportFields;
 
@@ -90,8 +90,8 @@ Packages (per module one package/guid) are defined in Settings.json:
         /// <returns></returns>
         public bool UpdateReqIfForElementRecursive(EA.Element el)
         {
-            string name = el.Name;
-            string alias = el.Alias;
+            
+           
             _count += 1;
             _countAll += 1;
             if (! UpdateReqIfForElement(el)) return false;
@@ -109,10 +109,11 @@ Packages (per module one package/guid) are defined in Settings.json:
             return true;
 
         }
+
         /// <summary>
         /// Serialize ReqIF
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="zipPath"></param>
         /// <returns></returns>
         bool SerializeReqIf(string zipPath)
         {
@@ -190,13 +191,12 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
             // Attribute not part of ReqIF, skip
             if (attrValueObject == null) return true;
             var attrType = attrValueObject.AttributeDefinition;//specObj.Values[0].AttributeDefinition.LongName;
-            object attrValue = attrValueObject.ObjectValue;
             if (attrType is AttributeDefinitionXHTML)
             switch (attrType)
             {
                 case  AttributeDefinitionXHTML xhtml:
                     // handle new line
-                    eaValue = eaValue.Replace("\r\n", "<br>");
+                    eaValue = eaValue.Replace("\r\n", "<br></br>");
 
                     string    xhtmlcontent = $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{eaValue}</reqif-xhtml:div>";
                     attrValueObject.ObjectValue = xhtmlcontent;
@@ -406,7 +406,9 @@ Available Attributes:
                 {
                     if (MessageBox.Show($@"Name: '{name}'
 Alias: '{alias}
-ObjectId/Multiplicity: '{objectId}", @"Error update EA Element, skip!",
+ObjectId/Multiplicity: '{objectId}
+
+{e}", @"Error update EA Element, skip!",
                             MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     break;
                     else continue;

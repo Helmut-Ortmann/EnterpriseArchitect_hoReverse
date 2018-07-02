@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace EaServices.Doors
 {
@@ -10,7 +10,7 @@ namespace EaServices.Doors
     /// </summary>
     public class ExportFields
     {
-        private List<string> _fields;
+        private readonly List<string> _fields;
         /// <summary>
         /// Create Export fields of the form:
         /// Name=Macro
@@ -61,9 +61,9 @@ namespace EaServices.Doors
                 case "EA.Author":
                     return el.Author;
                 case "EA.Modified":
-                    return el.Modified.ToString();
+                    return el.Modified.ToString(CultureInfo.CurrentCulture);
                 case "EA.Created":
-                    return el.Created.ToString();
+                    return el.Created.ToString(CultureInfo.CurrentCulture);
                 default:
                     return $"unknown macro: '{macro}'";
             }   
