@@ -56,21 +56,33 @@ namespace hoReverse.hoUtils
             return tg;
             
         }
+
         /// <summary>
-        /// Get Tagged Value with 'Name'.
+        /// Get Tagged Value with 'Name'. If TV not exists return "". 
         /// </summary>
         /// <param name="el"></param>
         /// <param name="name"></param>
+        /// <param name="caseSensitive"></param>
         /// <returns></returns>
-        public static string GetTaggedValue(EA.Element el, string name)
+        public static string GetTaggedValue(EA.Element el, string name, bool caseSensitive=true)
         {
             foreach (EA.TaggedValue taggedValue in el.TaggedValues)
             {
-                if (taggedValue.Name == name)
+                if (caseSensitive)
                 {
-                    return GetTaggedValue(taggedValue);
+                    if (taggedValue.Name == name)
+                    {
+                        return GetTaggedValue(taggedValue);
+                    }
                 }
-            }
+                else
+                {
+                   if (taggedValue.Name.ToLower() == name.ToLower())
+                        {
+                            return GetTaggedValue(taggedValue);
+                        }
+                    }
+             }
 
             return "";
 
