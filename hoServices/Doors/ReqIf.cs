@@ -4,6 +4,8 @@ using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
 using ReqIFSharp;
@@ -220,7 +222,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
             AttributeValue attrValueObject = caseSensitive 
                 ? specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name)
                 : specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName.ToLower() == name.ToLower());
-
+            bool multiValuedEnum = false;
             // Attribute not part of ReqIF, skip
             if (attrValueObject == null)
             {
@@ -237,9 +239,11 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                         attrValueObject = new AttributeValueXHTML();
                         attrValueObject.AttributeDefinition = attributeType;
                         break;
-                    case AttributeDefinitionEnumeration _:
+                    case AttributeDefinitionEnumeration moduleAttributDefinitionEnumeration:
                         attrValueObject = new AttributeValueEnumeration();
                         attrValueObject.AttributeDefinition = attributeType;
+                        multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
+
                         break;
 
                 }
@@ -265,7 +269,8 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
 
                     try
                     {
-                        attrValueObject.ObjectValue = eaValue;
+                        // take all the valid enums
+                        SetEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
                     }
                     catch (Exception e)
                     {
@@ -278,6 +283,29 @@ Value: '{eaValue}'
                     break;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Set the values of a enum (single line or multi line
+        /// </summary>
+        /// <param name="attributeValueEnumeration"></param>
+        /// <param name="values"></param>
+        /// <param name="multiValueEnum"></param>
+        public void SetEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
+        {
+            // over all values split by ",:=;-"
+            if (String.IsNullOrWhiteSpace(values)) return;
+
+            values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
+            foreach (var value in values.Split(','))
+            {
+                var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                    .SingleOrDefault(x=> x.LongName == value);
+                if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                if (!multiValueEnum) return;
+
+            }
+
         }
 
         /// <summary>

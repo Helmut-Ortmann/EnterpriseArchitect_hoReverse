@@ -44,7 +44,12 @@ Let's discuss it, but it works.
 
 ## News
 
+3.0.2 Roundtrip/Workflow ReqIF
+-  Define columns for [roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
+-  Supported types: string, xhtml, enum
+
 3.0.1 ReqIF *.pdf, *.wmf files supported
+-  Files are stored in the File Section of Requirements
 -  error fixing and minor improvements
 
 3. [Import Requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf), Tests (Doors, *.ReqIf, *.reqIfz, *.csv, *.xml)
