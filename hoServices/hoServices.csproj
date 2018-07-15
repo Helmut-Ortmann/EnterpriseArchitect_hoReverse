@@ -110,6 +110,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
@@ -129,6 +130,7 @@
     <Compile Include="Doors\DoorsModule.cs" />
     <Compile Include="Doors\DoorsOle.cs" />
     <Compile Include="Doors\DoorsReqIf.cs" />
+    <Compile Include="Doors\ExportFields.cs" />
     <Compile Include="Doors\FileImportSettingsItem.cs" />
     <Compile Include="Doors\HtmlToDocx.cs" />
     <Compile Include="Doors\HtmlToText.cs" />

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
 using ReqIFSharp;
@@ -20,15 +22,20 @@ namespace EaServices.Doors
     /// </summary>
     public class ReqIf : DoorsModule
     {
-        private readonly string Tab = "\t";
-        
+        readonly string Tab = "\t";
+        ReqIF _reqIf;
+       int _subModuleIndex;
+
+        ExportFields _exportFields;
+        List<ReqIFSharp.AttributeDefinition> _moduleAttributeDefinitions;
+
         readonly FileImportSettingsItem _settings;
         bool _errorMessage1;
         // Attributes not to import
         readonly String[] _blackList1 = new String[] { "TableType", "TableBottomBorder", "TableCellWidth", "TableChangeBars", "TableLeftBorder", "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder" };// DOORS Table requirements
 
         /// <summary>
-        /// ReqIF import
+        /// ReqIF Export/Roundtrip
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
@@ -38,9 +45,274 @@ namespace EaServices.Doors
         {
             _settings = settings;
         }
+        /// <summary>
+        /// Export updated Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
+        /// </summary>
+        /// <param name="subModuleIndex"></param>
+        /// <returns></returns>
+        public override bool ExportUpdateRequirements(int subModuleIndex = 0)
+        {
+            _subModuleIndex = subModuleIndex;
+            _errorMessage1 = false;
+            _exportFields = new ExportFields(_settings.WriteAttrNameList);
+            // decompress reqif file and its embedded files
+            string importReqIfFile = Decompress(ImportModuleFile);
+            if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
+
+            // Deserialize
+            ReqIFDeserializer deserializer = new ReqIFDeserializer();
+            _reqIf = deserializer.Deserialize(importReqIfFile);
+            _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
+            // Modules
+            if (subModuleIndex >= _reqIf.CoreContent[0].Specifications.Count)
+            {
+                MessageBox.Show($@"File: '{importReqIfFile}'
+Contains: {_reqIf.CoreContent.Count} modules
+Requested: {_reqIf.CoreContent.Count}
+Packages (per module one package/guid) are defined in Settings.json: 
+
+", @"More packages defined as Modules are in ReqIF file, break!");
+                return false;
+            }
+
+            // Modules
+            if (_reqIf.CoreContent[0].Specifications.Count == 0)
+            {
+                MessageBox.Show($@"File: '{importReqIfFile}'
+Contains: {_reqIf.CoreContent.Count} modules
+Requested: {_reqIf.CoreContent.Count}
+No module is defined in Settings.json: 
+
+", @"No module defined in ReqIF file, break!");
+                return false;
+            }
+
+            if (Pkg.Elements.Count == 0)
+            {
+                MessageBox.Show($@"File: '{importReqIfFile}'
+Contains: {_reqIf.CoreContent.Count} modules
+
+Export/Roundtrip needs at least initial import and model elements in EA!
+
+", @"No ReqIF initial import for an Roundtrip export available, break!");
+                return false;
+            }
+
+            // Export ReqIF SpecObjects stored in EA
+            foreach (EA.Element el in Pkg.Elements)
+            {
+                _level = 0;
+                if (! UpdateReqIfForElementRecursive(el)) return false;
+            }
+
+            // serialize ReqIF
+            return SerializeReqIf(ImportModuleFile);
+        }
+        /// <summary>
+        /// Recursive update an element
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public bool UpdateReqIfForElementRecursive(EA.Element el)
+        {
+            
+           
+            _count += 1;
+            _countAll += 1;
+            // Check type and stereotype
+            if (el.Type != _settings.ObjectType || el.Stereotype != _settings.Stereotype) return true;
+            if (! UpdateReqIfForElement(el)) return false;
+
+
+            if (el.Elements.Count > 0)
+            {
+                _level += 1;
+                foreach (EA.Element childEl in el.Elements)
+                {
+                    if (!UpdateReqIfForElementRecursive(childEl)) return false;
+                }
+                _level -= 1;
+            }
+            return true;
+
+        }
 
         /// <summary>
-        /// Import and update ReqIF Requirements.
+        /// Serialize ReqIF
+        /// </summary>
+        /// <param name="zipPath"></param>
+        /// <returns></returns>
+        bool SerializeReqIf(string zipPath)
+        {
+            var serializer = new ReqIFSerializer(false);
+            string pathSerialize = Path.Combine(Path.GetDirectoryName(zipPath), $"_{Path.GetFileNameWithoutExtension(zipPath)}.reqif");
+            try
+            {
+                serializer.Serialize(_reqIf, pathSerialize, null);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Path:
+'{pathSerialize}'
+
+{e}", @"Error serialize ReqIF, break!");
+                return false;
+            }
+            Compress(zipPath, pathSerialize);
+            return true;
+        }
+        /// <summary>
+        /// UpdateReqIf for an element. Handle fot TV: Values or Macros like '=EA.GUID'
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public bool UpdateReqIfForElement(EA.Element el)
+        {
+            string id = TaggedValue.GetTaggedValue(el, "Id");
+            SpecObject specObj;
+            try
+            {
+                specObj = _reqIf.CoreContent[0].SpecObjects.SingleOrDefault(x => x.Identifier == id);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"File: '{ImportModuleFile}'
+Module in ReqIF: '{_subModuleIndex}'
+
+{e}", @"Error getting identifier from ReqIF");
+                return false;
+            }
+
+            if (specObj == null)
+            {
+                MessageBox.Show($@"File: '{ImportModuleFile}'
+Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
+                return false;
+
+            }
+            // update values of ReqIF Attributes by TaggedValues
+            foreach (string tvName in _exportFields.GetFields())
+            {
+                string tvValue = TaggedValue.GetTaggedValue(el, tvName, caseSensitive:false);
+                
+
+                // update value
+                string macroValue = _exportFields.GetMacroValue(el, tvName);
+                if (macroValue != "") tvValue = macroValue;
+                if (tvValue == "") continue;
+                if (! ChangeValueReqIf(specObj, tvName, tvValue,caseSensitive:false)) return false;
+            }
+
+            //var specType = (SpecObjectType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecObjectType));
+            return true;
+
+        }
+
+        /// <summary>
+        /// Change ReqIF value of the specObject and the attribut value
+        /// </summary>
+        /// <param name="specObject"></param>
+        /// <param name="name"></param>
+        /// <param name="eaValue"></param>
+        /// <param name="caseSensitive"></param>
+        /// <returns></returns>
+        private bool ChangeValueReqIf(SpecObject specObject, string name, string eaValue, bool caseSensitive=false)
+        {
+            AttributeValue attrValueObject = caseSensitive 
+                ? specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name)
+                : specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName.ToLower() == name.ToLower());
+            bool multiValuedEnum = false;
+            // Attribute not part of ReqIF, skip
+            if (attrValueObject == null)
+            {
+                // Create AttributValue and assign them to values.
+                AttributeDefinition attributeType =
+                    _moduleAttributeDefinitions.SingleOrDefault(x => x.LongName.ToLower() == name.ToLower());
+                switch (attributeType)
+                {
+                    case AttributeDefinitionString _:
+                        attrValueObject = new AttributeValueString();
+                        attrValueObject.AttributeDefinition = attributeType;
+                        break;
+                    case AttributeDefinitionXHTML _:
+                        attrValueObject = new AttributeValueXHTML();
+                        attrValueObject.AttributeDefinition = attributeType;
+                        break;
+                    case AttributeDefinitionEnumeration moduleAttributDefinitionEnumeration:
+                        attrValueObject = new AttributeValueEnumeration();
+                        attrValueObject.AttributeDefinition = attributeType;
+                        multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
+
+                        break;
+
+                }
+
+                if (attrValueObject == null) return true; // not supported datatype
+                specObject.Values.Add(attrValueObject);
+            }
+            var attrType = attrValueObject.AttributeDefinition;//specObj.Values[0].AttributeDefinition.LongName;
+            switch (attrType)
+            {
+                case  AttributeDefinitionXHTML _:
+                    // handle new line
+                    eaValue = eaValue.Replace("\r\n", "<br></br>");
+
+                    string    xhtmlcontent = $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{eaValue}</reqif-xhtml:div>";
+                    attrValueObject.ObjectValue = xhtmlcontent;
+                break;
+
+                case AttributeDefinitionString _:
+                    attrValueObject.ObjectValue = eaValue;
+                    break;
+                case AttributeDefinitionEnumeration _:
+
+                    try
+                    {
+                        // take all the valid enums
+                        SetEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($@"Name: '{name}'
+
+Value: '{eaValue}'
+
+{e}", $@"Error enumeration value TV '{name}'.");
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Set the values of a enum (single line or multi line
+        /// </summary>
+        /// <param name="attributeValueEnumeration"></param>
+        /// <param name="values"></param>
+        /// <param name="multiValueEnum"></param>
+        public void SetEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
+        {
+            // over all values split by ",:=;-"
+            if (String.IsNullOrWhiteSpace(values)) return;
+
+            // delete old values
+            attributeValueEnumeration.Values.Clear();
+
+            values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
+            foreach (var value in values.Split(','))
+            {
+                var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                    .SingleOrDefault(x=> x.LongName == value);
+                if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                if (!multiValueEnum) return;
+
+            }
+
+        }
+        
+
+        /// <summary>
+        /// Import and update ReqIF Requirements. Derive Tagged Values from ReqSpec Attribut definition
         /// </summary>
         /// <param name="eaObjectType">EA Object type to create</param>
         /// <param name="eaStereotype">EA stereotype to create</param>
@@ -55,6 +327,7 @@ namespace EaServices.Doors
         {
             bool result = true;
            _errorMessage1 = false;
+            _exportFields = new ExportFields(_settings.WriteAttrNameList);
 
             // decompress reqif file and its embedded files
             string importReqIfFile = Decompress(ImportModuleFile);
@@ -71,7 +344,8 @@ namespace EaServices.Doors
 
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            var reqIf = deserializer.Deserialize(importReqIfFile);
+            _reqIf = deserializer.Deserialize(importReqIfFile);
+            _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
 
             // prepare EA, existing requirements to detect deleted and changed requirements
             ReadEaPackageRequirements();
@@ -80,8 +354,8 @@ namespace EaServices.Doors
 
 
             // Add requirements recursiv for module to requirement table
-            InitializeReqIfRequirementsTable(reqIf);
-            Specification reqifModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+            InitializeReqIfRequirementsTable(_reqIf);
+            Specification reqifModule = _reqIf.CoreContent[0].Specifications[subModuleIndex];
 
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
@@ -93,7 +367,7 @@ namespace EaServices.Doors
                 CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importReqIfFile);
 
                 MoveDeletedRequirements();
-                UpdatePackage(reqIf);
+                UpdatePackage();
             }
 
             Rep.BatchAppend = false;
@@ -236,7 +510,9 @@ Available Attributes:
                 {
                     if (MessageBox.Show($@"Name: '{name}'
 Alias: '{alias}
-ObjectId/Multiplicity: '{objectId}", @"Error update EA Element, skip!",
+ObjectId/Multiplicity: '{objectId}
+
+{e}", @"Error update EA Element, skip!",
                             MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     break;
                     else continue;
@@ -265,9 +541,22 @@ ObjectId/Multiplicity: '{objectId}", @"Error update EA Element, skip!",
             }
         }
 
+        /// <summary>
+        /// Compress the exported file
+        /// </summary>
+        /// <param name="zipFile">The path of the zip achive</param>
+        /// <param name="fileName">The file to zip</param>
+        void Compress(string zipFile, string fileName)
+        {
+            if (File.Exists(zipFile)) File.Delete(zipFile);
+            using (var zip = ZipFile.Open(zipFile, ZipArchiveMode.Create))
+            {
+                zip.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
+            }
+        }
 
         /// <summary>
-        /// Decompress the import reqIf file if compressed format (*.reqifz)
+        /// Decompress the import/export reqIf file if compressed format (*.reqifz)
         /// </summary>
         /// <param name="importReqIfFile"></param>
         /// <returns>The path to the *.reqif file</returns>
@@ -301,11 +590,10 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
         /// <summary>
         /// Update Package with Standard and ReqIF Properties
         /// </summary>
-        /// <param name="reqIf"></param>
-        protected void UpdatePackage(ReqIF reqIf)
+        protected override void UpdatePackage()
         {
             EA.Element el = Rep.GetElementByGuid(Pkg.PackageGUID);
-            GetModuleProperties(reqIf, el);
+            GetModuleProperties(_reqIf, el);
 
             base.UpdatePackage();
         }
@@ -418,13 +706,20 @@ XHTML:'{xhtmlValue}
                 DtRequirements.Columns.Add(attr, typeof(string));
             }
 
-            // get list of all used attributes
+            // get list of all defined attributes i
+            //var qDefinesAttributes = (from a in reqIf.CoreContent[0].SpecObjects[0].Type.SpecAttributes
+            //                          select a.SpecType.SpecAttributes.
 
-            var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
-                from attr in obj.Values
-                where (! _blackList1.Any(bl=>bl == attr.AttributeDefinition.LongName))  && // ignore blacklist, DOORS table attributes
-				      (! standardAttributes.Any(bl => bl == attr.AttributeDefinition.LongName)) // ignore standard attributes
-                select new { Name = attr.AttributeDefinition.LongName}).Distinct();
+            // get list of all used attributes
+            var qAttr = (from attr in _moduleAttributeDefinitions
+                where (!_blackList1.Any(bl => bl == attr.LongName)) && // ignore blacklist, DOORS table attributes
+                      (!standardAttributes.Any(bl => bl == attr.LongName)) // ignore standard attributes
+                          select new {Name=attr.LongName});
+          //  var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
+          //      from attr in obj.Values
+          //      where (! _blackList1.Any(bl=>bl == attr.AttributeDefinition.LongName))  && // ignore blacklist, DOORS table attributes
+				      //(! standardAttributes.Any(bl => bl == attr.AttributeDefinition.LongName)) // ignore standard attributes
+          //      select new { Name = attr.AttributeDefinition.LongName}).Distinct();
            
             // Add columns for all Attributes, except DOORS table attributes and standard attributes
             foreach (var attr in qAttr)
@@ -502,6 +797,38 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
         }
 
         /// <summary>
+        /// Get types of a ReqIF module
+        /// </summary>
+        /// <param name="reqIf"></param>
+        /// <param name="moduleIndex"></param>
+        /// <returns></returns>
+        List<ReqIFSharp.AttributeDefinition> GetTypesModule(ReqIF reqIf, int moduleIndex)
+        {
+            var specObjectTypes = new List<ReqIFSharp.AttributeDefinition>();
+            var children = reqIf.CoreContent[0].Specifications[moduleIndex].Children;
+            foreach (SpecHierarchy child in children)
+            {
+                AddModuleAttributeTypes(specObjectTypes, child.Children);
+            }
+            return specObjectTypes.Select(x=>x).Distinct().ToList();
+        }
+        // Get all specObjectTypes of
+        //void AddModuleAttributeTypes(List<ReqIFSharp.SpecObjectType> specObjectTypes, List<SpecHierarchy> children) {
+        /// <summary>
+        /// Get 
+        /// </summary>
+        /// <param name="specObjectTypes"></param>
+        /// <param name="children"></param>
+        void AddModuleAttributeTypes(List<ReqIFSharp.AttributeDefinition> specObjectTypes, List<SpecHierarchy> children)
+        {
+            foreach (SpecHierarchy child in children)
+            {
+                var specAttributes = child.Object.Type.SpecAttributes.Select(sa => sa);
+                specObjectTypes.AddRange(specAttributes);
+                AddModuleAttributeTypes(specObjectTypes, child.Children);
+            }
+        }
+        /// <summary>
         /// Add Tagged Values with Module Properties to Package/Object
         /// </summary>
         /// <param name="reqIf"></param>
@@ -512,7 +839,10 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                 select new { Value = obj.ObjectValue.ToString(), Name = obj.AttributeDefinition.LongName, Type = obj.AttributeDefinition.GetType() };
             foreach (var property in moduleProperties)
             {
-                TaggedValue.SetUpdate(el, property.Name, GetAttrValue(property.Value ?? ""));
+                // if writable don't overwrite value, only create TV
+                if (_exportFields.IsWritableValue(property.Value))
+                TaggedValue.CreateTv(el, property.Value); // only create TV
+                else TaggedValue.SetUpdate(el, property.Name, GetAttrValue(property.Value ?? "")); // update TV
             }
         }
 

@@ -32,8 +32,9 @@ namespace hoReverse.hoUtils
             return false;
 
         }
+
         /// <summary>
-        /// Get Tagged Value with 'Name'. If tagged value doesn't exists a new one is created. Don't forget to write the value and update.
+        /// Get Tagged Value with 'Name'. If tagged value doesn't exists than create a new one. Don't forget to write the value and update.
         /// </summary>
         /// <param name="el"></param>
         /// <param name="name"></param>
@@ -47,10 +48,58 @@ namespace hoReverse.hoUtils
                     return taggedValue;
                 }
             }
-
+            
             // create tagged value
-            EA.TaggedValue tg = (EA.TaggedValue)el.TaggedValues.AddNew(name, "Tag");
+            EA.TaggedValue tg = (EA.TaggedValue) el.TaggedValues.AddNew(name, "Tag");
             el.TaggedValues.Refresh();
+
+            return tg;
+            
+        }
+
+        /// <summary>
+        /// Get Tagged Value with 'Name'. If TV not exists return "". 
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <param name="caseSensitive"></param>
+        /// <returns></returns>
+        public static string GetTaggedValue(EA.Element el, string name, bool caseSensitive=true)
+        {
+            foreach (EA.TaggedValue taggedValue in el.TaggedValues)
+            {
+                if (caseSensitive)
+                {
+                    if (taggedValue.Name == name)
+                    {
+                        return GetTaggedValue(taggedValue);
+                    }
+                }
+                else
+                {
+                   if (taggedValue.Name.ToLower() == name.ToLower())
+                        {
+                            return GetTaggedValue(taggedValue);
+                        }
+                    }
+             }
+
+            return "";
+
+
+        }
+        /// <summary>
+        /// If tagged value doesn't exists a new one is created.  
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue CreateTv(EA.Element el, string name)
+        {
+
+            EA.TaggedValue tg = Add(el, name);
+            tg.Update();
 
             return tg;
         }

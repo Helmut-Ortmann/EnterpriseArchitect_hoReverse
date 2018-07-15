@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -1281,8 +1282,8 @@ namespace hoReverse.Reverse
             // 
             this._addFinalToolStripMenuItem.Name = "_addFinalToolStripMenuItem";
             this._addFinalToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this._addFinalToolStripMenuItem.Text = "&Final";
-            this._addFinalToolStripMenuItem.ToolTipText = "Add Final beneath selected Node";
+            this._addFinalToolStripMenuItem.Text = @"&Final";
+            this._addFinalToolStripMenuItem.ToolTipText = @"Add Final beneath selected Node";
             this._addFinalToolStripMenuItem.Click += new System.EventHandler(this.AddFinalToolStripMenuItem_Click);
             // 
             // _addMergeToolStripMenuItem
@@ -1297,16 +1298,16 @@ namespace hoReverse.Reverse
             // 
             this._showAllPortsToolStripMenuItem.Name = "_showAllPortsToolStripMenuItem";
             this._showAllPortsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this._showAllPortsToolStripMenuItem.Text = "&Show all ports";
-            this._showAllPortsToolStripMenuItem.ToolTipText = "Show all ports of selected classifier";
+            this._showAllPortsToolStripMenuItem.Text = @"&Show all ports";
+            this._showAllPortsToolStripMenuItem.ToolTipText = @"Show all ports of selected classifier";
             this._showAllPortsToolStripMenuItem.Click += new System.EventHandler(this.ShowAllPortsToolStripMenuItem_Click);
             // 
             // _insertTextIntoNodeToolStripMenuItem
             // 
             this._insertTextIntoNodeToolStripMenuItem.Name = "_insertTextIntoNodeToolStripMenuItem";
             this._insertTextIntoNodeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this._insertTextIntoNodeToolStripMenuItem.Text = "&Insert text into Element Notes";
-            this._insertTextIntoNodeToolStripMenuItem.ToolTipText = "Insert text into seleted Element Notes";
+            this._insertTextIntoNodeToolStripMenuItem.Text = @"&Insert text into Element Notes";
+            this._insertTextIntoNodeToolStripMenuItem.ToolTipText = @"Insert text into seleted Element Notes";
             this._insertTextIntoNodeToolStripMenuItem.Click += new System.EventHandler(this.InsertTextIntoNodeToolStripMenuItem_Click);
             // 
             // _btnNoMerge
@@ -1552,7 +1553,7 @@ namespace hoReverse.Reverse
             // 
             this.reloadSettingsToolStripMenuItem.Name = "reloadSettingsToolStripMenuItem";
             this.reloadSettingsToolStripMenuItem.Size = new System.Drawing.Size(374, 22);
-            this.reloadSettingsToolStripMenuItem.Text = "Reload Settings from Settings.json";
+            this.reloadSettingsToolStripMenuItem.Text = @"Reload Settings from Settings.json";
             this.reloadSettingsToolStripMenuItem.ToolTipText = "Load Settings.json from %appdata%\\ho\\hoReverse\\Settings.json";
             this.reloadSettingsToolStripMenuItem.Click += new System.EventHandler(this.ReloadSettingsToolStripMenuItem_Click);
             // 
@@ -1560,9 +1561,9 @@ namespace hoReverse.Reverse
             // 
             this.resetFactorySettingsToolStripMenuItem.Name = "resetFactorySettingsToolStripMenuItem";
             this.resetFactorySettingsToolStripMenuItem.Size = new System.Drawing.Size(374, 22);
-            this.resetFactorySettingsToolStripMenuItem.Text = "ResetFactorySettings";
+            this.resetFactorySettingsToolStripMenuItem.Text = @"ResetFactorySettings";
             this.resetFactorySettingsToolStripMenuItem.ToolTipText = "Reset the user.config to reset to delivery configuration.\r\n\r\nPlease restart. hoRe" +
-    "verse will  create a new user.config with the default settings.";
+    @"verse will  create a new user.config with the default settings.";
             this.resetFactorySettingsToolStripMenuItem.Click += new System.EventHandler(this.ResetFactorySettingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
@@ -1802,8 +1803,8 @@ namespace hoReverse.Reverse
             // 
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Name = "_deleteInvisibleuseRealizationDependenciesToolStripMenuItem";
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Text = "Delete invisible <<use> dependencies";
-            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.ToolTipText = "Delete for selected Class / Interface <<use>> dependencies which are not linked t" +
+            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Text = @"Delete invisible <<use>> dependencies";
+            this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.ToolTipText = @"Delete for selected Class / Interface <<use>> dependencies which are not linked t" +
     "o diagramobjects on the current diagram.";
             this._deleteInvisibleuseRealizationDependenciesToolStripMenuItem.Click += new System.EventHandler(this.DeleteInvisibleuseRealizationDependenciesToolStripMenuItem_Click);
             // 
@@ -1816,7 +1817,7 @@ namespace hoReverse.Reverse
             // 
             this._generateComponentPortsToolStripMenuItem.Name = "_generateComponentPortsToolStripMenuItem";
             this._generateComponentPortsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this._generateComponentPortsToolStripMenuItem.Text = "&GenerateComponentPorts";
+            this._generateComponentPortsToolStripMenuItem.Text = @"&GenerateComponentPorts";
             this._generateComponentPortsToolStripMenuItem.ToolTipText = resources.GetString("_generateComponentPortsToolStripMenuItem.ToolTipText");
             this._generateComponentPortsToolStripMenuItem.Click += new System.EventHandler(this.GenerateComponentPortsToolStripMenuItem_Click);
             // 
@@ -1824,16 +1825,16 @@ namespace hoReverse.Reverse
             // 
             this._hideAllPortsToolStripMenuItem.Name = "_hideAllPortsToolStripMenuItem";
             this._hideAllPortsToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this._hideAllPortsToolStripMenuItem.Text = "Hide all ports";
-            this._hideAllPortsToolStripMenuItem.ToolTipText = "Hide the ports of the selected element.";
+            this._hideAllPortsToolStripMenuItem.Text = @"Hide all ports";
+            this._hideAllPortsToolStripMenuItem.ToolTipText = @"Hide the ports of the selected element.";
             this._hideAllPortsToolStripMenuItem.Click += new System.EventHandler(this._hideAllPortsToolStripMenuItem_Click);
             // 
             // _showAllPortsActivityParametersToolStripMenuItem
             // 
             this._showAllPortsActivityParametersToolStripMenuItem.Name = "_showAllPortsActivityParametersToolStripMenuItem";
             this._showAllPortsActivityParametersToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
-            this._showAllPortsActivityParametersToolStripMenuItem.Text = "Show all ports / activity parameters";
-            this._showAllPortsActivityParametersToolStripMenuItem.ToolTipText = "Show all ports/activity parameters  for classifier (Component, Activity)";
+            this._showAllPortsActivityParametersToolStripMenuItem.Text = @"Show all ports / activity parameters";
+            this._showAllPortsActivityParametersToolStripMenuItem.ToolTipText = @"Show all ports/activity parameters  for classifier (Component, Activity)";
             this._showAllPortsActivityParametersToolStripMenuItem.Click += new System.EventHandler(this.ShowAllPortsActivityParametersToolStripMenuItem_Click);
             // 
             // _toolStripSeparator7
@@ -1938,7 +1939,7 @@ namespace hoReverse.Reverse
             // 
             this._getToolStripMenuItem.Name = "_getToolStripMenuItem";
             this._getToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this._getToolStripMenuItem.Text = "GetExternalFunctions";
+            this._getToolStripMenuItem.Text = @"GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
             this._getToolStripMenuItem.Click += new System.EventHandler(this.GetToolStripMenuItem_Click);
             // 
@@ -1946,8 +1947,8 @@ namespace hoReverse.Reverse
             // 
             this.makeRunnableToolStripMenuItem.Name = "makeRunnableToolStripMenuItem";
             this.makeRunnableToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.makeRunnableToolStripMenuItem.Text = "MakeRunnablePort";
-            this.makeRunnableToolStripMenuItem.ToolTipText = "Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
+            this.makeRunnableToolStripMenuItem.Text = @"MakeRunnablePort";
+            this.makeRunnableToolStripMenuItem.ToolTipText = @"Makes an Service Autosar Port\r\n\r\nSelect one or more ports.";
             this.makeRunnableToolStripMenuItem.Visible = false;
             this.makeRunnableToolStripMenuItem.Click += new System.EventHandler(this.MakeRunnableToolStripMenuItem_Click);
             // 
@@ -1955,7 +1956,7 @@ namespace hoReverse.Reverse
             // 
             this.makeServicePortToolStripMenuItem.Name = "makeServicePortToolStripMenuItem";
             this.makeServicePortToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.makeServicePortToolStripMenuItem.Text = "MakeServicePort";
+            this.makeServicePortToolStripMenuItem.Text = @"MakeServicePort";
             this.makeServicePortToolStripMenuItem.Visible = false;
             this.makeServicePortToolStripMenuItem.Click += new System.EventHandler(this.MakeServicePortToolStripMenuItem_Click);
             // 
@@ -1963,7 +1964,7 @@ namespace hoReverse.Reverse
             // 
             this.makeCalloutToolStripMenuItem.Name = "makeCalloutToolStripMenuItem";
             this.makeCalloutToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.makeCalloutToolStripMenuItem.Text = "MakeCalloutPort";
+            this.makeCalloutToolStripMenuItem.Text = @"MakeCalloutPort";
             this.makeCalloutToolStripMenuItem.Visible = false;
             this.makeCalloutToolStripMenuItem.Click += new System.EventHandler(this.MakeCalloutToolStripMenuItem_Click);
             // 
@@ -1976,7 +1977,7 @@ namespace hoReverse.Reverse
             // 
             this.showExternalComponentFunctionsToolStripMenuItem.Name = "showExternalComponentFunctionsToolStripMenuItem";
             this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions for EA-Element";
+            this.showExternalComponentFunctionsToolStripMenuItem.Text = @"Show Provided / Required Functions for EA-Element";
             this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = resources.GetString("showExternalComponentFunctionsToolStripMenuItem.ToolTipText");
             this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowExternalComponentFunctionsToolStripMenuItem_Click);
             // 
@@ -1992,9 +1993,9 @@ namespace hoReverse.Reverse
             // 
             this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
             this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.showFunctionsToolStripMenuItem.Text = "Show all Functions";
+            this.showFunctionsToolStripMenuItem.Text = @"Show all Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
-    "+ Code with up to date VC Code symbol database";
+    @"+ Code with up to date VC Code symbol database";
             this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowFunctionsToolStripMenuItem_Click);
             // 
             // toolStripSeparator13
@@ -2006,9 +2007,9 @@ namespace hoReverse.Reverse
             // 
             this.showSymbolDataBaseFoldersToolStripMenuItem.Name = "showSymbolDataBaseFoldersToolStripMenuItem";
             this.showSymbolDataBaseFoldersToolStripMenuItem.Size = new System.Drawing.Size(349, 22);
-            this.showSymbolDataBaseFoldersToolStripMenuItem.Text = "Show Symbol VC-Code DataBase Folders";
+            this.showSymbolDataBaseFoldersToolStripMenuItem.Text = @"Show Symbol VC-Code DataBase Folders";
             this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
-    "lete the whole folder. VS-Code will recreate it!";
+    @"lete the whole folder. VS-Code will recreate it!";
             this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.ShowSymbolDataBaseFoldersToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
@@ -2027,31 +2028,31 @@ namespace hoReverse.Reverse
             this._toolStripSeparator5});
             this._versionControlToolStripMenuItem.Name = "_versionControlToolStripMenuItem";
             this._versionControlToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
-            this._versionControlToolStripMenuItem.Text = "&VersionControl";
+            this._versionControlToolStripMenuItem.Text = @"&VersionControl";
             this._versionControlToolStripMenuItem.ToolTipText = "Sets the svn keywords:\r\n- svnDoc, svnRevision\r\nfor a package.";
             // 
             // _svnLogToolStripMenuItem
             // 
             this._svnLogToolStripMenuItem.Name = "_svnLogToolStripMenuItem";
             this._svnLogToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this._svnLogToolStripMenuItem.Text = "&Show Tortoise Log";
-            this._svnLogToolStripMenuItem.ToolTipText = "Opend the Tortoise Log window";
+            this._svnLogToolStripMenuItem.Text = @"&Show Tortoise Log";
+            this._svnLogToolStripMenuItem.ToolTipText = @"Opend the Tortoise Log window";
             this._svnLogToolStripMenuItem.Click += new System.EventHandler(this.SvnLogToolStripMenuItem_Click);
             // 
             // _svnTortoiseRepobrowserToolStripMenuItem
             // 
             this._svnTortoiseRepobrowserToolStripMenuItem.Name = "_svnTortoiseRepobrowserToolStripMenuItem";
             this._svnTortoiseRepobrowserToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this._svnTortoiseRepobrowserToolStripMenuItem.Text = "&Show Tortoise Repo Browser";
-            this._svnTortoiseRepobrowserToolStripMenuItem.ToolTipText = "Opens the Tortoise Repo Browser for the selected package";
+            this._svnTortoiseRepobrowserToolStripMenuItem.Text = @"&Show Tortoise Repo Browser";
+            this._svnTortoiseRepobrowserToolStripMenuItem.ToolTipText = @"Opens the Tortoise Repo Browser for the selected package";
             this._svnTortoiseRepobrowserToolStripMenuItem.Click += new System.EventHandler(this.SvnTortoiseRepobrowserToolStripMenuItem_Click);
             // 
             // _showDirectoryToolStripMenuItem
             // 
             this._showDirectoryToolStripMenuItem.Name = "_showDirectoryToolStripMenuItem";
             this._showDirectoryToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this._showDirectoryToolStripMenuItem.Text = "&Show Directory (VC or Code)";
-            this._showDirectoryToolStripMenuItem.ToolTipText = "Show Version Control directory of *.xml file or oh code";
+            this._showDirectoryToolStripMenuItem.Text = @"&Show Directory (VC or Code)";
+            this._showDirectoryToolStripMenuItem.ToolTipText = @"Show Version Control directory of *.xml file or oh code";
             this._showDirectoryToolStripMenuItem.Click += new System.EventHandler(this.ShowDirectoryToolStripMenuItem_Click);
             // 
             // _toolStripSeparator1
@@ -2063,15 +2064,15 @@ namespace hoReverse.Reverse
             // 
             this._getVcLatestrecursiveToolStripMenuItem.Name = "_getVcLatestrecursiveToolStripMenuItem";
             this._getVcLatestrecursiveToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this._getVcLatestrecursiveToolStripMenuItem.Text = "&GetVCLatest (recursive)";
-            this._getVcLatestrecursiveToolStripMenuItem.ToolTipText = "GetAllLatest for package (recursive)";
+            this._getVcLatestrecursiveToolStripMenuItem.Text = @"&GetVCLatest (recursive)";
+            this._getVcLatestrecursiveToolStripMenuItem.ToolTipText = @"GetAllLatest for package (recursive)";
             this._getVcLatestrecursiveToolStripMenuItem.Click += new System.EventHandler(this.GetVcLastestRecursiveToolStripMenuItem_Click);
             // 
             // _setSvnKeywordsToolStripMenuItem
             // 
             this._setSvnKeywordsToolStripMenuItem.Name = "_setSvnKeywordsToolStripMenuItem";
             this._setSvnKeywordsToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this._setSvnKeywordsToolStripMenuItem.Text = "&Set svn keywords";
+            this._setSvnKeywordsToolStripMenuItem.Text = @"&Set svn keywords";
             this._setSvnKeywordsToolStripMenuItem.ToolTipText = "Set the svn Module Package keywords for a VC package";
             this._setSvnKeywordsToolStripMenuItem.Click += new System.EventHandler(this.SetSvnKeywordsToolStripMenuItem_Click);
             // 
@@ -3158,6 +3159,21 @@ namespace hoReverse.Reverse
                     MenuItemHover_MouseHover,  // Optional register the mouse hover event 
                     "Locate Package",  MenuItemContext_MouseDown));
 
+                // Exporter/Roudtrip/Workflow ReqIF
+                // Filter import settings for to export items 
+                var exportBySettings = (from item in _importSettings.ImportSettings
+                                       where item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
+                                             item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
+                                       select item).ToList();
+
+               _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
+                   exportBySettings,
+                   "Export ReqIF",
+                   "Export Requirements ( ReqIF roundtrip)",
+                   Exporter_Click,
+                   MenuItemHover_MouseHover,  // Optional register the mouse hover event 
+                   "Locate Package", MenuItemContext_MouseDown));
+
 
 
 
@@ -3710,6 +3726,24 @@ namespace hoReverse.Reverse
             else MessageBox.Show($@"{importElement.ListNo}", $@"ListNo in Importer settings.json invalid");
 
         }
+        /// <summary>
+        /// Event Export  ReqIF,.. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Exporter_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
+            FileImportSettingsItem exportElement = (FileImportSettingsItem)item.Tag;
+            if (int.TryParse(exportElement.ListNo, out var listNumber))
+                ExportBySettings(listNumber, withMessage: true);
+            else MessageBox.Show($@"{exportElement.ListNo}", $@"ListNo in Importer settings.json invalid");
+
+        }
+
+
         /// <summary>
         /// Locate package of to imported file
         /// </summary>
@@ -4382,7 +4416,29 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             bool result = doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-            if (withMessage && result)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported list={listNumber}, finished.");
+            if (withMessage && result)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported by list={listNumber}, finished.");
+            return result;
+        }
+        /// <summary>
+        /// Export by settings
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <param name="withMessage"></param>
+        private bool ExportBySettings(int listNumber, bool withMessage = false)
+        {
+            if (_repository == null || String.IsNullOrEmpty(_repository.ConnectionString))
+            {
+                MessageBox.Show("", @"No repository loaded, break!!");
+                return false;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+
+            //EnableImportDialog(false);
+            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            bool result = doorsModule.ExportBySetting(listNumber);
+            //EnableImportDialog(true);
+            Cursor.Current = Cursors.Default;
+            if (withMessage && result) MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exported by list={listNumber}, finished.");
             return result;
         }
 

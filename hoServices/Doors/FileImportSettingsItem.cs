@@ -46,6 +46,19 @@ namespace EaServices.Doors
         }
         [JsonProperty("InputFile")]
         private string _inputFile;
+        /// <summary>
+        /// The file to export. 
+        ///
+        /// Example: myImport.reqifz, myImport.csv, myImport.xml
+        /// </summary>
+        [JsonIgnore]
+        public string ExportFile
+        {
+            get => _exportFile?.Replace(@"\", "/") ?? "";
+            set => _exportFile = value;
+        }
+        [JsonProperty("ExportFile")]
+        private string _exportFile;
 
         /// <summary>
         /// The dictionary to store the embedded files. 
@@ -185,6 +198,20 @@ namespace EaServices.Doors
         }
         [JsonProperty("AttrNameList")]
         private List<string>  _attrNameList;
+
+
+        /// <summary>
+        /// List of ReqIf Attributes to possibly overwrite and send back
+        /// This is the implementation of ReqIF Workflow
+        /// </summary>
+        [JsonIgnore]
+        public List<string> WriteAttrNameList
+        {
+            get => _writeAttrNameList ?? new List<string>();
+            set => _attrNameList = value;
+        }
+        [JsonProperty("WriteAttrNameList")]
+        private List<string> _writeAttrNameList;
 
         /// <summary>
         /// List of ReqIf Attributes to store as *.rtf

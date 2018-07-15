@@ -1,6 +1,10 @@
 hoReverse 
 
+<<<<<<< HEAD
 *  [Import](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportExport) ([ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF), [Doors CSV](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportDoorsCsv), [Structures xml](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportStructuredXml))
+=======
+*  [Import](ImportExport) ([ReqIF](ReqIF), [ReqIF Roundtrip](ReqIF_Roundtrip), [Doors CSV](ImportDoorsCsv), [Structures xml](ImportStructuredXml))
+>>>>>>> Development
 *  [Reverse Engineer C/C++ Code](#the-roots)
 *  [Features to improve everyday life](#the-roots)
 
@@ -15,6 +19,16 @@ Because in embedded I like the concept of Ports there are a lot of features to b
 For details see the [WiKi](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki).
 
 ![](ExampleGenerate.png)
+
+### ReqIF
+
+ReqIF is the standard to exchange Requirements between different tools. hoReverse now supports:
+
+-  [ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf)
+-  [ReqIF roundtrip/workflow](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
+
+![](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/images/RoundTripOverview.png)
+
 
 ## History
 
@@ -44,7 +58,12 @@ Let's discuss it, but it works.
 
 ## News
 
+3.0.2 Roundtrip/Workflow ReqIF
+-  Define columns for [roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
+-  Supported types: string, xhtml, enum
+
 3.0.1 ReqIF *.pdf, *.wmf files supported
+-  Files are stored in the File Section of Requirements
 -  error fixing and minor improvements
 
 3. [Import Requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf), Tests (Doors, *.ReqIf, *.reqIfz, *.csv, *.xml)
