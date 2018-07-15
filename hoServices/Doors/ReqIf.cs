@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
@@ -296,6 +295,9 @@ Value: '{eaValue}'
             // over all values split by ",:=;-"
             if (String.IsNullOrWhiteSpace(values)) return;
 
+            // delete old values
+            attributeValueEnumeration.Values.Clear();
+
             values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
             foreach (var value in values.Split(','))
             {
@@ -307,6 +309,7 @@ Value: '{eaValue}'
             }
 
         }
+        
 
         /// <summary>
         /// Import and update ReqIF Requirements. Derive Tagged Values from ReqSpec Attribut definition

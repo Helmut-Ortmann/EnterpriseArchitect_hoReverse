@@ -16,6 +16,16 @@ For details see the [WiKi](https://github.com/Helmut-Ortmann/EnterpriseArchitect
 
 ![](ExampleGenerate.png)
 
+### ReqIF
+
+ReqIF is the standard to exchange Requirements between different tools. hoReverse now supports:
+
+-  [ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf)
+-  [ReqIF roundtrip/workflow](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
+
+![](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/images/RoundTripOverview.png)
+
+
 ## History
 
 In a lot of embedded C/C++ projects with EA I missed functionality to create and maintain:
