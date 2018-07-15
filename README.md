@@ -54,6 +54,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.0.3
+
 3.0.2 Roundtrip/Workflow ReqIF
 -  Define columns for [roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
 -  Supported types: string, xhtml, enum
