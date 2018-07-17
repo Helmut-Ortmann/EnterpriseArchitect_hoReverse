@@ -10,6 +10,11 @@ namespace hoReverse.hoUtils.WiKiRefs
             Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/blob/master/README.md");
         }
 
+        public static void ReqIF()
+        {
+            Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf");
+        }
+
         public static void Wildcards()
         {
             Process.Start("https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/WildCards");

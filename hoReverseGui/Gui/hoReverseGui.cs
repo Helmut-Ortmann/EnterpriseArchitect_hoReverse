@@ -259,6 +259,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem importReqIFBySettings5ToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripMenuItem sQLWildcardsToolStripMenuItem;
+        private ToolStripMenuItem reqIFToolStripMenuItem;
         private ToolTip _toolTip1;
 
 
@@ -791,6 +792,7 @@ namespace hoReverse.Reverse
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.sQLWildcardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.reqIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2253,9 +2255,10 @@ namespace hoReverse.Reverse
             this.readmeToolStripMenuItem,
             this.repoToolStripMenuItem,
             this.hoToolsToolStripMenuItem,
+            this.lineStyleToolStripMenuItem,
             this.toolStripSeparator19,
             this.sQLWildcardsToolStripMenuItem,
-            this.lineStyleToolStripMenuItem,
+            this.reqIFToolStripMenuItem,
             this.toolStripSeparator14,
             this.analyzeCCToolStripMenuItem});
             this._helpToolStripMenuItem.Name = "_helpToolStripMenuItem";
@@ -2503,6 +2506,13 @@ namespace hoReverse.Reverse
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
             this.toolStripSeparator19.Size = new System.Drawing.Size(177, 6);
+            // 
+            // reqIFToolStripMenuItem
+            // 
+            this.reqIFToolStripMenuItem.Name = "reqIFToolStripMenuItem";
+            this.reqIFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reqIFToolStripMenuItem.Text = "ReqIF";
+            this.reqIFToolStripMenuItem.Click += new System.EventHandler(this.reqIFToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4477,6 +4487,11 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         private void sQLWildcardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.Wildcards();
+        }
+
+        private void reqIFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WikiRef.ReqIF();
         }
     }
 }
