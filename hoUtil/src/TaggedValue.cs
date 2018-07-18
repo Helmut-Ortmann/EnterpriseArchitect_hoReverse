@@ -164,13 +164,30 @@ namespace hoReverse.hoUtils
             return true;
 
         }
+
+
+        /// <summary>
+        /// Delete all tagged values for Element
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public static bool DeleteTaggedValuesForElement(EA.Element el)
+        {
+            for (int i = el.TaggedValues.Count - 1; i >= 0; i--)
+            {
+                el.TaggedValues.DeleteAt((short)i, false);
+            }
+            el.TaggedValues.Refresh();
+            el.Update();
+            return true;
+
+        }
+
         /// <summary>
         /// Create a Tagged value type
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="property"></param>
-        /// <param name="notes"></param>
-        /// <param name="description"></param>
         /// <returns></returns>
         public static bool DeleteTaggedValueTye(EA.Repository rep, string property)
         {

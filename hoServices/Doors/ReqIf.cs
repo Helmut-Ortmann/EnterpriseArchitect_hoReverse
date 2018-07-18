@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -171,13 +170,13 @@ Export/Roundtrip needs at least initial import and model elements in EA!
             return true;
         }
         /// <summary>
-        /// UpdateReqIf for an element. Handle fot TV: Values or Macros like '=EA.GUID'
+        /// UpdateReqIf for an element. Handle for TV: Values or Macros like '=EA.GUID' and updupting naming to Module prefix
         /// </summary>
         /// <param name="el"></param>
         /// <returns></returns>
         public bool UpdateReqIfForElement(EA.Element el)
         {
-            string id = TaggedValue.GetTaggedValue(el, "Id");
+            string id = TaggedValue.GetTaggedValue(el, GetPrefixedTagValueName("Id"));
             SpecObject specObj;
             try
             {
@@ -278,7 +277,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                     try
                     {
                         // take all the valid enums
-                        SetEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
+                        SetReqIfEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
                     }
                     catch (Exception e)
                     {
@@ -294,12 +293,12 @@ Value: '{eaValue}'
         }
 
         /// <summary>
-        /// Set the values of a enum (single line or multi line
+        /// Set the values of a ReqIF enum (single line or multi line) in the ReqIF (Attributedefinition)
         /// </summary>
         /// <param name="attributeValueEnumeration"></param>
         /// <param name="values"></param>
         /// <param name="multiValueEnum"></param>
-        public void SetEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
+        public void SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
         {
             // over all values split by ",:=;-"
             if (String.IsNullOrWhiteSpace(values)) return;
@@ -308,11 +307,34 @@ Value: '{eaValue}'
             attributeValueEnumeration.Values.Clear();
 
             values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
+            int indexEnum = 0;
             foreach (var value in values.Split(','))
             {
                 var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
                     .SingleOrDefault(x=> x.LongName == value);
-                if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                var enumValues = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                    .Select(x => x.LongName);
+                if (multiValueEnum)
+                {
+                    // multivalue return a comma separated list of 0=not selected, 1=selected
+                    if (value == "0")
+                    {
+                        ((AttributeValueEnumeration) attributeValueEnumeration).Values.Add(enumValue);
+                    }
+                    else
+                    {
+                        ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                    }
+
+                    indexEnum += 1;
+                }
+                else
+                {
+                    // Single value return after first value
+                    if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                    return;
+                }
+               
                 if (!multiValueEnum) return;
 
             }
@@ -457,6 +479,7 @@ Available Attributes:
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
+                SpecObject specObject = (SpecObject)row["specObject"];
 
 
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
@@ -535,12 +558,15 @@ ObjectId/Multiplicity: '{objectId}
                 }
 
                 // handle the remaining columns/ tagged values
+                //specObject.Values.Select(x => x.AttributeDefinition.LongName)
                 var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
+                        join v in specObject.Values on c.ColumnName equals v.AttributeDefinition.LongName
                         where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                         select new
                         {
                             Name = c.ColumnName,
-                            Value = row[c].ToString()
+                            Value = row[c].ToString(),
+                            AttrDef = v.AttributeDefinition
                         }
                     ;
                 // Handle *.rtf/*.docx content
@@ -550,12 +576,39 @@ ObjectId/Multiplicity: '{objectId}
                 UpdateLinkedDocument(el, rtfValue, importFile);
 
                 // Update/Create Tagged value
+                TaggedValue.DeleteTaggedValuesForElement(el);
+
+                // over all columns
                 foreach (var c in cols)
                 {
+                    
                     if (notesColumn != c.Name)
                     {
-                       
-                        TaggedValue.SetUpdate(el, GetPrefixedTagValueName(c.Name), GetAttrValue(c.Value ?? ""));
+                        // Enum with multivalue
+                        if (c.AttrDef is AttributeDefinitionEnumeration attrDefinitionEnumeration && attrDefinitionEnumeration.IsMultiValued)
+                        {
+                            // Enum values available
+                            var arrayEnumValues = ((DatatypeDefinitionEnumeration)c.AttrDef.DatatypeDefinition)
+                                .SpecifiedValues
+                                .Select(x => x.LongName).ToArray();
+                            Regex rx = new Regex(@"\r\n| ");
+                            var values =  rx.Replace(c.Value,",").Split(',');
+                            var found = from all in arrayEnumValues
+                                from s1 in values.Where(xxx => all == xxx).DefaultIfEmpty()
+                                select new {All=all, Value=s1};
+                            var value = "";
+                            var del = "";
+                            foreach (var f in found)
+                            {
+                                if (f.Value == null)
+                                    value = $"{value}{del}0";
+                                else
+                                    value = $"{value}{del}1";
+                                del = ",";
+                            }
+                            TaggedValue.SetUpdate(el, GetPrefixedTagValueName(c.Name), GetAttrValue(value));
+                        }
+                        else TaggedValue.SetUpdate(el, GetPrefixedTagValueName(c.Name), GetAttrValue(c.Value ?? ""));
                     }
                 }
             }
@@ -751,8 +804,9 @@ XHTML:'{xhtmlValue}
                 where (!_blackList1.Any(bl => bl == attributeDefinition.LongName)) && // ignore blacklist, DOORS table attributes
                       (!standardAttributes.Any(bl => bl == attributeDefinition.LongName)) // ignore standard attributes
                           select attributeDefinition);
-          
+
             // Add columns for all Attributes, except DOORS table attributes and standard attributes
+            DtRequirements.Columns.Add("specObject", typeof(SpecObject));
             foreach (var attr in attributeDefinitions)
             {
                 // add Column
@@ -776,19 +830,11 @@ XHTML:'{xhtmlValue}
                         // Enums as comma separated list
                         var enumValue = String.Join(",", arrayEnumValues);
                         // Multivalue enumeration
-                        if (attrEnumType.IsMultiValued)
-                            {
-
-                            }
-                            else
-                            {
-                                TaggedValue.CreateTaggedValueTye(Rep, tvName, 
-                                    $@"Type=Enum;{Environment.NewLine}Values={enumValue};", 
-                                    "hoReverse:ReqIF automated generated!");
-                            }
-
-
-                        break;
+                        string typeTv = attrEnumType.IsMultiValued ? "CheckList" : "Enum";
+                        TaggedValue.CreateTaggedValueTye(Rep, tvName,
+                            $@"Type={typeTv};{Environment.NewLine}Values={enumValue};",
+                            "hoReverse:ReqIF automated generated!");
+                       break;
                                 
                 }
 
@@ -812,6 +858,7 @@ XHTML:'{xhtmlValue}
             {
                 DataRow row = dt.NewRow();
                 SpecObject specObject = child.Object;
+                row["specObject"] = specObject;
 
                 // Limit Identifier length to 50 and output one error message if length exceeds length of 50
                 if (!_errorMessage1 && specObject.Identifier.Length > 50)
@@ -841,9 +888,11 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                         {
                             List<EnumValue> enumValues = (List<EnumValue>) column.ObjectValue;
                             string values = "";
+                            string del = "";
                             foreach (var enumValue in enumValues)
                             {
-                                values = $"{enumValue.LongName}{Environment.NewLine}";
+                                values = $"{values}{del}{enumValue.LongName}";
+                                del = Environment.NewLine;
                             }
                             row[column.AttributeDefinition.LongName] = values;
                         } else row[column.AttributeDefinition.LongName] = column.ObjectValue.ToString();
