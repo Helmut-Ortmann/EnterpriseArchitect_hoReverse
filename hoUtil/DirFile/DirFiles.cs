@@ -125,6 +125,11 @@ Taget:
 
         public static string GetMessageFromFile(string filePath)
         {
+            if (String.IsNullOrWhiteSpace(filePath))
+            {
+                MessageBox.Show("", @"Empty file path, break");
+                return "";
+            }
             return $@"File: '{Path.GetFileName(filePath)}'
 Dictionary: '{Path.GetDirectoryName(filePath)}'";
 

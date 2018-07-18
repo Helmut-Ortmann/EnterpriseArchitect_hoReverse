@@ -57,7 +57,7 @@ namespace EaServices.Doors
         {
             _subModuleIndex = subModuleIndex;
             // Calculate the column/taggedValueType prefix for current module
-            _prefixTv = _settings.PrefixTaggedValueTypeList.Count < _subModuleIndex
+            _prefixTv = _settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
                 ? _settings.PrefixTaggedValueTypeList[subModuleIndex]
                 : "";
 
@@ -338,7 +338,11 @@ Value: '{eaValue}'
            _errorMessage1 = false;
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
 
-
+            _subModuleIndex = subModuleIndex;
+            // Calculate the column/taggedValueType prefix for current module
+            _prefixTv = _settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
+                ? _settings.PrefixTaggedValueTypeList[subModuleIndex]
+                : "";
             // Create Tagged Value Types
 
             // decompress reqif file and its embedded files
