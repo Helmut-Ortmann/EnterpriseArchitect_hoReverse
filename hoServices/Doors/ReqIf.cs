@@ -24,7 +24,9 @@ namespace EaServices.Doors
     {
         readonly string Tab = "\t";
         ReqIF _reqIf;
-       int _subModuleIndex;
+        int _subModuleIndex;
+        // Prefix Tagged Values and Columnnames
+        private string _prefixTv = "";
 
         ExportFields _exportFields;
         List<ReqIFSharp.AttributeDefinition> _moduleAttributeDefinitions;
@@ -53,6 +55,12 @@ namespace EaServices.Doors
         public override bool ExportUpdateRequirements(int subModuleIndex = 0)
         {
             _subModuleIndex = subModuleIndex;
+            // Calculate the column/taggedValueType prefix for current module
+            _prefixTv = _settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
+                ? _settings.PrefixTaggedValueTypeList[subModuleIndex]
+                : "";
+
+           
             _errorMessage1 = false;
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
             // decompress reqif file and its embedded files
@@ -162,13 +170,13 @@ Export/Roundtrip needs at least initial import and model elements in EA!
             return true;
         }
         /// <summary>
-        /// UpdateReqIf for an element. Handle fot TV: Values or Macros like '=EA.GUID'
+        /// UpdateReqIf for an element. Handle for TV: Values or Macros like '=EA.GUID' and updupting naming to Module prefix
         /// </summary>
         /// <param name="el"></param>
         /// <returns></returns>
         public bool UpdateReqIfForElement(EA.Element el)
         {
-            string id = TaggedValue.GetTaggedValue(el, "Id");
+            string id = TaggedValue.GetTaggedValue(el, GetPrefixedTagValueName("Id"));
             SpecObject specObj;
             try
             {
@@ -193,14 +201,14 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
             // update values of ReqIF Attributes by TaggedValues
             foreach (string tvName in _exportFields.GetFields())
             {
-                string tvValue = TaggedValue.GetTaggedValue(el, tvName, caseSensitive:false);
+                string tvValue = TaggedValue.GetTaggedValue(el, GetPrefixedTagValueName(tvName), caseSensitive:false);
                 
 
                 // update value
                 string macroValue = _exportFields.GetMacroValue(el, tvName);
                 if (macroValue != "") tvValue = macroValue;
                 if (tvValue == "") continue;
-                if (! ChangeValueReqIf(specObj, tvName, tvValue,caseSensitive:false)) return false;
+                if (! ChangeValueReqIf(specObj, GetUnPrefixedTagValueName(tvName), tvValue,caseSensitive:false)) return false;
             }
 
             //var specType = (SpecObjectType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecObjectType));
@@ -269,7 +277,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                     try
                     {
                         // take all the valid enums
-                        SetEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
+                        SetReqIfEnumValue((AttributeValueEnumeration)attrValueObject, eaValue, multiValuedEnum);
                     }
                     catch (Exception e)
                     {
@@ -285,12 +293,12 @@ Value: '{eaValue}'
         }
 
         /// <summary>
-        /// Set the values of a enum (single line or multi line
+        /// Set the values of a ReqIF enum (single line or multi line) in the ReqIF (Attributedefinition)
         /// </summary>
         /// <param name="attributeValueEnumeration"></param>
         /// <param name="values"></param>
         /// <param name="multiValueEnum"></param>
-        public void SetEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
+        public void SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string values, bool multiValueEnum)
         {
             // over all values split by ",:=;-"
             if (String.IsNullOrWhiteSpace(values)) return;
@@ -299,11 +307,34 @@ Value: '{eaValue}'
             attributeValueEnumeration.Values.Clear();
 
             values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
+            int indexEnum = 0;
             foreach (var value in values.Split(','))
             {
                 var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
                     .SingleOrDefault(x=> x.LongName == value);
-                if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                var enumValues = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                    .Select(x => x.LongName);
+                if (multiValueEnum)
+                {
+                    // multivalue return a comma separated list of 0=not selected, 1=selected
+                    if (value == "0")
+                    {
+                        ((AttributeValueEnumeration) attributeValueEnumeration).Values.Add(enumValue);
+                    }
+                    else
+                    {
+                        ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                    }
+
+                    indexEnum += 1;
+                }
+                else
+                {
+                    // Single value return after first value
+                    if (enumValue != null) ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                    return;
+                }
+               
                 if (!multiValueEnum) return;
 
             }
@@ -328,6 +359,13 @@ Value: '{eaValue}'
             bool result = true;
            _errorMessage1 = false;
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
+
+            _subModuleIndex = subModuleIndex;
+            // Calculate the column/taggedValueType prefix for current module
+            _prefixTv = _settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
+                ? _settings.PrefixTaggedValueTypeList[subModuleIndex]
+                : "";
+            // Create Tagged Value Types
 
             // decompress reqif file and its embedded files
             string importReqIfFile = Decompress(ImportModuleFile);
@@ -441,6 +479,7 @@ Available Attributes:
             {
                 Count += 1;
                 string objectId = row["Id"].ToString();
+                SpecObject specObject = (SpecObject)row["specObject"];
 
 
                 int objectLevel = Int32.Parse(row["Object Level"].ToString()) - 1;
@@ -519,12 +558,15 @@ ObjectId/Multiplicity: '{objectId}
                 }
 
                 // handle the remaining columns/ tagged values
+                //specObject.Values.Select(x => x.AttributeDefinition.LongName)
                 var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
+                        join v in specObject.Values on c.ColumnName equals v.AttributeDefinition.LongName
                         where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                         select new
                         {
                             Name = c.ColumnName,
-                            Value = row[c].ToString()
+                            Value = row[c].ToString(),
+                            AttrDef = v.AttributeDefinition
                         }
                     ;
                 // Handle *.rtf/*.docx content
@@ -534,11 +576,62 @@ ObjectId/Multiplicity: '{objectId}
                 UpdateLinkedDocument(el, rtfValue, importFile);
 
                 // Update/Create Tagged value
+                TaggedValue.DeleteTaggedValuesForElement(el);
+
+                // over all columns
                 foreach (var c in cols)
                 {
-                    if (notesColumn != c.Name) TaggedValue.SetUpdate(el, c.Name, GetAttrValue(c.Value ?? ""));
+                    
+                    if (notesColumn != c.Name)
+                    {
+                        // Enum with multivalue
+                        if (c.AttrDef is AttributeDefinitionEnumeration attrDefinitionEnumeration && attrDefinitionEnumeration.IsMultiValued)
+                        {
+                            // Enum values available
+                            var arrayEnumValues = ((DatatypeDefinitionEnumeration)c.AttrDef.DatatypeDefinition)
+                                .SpecifiedValues
+                                .Select(x => x.LongName).ToArray();
+                            Regex rx = new Regex(@"\r\n| ");
+                            var values =  rx.Replace(c.Value,",").Split(',');
+                            var found = from all in arrayEnumValues
+                                from s1 in values.Where(xxx => all == xxx).DefaultIfEmpty()
+                                select new {All=all, Value=s1};
+                            var value = "";
+                            var del = "";
+                            foreach (var f in found)
+                            {
+                                if (f.Value == null)
+                                    value = $"{value}{del}0";
+                                else
+                                    value = $"{value}{del}1";
+                                del = ",";
+                            }
+                            TaggedValue.SetUpdate(el, GetPrefixedTagValueName(c.Name), GetAttrValue(value));
+                        }
+                        else TaggedValue.SetUpdate(el, GetPrefixedTagValueName(c.Name), GetAttrValue(c.Value ?? ""));
+                    }
                 }
             }
+        }
+        /// <summary>
+        /// Get prefixed Tagged Value name from name without prefix
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string GetPrefixedTagValueName(string name)
+        {
+            if (name.StartsWith(_prefixTv)) return name;
+            return $"{_prefixTv}{name}";
+        }
+        /// <summary>
+        /// Get prefixed Tagged Value name from name without prefix
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string GetUnPrefixedTagValueName(string name)
+        {
+            if (name.StartsWith(_prefixTv)) return name.Substring(_prefixTv.Length);
+            return name;
         }
 
         /// <summary>
@@ -706,25 +799,45 @@ XHTML:'{xhtmlValue}
                 DtRequirements.Columns.Add(attr, typeof(string));
             }
 
-            // get list of all defined attributes i
-            //var qDefinesAttributes = (from a in reqIf.CoreContent[0].SpecObjects[0].Type.SpecAttributes
-            //                          select a.SpecType.SpecAttributes.
-
             // get list of all used attributes
-            var qAttr = (from attr in _moduleAttributeDefinitions
-                where (!_blackList1.Any(bl => bl == attr.LongName)) && // ignore blacklist, DOORS table attributes
-                      (!standardAttributes.Any(bl => bl == attr.LongName)) // ignore standard attributes
-                          select new {Name=attr.LongName});
-          //  var qAttr = (from obj in reqIf.CoreContent[0].SpecObjects
-          //      from attr in obj.Values
-          //      where (! _blackList1.Any(bl=>bl == attr.AttributeDefinition.LongName))  && // ignore blacklist, DOORS table attributes
-				      //(! standardAttributes.Any(bl => bl == attr.AttributeDefinition.LongName)) // ignore standard attributes
-          //      select new { Name = attr.AttributeDefinition.LongName}).Distinct();
-           
+            var attributeDefinitions = (from attributeDefinition in _moduleAttributeDefinitions
+                where (!_blackList1.Any(bl => bl == attributeDefinition.LongName)) && // ignore blacklist, DOORS table attributes
+                      (!standardAttributes.Any(bl => bl == attributeDefinition.LongName)) // ignore standard attributes
+                          select attributeDefinition);
+
             // Add columns for all Attributes, except DOORS table attributes and standard attributes
-            foreach (var attr in qAttr)
+            DtRequirements.Columns.Add("specObject", typeof(SpecObject));
+            foreach (var attr in attributeDefinitions)
             {
-                DtRequirements.Columns.Add(attr.Name, typeof(string));
+                // add Column
+                DtRequirements.Columns.Add(attr.LongName, typeof(string));
+
+                // add TaggedValueType to EA if not already exists
+                switch (attr)
+                {
+                    // handle enum with or without multiple value
+                    case AttributeDefinitionEnumeration attrEnumType:
+                        string tvName = GetPrefixedTagValueName(attr.LongName);
+                        if (TaggedValue.TaggedValueTyeExists(Rep, tvName))
+                        {
+                            TaggedValue.DeleteTaggedValueTye(Rep, tvName);
+                        }
+
+                        // get enumeration value
+                            var arrayEnumValues = ((DatatypeDefinitionEnumeration) attrEnumType.DatatypeDefinition)
+                                .SpecifiedValues
+                                .Select(x => x.LongName).ToArray();
+                        // Enums as comma separated list
+                        var enumValue = String.Join(",", arrayEnumValues);
+                        // Multivalue enumeration
+                        string typeTv = attrEnumType.IsMultiValued ? "CheckList" : "Enum";
+                        TaggedValue.CreateTaggedValueTye(Rep, tvName,
+                            $@"Type={typeTv};{Environment.NewLine}Values={enumValue};",
+                            "hoReverse:ReqIF automated generated!");
+                       break;
+                                
+                }
+
             }
 
             return true;
@@ -745,6 +858,7 @@ XHTML:'{xhtmlValue}
             {
                 DataRow row = dt.NewRow();
                 SpecObject specObject = child.Object;
+                row["specObject"] = specObject;
 
                 // Limit Identifier length to 50 and output one error message if length exceeds length of 50
                 if (!_errorMessage1 && specObject.Identifier.Length > 50)
@@ -774,9 +888,11 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                         {
                             List<EnumValue> enumValues = (List<EnumValue>) column.ObjectValue;
                             string values = "";
+                            string del = "";
                             foreach (var enumValue in enumValues)
                             {
-                                values = $"{enumValue.LongName}{Environment.NewLine}";
+                                values = $"{values}{del}{enumValue.LongName}";
+                                del = Environment.NewLine;
                             }
                             row[column.AttributeDefinition.LongName] = values;
                         } else row[column.AttributeDefinition.LongName] = column.ObjectValue.ToString();

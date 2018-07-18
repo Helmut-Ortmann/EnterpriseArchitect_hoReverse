@@ -87,6 +87,18 @@ namespace EaServices.Doors
         private List<string>  _packageGuidList;
 
         /// <summary>
+        /// List of EA TaggedValue prefixe per ReqIF module. hoReverse uses this prefixes to allow same column names in ReqIF modules.
+        /// </summary>
+        [JsonIgnore]
+        public List<string> PrefixTaggedValueTypeList
+        {
+            get => _prefixTaggedValueTypeList ?? new List<string>();
+            set => _prefixTaggedValueTypeList = value;
+        }
+        [JsonProperty("PrefixTaggedValueTypeList")]
+        private List<string> _prefixTaggedValueTypeList;
+
+        /// <summary>
         /// ObjectType
         /// </summary>
         [JsonIgnore]

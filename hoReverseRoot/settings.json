@@ -445,7 +445,27 @@
           "ImportType"      :  "DoorsReqIF",
           "StatusNew"       :  "Proposed",
           "StatusChanged"   :  "Mandatory" 
-      }
+      },
+	  {
+		  "Name"            :  "12. Roundtrip 'ExportState.reqifz'",
+		  "Description"     :  "Roundtrip with ReqIF Studio",
+		  "ListNo"          :  "12", 
+		  "InputFile"       :  "c:/Temp/ReqIF/Roundtrip/Roundtrip.reqifz" ,
+		  "ExportFile"      :  "c:/Temp/ReqIF/Roundtrip/RoundtripExport.reqifz" ,
+		  "PackageGuidList" :  ["{C8605C12-76C3-4c14-9096-1E9CC248927F}","{18AEA428-BC06-4ae4-AC17-C28CADD0526B}"],
+		  "PrefixTaggedValueTypeList": ["Mod1_", "Mod2_"],
+		  "ObjectType"      :  "Requirement", 
+		  "Stereotype"      :  "",
+		  "ImportType"      :  "DoorsReqIF", 
+		  "StatusNew"       :  "Proposed",
+		  "StatusChanged"   :  "None",
+		  "RtfNameList"     :  ["ReqIF.Text"],
+		  "AttrNameList"    :  ["ReqIF.ForeignID", "ReqIF.Chaptername", "ReqIF.Text"],
+		  "AttrNotes"       :  "ReqIF.Text",
+		  "AliasList"       :  ["ReqIF.ForeignID"],
+		  "EmbeddedFileStorageDictionary" : "c:/Temp/ReqIF/Store/12/",
+		  "WriteAttrNameList": [ "ExportXhtml1", "ExportXhtml2","EA_Guid=EA.GUID","ExportState"]
+	  }  
   ]
 }
 

@@ -1,4 +1,9 @@
 ﻿// ReSharper disable once CheckNamespace
+
+using System;
+using System.Windows.Forms;
+using System.Xml;
+
 namespace hoReverse.hoUtils
 {
     public static class TaggedValue
@@ -128,6 +133,117 @@ namespace hoReverse.hoUtils
             tg.Update();    
             
             return tg;
+        }
+
+
+        /// <summary>
+        /// Create a Tagged value type
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="property"></param>
+        /// <param name="notes"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        public static bool CreateTaggedValueTye(EA.Repository rep, string property, string notes, string description)
+        {
+            try
+            {
+                string del = notes.Contains("'") ? @"""" : "'";
+                string sql = $@"Insert into t_propertytypes ( Property, Notes, Description )
+                                   values ({del}{property}{del}, {del}{notes}{del}, {del}{description}{del});";
+                rep.Execute(sql);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Property: '{property}'
+
+{e}", @"Can't create Tagged Value Type");
+                return false;
+            }
+
+            return true;
+
+        }
+
+
+        /// <summary>
+        /// Delete all tagged values for Element
+        /// </summary>
+        /// <param name="el"></param>
+        /// <returns></returns>
+        public static bool DeleteTaggedValuesForElement(EA.Element el)
+        {
+            for (int i = el.TaggedValues.Count - 1; i >= 0; i--)
+            {
+                el.TaggedValues.DeleteAt((short)i, false);
+            }
+            el.TaggedValues.Refresh();
+            el.Update();
+            return true;
+
+        }
+
+        /// <summary>
+        /// Create a Tagged value type
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static bool DeleteTaggedValueTye(EA.Repository rep, string property)
+        {
+            try
+            {
+                string sql = $@"Delete from t_propertytypes where Property = '{property}';";
+                                   
+                rep.Execute(sql);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Property: '{property}'
+
+{e}", @"Can't delete Tagged Value Type");
+                return false;
+            }
+
+            return true;
+
+        }
+        /// <summary>
+        /// Create a Tagged value type
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="property"></param>
+        /// <param name="notes"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        public static bool TaggedValueTyeExists(EA.Repository rep, string property)
+        {
+            try
+            {
+                string sql = $@"select count(*) as COUNT from t_propertytypes 
+                                  where Property = '{property}';";
+               string xml = rep.SQLQuery(sql);
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+
+                XmlNode countXml = xmlDoc.SelectSingleNode("//COUNT");
+                if (countXml != null)
+                {
+                    int count = Int32.Parse(countXml.InnerText);
+                    if (count == 0) return false;
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Property: '{property}'
+
+{e}", @"Can't read Tagged Value Type");
+                return false;
+            }
+
         }
     }
 }
