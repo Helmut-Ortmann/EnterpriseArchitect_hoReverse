@@ -93,22 +93,7 @@ namespace hoReverse.hoUtils
 
 
         }
-        /// <summary>
-        /// If tagged value doesn't exists a new one is created.  
-        /// </summary>
-        /// <param name="el"></param>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static EA.TaggedValue CreateTv(EA.Element el, string name)
-        {
-
-            EA.TaggedValue tg = Add(el, name);
-            tg.Update();
-
-            return tg;
-        }
-
+       
         /// <summary>
         /// Set Tagged Value with 'Name' to a value. If tagged value doesn't exists a new one is created. If the  
         /// </summary>
@@ -134,6 +119,21 @@ namespace hoReverse.hoUtils
             
             return tg;
         }
+        /// <summary>
+        /// Create Tagged Value with 'Name'. It return the TaggedValue  
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue CreateTaggedValue(EA.Element el, string name)
+        {
+
+            EA.TaggedValue tg = Add(el, name);
+            tg.Update();
+
+            return tg;
+
+        }
 
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace hoReverse.hoUtils
         /// <param name="notes"></param>
         /// <param name="description"></param>
         /// <returns></returns>
-        public static bool CreateTaggedValueTye(EA.Repository rep, string property, string notes, string description)
+        public static bool CreateTaggedValueType(EA.Repository rep, string property, string notes, string description)
         {
             try
             {
@@ -208,13 +208,12 @@ namespace hoReverse.hoUtils
             return true;
 
         }
+
         /// <summary>
         /// Create a Tagged value type
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="property"></param>
-        /// <param name="notes"></param>
-        /// <param name="description"></param>
         /// <returns></returns>
         public static bool TaggedValueTyeExists(EA.Repository rep, string property)
         {
