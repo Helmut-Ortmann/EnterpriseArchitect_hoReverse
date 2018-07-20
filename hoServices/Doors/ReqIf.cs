@@ -307,13 +307,10 @@ Value: '{eaValue}'
             attributeValueEnumeration.Values.Clear();
 
             values = Regex.Replace(values.Trim(), @"\r\n?|\n|;|,|:|-|=", ",");
-            int indexEnum = 0;
             foreach (var value in values.Split(','))
             {
                 var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
                     .SingleOrDefault(x=> x.LongName == value);
-                var enumValues = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
-                    .Select(x => x.LongName);
                 if (multiValueEnum)
                 {
                     // multivalue return a comma separated list of 0=not selected, 1=selected
@@ -325,8 +322,6 @@ Value: '{eaValue}'
                     {
                         ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
                     }
-
-                    indexEnum += 1;
                 }
                 else
                 {
@@ -343,7 +338,7 @@ Value: '{eaValue}'
         
 
         /// <summary>
-        /// Import and update ReqIF Requirements. Derive Tagged Values from ReqSpec Attribut definition
+        /// Import and update ReqIF Requirements in EA from ReqIF. Derive Tagged Values from ReqSpec Attribut definition
         /// </summary>
         /// <param name="eaObjectType">EA Object type to create</param>
         /// <param name="eaStereotype">EA stereotype to create</param>
@@ -393,11 +388,11 @@ Value: '{eaValue}'
 
             // Add requirements recursiv for module to requirement table
             InitializeReqIfRequirementsTable(_reqIf);
-            Specification reqifModule = _reqIf.CoreContent[0].Specifications[subModuleIndex];
+            Specification reqIfModule = _reqIf.CoreContent[0].Specifications[subModuleIndex];
 
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
-            AddRequirementsToDataTable(DtRequirements, reqifModule.Children, 1);
+            AddReqIfRequirementsToDataTable(DtRequirements, reqIfModule.Children, 1);
 
             // Check imported ReqIF requirements
             if (CheckImportedRequirements())
@@ -558,15 +553,14 @@ ObjectId/Multiplicity: '{objectId}
                 }
 
                 // handle the remaining columns/ tagged values
-                //specObject.Values.Select(x => x.AttributeDefinition.LongName)
                 var cols = from c in DtRequirements.Columns.Cast<DataColumn>()
-                        join v in specObject.Values on c.ColumnName equals v.AttributeDefinition.LongName
+                        join v in specObject.SpecType.SpecAttributes on c.ColumnName equals v.LongName// specObject.Values on c.ColumnName equals v.AttributeDefinition.LongName
                         where !ColumnNamesNoTaggedValues.Any(n => n == c.ColumnName)
                         select new
                         {
                             Name = c.ColumnName,
                             Value = row[c].ToString(),
-                            AttrDef = v.AttributeDefinition
+                            AttrDef = v
                         }
                     ;
                 // Handle *.rtf/*.docx content
@@ -785,7 +779,7 @@ XHTML:'{xhtmlValue}
         }
 
         /// <summary>
-        /// Initialize ReqIF Requirement DataTable with Columns (standard columns + one for each attribute)
+        /// Initialize ReqIF Requirement DataTable with Columns (standard columns + one for each attribute). It also adds Tagged Value Types
         /// </summary>
         /// <param name="reqIf"></param>
         private bool InitializeReqIfRequirementsTable(ReqIF reqIf)
@@ -845,15 +839,16 @@ XHTML:'{xhtmlValue}
 
 
         /// <summary>
-        /// Add requirements recursive to datatable 
+        /// Add requirements from ReqIF recursive to datatable. One Row = 1 Requirement with the attributes as columns 
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="children"></param>
         /// <param name="level"></param>
-        private void AddRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
+        private void AddReqIfRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
         {
             if (children == null || children.Count == 0) return;
 
+            // go over hierarchy
             foreach (SpecHierarchy child in children)
             {
                 DataRow row = dt.NewRow();
@@ -875,38 +870,57 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
 
                 row["Object Level"] = level;
 
-                List<AttributeValue> columns = specObject.Values;
+                var allColumnDefinitions = specObject.SpecType.SpecAttributes;
+                var columnsWithValue = specObject.Values;
+                var columns = from all in allColumnDefinitions
+                    from v in columnsWithValue.Where(x => all.LongName == x.AttributeDefinition.LongName).DefaultIfEmpty()
+                    select new { Definition = all, Value = v };
+
+                List<AttributeValue> columns1 = specObject.Values;
                 foreach (var column in columns)
                 {
-                    try
-                    {   
-                        // Handle blacklist
-                        if (_blackList1.Contains(column.AttributeDefinition.LongName)) continue;
-
-                        // Handle enums
-                        if (column.AttributeDefinition is AttributeDefinitionEnumeration)
-                        {
-                            List<EnumValue> enumValues = (List<EnumValue>) column.ObjectValue;
-                            string values = "";
-                            string del = "";
-                            foreach (var enumValue in enumValues)
-                            {
-                                values = $"{values}{del}{enumValue.LongName}";
-                                del = Environment.NewLine;
-                            }
-                            row[column.AttributeDefinition.LongName] = values;
-                        } else row[column.AttributeDefinition.LongName] = column.ObjectValue.ToString();
-                        
-                    }
-                    catch (Exception e)
+                    // column value doesn't exists
+                    if (column.Value == null)
                     {
-                        MessageBox.Show($@"AttrName: '{column.AttributeDefinition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}", 
-                            @"Exception add ReqIF Attribute");
+                        row[column.Definition.LongName] = "";
+                    }
+                    else
+                    {
+                        // column value exists
+                        try
+                        {
+                            // Handle blacklist
+                            if (_blackList1.Contains(column.Definition.LongName)) continue;
+
+                            // Handle enums
+                            if (column.Definition is AttributeDefinitionEnumeration)
+                            {
+                                List<EnumValue> enumValues = (List<EnumValue>) column.Value.ObjectValue;
+                                string values = "";
+                                string del = "";
+                                foreach (var enumValue in enumValues)
+                                {
+                                    values = $"{values}{del}{enumValue.LongName}";
+                                    del = Environment.NewLine;
+                                }
+
+                                row[column.Definition.LongName] = values;
+                            }
+                            else row[column.Definition.LongName] = column.Value.ObjectValue.ToString();
+
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(
+                                $@"AttrName: '{column.Definition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}",
+                                @"Exception add ReqIF Attribute");
+                        }
                     }
                 }
 
                 dt.Rows.Add(row);
-                AddRequirementsToDataTable(dt, child.Children, level + 1);
+                // handle the sub requirements
+                AddReqIfRequirementsToDataTable(dt, child.Children, level + 1);
             }
             
 
