@@ -93,7 +93,23 @@ namespace hoReverse.hoUtils
 
 
         }
-       
+        /// <summary>
+        /// Make a memo field out of the current TaggedValue  
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue MakeMemo(EA.Element el, string name)
+        {
+
+            EA.TaggedValue tg = Add(el, name);
+            string value = tg.Value;
+            if (value.ToLower() == "<memo>") return tg;
+            tg.Value = "<memo>";
+            tg.Notes = value;
+            tg.Update();
+            return tg;
+        }
         /// <summary>
         /// Set Tagged Value with 'Name' to a value. If tagged value doesn't exists a new one is created. If the  
         /// </summary>

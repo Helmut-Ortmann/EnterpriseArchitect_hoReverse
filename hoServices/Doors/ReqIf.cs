@@ -609,7 +609,7 @@ ObjectId/Multiplicity: '{objectId}
                 // over all columns
                 foreach (var c in cols)
                 {
-
+                    // suppress column if already schown in notes
                     if (notesColumn != c.Name)
                     {
                         // Enum with multivalue
@@ -635,9 +635,13 @@ ObjectId/Multiplicity: '{objectId}
                                     value = $"{value}{del}1";
                                 del = ",";
                             }
-                            CreateUpdateTaggedValueDuringInput(el, c.Name, c.Value);
+                            CreateUpdateTaggedValueDuringInput(el, c.Name, c.Value, c.AttrDef);
                         }
-                        else CreateUpdateTaggedValueDuringInput(el, c.Name, c.Value); 
+                        else
+                        {
+                            // handle roundtrip attributes
+                            CreateUpdateTaggedValueDuringInput(el, c.Name, c.Value, c.AttrDef);
+                        } 
 
                         
                     }
@@ -666,29 +670,43 @@ ObjectId/Multiplicity: '{objectId}
 
         /// <summary>
         /// Create TaggedValue. If it is a TaggedValue to export: Only set value during creating, don't overwrite a value;
+        /// If the field is a roundtrip (writable) attribute of type string/xhtml make a Memo field out of if.
         /// </summary>
         /// <param name="el"></param>
         /// <param name="name"></param>
         /// <param name="value"></param>
+        /// <param name="attrDefinition"></param>
         /// <returns></returns>
-        private EA.TaggedValue CreateUpdateTaggedValueDuringInput(EA.Element el, string name, string value)
+        private EA.TaggedValue CreateUpdateTaggedValueDuringInput(EA.Element el, string name, string value, AttributeDefinition attrDefinition)
         {
+            EA.TaggedValue tv;
             string tvValue = value ?? "";
             string tvName = GetPrefixedTagValueName(name);
+
+            
 
             // Values writable/roundtrip or macros to update
             if (_exportFields.IsWritableValue(name) )
             {
                if ( TaggedValue.Exists(el, tvName)) 
                    // only get value of existing one
-                    return TaggedValue.CreateTaggedValue(el,tvName);
+                    tv = TaggedValue.CreateTaggedValue(el,tvName);
                else
                {
                    if (_exportFields.GetMacroName(name) != "") tvValue = _exportFields.GetMacroValue(el, name);
-                   return TaggedValue.SetUpdate(el, tvName, GetStringAttrValue(tvValue));
+                   tv = TaggedValue.SetUpdate(el, tvName, GetStringAttrValue(tvValue));
                }
             }
-            else return TaggedValue.SetUpdate(el, tvName, GetStringAttrValue(tvValue));
+            else tv = TaggedValue.SetUpdate(el, tvName, GetStringAttrValue(tvValue));
+
+            // Make memo field for roundtrip attributes of type string/ xhtml
+            if (_exportFields.IsWritableValue(name) && _exportFields.GetMacroName(name) == "" &&
+                (attrDefinition is AttributeDefinitionXHTML || attrDefinition is AttributeDefinitionString))
+            {
+                TaggedValue.MakeMemo(el, tvName);
+
+            }
+            return tv;
 
         }
 
