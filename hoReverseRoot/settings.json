@@ -465,7 +465,27 @@
 		  "AliasList"       :  ["ReqIF.ForeignID"],
 		  "EmbeddedFileStorageDictionary" : "c:/Temp/ReqIF/Store/12/",
 		  "WriteAttrNameList": [ "ExportXhtml1", "ExportXhtml2","EA_Guid=EA.GUID","ExportState"]
-	  }  
+	  },
+	  {
+		  "Name"            :  "13. Roundtrip 'RoundTrip_Arch.reqifz'",
+		  "Description"     :  "Roundtrip with DOORS",
+		  "ListNo"          :  "13", 
+		  "InputFile"       :  "c:/hoData/Projects/00Current/Veoneer/ReqIF/RoundTrip_Arch.reqifz" ,
+		  "ExportFile"      :  "c:/hoData/Projects/00Current/Veoneer/ReqIF/RoundTrip_ArchExport.reqifz" ,
+		  "PackageGuidList" :  ["{F199A750-C7BF-4625-A95D-F4C1AF8E4900}","{157D337C-13BB-4fc0-AA10-79F0A7587C99}" ],
+		  "PrefixTaggedValueTypeList": ["ArchA_", "ArchB_"],
+		  "ObjectType"      :  "Requirement", 
+		  "Stereotype"      :  "",
+		  "ImportType"      :  "DoorsReqIF", 
+		  "StatusNew"       :  "Proposed",
+		  "StatusChanged"   :  "None",
+		  "RtfNameList"     :  ["ReqIF.Text"],
+		  "AttrNameList"    :  ["ReqIF.ForeignID", "ReqIF.Chaptername", "ReqIF.Text"],
+		  "AttrNotes"       :  "ReqIF.Text",
+		  "AliasList"       :  ["ReqIF.ForeignID"],
+		  "EmbeddedFileStorageDictionary" : "c:/Temp/ReqIF/Store/12/",
+		  "WriteAttrNameList": [ "_ArchBlockId=EA.GUID", "_ArchitectureStatComment","_ArchitectureStatus","_SortingCrit"]
+	  }    
   ]
 }
 

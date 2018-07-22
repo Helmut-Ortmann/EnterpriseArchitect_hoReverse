@@ -55,6 +55,7 @@ Let's discuss it, but it works.
 ## News
 
 3.0.4 Import preserves roundtrip values
+- error fixing
 
 3.0.3 Enum with multivalue selection support
 - TaggedValue name optional with prefix (per ReqIF module)

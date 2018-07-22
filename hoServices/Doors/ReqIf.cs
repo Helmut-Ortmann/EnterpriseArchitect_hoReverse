@@ -295,11 +295,8 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
             switch (attrType)
             {
                 case AttributeDefinitionXHTML _:
-                    // handle new line
-                    eaValue = eaValue.Replace("\r\n", "<br></br>");
-
-                    string xhtmlcontent =
-                        $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{eaValue}</reqif-xhtml:div>";
+                    // make xhtml and handle new line
+                    var xhtmlcontent = MakeXhtmlFromString(eaValue);
                     attrValueObject.ObjectValue = xhtmlcontent;
                     break;
 
@@ -327,6 +324,19 @@ Value: '{eaValue}'
 
             return true;
         }
+        /// <summary>
+        /// Make XHTML from a simple string. It inserts the xhtml namespace and handles cr/lf
+        /// </summary>
+        /// <param name="stringValue"></param>
+        /// <returns></returns>
+        private static string MakeXhtmlFromString(string stringValue)
+        {
+            stringValue = stringValue.Replace("\r\n", "<br></br>");
+
+            string xhtmlcontent =
+                $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringValue}</reqif-xhtml:div>";
+            return xhtmlcontent;
+        }
 
         /// <summary>
         /// Set the values of a ReqIF enum (single value or multi value) in the ReqIF (Attributedefinition)
@@ -345,13 +355,13 @@ Value: '{eaValue}'
             
             if (!multiValueEnum)
             {
-                var enumValue = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                var enumValue = attributeValueEnumeration.Definition.Type.SpecifiedValues
                     .SingleOrDefault(x => x.LongName == value);
-                ((AttributeValueEnumeration)attributeValueEnumeration).Values.Add(enumValue);
+                attributeValueEnumeration.Values.Add(enumValue);
             }
             else
             {   // all enums (multi value enum)
-                var enumValues = ((AttributeValueEnumeration)attributeValueEnumeration).Definition.Type.SpecifiedValues
+                var enumValues = attributeValueEnumeration.Definition.Type.SpecifiedValues
                     .Select(x => x);
                 var values = Regex.Replace(value.Trim(), @"\r\n?|\n|;|,|:|-|=", ",").Split(',');
                 int index = 0;
@@ -359,7 +369,7 @@ Value: '{eaValue}'
                 {
                     if (values[index] == "1")
                     {
-                        ((AttributeValueEnumeration) attributeValueEnumeration).Values.Add(enumValue);
+                        attributeValueEnumeration.Values.Add(enumValue);
                     }
                     index += 1;
 
@@ -943,7 +953,7 @@ XHTML:'{xhtmlValue}
 
 
         /// <summary>
-        /// Add requirements from ReqIF recursive to datatable. One Row = 1 Requirement with the attributes as columns 
+        /// Add requirements from ReqIF recursive to datatable. One Row = one Requirement with the row-attributes as columns. It creates columns also for attributes without values.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="children"></param>
@@ -974,53 +984,9 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
 
                 row["Object Level"] = level;
 
-                var allColumnDefinitions = specObject.SpecType.SpecAttributes;
-                var columnsWithValue = specObject.Values;
-                var columns = from all in allColumnDefinitions
-                    from v in columnsWithValue.Where(x => all.LongName == x.AttributeDefinition.LongName).DefaultIfEmpty()
-                    select new { Definition = all, Value = v };
 
-                List<AttributeValue> columns1 = specObject.Values;
-                foreach (var column in columns)
-                {
-                    // column value doesn't exists
-                    if (column.Value == null)
-                    {
-                        row[column.Definition.LongName] = "";
-                    }
-                    else
-                    {
-                        // column value exists
-                        try
-                        {
-                            // Handle blacklist
-                            if (_blackList1.Contains(column.Definition.LongName)) continue;
-
-                            // Handle enums
-                            if (column.Definition is AttributeDefinitionEnumeration)
-                            {
-                                List<EnumValue> enumValues = (List<EnumValue>) column.Value.ObjectValue;
-                                string values = "";
-                                string del = "";
-                                foreach (var enumValue in enumValues)
-                                {
-                                    values = $"{values}{del}{enumValue.LongName}";
-                                    del = Environment.NewLine;
-                                }
-
-                                row[column.Definition.LongName] = values;
-                            }
-                            else row[column.Definition.LongName] = column.Value.ObjectValue.ToString();
-
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(
-                                $@"AttrName: '{column.Definition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}",
-                                @"Exception add ReqIF Attribute");
-                        }
-                    }
-                }
+                // Add columns of current row to datatable
+                AddColumnsToDataTable(specObject, row);
 
                 dt.Rows.Add(row);
                 // handle the sub requirements
@@ -1028,6 +994,61 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
             }
             
 
+        }
+        /// <summary>
+        /// Add columns of current row to datatable (import). 
+        /// </summary>
+        /// <param name="specObject"></param>
+        /// <param name="row"></param>
+        private void AddColumnsToDataTable(SpecObject specObject, DataRow row)
+        {
+            // over all columns 
+            // - Definitions of all attributes
+            // - Values of attributes with values
+            var allColumnDefinitions = specObject.SpecType.SpecAttributes;
+            var columnsWithValue = specObject.Values;
+            var columns = from all in allColumnDefinitions
+                from v in columnsWithValue.Where(x => all.LongName == x.AttributeDefinition.LongName).DefaultIfEmpty()
+                select new {Definition = all, Value = v};
+            foreach (var column in columns)
+            {
+                // column value doesn't exists
+                if (column.Value == null)
+                {
+                    row[column.Definition.LongName] = "";
+                }
+                else
+                {
+                    // column value exists
+                    try
+                    {
+                        // Handle blacklist
+                        if (_blackList1.Contains(column.Definition.LongName)) continue;
+
+                        // Handle enums
+                        if (column.Definition is AttributeDefinitionEnumeration)
+                        {
+                            List<EnumValue> enumValues = (List<EnumValue>) column.Value.ObjectValue;
+                            string values = "";
+                            string del = "";
+                            foreach (var enumValue in enumValues)
+                            {
+                                values = $"{values}{del}{enumValue.LongName}";
+                                del = Environment.NewLine;
+                            }
+
+                            row[column.Definition.LongName] = values;
+                        }
+                        else row[column.Definition.LongName] = column.Value.ObjectValue.ToString();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(
+                            $@"AttrName: '{column.Definition.LongName}'{Environment.NewLine}{Environment.NewLine}{e}",
+                            @"Exception add ReqIF Attribute");
+                    }
+                }
+            }
         }
 
         /// <summary>
