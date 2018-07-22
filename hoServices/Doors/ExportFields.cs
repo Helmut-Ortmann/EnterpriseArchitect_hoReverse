@@ -34,14 +34,29 @@ namespace EaServices.Doors
 
         }
         /// <summary>
-        /// returns true if the tagged Value with the name 'name' is writable.
+        /// returns true if the tagged Value with the name 'name' is writable (write back during export/roundtrip).
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="fieldName"></param>
         /// <returns></returns>
-        public bool IsWritableValue(string name)
+        public bool IsWritableValue(string fieldName)
         {
-            return _fields.SingleOrDefault(x => x.Split('=')[0] == name)!=null;
+            return _fields.SingleOrDefault(x => x.Split('=')[0] == fieldName)!=null;
         }
+        /// <summary>
+        /// Returns the macro name of a field
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public string GetMacroName(string fieldName)
+        {
+            var macro = (from field in _fields
+                let n = field.Split('=')
+                where n.Length > 1 &&
+                      n[0] == fieldName
+                select n[1]).FirstOrDefault();
+            return macro ?? "";
+        }
+
         /// <summary>
         /// Get Macro value of the fiels
         /// </summary>
@@ -50,15 +65,11 @@ namespace EaServices.Doors
         /// <returns></returns>
         public string GetMacroValue(EA.Element el, string fieldName)
         {
-            var macro = (from field in _fields
-                let n = field.Split('=')
-                where n.Length > 1 &&
-                      n[0] == fieldName
-                select n[1]).FirstOrDefault();
-            if (macro == null) return "";
-           
+            var macro = GetMacroName(fieldName);
             switch (macro)
             {
+                case "":        // no macro found
+                    return "";
                 case "EA.GUID":
                     return el.ElementGUID;
                 case "EA.Version":
