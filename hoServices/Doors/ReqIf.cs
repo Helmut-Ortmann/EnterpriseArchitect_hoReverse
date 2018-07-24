@@ -28,6 +28,13 @@ namespace EaServices.Doors
         readonly string Tab = "\t";
         ReqIF _reqIf;
 
+        /// <summary>
+        /// Deserialized ReqIF
+        /// </summary>
+        public ReqIF ReqIFDeserialized
+        {
+            get { return _reqIf; }
+        }
         int _subModuleIndex;
 
         // Prefix Tagged Values and Columnnames
@@ -444,6 +451,10 @@ Value: '{eaValue}'
 
                 MoveDeletedRequirements();
                 UpdatePackage();
+
+                // handle links
+                ReqIfRelation relations = new ReqIfRelation(_reqIf, Rep,_settings);
+
             }
 
             Rep.BatchAppend = false;

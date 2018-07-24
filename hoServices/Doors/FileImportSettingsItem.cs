@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
 using LinqToDB.Common;
@@ -86,6 +87,16 @@ namespace EaServices.Doors
         [JsonProperty("PackageGuidList")]
         private List<string>  _packageGuidList;
 
+
+        /// <summary>
+        /// Get comma separated list of GUIDs ('guid1','guid2')
+        /// </summary>
+        [JsonIgnore]
+        public string PackageGuidCommaList
+        {
+            get => $"'{String.Join("','", PackageGuidList.ToArray())}'".Replace(" ","");
+        }
+
         /// <summary>
         /// List of EA TaggedValue prefixe per ReqIF module. hoReverse uses this prefixes to allow same column names in ReqIF modules.
         /// </summary>
@@ -109,6 +120,18 @@ namespace EaServices.Doors
         }
         [JsonProperty("ObjectType")]
         private string  _objectType;
+
+        /// <summary>
+        /// Stereotype dependency Requirement linking
+        /// </summary>
+        [JsonIgnore]
+        public string StereotypeDependency
+        {
+            get => _stereotypeDependency;
+            set => _stereotypeDependency = value;
+        }
+        [JsonProperty("StereotypeDependency"), DefaultValue("")]
+        private string _stereotypeDependency;
 
         /// <summary>
         /// Stereotype to use when creating the EA Element for a requirement/test
@@ -220,7 +243,7 @@ namespace EaServices.Doors
         public List<string> WriteAttrNameList
         {
             get => _writeAttrNameList ?? new List<string>();
-            set => _attrNameList = value;
+            set => _writeAttrNameList = value;
         }
         [JsonProperty("WriteAttrNameList")]
         private List<string> _writeAttrNameList;

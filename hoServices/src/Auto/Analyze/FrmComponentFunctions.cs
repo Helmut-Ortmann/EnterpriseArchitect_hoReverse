@@ -388,7 +388,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
                 text = $"{text}{delimiter}{function}";
                 delimiter = "\r\n";
             }
-            Clipboard.SetText(text);
+            if (!String.IsNullOrEmpty(text)) Clipboard.SetText(text);
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ C/C++ updates this Symbol Database when you edit/open a C/C++ file
             string functionName = row.Cells["Implementation"].Value.ToString().Trim() != ""
                 ? row.Cells["Implementation"].Value.ToString()
                 : row.Cells["Interface"].Value.ToString();
-            Clipboard.SetText(functionName);
+            if (string.IsNullOrEmpty(functionName)) Clipboard.SetText(functionName);
 
             // Estimate line number
             var lineNumber = columnNameLineNumber == "" 

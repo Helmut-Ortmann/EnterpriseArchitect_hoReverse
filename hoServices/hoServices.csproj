@@ -130,12 +130,14 @@
     <Compile Include="Doors\DoorsModule.cs" />
     <Compile Include="Doors\DoorsOle.cs" />
     <Compile Include="Doors\DoorsReqIf.cs" />
+    <Compile Include="Doors\EaRequirement.cs" />
     <Compile Include="Doors\ExportFields.cs" />
     <Compile Include="Doors\FileImportSettingsItem.cs" />
     <Compile Include="Doors\HtmlToDocx.cs" />
     <Compile Include="Doors\HtmlToText.cs" />
     <Compile Include="Doors\ImportSettings.cs" />
     <Compile Include="Doors\ReqIf.cs" />
+    <Compile Include="Doors\ReqIfRelation.cs" />
     <Compile Include="Doors\XmlStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">

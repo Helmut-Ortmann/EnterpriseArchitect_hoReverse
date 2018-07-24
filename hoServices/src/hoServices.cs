@@ -173,7 +173,7 @@ namespace hoReverse.Services
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{e}", "FQ name not implemented in your EA version!");
+                MessageBox.Show($@"{e}", @"FQ name not implemented in your EA version!");
                 strFq = "";
             }
 
@@ -531,7 +531,7 @@ Second Element: Target of move connections and appearances", "Select two element
         public static string CopyContextNameToClipboard(Repository rep)
         {
             string txt = GetNamesFromSelectedItems(rep);
-            Clipboard.SetText(txt);
+            if (! String.IsNullOrWhiteSpace(txt)) Clipboard.SetText(txt);
             return txt;
         }
 

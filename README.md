@@ -54,6 +54,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.0.5  
+- Support of *.eapx files
+- Fix copy name to clipboard for empty name
+
 3.0.4 Import preserves roundtrip values
 - error fixing
 
