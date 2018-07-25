@@ -58,17 +58,20 @@ namespace EaServices.Doors
                 {
                     if (el != rel.SourceReq)
                     {
-                        if (el != null) DeleteDependencies(el,_settings.StereotypeDependency);
+                        el = rel.SourceReq;
+                        if (el != null) DeleteDependencies(el,_settings.PackageGuidList);
                     }
 
                     EA.Connector con = (EA.Connector)el.Connectors.AddNew("", "Dependency");
                     con.Stereotype = _settings.StereotypeDependency;
+                    con.ClientID = rel.TargetReq.ElementID;
+                    con.SupplierID = rel.SourceReq.ElementID;
                     con.Update();
 
                     el.Connectors.Refresh();
                     el.Update();
 
-                    el = rel.SourceReq;
+                   
                 }
 
             
@@ -77,17 +80,24 @@ namespace EaServices.Doors
 
 
         }
+
         /// <summary>
-        /// Delete dependencies of element
+        /// Delete dependencies of element within the ReqIF Packages
         /// </summary>
         /// <param name="el"></param>
-        private void DeleteDependencies(EA.Element el, string stereotype)
+        /// <param name="packageGuidList"></param>
+        private void DeleteDependencies( EA.Element el, List<string> packageGuidList)
         {
             for (int i = el.Connectors.Count - 1; i >= 0; i--)
             {
-                if ( ((EA.Connector)el.Connectors.GetAt((short)i)).Stereotype == stereotype)
+                var elConnector = (EA.Connector)el.Connectors.GetAt((short)i);
+                var elTarget = _rep.GetElementByID(elConnector.SupplierID);
+                string pkgTargetGuid = _rep.GetPackageByID(elTarget.PackageID).PackageGUID;
+                if ( packageGuidList.Contains(pkgTargetGuid))
                         el.Connectors.DeleteAt((short)i, true);
             }
+            el.Refresh();
+            el.Update();
         }
     }
     

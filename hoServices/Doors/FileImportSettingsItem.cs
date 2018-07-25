@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Remoting.Messaging;
-using LinqToDB.Common;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace EaServices.Doors
@@ -31,7 +30,7 @@ namespace EaServices.Doors
            XmlStruct,    // Structured XML, use it e.g. for test
            XmlFlat       // Flat XML, currently not used
         }
-        [JsonProperty("ImportType")]
+        [JsonProperty("ImportType"),DefaultValue("Requirement")]
         public ImportTypes ImportType { get; set; }
 
         /// <summary>
@@ -48,14 +47,16 @@ namespace EaServices.Doors
         [JsonProperty("InputFile")]
         private string _inputFile;
         /// <summary>
-        /// The file to export. 
+        /// The file to export. The default is the input file name with "_Export" at the end
         ///
         /// Example: myImport.reqifz, myImport.csv, myImport.xml
         /// </summary>
         [JsonIgnore]
         public string ExportFile
         {
-            get => _exportFile?.Replace(@"\", "/") ?? "";
+            get => String.IsNullOrWhiteSpace(_exportFile) 
+                ? Path.Combine(Path.GetDirectoryName(_inputFile), $"{Path.GetFileNameWithoutExtension(_inputFile)}_Export.{Path.GetExtension(_inputFile)}") 
+                : _exportFile?.Replace(@"\", "/") ;
             set => _exportFile = value;
         }
         [JsonProperty("ExportFile")]
@@ -127,10 +128,10 @@ namespace EaServices.Doors
         [JsonIgnore]
         public string StereotypeDependency
         {
-            get => _stereotypeDependency;
+            get => String.IsNullOrWhiteSpace(_stereotypeDependency) ? "" : _stereotypeDependency.Trim();
             set => _stereotypeDependency = value;
         }
-        [JsonProperty("StereotypeDependency"), DefaultValue("")]
+        [JsonProperty("StereotypeDependency"), DefaultValue(" ")]
         private string _stereotypeDependency;
 
         /// <summary>
@@ -139,10 +140,10 @@ namespace EaServices.Doors
         [JsonIgnore]
         public string Stereotype
         {
-            get => _stereotype;
+            get => String.IsNullOrWhiteSpace(_stereotype) ? "" : _stereotype.Trim();
             set => _stereotype = value;
         }
-        [JsonProperty("Stereotype")]
+        [JsonProperty("Stereotype"), DefaultValue(" ")]
         private string  _stereotype;
 
         /// <summary>
