@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using hoLinqToSql.LinqUtils;
 using System.Windows.Forms;
+using EA;
 
 namespace hoReverse
 {
-    public partial class hoReverse
+    public partial class hoReverseRoot
     {
         private Dictionary<string, string> _tv = new Dictionary<string, string>();
+
         /// <summary>
         /// Add-In Search: Sample
         /// See: http://sparxsystems.com/enterprise_architect_user_guide/13.5/automation/add-in_search.html
@@ -85,10 +87,9 @@ namespace hoReverse
             }
             else
             {
-                object item;
-                EA.ObjectType type = rep.GetContextItem(out item);
-                if (item is EA.Element) NestedElements(dt, (EA.Element)item);
-                if (item is EA.Package) NestedPackage(dt, (EA.Package)item);
+                rep.GetContextItem(out var item);
+                if (item is Element element) NestedElements(dt, element);
+                if (item is Package package) NestedPackage(dt, package);
             }
             return dt;
         }
@@ -134,7 +135,7 @@ namespace hoReverse
 
                 string value = tv.Value;
                 if (value.StartsWith("<memo>")) value = tv.Notes;
-                dataRow[$"{tv.Name}"] = tv.Value;
+                dataRow[$"{tv.Name}"] = value;
             }
         }
     }
