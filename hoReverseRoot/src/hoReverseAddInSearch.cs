@@ -7,6 +7,9 @@ using EA;
 
 namespace hoReverse
 {
+    /// <summary>
+    /// Partial class for Add-In Searches
+    /// </summary>
     public partial class hoReverseRoot
     {
         private Dictionary<string, string> _tv = new Dictionary<string, string>();
