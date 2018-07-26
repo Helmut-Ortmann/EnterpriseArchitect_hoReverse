@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using EA;
 using hoReverse.Reverse;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
@@ -12,6 +15,7 @@ using hoReverse.Services;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Appls;
 using hoReverse.hoUtils.ActionPins;
+using hoLinqToSql.LinqUtils;
 
 
 using GlobalHotkeys;
@@ -20,7 +24,7 @@ namespace hoReverse
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     // ReSharper disable once InconsistentNaming
-    public class hoReverseRoot : EAAddinFramework.EAAddinBase
+    public partial class hoReverseRoot : EAAddinFramework.EAAddinBase
     {
         //string logInUser = null;
         //UserRights logInUserRights = UserRights.ADMIN;
@@ -34,7 +38,6 @@ namespace hoReverse
         // Key:   hoReverse
         // Value: hoReverse.ReverseRoot
         private string _prog_id = "hoReverse.ReverseRoot";
-
 
 
         EaHistory _history;// diagram history
@@ -1090,7 +1093,66 @@ Errors:{countError}");
 
             }
         }
-     
+        /// <summary>
+        /// Add-In Search: Sample
+        /// See: http://sparxsystems.com/enterprise_architect_user_guide/13.5/automation/add-in_search.html
+        /// hoTools:
+        /// https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/AddInModelSearch        
+        ///
+        /// Configure New Search of type Add-In Search:
+        /// - hoReverse.AddInSearchObjectsNested
+        /// - Configuration errors are shown in output
+        /// 
+        /// How it's works:
+        /// 1. Create a Table and fill it with your code
+        /// 2. Adapt LINQ to output the table (powerful)
+        ///    -- Where to select only certain rows
+        ///    -- Order By to order the result set
+        ///    -- Grouping
+        ///    -- Filter
+        ///    -- JOIN
+        ///    -- etc.
+        /// 3. Deploy and test 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="searchText"></param>
+        /// <param name="xmlResults"></param>
+        /// <returns></returns>
+        public object AddInSearchObjectsNested(EA.Repository repository, string searchText, out string xmlResults)
+        {
+            // 1. Collect data into a data table
+            DataTable dt = AddinSearchObjectsNested_SetTable(repository, searchText);
+            // 2. Order, Filter, Join, Format to XML
+            xmlResults = AddinSearchObjectsNested_MakeXml(dt);
+            return "ok";
+        }
+
+        
+
+        /// <summary>
+        /// Test Query to show making EA xml from a Data table by using MakeXml. It queries the data table, orders the content according to Name columen and outputs it in EA xml format
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        private string AddinSearchObjectsNested_MakeXml(DataTable dt)
+        {
+            try
+            {
+                // Make a LINQ query (WHERE, JOIN, ORDER,)
+                //OrderedEnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
+                EnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
+                    select row;
+
+                return Xml.MakeXml(dt, rows);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"{e}", @"Error LINQ query Test query to show Table to EA xml format");
+                return "";
+
+            }
+        }
+
 
 
         private static void ShowAbout()

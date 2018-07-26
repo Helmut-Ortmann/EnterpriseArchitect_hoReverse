@@ -13,7 +13,6 @@ using LinqToDB.DataProvider;
 using hoUtils.Json;
 using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
-using Task = System.Threading.Tasks.Task;
 
 namespace EaServices.Doors
 {
@@ -42,7 +41,7 @@ namespace EaServices.Doors
         string _importModuleFile;
         EA.Package _pkg;
 
-        private ReqIF _reqIfDeserialized = null;
+        private ReqIF _reqIfDeserialized;
 
         private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
@@ -389,7 +388,7 @@ namespace EaServices.Doors
                         }).ToDataTable();
 
                     // Make EA xml
-                    string xml = hoLinqToSql.LinqUtils.Xml.MakeXmlFromDataTable(falseRequirements);
+                    string xml = Xml.MakeXmlFromDataTable(falseRequirements);
                     // Output to EA
                     _rep.RunModelSearch("", "", "", xml);
                     return falseRequirements.Rows.Count == 0;
