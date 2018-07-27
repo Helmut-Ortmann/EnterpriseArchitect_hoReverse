@@ -289,5 +289,7 @@ namespace EaServices.Doors
         }
         [JsonProperty("IdList")]
         private List<string> _idList;
+
+       
     }
 }

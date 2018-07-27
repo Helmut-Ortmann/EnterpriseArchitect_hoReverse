@@ -2,20 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
-using hoLinqToSql.LinqUtils;
 using System.Windows.Forms;
-using EaServices.AddInSearch;
 using EA;
+using hoLinqToSql.LinqUtils;
+using EaServices.AddInSearch;
 
-namespace hoReverse
+namespace EaServices.AddInSearch
 {
-    /// <summary>
-    /// Partial class for Add-In Searches
-    /// - https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/AddInModelSearch
-    /// </summary>
-    public partial class hoReverseRoot
+    public class AddInSearches
     {
-        private Dictionary<string, string> _tv = new Dictionary<string, string>();
+        private static Dictionary<string, string> _tv = new Dictionary<string, string>();
 
         /// <summary>
         /// Add-In Search to find nested Elements for:
@@ -28,30 +24,43 @@ namespace hoReverse
         /// - All elements in it's hierarchical structure
         /// - Tagged Values
         /// 
+        /// How it's works:
+        /// 1. Create a Table and fill it with your code
+        /// 2. Adapt LINQ to output the table (powerful)
+        ///    -- Where to select only certain rows
+        ///    -- Order By to order the result set
+        ///    -- Grouping
+        ///    -- Filter
+        ///    -- JOIN
+        ///    -- etc.
+        /// 3. Deploy and test 
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="searchText"></param>
         /// <param name="xmlResults"></param>
         /// <returns></returns>
-        public object AddInSearchObjectsNested(EA.Repository repository, string searchText, out string xmlResults)
+        public static string SearchObjectsNested(EA.Repository repository, string searchText)
         {
-            xmlResults = AddInSearches.SearchObjectsNested(repository, searchText);
-            return "ok";
-            
+            // 1. Collect data into a data table
+            DataTable dt = AddinSearchObjectsNestedInitTable(repository, searchText);
+            // 2. Order, Filter, Join, Format to XML
+            return AddinSearchObjectsNestedMakeXml(dt);
         }
+
+
         /// <summary>
         /// Test Query to show making EA xml from a Data table by using MakeXml. It queries the data table, orders the content according to Name columen and outputs it in EA xml format
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        private string AddinSearchObjectsNestedMakeXml(DataTable dt)
+        private static string AddinSearchObjectsNestedMakeXml(DataTable dt)
         {
             try
             {
                 // Make a LINQ query (WHERE, JOIN, ORDER,)
                 //OrderedEnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
                 EnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
-                    select row;
+                                                        select row;
 
                 return Xml.MakeXml(dt, rows);
             }
@@ -68,7 +77,7 @@ namespace hoReverse
         /// <param name="rep"></param>
         /// <param name="searchText">Optional: List of packages, EA elements as a comma separated list</param>
         /// <returns></returns>
-        private DataTable AddinSearchObjectsNestedInitTable(EA.Repository rep, string searchText)
+        private static DataTable AddinSearchObjectsNestedInitTable(EA.Repository rep, string searchText)
         {
             _tv = new Dictionary<string, string>();
             DataTable dt = new DataTable();
@@ -109,7 +118,7 @@ namespace hoReverse
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="pkg"></param>
-        private void NestedPackage(DataTable dt, EA.Package pkg)
+        private static void NestedPackage(DataTable dt, EA.Package pkg)
         {
             foreach (EA.Element el in pkg.Elements)
             {
@@ -118,7 +127,7 @@ namespace hoReverse
 
         }
 
-        private void NestedElements(DataTable dt, EA.Element el)
+        private static void NestedElements(DataTable dt, EA.Element el)
         {
 
             var row = dt.NewRow();
@@ -138,7 +147,7 @@ namespace hoReverse
 
         }
 
-        private void AddTaggedValues(DataTable dt, EA.Element el, DataRow dataRow)
+        private static void AddTaggedValues(DataTable dt, EA.Element el, DataRow dataRow)
         {
             foreach (EA.TaggedValue tv in el.TaggedValues)
             {
@@ -158,7 +167,7 @@ namespace hoReverse
         /// </summary>
         /// <param name="commaSeparated"></param>
         /// <returns></returns>
-        private string[] GetEaFromCommaSeparatedList(string commaSeparated)
+        private static string[] GetEaFromCommaSeparatedList(string commaSeparated)
         {
             if (String.IsNullOrWhiteSpace(commaSeparated)) return new string[0];
             // delete special characters like blank, linefeed, ', ""
@@ -170,6 +179,5 @@ namespace hoReverse
 
             return commaSeparated.Split(',');
         }
-
     }
 }

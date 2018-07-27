@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using EaServices.MOVE;
@@ -28,6 +29,7 @@ using hoReverse.hoUtil.EaCollection;
 using hoReverse.hoUtilsVC;
 using CustomProperty = EA.CustomProperty;
 using DiagramObject = EA.DiagramObject;
+using EaServices.AddInSearch;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services
@@ -55,6 +57,7 @@ namespace hoReverse.Services
     #endregion
 
     // ReSharper disable once InconsistentNaming
+    [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
     public static partial class HoService
     {
         public static string Release = "1.0.01";
@@ -84,7 +87,7 @@ namespace hoReverse.Services
             }
             catch (Exception e1)
             {
-                MessageBox.Show(e1.ToString(), "Search name:'" + searchName + "'");
+                MessageBox.Show(e1.ToString(), $@"Search name:'{searchName}'");
             }
         }
 
@@ -109,7 +112,7 @@ namespace hoReverse.Services
             // two objects selected
             if (curDiagram.SelectedObjectsCount < 2 || curDiagram.SelElements.Count < 2)
             {
-                MessageBox.Show(@"Ports, Parameter, Pins supported", "Select at least two elements on the diagram!");
+                MessageBox.Show(@"Ports, Parameter, Pins supported", @"Select at least two elements on the diagram!");
                 return;
             }
             EaCollectionDiagramObjects diaCol = new EaCollectionDiagramObjects(curDiagram);
@@ -200,7 +203,7 @@ namespace hoReverse.Services
             if (curDiagram.SelectedObjectsCount != 2 || curDiagram.SelElements.Count != 2)
             {
                 MessageBox.Show(@"First Element: Source of move connections and appearances
-Second Element: Target of move connections and appearances", "Select two elements on the diagram!");
+Second Element: Target of move connections and appearances", @"Select two elements on the diagram!");
                 return;
             }
             Element source = curDiagram.SelElements[1];
@@ -510,6 +513,18 @@ Second Element: Target of move connections and appearances", "Select two element
 
         #endregion
 
+        [ServiceOperation("{EC487B04-98DC-42B3-9A50-D0880CECD9AB}", "Search nested elements like requirements for package or elements",
+            "Select Package, Element, all tagged values are shown", isTextRequired: false)]
+
+        public static void SearchNestedElements(Repository rep)
+        {
+
+            string xmlString = AddInSearches.SearchObjectsNested(rep, "");
+            rep.RunModelSearch("", "", "", xmlString);
+
+        }
+
+
         [ServiceOperation("{8704186B-665F-4E4A-95B4-31E1232A63FE}", "Search for + Copy to Clipboard selected item name, if Action try to find operation",
             "Select Package, Element, Attribute, Operation. If Action it tries to extract a possible function name", isTextRequired: false)]
 
@@ -710,7 +725,7 @@ Second Element: Target of move connections and appearances", "Select two element
             s[0] = dlg.User;
             if (s[0] == "")
             {
-                MessageBox.Show("Author:'" + s[0] + "'", "no or invalid user");
+                MessageBox.Show($@"Author:'{s[0]}'", @"no or invalid user");
                 return;
             }
             switch (oType)
@@ -718,15 +733,15 @@ Second Element: Target of move connections and appearances", "Select two element
                 case ObjectType.otPackage:
                     RecursivePackages.DoRecursivePkg(rep, pkg, ChangeAuthorPackage, ChangeAuthorElement,
                         ChangeAuthorDiagram, s, ChangeScope.PackageRecursive);
-                    MessageBox.Show("New author:'" + s[0] + "'", "Author changed for packages/elements (recursive)");
+                    MessageBox.Show($@"New author:'{s[0]}'", @"Author changed for packages/elements (recursive)");
                     break;
                 case ObjectType.otElement:
                     RecursivePackages.DoRecursiveEl(rep, el, ChangeAuthorElement, ChangeAuthorDiagram, s, ChangeScope.PackageRecursive);
-                    MessageBox.Show("New author:'" + s[0] + "'", "Author changed for elements (recursive)");
+                    MessageBox.Show($@"New author:'{ s[0]} '", @"Author changed for elements (recursive)");
                     break;
                 case ObjectType.otDiagram:
                     ChangeAuthorDiagram(rep, dia, s);
-                    MessageBox.Show("New author:'" + s[0] + "'", "Author changed for diagram");
+                    MessageBox.Show($@"New author:' {s[0]}'", @"Author changed for diagram");
                     break;
                 default:
                     return;
@@ -776,22 +791,22 @@ Second Element: Target of move connections and appearances", "Select two element
             args[0] = dlg.User;
             if (args[0] == "")
             {
-                MessageBox.Show("Author:'" + args[0] + "'", "no or invalid user");
+                MessageBox.Show($@"Author:'{args[0]}'", @"no or invalid user");
                 return;
             }
             switch (oType)
             {
                 case ObjectType.otPackage:
                     ChangeAuthorPackage(rep, pkg, args);
-                    MessageBox.Show("New author:'" + args[0] + "'", "Author changed for package");
+                    MessageBox.Show($@"New author:'{args[0]}'", @"Author changed for package");
                     break;
                 case ObjectType.otElement:
                     ChangeAuthorElement(rep, el, args);
-                    MessageBox.Show("New author:'" + args[0] + "'", "Author changed for element");
+                    MessageBox.Show($@"New author:'{args[0]}'", @"Author changed for element");
                     break;
                 case ObjectType.otDiagram:
                     ChangeAuthorDiagram(rep, dia, args);
-                    MessageBox.Show("New author:'" + args[0] + "'", "Author changed for element");
+                    MessageBox.Show(@"New author:'{args[0]}'", @"Author changed for element");
                     break;
                 default:
                     return;
@@ -869,7 +884,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         Element el1 = rep.GetElementByGuid(pkg.PackageGUID);
                         if (el1.Gentype == "")
                         {
-                            MessageBox.Show("Package has no language configured. Please select a language!");
+                            MessageBox.Show(@"Package has no language configured. Please select a language!");
                             return;
                         }
                         path = HoUtil.GetFilePath(rep, el1.Gentype, pkg.CodePath);
@@ -1769,7 +1784,7 @@ Second Element: Target of move connections and appearances", "Select two element
 
             if (name.Length > 255)
             {
-                MessageBox.Show(type + ": '" + name + "' has more than 255 characters.", "Name is to long");
+                MessageBox.Show(type + @": '" + name + @"' has more than 255 characters.", @"Name is to long");
                 return null;
             }
             Element elParent = null;
@@ -2119,7 +2134,7 @@ Second Element: Target of move connections and appearances", "Select two element
             {
                 if (elSource.Locked )
                 {
-                    MessageBox.Show("Source #" + elSource.Name + "' is locked", "Element locked");
+                    MessageBox.Show($@"Source #{elSource.Name}' is locked", @"Element locked");
                     continue;
                 }
                 if (isComponent)
@@ -2228,7 +2243,7 @@ Second Element: Target of move connections and appearances", "Select two element
             catch (Exception e)
             {
                 rep.GetLastError();
-                MessageBox.Show(e.ToString(), "Error create connector between '" + elSource.Name + " and '" + elTarget.Name + "' ");
+                MessageBox.Show(e.ToString(), $@"Error create connector between '{elSource.Name}' and '{ elTarget.Name}' ");
             }
            
 
@@ -3346,7 +3361,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString() , "Error Insert Function");
+                MessageBox.Show(e11.ToString() , @"Error Insert Function");
             }
             finally
             {
@@ -3381,7 +3396,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Create Macro from text");
+                MessageBox.Show(e11.ToString(), @"Error Create Macro from text");
             }
             finally
             {
@@ -3402,7 +3417,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Delete Macros/Stereotypes");
+                MessageBox.Show(e11.ToString(), @"Error Delete Macros/Stereotypes");
             }
             finally
             {
@@ -3429,7 +3444,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Delete Macros/Stereotypes");
+                MessageBox.Show(e11.ToString(), @"Error Delete Macros/Stereotypes");
             }
             finally
             {
@@ -3565,15 +3580,17 @@ Second Element: Target of move connections and appearances", "Select two element
                 elPar.Type = type;
                 elPar.Kind = "in";
                 elPar.Position = pos;
-
+                // $@"Error creating parameter:{type} {name}" );
                 try
                 {
                     elPar.Update();
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e + "\n\n" + elPar.GetLastError(), "Error creating parameter:" + type + " " + name);
-                }
+                    MessageBox.Show($@"{e}
+
+{elPar.GetLastError()}", $@"Error creating parameter:'{type}' '{name}'");
+                }   
                 pos = pos + 1;
 
             }
@@ -3742,7 +3759,7 @@ Second Element: Target of move connections and appearances", "Select two element
                 string[] lparElements = par.Split(' ');
                 if (lparElements.Length > 2)
                 {
-                    MessageBox.Show(txt, "Can't evaluate parameters, possible more than 'type name'");
+                    MessageBox.Show(txt, @"Can't evaluate parameters, possible more than 'type name'");
                     return;
 
                 }
@@ -3771,7 +3788,9 @@ Second Element: Target of move connections and appearances", "Select two element
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e + "\n\n"+elPar.GetLastError(), "Error creating parameter:" + type +" " + name);
+                    MessageBox.Show($@"{e}
+
+{elPar.GetLastError()}", $@"Error creating parameter: {type} {name}");
                 }
                 pos = pos + 1;
 
@@ -3836,7 +3855,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                MessageBox.Show(e10.ToString(), @"Error insert Attributes");
             }
             finally
             {
@@ -4008,7 +4027,7 @@ Second Element: Target of move connections and appearances", "Select two element
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error insert Attributes");
+                MessageBox.Show(e10.ToString(), @"Error insert Attributes");
             }
             finally
             {
@@ -4248,7 +4267,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         a = (EA.Attribute)el.Attributes.AddNew(aName, "");
                         if (a.Name.Length > 255)
                         {
-                            MessageBox.Show(a.Name + " has " + a.Name.Length, "Name longer than 255");
+                            MessageBox.Show(a.Name + @" has " + a.Name.Length, @"Name longer than 255");
                             continue;
                         }
                         a.Pos = el.Attributes.Count;
@@ -4268,7 +4287,7 @@ Second Element: Target of move connections and appearances", "Select two element
                         a.Container = collectionValue;
                         if (collectionValue.Length > 50)
                         {
-                            MessageBox.Show("Collection '" + collectionValue + "' has " + collectionValue.Length + " characters.", "Break! Collection length need to be <=50 characters");
+                            MessageBox.Show($@"Collection '{collectionValue}' has {collectionValue.Length} characters.", @"Break! Collection length need to be <=50 characters");
                             continue;
                         }
                     }
@@ -4280,7 +4299,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.ToString(), "Error updating attribute");
+                        MessageBox.Show(e.ToString(), @"Error updating attribute");
                     }
                 }
                 else
@@ -4288,7 +4307,7 @@ Second Element: Target of move connections and appearances", "Select two element
                     MessageBox.Show($@"String:
 '{s}'
 Interpret:'{sCompact}'
-Regex:'{regexName}'", "Couldn't understand attribute syntax");
+Regex:'{regexName}'", @"Couldn't understand attribute syntax");
                 }
             }
 
@@ -4411,7 +4430,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                  a.Type = "";
                  a.Update();
              } else {
-                 MessageBox.Show(sMacroDefinition,"Can't identify macro name");
+                 MessageBox.Show(sMacroDefinition,@"Can't identify macro name");
              }
 
         }
@@ -4502,7 +4521,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                         Method m = HoUtil.GetOperationFromBrehavior(rep, el);
                         if (m == null)
                         {
-                            MessageBox.Show("Activity hasn't an operation");
+                            MessageBox.Show(@"Activity hasn't an operation");
                             return;
                         }
                         ReconcileOperationTypes(rep, m);
@@ -4575,8 +4594,8 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 {
                     if (parType == "")
                     {
-                        MessageBox.Show("Method " + m.Name + " Parameter '" + par.Name + ":" + par.Type + "' ",
-                            "Parameter type undefined");
+                        MessageBox.Show($@"Method { m.Name } Parameter '{par.Name}:{ par.Type}' ",
+                            @"Parameter type undefined");
                     }
                     else
                     {
@@ -4755,7 +4774,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Checkout");
+                MessageBox.Show(e11.ToString(), @"Error Checkout");
             }
             finally
             {
@@ -4787,7 +4806,9 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 Cursor.Current = Cursors.Default;
             } catch (Exception e) 
             {
-                MessageBox.Show(e + "\n\n"+ pkg.GetLastError(), "Error Checkout");
+                MessageBox.Show($@"{e} 
+
+{pkg.GetLastError()}", @"Error Checkout");
             }
             finally
             {
@@ -4806,7 +4827,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Check-In");
+                MessageBox.Show(e11.ToString(), @"Error Check-In");
             }
             finally
             {
@@ -4918,8 +4939,8 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             label.Text = promptText;
             textBox.Text = value;
 
-            buttonOk.Text = "OK";
-            buttonCancel.Text = "Cancel";
+            buttonOk.Text = @"OK";
+            buttonCancel.Text = @"Cancel";
             buttonOk.DialogResult = DialogResult.OK;
             buttonCancel.DialogResult = DialogResult.Cancel;
 
@@ -4990,7 +5011,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error set directory tagged values");
+                MessageBox.Show(e11.ToString(), @"Error set directory tagged values");
             }
             finally
             {
@@ -5022,7 +5043,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
                 int state = pkg.VersionControlGetStatus();
                 if (state == 4)
                 {
-                    MessageBox.Show("","Package checked out by another user, break");
+                    MessageBox.Show("",@"Package checked out by another user, break");
                         return;
                 }
                 if (state == 1)// checked in
@@ -5390,7 +5411,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 
             var trgEl = (Element)rep.GetContextObject();
             if  (!(trgEl.Type.Equals("Activity"))) {
-                MessageBox.Show("Target '" + trgEl.Name + ":" + trgEl.Type + "' isn't an Activity", " Only move below Activity is allowed");
+                MessageBox.Show($@"Target '{trgEl.Name}':{trgEl.Type}' isn't an Activity", @"Only move below Activity is allowed");
                 return;
             }
             for (int i = 0; i < count; i = i + 1)
@@ -5465,7 +5486,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error generating ports for component");
+                MessageBox.Show(e10.ToString(), @"Error generating ports for component");
             }
             finally
             {
@@ -5558,7 +5579,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             }
             catch (Exception e10)
             {
-                MessageBox.Show(e10.ToString(), "Error generating ports for component");
+                MessageBox.Show(e10.ToString(), @"Error generating ports for component");
             }
             finally
             {
@@ -5646,7 +5667,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
             string path = HoUtil.GetGenFilePathElement(rep, el);
             if (path == "")
             {
-                MessageBox.Show("No file defined in property for: '" + el.Name + "':" + el.Type);
+                MessageBox.Show(@"No file defined in property for: '" + el.Name + "':" + el.Type);
                 return lEl;
             }
 
@@ -5660,7 +5681,7 @@ Regex:'{regexName}'", "Couldn't understand attribute syntax");
 ElementName: {el.Name}
 ElementType:{el.Type}", 
                     
-                    $"Code file extension for Element type '{el.Type}' probably wrong!");
+                    $@"Code file extension for Element type '{el.Type}' probably wrong!");
                 return lEl;
             }
             // Check if filename is plausible
@@ -5732,11 +5753,13 @@ ElementType:{el.Type}",
                 if (pkg.IsControlled)
                 {
                     string pkgState = HoUtil.GetVCstate(rep, pkg, true);
-                     DialogResult result = MessageBox.Show("Package is "+ pkgState +"\nPath=" + pkg.XMLPath + "\nFlags=" + pkg.Flags, "Update package state?", MessageBoxButtons.YesNo);
+                     DialogResult result = MessageBox.Show($@"Package is {pkgState}
+Path={pkg.XMLPath} 
+Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)  HoUtil.UpdateVc(rep, pkg);
                 }
             }
-            else MessageBox.Show("No package selected");
+            else MessageBox.Show(@"No package selected");
         }
                     #endregion
                     #region updateVcStateOfSelectedPackageRecursiveService
@@ -5762,7 +5785,7 @@ ElementType:{el.Type}",
             }
             catch (Exception e11)
             {
-                MessageBox.Show(e11.ToString(), "Error Insert Function");
+                MessageBox.Show(e11.ToString(), @"Error Insert Function");
             }
             finally
             {
@@ -5875,7 +5898,7 @@ ElementType:{el.Type}",
                     guid = pkg.PackageGUID;
                     break;
                 default:
-                    MessageBox.Show("Nothing useful selected");
+                    MessageBox.Show(@"Nothing useful selected");
                     break;
             }
             return guid;
