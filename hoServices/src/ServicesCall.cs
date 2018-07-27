@@ -121,7 +121,9 @@ namespace hoReverse.Services
                     }
                 } catch (Exception e)
                 {
-                    MessageBox.Show(e +  "\nCan't invoke " + Method.Name + "Return:'"+ Method.ReturnParameter + "' "+Method,"Error Invoking service");
+                    MessageBox.Show($@"{e}
+
+Can't invoke { Method.Name} Return:'{Method.ReturnParameter}' '{Method}'",@"Error Invoking service");
                     return (string)s;
                 }
             }

@@ -513,8 +513,8 @@ Second Element: Target of move connections and appearances", @"Select two elemen
 
         #endregion
 
-        [ServiceOperation("{EC487B04-98DC-42B3-9A50-D0880CECD9AB}", "Search nested elements like requirements for package or elements",
-            "Select Package, Element, all tagged values are shown", isTextRequired: false)]
+        [ServiceOperation("{EC487B04-98DC-42B3-9A50-D0880CECD9AB}", "Search nested elements like requirements",
+            "Select Package, Element, all nested Elements and their Tagged Values are shown", isTextRequired: false)]
 
         public static void SearchNestedElements(Repository rep)
         {
