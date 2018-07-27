@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EA;
 using hoLinqToSql.LinqUtils;
-using EaServices.AddInSearch;
 
 namespace EaServices.AddInSearch
 {
@@ -13,31 +12,30 @@ namespace EaServices.AddInSearch
     {
         private static Dictionary<string, string> _tv = new Dictionary<string, string>();
 
-        /// <summary>
-        /// Add-In Search to find nested Elements for:
-        /// -  Selected
-        /// -- Package
-        /// -- Element
-        /// - Comma separated GUID list of Packages or Elements in 'Search Term'  
-        ///
-        ///  It outputs:
-        /// - All elements in it's hierarchical structure
-        /// - Tagged Values
+        ///  <summary>
+        ///  Add-In Search to find nested Elements for:
+        ///  -  Selected
+        ///  -- Package
+        ///  -- Element
+        ///  - Comma separated GUID list of Packages or Elements in 'Search Term'  
         /// 
-        /// How it's works:
-        /// 1. Create a Table and fill it with your code
-        /// 2. Adapt LINQ to output the table (powerful)
-        ///    -- Where to select only certain rows
-        ///    -- Order By to order the result set
-        ///    -- Grouping
-        ///    -- Filter
-        ///    -- JOIN
-        ///    -- etc.
-        /// 3. Deploy and test 
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="searchText"></param>
-        /// <param name="xmlResults"></param>
+        ///   It outputs:
+        ///  - All elements in it's hierarchical structure
+        ///  - Tagged Values
+        ///  
+        ///  How it's works:
+        ///  1. Create a Table and fill it with your code
+        ///  2. Adapt LINQ to output the table (powerful)
+        ///     -- Where to select only certain rows
+        ///     -- Order By to order the result set
+        ///     -- Grouping
+        ///     -- Filter
+        ///     -- JOIN
+        ///     -- etc.
+        ///  3. Deploy and test 
+        ///  </summary>
+        ///  <param name="repository"></param>
+        ///  <param name="searchText"></param>
         /// <returns></returns>
         public static string SearchObjectsNested(EA.Repository repository, string searchText)
         {
@@ -86,6 +84,7 @@ namespace EaServices.AddInSearch
             dt.Columns.Add("Name", typeof(string));
             dt.Columns.Add("Alias", typeof(string));
             dt.Columns.Add("Note", typeof(string));
+            int level = 0;
             if (searchText.Trim().StartsWith("{"))
             {
                 // handle string
@@ -94,59 +93,67 @@ namespace EaServices.AddInSearch
                 {
                     EA.Element el = rep.GetElementByGuid(txt);
                     if (el == null) continue;
-                    if (el.Type != "Package") NestedElements(dt, el);
-                    if (el.Type == "Package") NestedPackage(dt, rep.GetPackageByGuid(txt));
+                    if (el.Type != "Package") NestedElements(dt, el, level);
+                    if (el.Type == "Package") NestedPackage(dt, rep.GetPackageByGuid(txt), level);
                 }
 
                 EA.Package pkg = rep.GetPackageByGuid(searchText);
                 if (pkg != null)
                 {
-                    NestedPackage(dt, pkg);
+                    NestedPackage(dt, pkg, level);
                 }
             }
             else
             {
                 // handle context element
                 rep.GetContextItem(out var item);
-                if (item is Element element) NestedElements(dt, element);
-                if (item is Package package) NestedPackage(dt, package);
+                if (item is Element element) NestedElements(dt, element, level);
+                if (item is Package package) NestedPackage(dt, package, level);
             }
             return dt;
         }
+
         /// <summary>
         /// Show nested packages
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="pkg"></param>
-        private static void NestedPackage(DataTable dt, EA.Package pkg)
+        /// <param name="level"></param>
+        private static void NestedPackage(DataTable dt, EA.Package pkg, int level)
         {
             foreach (EA.Element el in pkg.Elements)
             {
-                NestedElements(dt, el);
+                NestedElements(dt, el, level);
             }
 
         }
 
-        private static void NestedElements(DataTable dt, EA.Element el)
+        private static void NestedElements(DataTable dt, EA.Element el, int level)
         {
 
             var row = dt.NewRow();
             row["CLASSGUID"] = el.ElementGUID;
             row["CLASSTYPE"] = el.Type;
-            row["Name"] = el.Name;
+            string t = $"{new string('.',2 * level)}{el.Name}";
+            row["Name"] = t;
             row["Alias"] = el.Alias;
             row["Note"] = el.Notes;
             AddTaggedValues(dt, el, row);
             dt.Rows.Add(row);
-
+            level += 1;
             foreach (EA.Element elChild in el.Elements)
             {
 
-                NestedElements(dt, elChild);
+                NestedElements(dt, elChild, level);
             }
 
         }
-
+        /// <summary>
+        /// Add Tagged values of element to current data table row
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="el"></param>
+        /// <param name="dataRow"></param>
         private static void AddTaggedValues(DataTable dt, EA.Element el, DataRow dataRow)
         {
             foreach (EA.TaggedValue tv in el.TaggedValues)
