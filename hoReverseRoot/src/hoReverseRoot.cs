@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using EA;
 using hoReverse.Reverse;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
@@ -12,6 +15,7 @@ using hoReverse.Services;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Appls;
 using hoReverse.hoUtils.ActionPins;
+using hoLinqToSql.LinqUtils;
 
 
 using GlobalHotkeys;
@@ -20,7 +24,7 @@ namespace hoReverse
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     // ReSharper disable once InconsistentNaming
-    public class hoReverseRoot : EAAddinFramework.EAAddinBase
+    public partial class hoReverseRoot : EAAddinFramework.EAAddinBase
     {
         //string logInUser = null;
         //UserRights logInUserRights = UserRights.ADMIN;
@@ -34,7 +38,6 @@ namespace hoReverse
         // Key:   hoReverse
         // Value: hoReverse.ReverseRoot
         private string _prog_id = "hoReverse.ReverseRoot";
-
 
 
         EaHistory _history;// diagram history
@@ -1090,7 +1093,12 @@ Errors:{countError}");
 
             }
         }
-     
+        
+
+        
+
+        
+
 
 
         private static void ShowAbout()

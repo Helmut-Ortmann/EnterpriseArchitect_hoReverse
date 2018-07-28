@@ -11,8 +11,8 @@ using hoUtils.DirFile;
 using hoUtils.ExportImport;
 using LinqToDB.DataProvider;
 using hoUtils.Json;
+using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
-using Task = System.Threading.Tasks.Task;
 
 namespace EaServices.Doors
 {
@@ -40,6 +40,8 @@ namespace EaServices.Doors
 
         string _importModuleFile;
         EA.Package _pkg;
+
+        private ReqIF _reqIfDeserialized;
 
         private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
@@ -101,6 +103,7 @@ namespace EaServices.Doors
         {
             _pkg = pkg;
             _rep = rep;
+            _reqIfDeserialized = null;
 
             // get connection string of repository
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
@@ -385,7 +388,7 @@ namespace EaServices.Doors
                         }).ToDataTable();
 
                     // Make EA xml
-                    string xml = hoLinqToSql.LinqUtils.Xml.MakeXmlFromDataTable(falseRequirements);
+                    string xml = Xml.MakeXmlFromDataTable(falseRequirements);
                     // Output to EA
                     _rep.RunModelSearch("", "", "", xml);
                     return falseRequirements.Rows.Count == 0;
@@ -580,6 +583,7 @@ Check Import settings in Settings.Json.",
                                 var doorsReqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
                                 result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,  eaStatusNew,
                                     eaStatusChanged);
+                                _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
@@ -588,6 +592,7 @@ Check Import settings in Settings.Json.",
                                 var reqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
                                 result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex, eaStatusNew,
                                     eaStatusChanged);
+                                _reqIfDeserialized = reqIf.ReqIFDeserialized;
                                 //await Task.Run(() =>
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
@@ -600,8 +605,18 @@ Check Import settings in Settings.Json.",
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
                         }
+                        
+                        
 
 
+                    }
+                    // run for package
+                    // handle links
+                    if (_reqIfDeserialized != null && 
+                        (item.ImportType is FileImportSettingsItem.ImportTypes.ReqIf || item.ImportType is FileImportSettingsItem.ImportTypes.DoorsReqIf))
+                    {
+                        ReqIfRelation relations = new ReqIfRelation(_reqIfDeserialized, Rep, item);
+                        relations.WriteRelations();
                     }
                 }
 

@@ -140,7 +140,7 @@ namespace hoReverse.hoUtils.Diagrams
                     foreach (EA.DiagramObject obj in _dia.SelectedObjects)
                     {
                         // skip last selected element / context element
-                        if (obj.ElementID == _conTextDiagramObject.ElementID) continue;
+                        if (_conTextDiagramObject != null && obj.ElementID == _conTextDiagramObject.ElementID) continue;
 
                         _selectedObjects.Add(obj);
                         SelElements.Add(rep.GetElementByID(obj.ElementID));
