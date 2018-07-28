@@ -58,6 +58,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1 ReqIF import with Links between Requirements
+-  Add-In Search/Show for [nested elements/requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/ShowNestedElements)
+-  [Service](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/Services) to Search/Show nested elements/requirements
+
 3.0.5  
 - Support of *.eapx files
 - Fix copy name to clipboard for empty name
