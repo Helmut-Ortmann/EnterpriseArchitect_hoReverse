@@ -8,8 +8,12 @@ using hoLinqToSql.LinqUtils;
 
 namespace EaServices.AddInSearch
 {
+    /// <summary>
+    /// Add-In Searches 
+    /// </summary>
     public class AddInSearches
     {
+        // Dictionary of all TaggedValues of a search
         private static Dictionary<string, string> _tv = new Dictionary<string, string>();
 
         ///  <summary>
@@ -47,7 +51,7 @@ namespace EaServices.AddInSearch
 
 
         /// <summary>
-        /// Test Query to show making EA xml from a Data table by using MakeXml. It queries the data table, orders the content according to Name columen and outputs it in EA xml format
+        /// Query to make EA xml from a Data Table by using MakeXml. 
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
@@ -56,7 +60,6 @@ namespace EaServices.AddInSearch
             try
             {
                 // Make a LINQ query (WHERE, JOIN, ORDER,)
-                //OrderedEnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
                 EnumerableRowCollection<DataRow> rows = from row in dt.AsEnumerable()
                                                         select row;
 
@@ -93,42 +96,47 @@ namespace EaServices.AddInSearch
                 {
                     EA.Element el = rep.GetElementByGuid(txt);
                     if (el == null) continue;
-                    if (el.Type != "Package") NestedElements(dt, el, level);
-                    if (el.Type == "Package") NestedPackage(dt, rep.GetPackageByGuid(txt), level);
+                    if (el.Type != "Package") NestedElementsRecursive(dt, el, level);
+                    if (el.Type == "Package") NestedPackageElementsRecursive(dt, rep.GetPackageByGuid(txt), level);
                 }
 
                 EA.Package pkg = rep.GetPackageByGuid(searchText);
                 if (pkg != null)
                 {
-                    NestedPackage(dt, pkg, level);
+                    NestedPackageElementsRecursive(dt, pkg, level);
                 }
             }
             else
             {
                 // handle context element
                 rep.GetContextItem(out var item);
-                if (item is Element element) NestedElements(dt, element, level);
-                if (item is Package package) NestedPackage(dt, package, level);
+                if (item is Element element) NestedElementsRecursive(dt, element, level);
+                if (item is Package package) NestedPackageElementsRecursive(dt, package, level);
             }
             return dt;
         }
 
         /// <summary>
-        /// Show nested packages
+        /// Make a Data Table from Package Elements recursive
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="pkg"></param>
         /// <param name="level"></param>
-        private static void NestedPackage(DataTable dt, EA.Package pkg, int level)
+        private static void NestedPackageElementsRecursive(DataTable dt, EA.Package pkg, int level)
         {
             foreach (EA.Element el in pkg.Elements)
             {
-                NestedElements(dt, el, level);
+                NestedElementsRecursive(dt, el, level);
             }
 
         }
-
-        private static void NestedElements(DataTable dt, EA.Element el, int level)
+        /// <summary>
+        /// Make a Data Table from nested Elements recursive
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="el"></param>
+        /// <param name="level"></param>
+        private static void NestedElementsRecursive(DataTable dt, EA.Element el, int level)
         {
 
             var row = dt.NewRow();
@@ -144,12 +152,12 @@ namespace EaServices.AddInSearch
             foreach (EA.Element elChild in el.Elements)
             {
 
-                NestedElements(dt, elChild, level);
+                NestedElementsRecursive(dt, elChild, level);
             }
 
         }
         /// <summary>
-        /// Add Tagged values of element to current data table row
+        /// Add Tagged Values of element to current data table row
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="el"></param>
