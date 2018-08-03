@@ -54,6 +54,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.1 Add-In Search with LINQ to SQL (rearly fast for recursive search)
+
 3.1 ReqIF import with Links between Requirements
 -  Add-In Search/Show for [nested elements/requirements](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/ShowNestedElements)
 -  [Service](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoTools/wiki/Services) to Search/Show nested elements/requirements
