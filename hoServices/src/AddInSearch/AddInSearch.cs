@@ -59,9 +59,6 @@ namespace EaServices.AddInSearch
         /// <returns></returns>
         public static string SearchObjectsNested(EA.Repository repository, string searchText)
         {
-
-            
-
             // 1. Collect data into a data table
             DataTable dt = AddinSearchObjectsNestedInitTable(repository, searchText);
             // 2. Order, Filter, Join, Format to XML
@@ -258,11 +255,11 @@ namespace EaServices.AddInSearch
             }
 
         }
+
         /// <summary>
         /// Get Dictionary of nested elements for a package GUID.
         /// </summary>
         /// <param name="provider"></param>
-        /// <param name="guid"></param>
         /// <param name="connectionString"></param>
         /// <returns></returns>
         private static Dictionary<int, NestedObject> GetElementNestedElements(string connectionString, IDataProvider provider, int pkgId, IndexOutOfRangeException elId)
@@ -328,7 +325,12 @@ namespace EaServices.AddInSearch
            
 
         }
-
+        /// <summary>
+        /// Nested Elements to Data Table
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="nestedObject"></param>
+        /// <param name="level"></param>
         private static void NestedElementToDataTable(DataTable dt, KeyValuePair<int, NestedObject> nestedObject, int level)
         {
             var row = dt.NewRow();
@@ -350,7 +352,6 @@ namespace EaServices.AddInSearch
                row[$"{tv.Property}"] = value;
             }
             dt.Rows.Add(row);
-            level += 1;
         }
 
         /// <summary>

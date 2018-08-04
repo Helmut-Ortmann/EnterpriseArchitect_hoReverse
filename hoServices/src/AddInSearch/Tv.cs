@@ -1,7 +1,7 @@
 ﻿namespace EaServices.AddInSearch
 {
     /// <summary>
-    /// Tagged Values. It handles 'memo' fields.
+    /// Tagged Values. 
     /// </summary>
     public class Tv
     {
