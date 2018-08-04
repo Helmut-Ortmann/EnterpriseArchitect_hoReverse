@@ -142,6 +142,8 @@
     <Compile Include="Doors\XmlStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\AddInSearch\AddInSearch.cs" />
+    <Compile Include="src\AddInSearch\NestedObject.cs" />
+    <Compile Include="src\AddInSearch\Tv.cs" />
     <Compile Include="src\Auto\Analyze\FrmComponentFunctions.cs">
       <SubType>Form</SubType>
     </Compile>
