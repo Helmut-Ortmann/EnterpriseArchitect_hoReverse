@@ -46,6 +46,7 @@ namespace EaServices.Doors
         }
         [JsonProperty("InputFile")]
         private string _inputFile;
+
         /// <summary>
         /// The file to export. The default is the input file name with "_Export" at the end
         ///
@@ -61,6 +62,22 @@ namespace EaServices.Doors
         }
         [JsonProperty("ExportFile")]
         private string _exportFile;
+
+        /// <summary>
+        /// The file to export. The default is the input file name with "_Export" at the end
+        ///
+        /// Example: myImport.reqifz, myImport.csv, myImport.xml
+        /// </summary>
+        [JsonIgnore]
+        public string RoundtripFile
+        {
+            get => String.IsNullOrWhiteSpace(_roundtripFile)
+                ? Path.Combine(Path.GetDirectoryName(_inputFile), $"{Path.GetFileNameWithoutExtension(_inputFile)}_Roundtrip.{Path.GetExtension(_inputFile)}")
+                : _roundtripFile?.Replace(@"\", "/");
+            set => _roundtripFile = value;
+        }
+        [JsonProperty("RoundtripFile")]
+        private string _roundtripFile;
 
         /// <summary>
         /// The dictionary to store the embedded files. 

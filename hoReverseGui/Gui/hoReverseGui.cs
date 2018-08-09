@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using EaServices.Doors;
-using EA;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
 using hoReverse.Services;
@@ -3188,20 +3187,35 @@ namespace hoReverse.Reverse
                     MenuItemHover_MouseHover,  // Optional register the mouse hover event 
                     "Locate Package",  MenuItemContext_MouseDown));
 
-                // Exporter/Roudtrip/Workflow ReqIF
+                // Roudtrip/Workflow ReqIF
                 // Filter import settings for to export items 
-                var exportBySettings = (from item in _importSettings.ImportSettings
+                var roundtripBySettings = (from item in _importSettings.ImportSettings
                                        where item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
                                              item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
                                        select item).ToList();
 
                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
-                   exportBySettings,
-                   "Export ReqIF",
-                   "Export Requirements ( ReqIF roundtrip)",
-                   Exporter_Click,
+                   roundtripBySettings,
+                   "Roundtrip ReqIF",
+                   "Roundtrip Requirements ( ReqIF export roundtrip attributes)",
+                   Roundtrip_Click,
                    MenuItemHover_MouseHover,  // Optional register the mouse hover event 
                    "Locate Package", MenuItemContext_MouseDown));
+
+                // Roudtrip/Workflow ReqIF
+                // Filter import settings for to export items 
+                var exportBySettings = (from item in _importSettings.ImportSettings
+                    where item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
+                          item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
+                    select item).ToList();
+
+                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
+                    exportBySettings,
+                    "Export ReqIF",
+                    "Export Requirements ( ReqIF export all)",
+                    Export_Click,
+                    MenuItemHover_MouseHover,  // Optional register the mouse hover event 
+                    "Locate Package", MenuItemContext_MouseDown));
 
 
 
@@ -3760,7 +3774,23 @@ namespace hoReverse.Reverse
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void Exporter_Click(object sender, EventArgs e)
+        void Roundtrip_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            Debug.Assert(item != null, nameof(item) + " != null");
+            if (item?.Tag == null) return;
+            FileImportSettingsItem roundtripElement = (FileImportSettingsItem)item.Tag;
+            if (int.TryParse(roundtripElement.ListNo, out var listNumber))
+                RoundtripBySettings(listNumber, withMessage: true);
+            else MessageBox.Show($@"{roundtripElement.ListNo}", $@"ListNo in Importer settings.json invalid");
+
+        }
+        /// <summary>
+        /// Event Export  ReqIF,.. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Export_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
@@ -4070,7 +4100,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         /// <param name="e"></param>
         private void GetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_repository.GetContextItem(out var eaObject) == ObjectType.otElement)
+            if (_repository.GetContextItem(out var eaObject) == EA.ObjectType.otElement)
             {
                 EA.Element component = (EA.Element) eaObject;
                 if (component.Type == "Component" || component.Type == "Class")
@@ -4450,7 +4480,29 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             return result;
         }
         /// <summary>
-        /// Export by settings
+        /// Roundtrip by settings
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <param name="withMessage"></param>
+        private bool RoundtripBySettings(int listNumber, bool withMessage = false)
+        {
+            if (_repository == null || String.IsNullOrEmpty(_repository.ConnectionString))
+            {
+                MessageBox.Show("", @"No repository loaded, break!!");
+                return false;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+
+            //EnableImportDialog(false);
+            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            bool result = doorsModule.RoundtripBySetting(listNumber);
+            //EnableImportDialog(true);
+            Cursor.Current = Cursors.Default;
+            if (withMessage && result) MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Roundtrip by list={listNumber}, finished.");
+            return result;
+        }
+        /// <summary>
+        /// Export ReqIF by settings
         /// </summary>
         /// <param name="listNumber"></param>
         /// <param name="withMessage"></param>
@@ -4464,13 +4516,14 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             Cursor.Current = Cursors.WaitCursor;
 
             //EnableImportDialog(false);
-            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            DoorsModule doorsModule = new DoorsModule(_jasonFilePath, _repository);
             bool result = doorsModule.ExportBySetting(listNumber);
             //EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
             if (withMessage && result) MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exported by list={listNumber}, finished.");
             return result;
         }
+
 
         private void ImportReqIFBySettings3ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {

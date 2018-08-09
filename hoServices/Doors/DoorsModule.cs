@@ -162,7 +162,7 @@ namespace EaServices.Doors
         {
             return false;
         }
-        public virtual bool ExportUpdateRequirements(int subModuleIndex = 0)
+        public virtual bool RoundtripUpdateRequirements(int subModuleIndex = 0)
         {
             return true;
         }
@@ -440,7 +440,7 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="listNumber"></param>
         /// <returns></returns>
-        public bool ExportBySetting(int listNumber)
+        public bool RoundtripBySetting(int listNumber)
         {
             bool result = true;
             _level = -1;
@@ -498,14 +498,14 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                                 var doorsReqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && doorsReqIf.ExportUpdateRequirements(subPackageIndex);
+                                result = result && doorsReqIf.RoundtripUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
                                 var reqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && reqIf.ExportUpdateRequirements(subPackageIndex);
+                                result = result && reqIf.RoundtripUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
@@ -520,7 +520,74 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
             return true;
         }
 
-        
+        /// <summary>
+        /// Export all jobs of the current list number with the respectively defined settings. Currently only changed tagged values are exported/updated.
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <returns></returns>
+        public bool ExportBySetting(int listNumber)
+        {
+            bool result = true;
+            _level = -1;
+            _count = 0;
+            _countAll = 0;
+            _countPkg = 0;
+            _countItems = 0;
+            // over all packages
+            foreach (FileImportSettingsItem item in _importSettings)
+            {
+                if (Convert.ToInt32(item.ListNo) == listNumber)
+                {
+                   
+                    _importModuleFile = item.ExportFile;
+                   
+                    // handle more than one package
+                    int subPackageIndex = -1;
+                    // handle zip files like
+                    foreach (string guid in item.PackageGuidList)
+                    {
+                        subPackageIndex += 1;
+                        _pkg = _rep.GetPackageByGuid(guid);
+                        if (_pkg == null)
+                        {
+                            MessageBox.Show(
+                                $@"Package of export list {listNumber} with GUID='{guid}' not available.
+{item.Description}
+{item.Name}
+
+    Check Import settings in Settings.Json.",
+                                @"Package to import into isn't available, break!");
+                            return false;
+                        }
+
+                        switch (item.ImportType)
+                        {
+
+                            case FileImportSettingsItem.ImportTypes.DoorsReqIf:
+                                var doorsReqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                result = result && doorsReqIf.ExportRequirements(subPackageIndex);
+                                //await Task.Run(() =>
+                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+
+                            case FileImportSettingsItem.ImportTypes.ReqIf:
+                                var reqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                result = result && reqIf.ExportRequirements(subPackageIndex);
+                                //await Task.Run(() =>
+                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                break;
+
+                        }
+
+
+                    }
+                }
+            }
+
+            return true;
+        }
+
+
         /// <summary>
         /// Import all jobs of the current list number with the respectively defined settings.
         /// </summary>
