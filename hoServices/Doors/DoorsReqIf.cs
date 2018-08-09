@@ -9,7 +9,7 @@ using ReqIFSharp;
 
 namespace EaServices.Doors
 {
-    public class DoorsReqIf : ReqIf
+    public class DoorsReqIf : ReqIfs.ReqIf
     {
         /// <summary>
         /// Import of ReqIF DOORS Requirements

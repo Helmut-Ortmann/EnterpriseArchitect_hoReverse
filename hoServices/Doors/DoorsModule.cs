@@ -13,6 +13,7 @@ using LinqToDB.DataProvider;
 using hoUtils.Json;
 using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
+using EaServices.Doors.ReqIfs;
 
 namespace EaServices.Doors
 {
@@ -497,14 +498,14 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                         {
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && doorsReqIf.RoundtripUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIf.RoundtripUpdateRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
@@ -564,14 +565,14 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                         {
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && doorsReqIf.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIf(_rep, _pkg, _importModuleFile, item);
+                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIf.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
@@ -647,7 +648,7 @@ Check Import settings in Settings.Json.",
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
                                 result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,  eaStatusNew,
                                     eaStatusChanged);
                                 _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
@@ -656,7 +657,7 @@ Check Import settings in Settings.Json.",
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIf(_rep, _pkg, item.InputFile, item);
+                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
                                 result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex, eaStatusNew,
                                     eaStatusChanged);
                                 _reqIfDeserialized = reqIf.ReqIFDeserialized;
