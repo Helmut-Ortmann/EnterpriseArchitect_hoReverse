@@ -14,7 +14,14 @@ namespace EaServices.Doors.ReqIfs
         const string SpecificationTypeModuleId = @"specificationTypeModule";
         const string SpecificationTypeModuleName = @"SpecificationTypeModule";
         // Modulspecifisch, has to be estimated from ReqIF for a new module
-        SpecificationType _specificationTypeModule = null;
+        SpecificationType _specificationTypeModule;
+
+        const string SpecificationTypePrefixId = @"specificationType";
+        const string SpecificationTypePrefixName = @"SpecificationType";
+        // Modulspecifisch, has to be estimated from ReqIF for a new module
+        SpecificationType _specificationType;
+
+
 
         /// <summary>
         /// Export Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
@@ -57,22 +64,22 @@ namespace EaServices.Doors.ReqIfs
         private void WriteModule([NotNull]EA.Package pkg)
         {
             var reqIfContent = Enumerable.SingleOrDefault<ReqIFContent>(_reqIf.CoreContent);
+            string id = $"_{pkg.PackageGUID.Replace("{","").Replace("}", "").Replace("-", "_")}";
 
-
-
+            // Module specification
             var moduleSpecification = new Specification
             {
-                Description = $"Package name of EA Requirement Module, GUID={pkg.PackageGUID}",
-                Identifier = pkg.PackageGUID,
+                Description = $"Module specification of Package '{pkg.Name}', GUID={pkg.PackageGUID}",
+                Identifier = id,
                 LastChange = DateTime.Now,
-                LongName = pkg.Name,
-                Type = _specificationTypeModule ?? 
+                LongName = $"Module {pkg.Name}",
+                Type = _specificationTypeModule ?? // Find the general SpecificationType for modules
                        (SpecificationType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType) &&
                                                                                       x.Identifier == SpecificationTypeModuleId)
             };
-
-
             reqIfContent.Specifications.Add(moduleSpecification);
+
+            AddAttributesModuleSpecification(moduleSpecification, pkg);
 
         }
 
@@ -202,18 +209,182 @@ namespace EaServices.Doors.ReqIfs
                 LastChange = DateTime.Now
 
             };
-            //AddAttributeDefinitionsModule(specificationTypeModule, reqIfContent);
+            //AddSpecTypeAttributesCore(specificationTypeModule, reqIfContent);
 
-            //AddAttributeDefinitionsModule(specificationType, reqIfContent);
+            //AddSpecTypeAttributesCore(specificationType, reqIfContent);
+
+            AddAttributeDefinitionsToModuleSpecificationType(specificationTypeModule, reqIfContent);
             reqIfContent.SpecTypes.Add(specificationTypeModule);
             return specificationTypeModule;
         }
+
+
         /// <summary>
-        /// Add Attributes to SpecType.
+        /// Add Attribut definitions to SpecificationType of Module
         /// </summary>
         /// <param name="specType"></param>
         /// <param name="reqIfContent"></param>
-        private void AddAttributeDefinitionsModule(SpecType specType, ReqIFContent reqIfContent)
+        private void AddAttributeDefinitionsToModuleSpecificationType(SpecType specType, ReqIFContent reqIfContent)
+        {
+            var attributeDefinitionReqIfName = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Name",
+                Identifier = "specification-reqif-name",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML) reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqIfName);
+
+            var attributeDefinitionReqIfDescription = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Description",
+                Identifier = "specification-reqif-description",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML) reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqIfDescription);
+
+            var attributeDefinitionReqICreatedBy = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ForeignCreatedBy",
+                Identifier = "specification-reqif-createdby",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqICreatedBy);
+            var attributeDefinitionReqIModifiedBy = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ForeignModifiedBy",
+                Identifier = "specification-reqif-modifiedby",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqIModifiedBy);
+
+            var attributeDefinitionReqIModifiedOn = new AttributeDefinitionDate()
+            {
+                LongName = "ReqIF.ForeignModifiedOn",
+                Identifier = "specification-reqif-modified-on",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionDate)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionDate))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqIModifiedOn);
+
+            var attributeDefinitionReqCreatedOn = new AttributeDefinitionDate()
+            {
+                LongName = "ReqIF.ForeignCreatedOn",
+                Identifier = "specification-reqif-created-on",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionDate)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionDate))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqCreatedOn);
+
+
+            var attributeDefinitionReqPrefix = new AttributeDefinitionXHTML()
+            {
+                LongName = "ReqIF.Prefix",
+                Identifier = "specification-reqif-prefix",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqPrefix);
+
+        }
+
+
+        /// <summary>
+        /// Create and add the module specifications <see cref="SpecificationType"/> with attribute definitions
+        /// </summary>
+        private void AddAttributesModuleSpecification(SpecElementWithAttributes specElementWithAttributes,  EA.Package pkg)
+        {
+            EA.Element elPkg = Rep.GetElementByGuid(pkg.PackageGUID);
+            SpecType specType = specElementWithAttributes.SpecType;
+
+            // Name
+            var attributeValueXhtml = new AttributeValueXHTML
+            {
+                Definition = (AttributeDefinitionXHTML) specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.Identifier == "specification-reqif-name"),
+                TheValue = MakeXhtmlFromString(Rep, pkg.Name)
+            };
+            specElementWithAttributes.Values.Add(attributeValueXhtml);
+
+            // Description
+            attributeValueXhtml = new AttributeValueXHTML
+            {
+                Definition = (AttributeDefinitionXHTML) specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                    x.Identifier == "specification-reqif-description"),
+                    TheValue = MakeXhtmlFromString(Rep, pkg.Notes)
+            };
+            specElementWithAttributes.Values.Add(attributeValueXhtml);
+
+
+            // Prefix
+            attributeValueXhtml = new AttributeValueXHTML
+            {
+                Definition = (AttributeDefinitionXHTML)specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                    x.Identifier == "specification-reqif-prefix"),
+                TheValue = MakeXhtmlFromString("")
+            };
+            specElementWithAttributes.Values.Add(attributeValueXhtml);
+
+            // CreatedBy
+            attributeValueXhtml = new AttributeValueXHTML
+            {
+                Definition = (AttributeDefinitionXHTML)specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                    x.Identifier == "specification-reqif-createdby"),
+                TheValue = MakeXhtmlFromString(elPkg.Author)
+            };
+            specElementWithAttributes.Values.Add(attributeValueXhtml);
+
+            // CreatedOn
+            var attributeValueDate = new AttributeValueDate()
+            {
+                Definition = (AttributeDefinitionDate)specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionDate) &&
+                    x.Identifier == "specification-reqif-created-on"),
+                TheValue = elPkg.Created
+            };
+            specElementWithAttributes.Values.Add(attributeValueDate);
+
+            // ModifiedOn
+            attributeValueDate = new AttributeValueDate()
+            {
+                Definition = (AttributeDefinitionDate)specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionDate) &&
+                    x.Identifier == "specification-reqif-modified-on"),
+                TheValue = elPkg.Created
+            };
+            specElementWithAttributes.Values.Add(attributeValueDate);
+
+            // ModifiedBy
+            attributeValueXhtml = new AttributeValueXHTML
+            {
+                Definition = (AttributeDefinitionXHTML)specType.SpecAttributes.SingleOrDefault(x =>
+                    x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                    x.Identifier == "specification-reqif-modifiedby"),
+                TheValue = MakeXhtmlFromString("Not supported")
+            };
+            specElementWithAttributes.Values.Add(attributeValueXhtml);
+
+        }
+
+        /// <summary>
+        /// Add core attributes to SpecType.
+        /// </summary>
+        /// <param name="specType"></param>
+        /// <param name="reqIfContent"></param>
+        private void AddSpecTypeAttributesCore(SpecType specType, ReqIFContent reqIfContent)
         {
             var attributeDefinitionBoolean = new AttributeDefinitionBoolean();
             attributeDefinitionBoolean.LongName = "boolean attribute";

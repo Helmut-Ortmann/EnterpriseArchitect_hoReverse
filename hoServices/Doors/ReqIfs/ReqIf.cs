@@ -345,9 +345,31 @@ Value: '{eaValue}'
         private static string MakeXhtmlFromString(string stringValue)
         {
             stringValue = stringValue.Replace("\r\n", "<br></br>");
+            stringValue = stringValue.Replace("&nbsp;", "");
+            stringValue = Regex.Replace(stringValue, @">\s*<","><");  // Replace Blanks between control sequences
+
 
             string xhtmlcontent =
                 $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringValue}</reqif-xhtml:div>";
+            return xhtmlcontent;
+        }
+
+        /// <summary>
+        /// Make XHTML from a string. It inserts the xhtml namespace and handles cr/lf
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string MakeXhtmlFromString(EA.Repository rep, string stringText)
+        {
+            string stringHtml = rep.GetFormatFromField("HTML", stringText);
+            stringHtml = stringHtml.Replace("\r\n", "");
+            stringHtml = stringHtml.Replace("&nbsp;", "");
+            stringHtml = Regex.Replace(stringHtml, @">\s*<", "><");  // Replace Blanks between control sequences
+
+
+            string xhtmlcontent =
+                $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringHtml}</reqif-xhtml:div>";
             return xhtmlcontent;
         }
 
