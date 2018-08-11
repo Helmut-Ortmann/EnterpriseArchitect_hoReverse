@@ -52,8 +52,8 @@ namespace EaServices.Doors
 
         private List<FileImportSettingsItem> _importSettings;
 
-        private IDataProvider _provider;
-        private string _connectionString;
+        protected IDataProvider _provider;
+        protected string _connectionString;
 
         protected readonly string[] ColumnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
 

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using DataModels;
 using hoUtils.DirFile;
 using JetBrains.Annotations;
 using ReqIFSharp;
@@ -53,7 +55,71 @@ namespace EaServices.Doors.ReqIfs
             // serialize ReqIF
             return SerializeReqIf(ImportModuleFile);
         }
+        /// <summary>
+        /// Add Data Types for Enums
+        /// </summary>
+        /// <param name="pkg"></param>
+        private void GetTaggedValueTypes(ReqIF reqIf, EA.Package pkg)
+        {
+            using (var db = new EaDataModel(_provider, _connectionString))
+            {
+                var tvProperties = (from tv in db.t_objectproperties
+                    join o in db.t_object on tv.Object_ID equals o.Object_ID
+                    join p in db.t_package on o.Package_ID equals p.Package_ID
+                    join tvType in db.t_propertytypes on tv.Property equals tvType.Property
+                    where p.ea_guid == pkg.PackageGUID && tvType.Notes.Contains("Values=") && 
+                                                           (tvType.Notes.Contains("Type=Enum") || tvType.Notes.Contains("Type=CheckList"))
+                    orderby tvType.Property
+                    group tvType by new { Property = tvType.Property, Notes = tvType.Notes.Substring(0) } into grp  //, tvType.Notes
+                    select new { grp.Key.Property, grp.Key.Notes }).Distinct();
 
+                // make ReqIF DataTypes
+                var reqIfContent = reqIf.CoreContent.SingleOrDefault();
+                foreach (var tv in tvProperties)
+                {
+                    string idEnum = ReqIfUtils.MakeIdReqIfConform($"_{tv.Property}");
+                    var datatypeDefinitionEnumeration = new DatatypeDefinitionEnumeration
+                    {
+                        Description = $"{tv.Notes}",
+                        Identifier = idEnum,
+                        LastChange = DateTime.Now,
+                        LongName = $"{tv.Property}"
+                        
+                    };
+                    // get enumeration values
+                    Regex rx = new Regex("Values=([^;]*);");
+                    Match match = rx.Match(tv.Notes);
+                    if (match.Success)
+                    {
+                        int index = 0;
+                        foreach (var value in match.Groups[1].Value.Split(','))
+                        {
+                            index += 1;
+                            var embeddedValue = new EmbeddedValue
+                            {
+                                Key = index,
+                                OtherContent = value,
+
+                            };
+                            var enumValue = new EnumValue
+                            {
+                                Identifier = ReqIfUtils.MakeIdReqIfConform($"{idEnum}_{value}"),
+                                LastChange = DateTime.Now,
+                                LongName = value,
+                                Properties = embeddedValue
+                            };
+                            // Add enum value
+                            datatypeDefinitionEnumeration.SpecifiedValues.Add(enumValue);
+                        }
+                        
+                    }
+                    reqIfContent.DataTypes.Add(datatypeDefinitionEnumeration);
+
+                }
+
+            }
+
+        }
 
 
 
@@ -64,13 +130,12 @@ namespace EaServices.Doors.ReqIfs
         private void WriteModule([NotNull]EA.Package pkg)
         {
             var reqIfContent = Enumerable.SingleOrDefault<ReqIFContent>(_reqIf.CoreContent);
-            string id = $"_{pkg.PackageGUID.Replace("{","").Replace("}", "").Replace("-", "_")}";
 
             // Module specification
             var moduleSpecification = new Specification
             {
                 Description = $"Module specification of Package '{pkg.Name}', GUID={pkg.PackageGUID}",
-                Identifier = id,
+                Identifier = ReqIfUtils.IdFromGuid(pkg.PackageGUID),
                 LastChange = DateTime.Now,
                 LongName = $"Module {pkg.Name}",
                 Type = _specificationTypeModule ?? // Find the general SpecificationType for modules
@@ -80,6 +145,8 @@ namespace EaServices.Doors.ReqIfs
             reqIfContent.Specifications.Add(moduleSpecification);
 
             AddAttributesModuleSpecification(moduleSpecification, pkg);
+
+            GetTaggedValueTypes(_reqIf, pkg);
 
         }
 

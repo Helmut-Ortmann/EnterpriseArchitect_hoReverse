@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using DataModels;
 using EA;
 using hoReverse.hoUtils;
 using ReqIFSharp;
@@ -412,6 +413,7 @@ Value: '{eaValue}'
             }
 
         }
+       
 
 
         /// <summary>
