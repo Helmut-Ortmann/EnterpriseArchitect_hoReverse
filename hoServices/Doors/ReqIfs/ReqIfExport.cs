@@ -24,6 +24,8 @@ namespace EaServices.Doors.ReqIfs
         SpecificationType _specificationType;
         private SpecObjectType _specObjectType;
 
+        private Specification _moduleSpecification;
+
 
 
         /// <summary>
@@ -47,9 +49,31 @@ namespace EaServices.Doors.ReqIfs
             WriteModule(Pkg);
 
             CreateSpecObjects();
+            CreateSpecification();
 
             // serialize ReqIF
             return SerializeReqIf(ImportModuleFile);
+        }
+        /// <summary>
+        /// Create Specification with hierachy
+        /// </summary>
+        private void CreateSpecification()
+        {
+            var reqIfContent = _reqIf.CoreContent.SingleOrDefault();
+            var parent = _moduleSpecification;
+            foreach (EA.Element el in Pkg.Elements)
+            {
+                var idSpecObject = $"specObj{ReqIfUtils.IdFromGuid(el.ElementGUID)}";
+                var specObject = reqIfContent.SpecObjects.SingleOrDefault(x => x.Identifier == idSpecObject);
+                var specHierarchy = new SpecHierarchy()
+                {
+                    Identifier = $"speHierarchy{ReqIfUtils.IdFromGuid(el.ElementGUID)}",
+                    LastChange = el.Modified,
+                    LongName = el.Name,
+                    Object = specObject
+                };
+                parent.Children.Add(specHierarchy);
+            }
         }
 
 
@@ -264,7 +288,7 @@ namespace EaServices.Doors.ReqIfs
             var reqIfContent = Enumerable.SingleOrDefault<ReqIFContent>(_reqIf.CoreContent);
 
             // Module specification
-            var moduleSpecification = new Specification
+            _moduleSpecification = new Specification
             {
                 Description = $"Module specification of Package '{pkg.Name}', GUID={pkg.PackageGUID}",
                 Identifier = ReqIfUtils.IdFromGuid(pkg.PackageGUID),
@@ -274,9 +298,9 @@ namespace EaServices.Doors.ReqIfs
                        (SpecificationType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType) &&
                                                                                       x.Identifier == SpecificationTypeModuleId)
             };
-            reqIfContent.Specifications.Add(moduleSpecification);
+            reqIfContent.Specifications.Add(_moduleSpecification);
 
-            AddAttributesModuleSpecification(moduleSpecification, pkg);
+            AddAttributesModuleSpecification(_moduleSpecification, pkg);
             // Add datatypes for packages (enums)
             AddDatatypesForPackage(_reqIf, pkg);
             // AddSpecObj type for package/module
