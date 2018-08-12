@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using EaServices.Doors.ReqIfs;
 using hoLinqToSql.LinqUtils;
 using LinqToDB.DataProvider;
 
@@ -418,9 +419,7 @@ namespace EaServices.AddInSearch
                     dt.Columns.Add(tv.Name, typeof(string));
                 }
 
-                string value = tv.Value;
-                if (value.StartsWith("<memo>")) value = tv.Notes;
-                dataRow[$"{tv.Name}"] = value;
+                dataRow[$"{tv.Name}"] = ReqIfUtils.GetEaTaggedValue(tv.Value, tv.Notes);
             }
         }
         /// <summary>

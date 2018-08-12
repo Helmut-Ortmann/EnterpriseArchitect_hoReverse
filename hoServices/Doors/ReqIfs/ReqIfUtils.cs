@@ -36,5 +36,15 @@ namespace EaServices.Doors.ReqIfs
             if (!(Char.IsLetter(id[0]) || id[0] == '_')) id = $"_{id}";
             return id;
         }
+        /// <summary>
+        /// Get Tagged EA Tagged Value. It handles memo fileds
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="note"></param>
+        /// <returns></returns>
+        public static string GetEaTaggedValue(string value, string note)
+        {
+            return value.StartsWith("<memo>") ? note : value;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace EaServices.Doors.ReqIfs
     {
         // Identifier for export
         const string SpecificationTypeModuleId = @"specificationTypeModule";
-        const string SpecificationTypeModuleName = @"SpecificationTypeModule";
+        const string SpecificationTypeModuleName = @"Modules/Packages";
         // Modulspecifisch, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
 
@@ -22,6 +22,7 @@ namespace EaServices.Doors.ReqIfs
         const string SpecificationTypePrefixName = @"SpecificationType";
         // Modulspecifisch, has to be estimated from ReqIF for a new module
         SpecificationType _specificationType;
+        private SpecObjectType _specObjectType;
 
 
 
@@ -45,21 +46,107 @@ namespace EaServices.Doors.ReqIfs
 
             WriteModule(Pkg);
 
-            // Export ReqIF SpecObjects stored in EA
-            foreach (EA.Element el in Pkg.Elements)
-            {
-                _level = 0;
-                //if (!UpdateReqIfForElementRecursive(el)) return false;
-            }
+            CreateSpecObjects();
 
             // serialize ReqIF
             return SerializeReqIf(ImportModuleFile);
         }
+
+
+        /// <summary>
+        /// Create SpecObject for all Requirements of Package
+        /// </summary>
+        private void CreateSpecObjects()
+        {
+            var reqIfContent = _reqIf.CoreContent.SingleOrDefault();
+            using (var db = new EaDataModel(_provider, _connectionString))
+            {
+                var reqs = from r in db.t_object
+                    join pkg in db.t_package on r.Package_ID equals pkg.Package_ID
+                    join tv in db.t_objectproperties on r.Object_ID equals tv.Object_ID
+                    where pkg.ea_guid == Pkg.PackageGUID
+                    orderby r.Name, tv.Property
+                    select new {Name=r.Name,Guid=r.ea_guid, Desc=r.Note,  TvName= tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
+                string currentGuid = "";
+                SpecObject specObject = null;
+                foreach (var r in reqs)
+                {
+                    // new Requirements
+                    if (currentGuid != r.Guid)
+                    {
+                        currentGuid = r.Guid;
+                        
+                        specObject = new SpecObject
+                        {
+                            LongName = $"{r.Name}",
+                            Identifier = $"specObj{ReqIfUtils.IdFromGuid(r.Guid)}",  
+                            LastChange = DateTime.Now,
+                            Type       = _specObjectType
+                        };
+                        // Attribute Name
+                        var attributeValueXhtml = new AttributeValueXHTML
+                        {
+                            Definition =
+                                (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Name"),
+                            TheValue = MakeXhtmlFromString(r.Name)
+                        };
+                        specObject.Values.Add(attributeValueXhtml);
+                        // Attribute Text
+                        attributeValueXhtml = new AttributeValueXHTML
+                        {
+                            Definition =
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text"),
+                            TheValue = MakeXhtmlFromString(Rep,r.Desc)
+                        };
+                        specObject.Values.Add(attributeValueXhtml);
+
+
+                        reqIfContent.SpecObjects.Add(specObject);
+
+
+                    }
+                    // Add Tagged Value
+                    // Check if enumeration
+                    var dataTypeEnumeration = (DatatypeDefinitionEnumeration)reqIfContent.DataTypes.SingleOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
+                                                                                                                         && x.LongName == r.TvName);
+                    if (dataTypeEnumeration == null)
+                    {
+                        var attributeValueXhtml = new AttributeValueXHTML
+                        {
+                            Definition =
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
+                            TheValue = MakeXhtmlFromString(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue,r.TvNote))
+                        };
+                        specObject.Values.Add(attributeValueXhtml);
+                    }
+                    else
+                    {
+                        var attributeDefinitionEnumeration =
+                            (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == r.TvName);
+                        var attributeValueEnumeration = new AttributeValueEnumeration
+                        {
+                            Definition = attributeDefinitionEnumeration
+
+                        };
+                        SetReqIfEnumValue(attributeValueEnumeration, r.TvValue, attributeDefinitionEnumeration.IsMultiValued);
+                        specObject.Values.Add(attributeValueEnumeration);
+                        
+                    }
+                    
+                }
+            }
+
+        }
+
         /// <summary>
         /// Add Data Types for Enums
         /// </summary>
         /// <param name="pkg"></param>
-        private void GetTaggedValueTypes(ReqIF reqIf, EA.Package pkg)
+        private void AddDatatypesForPackage(ReqIF reqIf, EA.Package pkg)
         {
             using (var db = new EaDataModel(_provider, _connectionString))
             {
@@ -145,8 +232,167 @@ namespace EaServices.Doors.ReqIfs
             reqIfContent.Specifications.Add(moduleSpecification);
 
             AddAttributesModuleSpecification(moduleSpecification, pkg);
+            // Add datatypes for packages (enums)
+            AddDatatypesForPackage(_reqIf, pkg);
+            // AddSpecObj type for package/module
+            AddSpeObjectTypeForModule(_reqIf, pkg);
 
-            GetTaggedValueTypes(_reqIf, pkg);
+        }
+
+        /// <summary>
+        /// Add Spec object type for module/package
+        /// </summary>
+        /// <param name="reqIf"></param>
+        /// <param name="pkg"></param>
+        private void AddSpeObjectTypeForModule(ReqIF reqIf, EA.Package pkg)
+        {
+            var reqIfContent = reqIf.CoreContent.SingleOrDefault();
+            // SpecObjType of package/module
+            _specObjectType = new SpecObjectType
+            {
+                LongName = $"{pkg.Name}",
+                Identifier = $"specObjT{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now
+               };
+
+            
+            // Add Standard Attributes
+            // 
+            var attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Name",
+                Identifier = $"attr_ReqIF.Name{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML) reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ChapterName",
+                Identifier = $"attr_ReqIF.ChapterName{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Text",
+                Identifier = $"attr_ReqIF.Text{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+           _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ForeignModifiedBy",
+                Identifier = $"attr_ReqIF.ModifiedBy{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ForeignCreatedBy",
+                Identifier = $"attr_ReqIF.CreatedBy{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+
+            var attributeDefinitionDate = new AttributeDefinitionDate()
+            {
+                LongName = "ReqIF.ForeignCreatedOn",
+                Identifier = $"attr_ReqIF.CreatedOn{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionDate)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionDate))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            attributeDefinitionDate = new AttributeDefinitionDate()
+            {
+                LongName = "ReqIF.ForeignModifiedOn",
+                Identifier = $"attr_ReqIF.ModifiedOn{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionDate)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionDate))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            var attributeDefinitionBool = new AttributeDefinitionBoolean()
+            {
+                LongName = "ReqIF.ForeignDeleted",
+                Identifier = $"attr_ReqIF.Deleted{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionBoolean)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionBoolean))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionBool);
+            var attributeDefinitionInteger = new AttributeDefinitionInteger()
+            {
+                LongName = "ReqIF.ForeignId",
+                Identifier = $"attr_ReqIF.ForeignId{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionInteger)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionInteger))
+            };
+            _specObjectType.SpecAttributes.Add(attributeDefinitionInteger);
+
+
+            using (var db = new EaDataModel(_provider, _connectionString))
+            {
+                // get all TVs
+                var tvs = (from tv in db.t_objectproperties
+                join o in db.t_object on tv.Object_ID equals o.Object_ID
+                join p in db.t_package on o.Package_ID equals p.Package_ID
+                where p.ea_guid == pkg.PackageGUID
+                orderby tv.Property
+                //group tv by new { tv.Property, tv.PropertyID} into grp
+                select tv.Property).Distinct();
+
+                // add attributes of the tagged values
+                foreach (var tvName in tvs)
+                {
+                    // Check if enum (Type=Enum; or Type=Checklist;)
+                    var dataTypeEnumeration = (DatatypeDefinitionEnumeration)reqIfContent.DataTypes.SingleOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
+                                                                                                                         && x.LongName == tvName);
+                    if (dataTypeEnumeration == null)
+                    {
+                        attributeDefinitionXhtml = new AttributeDefinitionXHTML
+                        {
+                            LongName = $"{tvName}",
+                            Identifier = ReqIfUtils.MakeIdReqIfConform($"attr{pkg.Name}_{tvName}"),
+                            LastChange = DateTime.Now,
+                            Type = (DatatypeDefinitionXHTML) reqIfContent.DataTypes.SingleOrDefault(x =>
+                                x.GetType() == typeof(DatatypeDefinitionXHTML))
+                        };
+                        _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+
+                    }
+                    else
+                    { // Enumeration
+                        
+                       
+                       var attributeDefinitionEnumeration = new AttributeDefinitionEnumeration
+                            {
+                                LongName = $"{tvName}",
+                                Identifier = ReqIfUtils.MakeIdReqIfConform($"attr{pkg.Name}_{tvName}"),
+                                LastChange = DateTime.Now,
+                                Type = dataTypeEnumeration
+                            };
+                        if (dataTypeEnumeration.Description.Contains("Type=CheckList"))
+                            attributeDefinitionEnumeration.IsMultiValued = true;
+                        _specObjectType.SpecAttributes.Add(attributeDefinitionEnumeration);
+
+                    }
+                }
+            }
+            // Add Attrributes to SpecObjType
+            reqIfContent.SpecTypes.Add(_specObjectType);
+
 
         }
 
