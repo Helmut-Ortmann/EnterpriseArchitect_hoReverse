@@ -66,7 +66,7 @@ namespace EaServices.Doors.ReqIfs
                     join tv in db.t_objectproperties on r.Object_ID equals tv.Object_ID
                     where pkg.ea_guid == Pkg.PackageGUID
                     orderby r.Name, tv.Property
-                    select new {Name=r.Name,Guid=r.ea_guid, Desc=r.Note,  TvName= tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
+                    select new {Name=r.Name,ModifiedOn=r.ModifiedDate, CreatedOn = r.CreatedDate, Author=r.Author, Guid =r.ea_guid, Desc=r.Note,  TvName= tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
                 string currentGuid = "";
                 SpecObject specObject = null;
                 foreach (var r in reqs)
@@ -83,8 +83,53 @@ namespace EaServices.Doors.ReqIfs
                             LastChange = DateTime.Now,
                             Type       = _specObjectType
                         };
+                        // ID
+                        var attributeValueString = new AttributeValueString
+                        {
+                            Definition =
+                                (AttributeDefinitionString)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionString) && x.LongName == "ReqIF.ForeignId"),
+                            TheValue = r.Guid
+                        };
+                        specObject.Values.Add(attributeValueString);
+                        // Created on
+                        var attributeValueDate = new AttributeValueDate
+                        {
+                            Definition =
+                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionDate) && x.LongName == "ReqIF.ForeignCreatedOn"),
+                            TheValue = (DateTime)r.CreatedOn
+                        };
+                        specObject.Values.Add(attributeValueDate);
+                        // Created on
+                        attributeValueDate = new AttributeValueDate
+                        {
+                            Definition =
+                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionDate) && x.LongName == "ReqIF.ForeignModifiedOn"),
+                            TheValue = (DateTime)r.ModifiedOn
+                        };
+                        specObject.Values.Add(attributeValueDate);
+                        // Created by
+                        var attributeValueXhtml = new AttributeValueXHTML()
+                        {
+                            Definition =
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignCreatedBy"),
+                            TheValue = MakeXhtmlFromString(r.Author)
+                        };
+                        specObject.Values.Add(attributeValueXhtml);
+                        // Modified by
+                        attributeValueXhtml = new AttributeValueXHTML
+                        {
+                            Definition =
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignModifiedBy"),
+                            TheValue = MakeXhtmlFromString("not supported")
+                        };
+                        specObject.Values.Add(attributeValueXhtml);
                         // Attribute Name
-                        var attributeValueXhtml = new AttributeValueXHTML
+                        attributeValueXhtml = new AttributeValueXHTML
                         {
                             Definition =
                                 (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
@@ -331,15 +376,15 @@ namespace EaServices.Doors.ReqIfs
                     x.GetType() == typeof(DatatypeDefinitionBoolean))
             };
             _specObjectType.SpecAttributes.Add(attributeDefinitionBool);
-            var attributeDefinitionInteger = new AttributeDefinitionInteger()
+            var attributeDefinitionString = new AttributeDefinitionString()
             {
                 LongName = "ReqIF.ForeignId",
                 Identifier = $"attr_ReqIF.ForeignId{ReqIfUtils.IdFromGuid(pkg.PackageGUID)}",
                 LastChange = DateTime.Now,
-                Type = (DatatypeDefinitionInteger)reqIfContent.DataTypes.SingleOrDefault(x =>
-                    x.GetType() == typeof(DatatypeDefinitionInteger))
+                Type = (DatatypeDefinitionString)reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionString))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionInteger);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionString);
 
 
             using (var db = new EaDataModel(_provider, _connectionString))
