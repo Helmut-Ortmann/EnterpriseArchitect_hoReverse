@@ -9,6 +9,23 @@ namespace hoUtils.Compression
     {
         const string TempDirectory = "hoReqIf";
 
+
+        /// <summary>
+        /// Create a temp directory
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateTempDir()
+        {
+            string tempPath = Path.GetTempPath();
+            tempPath = Path.Combine(tempPath, TempDirectory);
+            // Delete directory if exists
+            if (Directory.Exists(tempPath))
+                Directory.Delete(tempPath, recursive: true);
+            Directory.CreateDirectory(tempPath);
+            return tempPath;
+
+        }
+
         /// <summary>
         /// Extract the zip file to an extract directory. If no extractDirectory exists a temp directory is created
         /// </summary>
@@ -22,11 +39,7 @@ namespace hoUtils.Compression
             // estimate extract path for a temporary dictionars
             if (String.IsNullOrWhiteSpace(extractPath))
             {
-                extractPath = Path.GetTempPath();
-                extractPath = Path.Combine(extractPath, TempDirectory);
-                if (Directory.Exists(extractPath))
-                    Directory.Delete(extractPath,recursive:true);
-                Directory.CreateDirectory(extractPath);
+                extractPath = CreateTempDir();
             }
 
             // Ensures that the last character on the extraction path

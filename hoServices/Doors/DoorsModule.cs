@@ -57,7 +57,7 @@ namespace EaServices.Doors
 
         protected readonly string[] ColumnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
 
-        private readonly string packageNameDeletedObjects = "DeletedDoorsRequirements";
+        private readonly string packageNameDeletedObjects = "Trash";
 
         /// <summary>
         /// Initialize basic
@@ -437,7 +437,7 @@ namespace EaServices.Doors
         }
 
         /// <summary>
-        /// Export all jobs of the current list number with the respectively defined settings. Currently only changed tagged values are exported/updated.
+        /// Export all jobs of the current list number with the respectively defined settings. Only changed tagged values are exported/updated.
         /// </summary>
         /// <param name="listNumber"></param>
         /// <returns></returns>
@@ -605,79 +605,7 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                         MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
                         return false;
                     }
-                    // handle more than one package
-                    int subPackageIndex = -1;
-                    // handle zip files like
-                    foreach (string guid in item.PackageGuidList)
-                    {
-                        subPackageIndex += 1;
-                        _pkg = _rep.GetPackageByGuid(guid);
-                        if (_pkg == null)
-                        {
-                            MessageBox.Show(
-                                $@"Package of import list {listNumber} with GUID='{guid}' not available.
-{item.Description}
-{item.Name}
-
-Check Import settings in Settings.Json.",
-                            @"Package to import into isn't available, break!");
-                        return false;
-                    }
-
-                    
-                    string eaObjectType = item.ObjectType;
-                    string eaStereotype = item.Stereotype;
-                    string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None"
-                        ? ""
-                        : item.StatusNew;
-                    string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None"
-                        ? ""
-                        : item.StatusChanged;
-
-
-                    
-
-                        switch (item.ImportType)
-                        {
-                            case FileImportSettingsItem.ImportTypes.DoorsCsv:
-                                var doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item);
-                                result = result && doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
-                                    eaStatusChanged);
-                                //await Task.Run(() =>
-                                //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
-
-                            case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                                result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,  eaStatusNew,
-                                    eaStatusChanged);
-                                _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
-                                //await Task.Run(() =>
-                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
-
-                            case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                                result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex, eaStatusNew,
-                                    eaStatusChanged);
-                                _reqIfDeserialized = reqIf.ReqIFDeserialized;
-                                //await Task.Run(() =>
-                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
-
-                            case FileImportSettingsItem.ImportTypes.XmlStruct:
-                                var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
-                                result = result && xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
-                                    eaStatusChanged);
-                                //await Task.Run(() =>
-                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
-                        }
-                        
-                        
-
-
-                    }
+                    if (!ImportByReqifFile(listNumber, item, ref result)) return false;
                     // run for package
                     // handle links
                     if (_reqIfDeserialized != null && 
@@ -693,7 +621,84 @@ Check Import settings in Settings.Json.",
             return result;
 
         }
-       
+
+        private bool ImportByReqifFile(int listNumber, FileImportSettingsItem item, ref bool result)
+        {
+// handle more than one package
+            int subPackageIndex = -1;
+            // handle zip files like
+            foreach (string guid in item.PackageGuidList)
+            {
+                subPackageIndex += 1;
+                _pkg = _rep.GetPackageByGuid(guid);
+                if (_pkg == null)
+                {
+                    MessageBox.Show(
+                        $@"Package of import list {listNumber} with GUID='{guid}' not available.
+{item.Description}
+{item.Name}
+
+Check Import settings in Settings.Json.",
+                        @"Package to import into isn't available, break!");
+                    return false;
+                }
+
+
+                string eaObjectType = item.ObjectType;
+                string eaStereotype = item.Stereotype;
+                string eaStatusNew = String.IsNullOrEmpty(item.StatusNew) || item.StatusNew == "None"
+                    ? ""
+                    : item.StatusNew;
+                string eaStatusChanged = String.IsNullOrEmpty(item.StatusChanged) || item.StatusChanged == "None"
+                    ? ""
+                    : item.StatusChanged;
+
+
+                switch (item.ImportType)
+                {
+                    case FileImportSettingsItem.ImportTypes.DoorsCsv:
+                        var doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item);
+                        result = result && doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                                     eaStatusChanged);
+                        //await Task.Run(() =>
+                        //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        break;
+
+                    case FileImportSettingsItem.ImportTypes.DoorsReqIf:
+                        var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
+                        result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,
+                                     eaStatusNew,
+                                     eaStatusChanged);
+                        _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
+                        if (doorsReqIf.CountPackage > 1) return result;
+                        //await Task.Run(() =>
+                        //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        break;
+
+                    case FileImportSettingsItem.ImportTypes.ReqIf:
+                        var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
+                        result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,
+                                     eaStatusNew,
+                                     eaStatusChanged);
+                        _reqIfDeserialized = reqIf.ReqIFDeserialized;
+                        if (reqIf.CountPackage > 1) return result;
+                        //await Task.Run(() =>
+                        //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        break;
+
+                    case FileImportSettingsItem.ImportTypes.XmlStruct:
+                        var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
+                        result = result && xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                                     eaStatusChanged);
+                        //await Task.Run(() =>
+                        //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        break;
+                }
+            }
+
+            return true;
+        }
+
 
         protected EA.Repository Rep { get => _rep; set => _rep = value; }
         protected EA.Package Pkg { get => _pkg; set => _pkg = value; }

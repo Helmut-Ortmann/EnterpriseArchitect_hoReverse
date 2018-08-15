@@ -29,6 +29,7 @@
     </SuppressIces>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Lib" />
     <Folder Include="Scripts\" />
     <Folder Include="Wxs" />
     <Folder Include="Wxs\Collect" />

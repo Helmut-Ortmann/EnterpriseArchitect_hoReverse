@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using DataModels;
+using hoUtils.Compression;
 using hoUtils.DirFile;
 using JetBrains.Annotations;
 using ReqIFSharp;
@@ -44,20 +46,26 @@ namespace EaServices.Doors.ReqIfs
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
 
             // Write header, delete file if first package
-            _reqIf = AddHeader(ImportModuleFile, subModuleIndex == 0);
+            _reqIf = AddHeader(ImportModuleFile, newFile:subModuleIndex==0);
+            _reqIfContent = _reqIf.CoreContent.SingleOrDefault();
 
             WriteModule(Pkg);
 
             CreateSpecObjects();
-            CreateSpecification();
+            CreateSpecHierarchy();
 
             // serialize ReqIF
-            return SerializeReqIf(ImportModuleFile);
+            string fileReqIf = Path.Combine(Zip.CreateTempDir(), Path.GetFileName(ImportModuleFile));
+            SerializeReqIf(fileReqIf, compress:false);
+            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf));
+            return true;
+
+
         }
         /// <summary>
         /// Create Specification with hierachy
         /// </summary>
-        private void CreateSpecification()
+        private void CreateSpecHierarchy()
         {
             var reqIfContent = _reqIf.CoreContent.SingleOrDefault();
             var parent = _moduleSpecification;
@@ -73,7 +81,30 @@ namespace EaServices.Doors.ReqIfs
                     Object = specObject
                 };
                 parent.Children.Add(specHierarchy);
+                foreach (EA.Element child in el.Elements)
+                {
+                    CreateSpecHierarchyElement(specHierarchy, child);
+                }
             }
+        }
+
+        private void CreateSpecHierarchyElement(SpecHierarchy parent, EA.Element el)
+        {
+            var idSpecObject = $"specObj{ReqIfUtils.IdFromGuid(el.ElementGUID)}";
+            var specObject = _reqIfContent.SpecObjects.SingleOrDefault(x => x.Identifier == idSpecObject);
+            var specHierarchy = new SpecHierarchy()
+            {
+                Identifier = $"speHierarchy{ReqIfUtils.IdFromGuid(el.ElementGUID)}",
+                LastChange = el.Modified,
+                LongName = el.Name,
+                Object = specObject
+            };
+            parent.Children.Add(specHierarchy);
+            foreach (EA.Element child in el.Elements)
+            {
+                CreateSpecHierarchyElement(specHierarchy, child);
+            }
+
         }
 
 
@@ -233,6 +264,10 @@ namespace EaServices.Doors.ReqIfs
                 var reqIfContent = reqIf.CoreContent.SingleOrDefault();
                 foreach (var tv in tvProperties)
                 {
+                    // Check if Enumeration-Datatype already exists
+                    var dataTypeEnumeration = (DatatypeDefinitionEnumeration)reqIfContent.DataTypes.FirstOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
+                                                                                                                        && x.LongName == tv.Property);
+                    if (dataTypeEnumeration != null) continue;
                     string idEnum = ReqIfUtils.MakeIdReqIfConform($"_{tv.Property}");
                     var datatypeDefinitionEnumeration = new DatatypeDefinitionEnumeration
                     {
@@ -426,8 +461,10 @@ namespace EaServices.Doors.ReqIfs
                 foreach (var tvName in tvs)
                 {
                     // Check if enum (Type=Enum; or Type=Checklist;)
+                    //var dataTypeEnumeration = (DatatypeDefinitionEnumeration)reqIfContent.DataTypes.FirstOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
+                    //                                                                                                     && x.LongName == tvName);
                     var dataTypeEnumeration = (DatatypeDefinitionEnumeration)reqIfContent.DataTypes.SingleOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
-                                                                                                                         && x.LongName == tvName);
+                                                                                                                        && x.LongName == tvName);
                     if (dataTypeEnumeration == null)
                     {
                         attributeDefinitionXhtml = new AttributeDefinitionXHTML
@@ -480,8 +517,8 @@ namespace EaServices.Doors.ReqIfs
             if (File.Exists(file))
             {
                 // decompress reqif file and its embedded files
-                string importReqIfFile = Decompress(file);
-                if (String.IsNullOrWhiteSpace(importReqIfFile)) return null;
+                string[] importReqIfFile = Decompress(file);
+                if (String.IsNullOrWhiteSpace(importReqIfFile[0])) return null;
 
                 // Deserialize
                 ReqIFDeserializer deserializer = new ReqIFDeserializer();
