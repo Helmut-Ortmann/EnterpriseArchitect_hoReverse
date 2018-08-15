@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.2 ReqIF Eport from EA
+-  Fix error nested AddinQuery (Elements without Tagged Values)
+-  linq2db 2.2.0
+
 3.1.1 Add-In Search with LINQ to SQL (rearly fast for recursive search)
 
 3.1 ReqIF import with Links between Requirements

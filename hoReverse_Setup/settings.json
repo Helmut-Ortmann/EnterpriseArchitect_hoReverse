@@ -371,6 +371,7 @@
   // - RtfNameList      List of attribute names to import into the EA property 'Linked Document', e.g.  ["Object Text",]
   // - AliasList        List of attribute names to import into the EA property 'Alias', e.g. ["RequirementID"] or ["ReqIF.ForeignID"]
   // - AttrNameList     List of attribute names to import into the EA property 'Name', e.g.  ["RequirementID", "Object Heading", "Object Text"]
+  // - ExportMappingList List of Mapping EA properties and Tagged values to ReqIF Attributes
   // - EmbeddedFileStorageDictionary
   //                    Dictionary of embedded files to store. If blank or empty then don't store 
   //                    DOORS: Doors stores files as *.ole files which currently can't be opened
@@ -432,6 +433,27 @@
 	  },
 	  {
 		  "Name"            :  "13. Roundtrip 'RoundTrip_Arch.reqifz'",
+		  "Description"     :  "Roundtrip with DOORS",
+		  "ListNo"          :  "13", 
+		  "InputFile"       :  "c:/hoData/Projects/00Current/Veoneer/ReqIF/RoundTrip_Arch.reqifz" ,
+		  "ExportFile"      :  "c:/hoData/Projects/00Current/Veoneer/ReqIF/RoundTrip_ArchExport.reqifz" ,
+		  "PackageGuidList" :  ["{F199A750-C7BF-4625-A95D-F4C1AF8E4900}","{157D337C-13BB-4fc0-AA10-79F0A7587C99}" ],
+		  "PrefixTaggedValueTypeList": ["ArchA_", "ArchB_"],
+		  "ObjectType"      :  "Requirement", 
+		  "Stereotype"      :  "",
+		  "ImportType"      :  "DoorsReqIF", 
+		  "StatusNew"       :  "Proposed",
+		  "StatusChanged"   :  "None",
+		  "RtfNameList"     :  ["ReqIF.Text"],
+		  "AttrNameList"    :  ["ReqIF.ForeignID", "ReqIF.Chaptername", "ReqIF.Text"],
+		  "AttrNotes"       :  "ReqIF.Text",
+		  "AliasList"       :  ["ReqIF.ForeignID"],
+		  "EmbeddedFileStorageDictionary" : "c:/Temp/ReqIF/Store/12/",
+		  "WriteAttrNameList": [ "_ArchBlockId=EA.GUID", "_ArchitectureStatComment","_ArchitectureStatus","_SortingCrit"]
+	  },
+	  ,
+	  {
+		  "Name"            :  "14. Export 'RoundTrip_Arch.reqifz'",
 		  "Description"     :  "Roundtrip with DOORS",
 		  "ListNo"          :  "13", 
 		  "InputFile"       :  "c:/hoData/Projects/00Current/Veoneer/ReqIF/RoundTrip_Arch.reqifz" ,

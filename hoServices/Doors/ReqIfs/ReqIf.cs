@@ -31,7 +31,7 @@ namespace EaServices.Doors.ReqIfs
         
         public int CountPackage = 0;
         ReqIF _reqIf;
-        private ReqIFContent _reqIfContent;
+        ReqIFContent _reqIfContent;
 
         /// <summary>
         /// Deserialized ReqIF
@@ -307,16 +307,22 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                 switch (attributeType)
                 {
                     case AttributeDefinitionString _:
-                        attrValueObject = new AttributeValueString();
-                        attrValueObject.AttributeDefinition = attributeType;
+                        attrValueObject = new AttributeValueString
+                        {
+                            AttributeDefinition = attributeType
+                        };
                         break;
                     case AttributeDefinitionXHTML _:
-                        attrValueObject = new AttributeValueXHTML();
-                        attrValueObject.AttributeDefinition = attributeType;
+                        attrValueObject = new AttributeValueXHTML
+                        {
+                            AttributeDefinition = attributeType
+                        };
                         break;
                     case AttributeDefinitionEnumeration moduleAttributDefinitionEnumeration:
-                        attrValueObject = new AttributeValueEnumeration();
-                        attrValueObject.AttributeDefinition = attributeType;
+                        attrValueObject = new AttributeValueEnumeration
+                        {
+                            AttributeDefinition = attributeType
+                        };
                         multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
 
                         break;

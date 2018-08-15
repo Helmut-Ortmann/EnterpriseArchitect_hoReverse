@@ -105,6 +105,29 @@ namespace EaServices.Doors
         [JsonProperty("PackageGuidList")]
         private List<string>  _packageGuidList;
 
+        /// <summary>
+        /// Export Mapping List to map EA Attributes to ReqIF Attributes.
+        ///
+        /// Example:
+        /// ["ReqIF.Text=EA.LinkedDocument;", "ReqIF.ForeignID=EA.GUID"]
+        /// Supported:
+        /// - ReqIF.Name  (default: Name)
+        /// - ReqIF.Text  (default: Linked Document, Notes)
+        /// - ReqIF.ForeignID (default: EA.GUID)
+        /// - EA.LinkedDocument
+        /// - EA.Alias
+        /// - EA.GUID (GUID of requirement or whatever EA type you use)
+        /// - EA.Note (EA Notes)
+        /// </summary>
+        [JsonIgnore]
+        public List<string> ExportMappingList
+        {
+            get => _exportMappingList ?? new List<string>();
+            set => _exportMappingList = value;
+        }
+        [JsonProperty("ExportMappingList")]
+        private List<string> _exportMappingList;
+
 
         /// <summary>
         /// Get comma separated list of GUIDs ('guid1','guid2')
