@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using DataModels;
 using EA;
 using hoReverse.hoUtils;
 using ReqIFSharp;
@@ -13,8 +14,9 @@ using File = System.IO.File;
 using Path = System.IO.Path;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 
-namespace EaServices.Doors
+namespace EaServices.Doors.ReqIfs
 {
+
     /// <summary>
     /// Import ReqIf requirements. The subclass ReqIfDoors handles DOORS specific features (currently not used). It handles:
     /// - *.reqif
@@ -23,10 +25,13 @@ namespace EaServices.Doors
     /// - Modules (in settings give two package GUIDs
     /// Currently ReqIf doesn't support embedded files other than image (no ole, excel, pdf)
     /// </summary>
-    public class ReqIf : DoorsModule
+    public partial class ReqIf : DoorsModule
     {
         readonly string Tab = "\t";
+        
+        public int CountPackage = 0;
         ReqIF _reqIf;
+        private ReqIFContent _reqIfContent;
 
         /// <summary>
         /// Deserialized ReqIF
@@ -68,33 +73,52 @@ namespace EaServices.Doors
         }
 
         /// <summary>
-        /// Export updated Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
+        /// Roundtrip / updated Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
         /// </summary>
         /// <param name="subModuleIndex"></param>
         /// <returns></returns>
-        public override bool ExportUpdateRequirements(int subModuleIndex = 0)
+        public override bool RoundtripUpdateRequirements(int subModuleIndex = 0)
         {
+            CountPackage = 0;
             _subModuleIndex = subModuleIndex;
             // Calculate the column/taggedValueType prefix for current module
             _prefixTv = _settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
                 ? _settings.PrefixTaggedValueTypeList[subModuleIndex]
                 : "";
 
-
             _errorMessage1 = false;
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
             // decompress reqif file and its embedded files
-            string importReqIfFile = Decompress(ImportModuleFile);
-            if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
+            string[] importReqIfFiles = Decompress(ImportModuleFile);
+            if (importReqIfFiles.Length == 0) return false;
 
-            // Deserialize
+            // over all import files
+            foreach (var file in importReqIfFiles)
+            {
+                CountPackage += 1;
+                // estimate package
+                string pkgGuid = _settings.PackageGuidList[_subModuleIndex];
+                Pkg = Rep.GetPackageByGuid(pkgGuid);
+
+                bool result = RoundtripFile(file, subModuleIndex);
+                if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
+                if (result == false || _errorMessage1) return false;
+            }
+            Compress(ImportModuleFile, Path.GetDirectoryName(importReqIfFiles[0]));
+            return true;
+
+        }
+
+        private bool RoundtripFile(string file, int subModuleIndex)
+        {
+// Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            _reqIf = deserializer.Deserialize(importReqIfFile);
+            _reqIf = deserializer.Deserialize(file);
             _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
             // Modules
             if (subModuleIndex >= _reqIf.CoreContent[0].Specifications.Count)
             {
-                MessageBox.Show($@"File: '{importReqIfFile}'
+                MessageBox.Show($@"File: '{file}'
 Contains: {_reqIf.CoreContent.Count} modules
 Requested: {_reqIf.CoreContent.Count}
 Packages (per module one package/guid) are defined in Settings.json: 
@@ -106,7 +130,7 @@ Packages (per module one package/guid) are defined in Settings.json:
             // Modules
             if (_reqIf.CoreContent[0].Specifications.Count == 0)
             {
-                MessageBox.Show($@"File: '{importReqIfFile}'
+                MessageBox.Show($@"File: '{file}'
 Contains: {_reqIf.CoreContent.Count} modules
 Requested: {_reqIf.CoreContent.Count}
 No module is defined in Settings.json: 
@@ -117,12 +141,12 @@ No module is defined in Settings.json:
 
             if (Pkg.Elements.Count == 0)
             {
-                MessageBox.Show($@"File: '{importReqIfFile}'
+                MessageBox.Show($@"File: '{file}'
 Contains: {_reqIf.CoreContent.Count} modules
 
-Export/Roundtrip needs at least initial import and model elements in EA!
+Roundtrip needs at least initial import and model elements in EA!
 
-", @"No ReqIF initial import for an Roundtrip export available, break!");
+", @"No ReqIF initial import for an Roundtrip available, break!");
                 return false;
             }
 
@@ -134,8 +158,9 @@ Export/Roundtrip needs at least initial import and model elements in EA!
             }
 
             // serialize ReqIF
-            return SerializeReqIf(ImportModuleFile);
+            return SerializeReqIf(file, compress:false);
         }
+
 
         /// <summary>
         /// Recursive update an element
@@ -168,16 +193,20 @@ Export/Roundtrip needs at least initial import and model elements in EA!
 
         }
 
+
+        
+
         /// <summary>
         /// Serialize ReqIF
         /// </summary>
-        /// <param name="zipPath"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        bool SerializeReqIf(string zipPath)
+        bool SerializeReqIf(string file, bool compress=true)
         {
             var serializer = new ReqIFSerializer(false);
-            string pathSerialize = Path.Combine(Path.GetDirectoryName(zipPath),
-                $"_{Path.GetFileNameWithoutExtension(zipPath)}.reqif");
+            string prefix = Path.GetFileNameWithoutExtension(file).StartsWith("_") ? "" : "_";
+            string pathSerialize = Path.Combine(Path.GetDirectoryName(file),
+                $"{prefix}{Path.GetFileNameWithoutExtension(file)}.reqif");
             try
             {
                 serializer.Serialize(_reqIf, pathSerialize, null);
@@ -190,8 +219,8 @@ Export/Roundtrip needs at least initial import and model elements in EA!
 {e}", @"Error serialize ReqIF, break!");
                 return false;
             }
-
-            Compress(zipPath, pathSerialize);
+            if (compress)
+                Compress(ImportModuleFile, Path.GetDirectoryName(pathSerialize));
             return true;
         }
 
@@ -339,9 +368,31 @@ Value: '{eaValue}'
         private static string MakeXhtmlFromString(string stringValue)
         {
             stringValue = stringValue.Replace("\r\n", "<br></br>");
+            stringValue = stringValue.Replace("&nbsp;", "");
+            stringValue = Regex.Replace(stringValue, @">\s*<","><");  // Replace Blanks between control sequences
+
 
             string xhtmlcontent =
                 $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringValue}</reqif-xhtml:div>";
+            return xhtmlcontent;
+        }
+
+        /// <summary>
+        /// Make XHTML from a string. It inserts the xhtml namespace and handles cr/lf
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string MakeXhtmlFromString(EA.Repository rep, string stringText)
+        {
+            string stringHtml = rep.GetFormatFromField("HTML", stringText);
+            stringHtml = stringHtml.Replace("\r\n", "");
+            stringHtml = stringHtml.Replace("&nbsp;", "");
+            stringHtml = Regex.Replace(stringHtml, @">\s*<", "><");  // Replace Blanks between control sequences
+
+
+            string xhtmlcontent =
+                $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringHtml}</reqif-xhtml:div>";
             return xhtmlcontent;
         }
 
@@ -374,7 +425,7 @@ Value: '{eaValue}'
                 int index = 0;
                 foreach (var enumValue in enumValues)
                 {
-                    if (values[index] == "1")
+                    if (values.Length >  index  && values[index] == "1")
                     {
                         attributeValueEnumeration.Values.Add(enumValue);
                     }
@@ -384,6 +435,7 @@ Value: '{eaValue}'
             }
 
         }
+       
 
 
         /// <summary>
@@ -400,6 +452,7 @@ Value: '{eaValue}'
             string stateNew = "",
             string stateChanged = "")
         {
+            CountPackage = 0;
             bool result = true;
             _errorMessage1 = false;
             // handle Export fields
@@ -413,13 +466,32 @@ Value: '{eaValue}'
             // Create Tagged Value Types
 
             // decompress reqif file and its embedded files
-            string importReqIfFile = Decompress(ImportModuleFile);
-            if (String.IsNullOrWhiteSpace(importReqIfFile)) return false;
+            string[] importReqIfFiles = Decompress(ImportModuleFile);
+            if (importReqIfFiles.Length == 0) return false;
 
-            // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
-            if (_settings.EmbeddedFileStorageDictionary != "" && subModuleIndex == 0)
+            // over all import files
+            foreach (var file in importReqIfFiles)
             {
-                string sourceDir = Path.GetDirectoryName(importReqIfFile);
+                CountPackage += 1;
+                // estimate package
+                string pkgGuid = _settings.PackageGuidList[_subModuleIndex];
+                Pkg = Rep.GetPackageByGuid(pkgGuid);
+
+                ImportReqifFile(file, eaObjectType, eaStereotype, subModuleIndex, stateNew, stateChanged);
+                if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
+                if (result == false || _errorMessage1) return false;
+
+            }
+            return result && (!_errorMessage1);
+        }
+
+        private void ImportReqifFile(string file, string eaObjectType, string eaStereotype, int subModuleIndex, string stateNew,
+            string stateChanged)
+        {
+// Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+            if (_settings.EmbeddedFileStorageDictionary != "" && _subModuleIndex == 0)
+            {
+                string sourceDir = Path.GetDirectoryName(file);
                 hoUtils.DirectoryExtension.CreateEmptyFolder(_settings.EmbeddedFileStorageDictionary);
                 hoUtils.DirectoryExtension.DirectoryCopy(sourceDir, _settings.EmbeddedFileStorageDictionary,
                     copySubDirs: true);
@@ -427,13 +499,12 @@ Value: '{eaValue}'
 
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            _reqIf = deserializer.Deserialize(importReqIfFile);
+            _reqIf = deserializer.Deserialize(file);
             _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
 
             // prepare EA, existing requirements to detect deleted and changed requirements
             ReadEaPackageRequirements();
             CreateEaPackageDeletedObjects();
-
 
 
             // Add requirements recursiv for module to requirement table
@@ -447,20 +518,18 @@ Value: '{eaValue}'
             // Check imported ReqIF requirements
             if (CheckImportedRequirements())
             {
-                CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, importReqIfFile);
+                CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, file);
 
                 MoveDeletedRequirements();
                 UpdatePackage();
 
                 // handle links
-                ReqIfRelation relations = new ReqIfRelation(_reqIf, Rep,_settings);
-
+                ReqIfRelation relations = new ReqIfRelation(_reqIf, Rep, _settings);
             }
 
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
-            return result && (!_errorMessage1);
         }
 
         /// <summary>
@@ -754,16 +823,21 @@ ObjectId/Multiplicity: '{objectId}
         }
 
         /// <summary>
-        /// Compress the exported file
+        /// Compress the files of the directory
         /// </summary>
         /// <param name="zipFile">The path of the zip achive</param>
-        /// <param name="fileName">The file to zip</param>
-        void Compress(string zipFile, string fileName)
+        /// <param name="dirName">The directory to zip</param>
+        void Compress(string zipFile, string dirName)
         {
+            
             if (File.Exists(zipFile)) File.Delete(zipFile);
             using (var zip = ZipFile.Open(zipFile, ZipArchiveMode.Create))
             {
-                zip.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
+                foreach (var file in Directory.GetFiles(dirName))
+                {
+                   if (Path.GetFileName(file).ToLower().EndsWith("reqif"))
+                            zip.CreateEntryFromFile(file, Path.GetFileName(file));
+                }
             }
         }
 
@@ -772,30 +846,31 @@ ObjectId/Multiplicity: '{objectId}
         /// </summary>
         /// <param name="importReqIfFile"></param>
         /// <returns>The path to the *.reqif file</returns>
-        private string Decompress(string importReqIfFile)
+        private string[] Decompress(string importReqIfFile)
         {
             // *.reqifz for compressed ReqIf File
             if (importReqIfFile.ToUpper().EndsWith("Z"))
             {
                 string extractDirectory = hoUtils.Compression.Zip.ExtractZip(importReqIfFile);
-                if (String.IsNullOrWhiteSpace(extractDirectory)) return "";
+                if (String.IsNullOrWhiteSpace(extractDirectory)) return new string[0];
 
                 // extract reqif file from achive
                 string pattern = "*.reqif";
                 var files = Directory.GetFiles(extractDirectory, pattern);
-                if (files.Length != 1)
+                if (files.Length == 0)
                 {
-                    MessageBox.Show($@"Can't find '*.reqif' file in decompressed folder
+                    MessageBox.Show($@"Can't find '*.reqif' file(s) in decompressed folder
 
 *.reqifz File :  '{importReqIfFile}'
 Pattern       :  '{pattern}'
 Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompressed folder");
+                    return new string[0];
                 }
-                
-                return files.Length > 0 ?files[0] :"";
+
+                return files;
             }
 
-            return importReqIfFile;
+            return new string[] { importReqIfFile };
         }
 
 
@@ -1023,6 +1098,9 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                 select new {Definition = all, Value = v};
             foreach (var column in columns)
             {
+                // Handle blacklist
+                if (_blackList1.Contains(column.Definition.LongName)) continue;
+
                 // column value doesn't exists
                 if (column.Value == null)
                 {
@@ -1033,8 +1111,7 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                     // column value exists
                     try
                     {
-                        // Handle blacklist
-                        if (_blackList1.Contains(column.Definition.LongName)) continue;
+                        
 
                         // Handle enums
                         if (column.Definition is AttributeDefinitionEnumeration)

@@ -3,7 +3,7 @@ using System.Linq;
 using EA;
 using ReqIFSharp;
 
-namespace EaServices.Doors
+namespace EaServices.Doors.ReqIfs
 {
     public class ReqIfRelation
     {
