@@ -1,18 +1,15 @@
 # hoReverse 
 
-<<<<<<< HEAD
 *  Requirements / ReqIF
-   *  [Import](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportExport) ([ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF), [Doors CSV](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportDoorsCsv), [Structures xml](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportStructuredXml))
-
-   *  [Export](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportExport) ([ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF), [ReqIF Roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip))
+   *  [Import/Export](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportExport) [ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF), [Doors CSV](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportDoorsCsv), [Structures xml](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ImportStructuredXml)
+   *  [Roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip)
+   *  [Export](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Export) ([ReqIF](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF), [ReqIF Roundtrip](https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Roundtrip))
 *  Development
    *  [Reverse Engineer C/C++ Code](#the-roots)
    *  [Features to improve everyday life](#the-roots)
-=======
 *  [Import](ImportExport) ([ReqIF](ReqIF), [ReqIF Roundtrip](ReqIF_Roundtrip), [ReqIF Export](ReqIF_Export)[Doors CSV](ImportDoorsCsv), [Structures xml](ImportStructuredXml))
 *  [Reverse Engineer C/C++ Code](#the-roots)
 *  [Features to improve everyday life](#the-roots)
->>>>>>> Development
 
 ![](ReqIfExample.png)
 
