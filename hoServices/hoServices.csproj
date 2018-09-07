@@ -105,6 +105,9 @@
     <Reference Include="SautinSoft.HtmlToRtf">
       <HintPath>..\..\..\..\Knowledge\ReqIF\Tools\HtmlToRtf_Sautin\Net 4.5\SautinSoft.HtmlToRtf.dll</HintPath>
     </Reference>
+    <Reference Include="SautinSoft.RtfToHtml, Version=6.1.12.20, Culture=neutral, PublicKeyToken=c666a5e96a3d5457, processorArchitecture=MSIL">
+      <HintPath>..\packages\sautinsoft.rtftohtml.6.1.12.20\lib\net45\SautinSoft.RtfToHtml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.Core" />
@@ -144,6 +147,7 @@
     <Compile Include="Doors\ReqIfs\ReqIfExport.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRelation.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfUtils.cs" />
+    <Compile Include="Doors\RtfToXhtml.cs" />
     <Compile Include="Doors\XmlStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\AddInSearch\AddInSearch.cs" />

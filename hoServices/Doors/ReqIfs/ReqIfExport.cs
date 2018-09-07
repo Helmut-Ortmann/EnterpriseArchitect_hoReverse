@@ -118,7 +118,9 @@ namespace EaServices.Doors.ReqIfs
                     join tv in db.t_objectproperties on r.Object_ID equals tv.Object_ID
                     where pkg.ea_guid == Pkg.PackageGUID
                     orderby r.Name, tv.Property
-                    select new {Name=r.Name,ModifiedOn=r.ModifiedDate, CreatedOn = r.CreatedDate, Author=r.Author, Guid =r.ea_guid, Desc=r.Note,  TvName= tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
+                    select new {Name=r.Name,ModifiedOn=r.ModifiedDate, CreatedOn = r.CreatedDate, Author=r.Author,
+                        Guid =r.ea_guid, Desc=r.Note,
+                        TvName = tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
                 string currentGuid = "";
                 SpecObject specObject = null;
                 foreach (var r in reqs)
@@ -153,7 +155,7 @@ namespace EaServices.Doors.ReqIfs
                             TheValue = r.CreatedOn??DateTime.Now
                         };
                         specObject.Values.Add(attributeValueDate);
-                        // Created on
+                        // Modified on
                         attributeValueDate = new AttributeValueDate
                         {
                             Definition =
@@ -189,18 +191,41 @@ namespace EaServices.Doors.ReqIfs
                             TheValue = MakeXhtmlFromString(r.Name)
                         };
                         specObject.Values.Add(attributeValueXhtml);
-                        // Attribute Text
-                        attributeValueXhtml = new AttributeValueXHTML
+
+                        
+                        // Attribute Text (note or Linked Document)
+                        EA.Element el = Rep.GetElementByGuid(r.Guid);
+                        string rtfText = el?.GetLinkedDocument();
+                        var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                            x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
+
+                        if (String.IsNullOrEmpty(rtfText))
                         {
-                            Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text"),
-                            TheValue = MakeXhtmlFromString(Rep,r.Desc)
-                        };
+                            string fileDir = _settings.EmbeddedFileStorageDictionary;
+                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir);
+                            // Text = Linked Document
+                            attributeValueXhtml = new AttributeValueXHTML
+                            {
+                                Definition = definition,
+                                TheValue = MakeXhtmlFromString(Rep, xhtml)
+                            };
+                            xxxx
+
+                        }
+                        else
+                        {
+                            // Text = notes.
+                            attributeValueXhtml = new AttributeValueXHTML
+                            {
+                                Definition = definition,
+                                TheValue = MakeXhtmlFromString(Rep, r.Desc)
+                            };
+                            
+                        }
                         specObject.Values.Add(attributeValueXhtml);
 
 
-                       _reqIfContent.SpecObjects.Add(specObject);
+                        _reqIfContent.SpecObjects.Add(specObject);
 
 
                     }
