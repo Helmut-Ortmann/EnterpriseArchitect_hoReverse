@@ -50,7 +50,7 @@ namespace EaServices.Doors.ReqIfs
                     return MakeIdReqIfConform($"_enumValue_{string1}_{string2}");
                 default:
                     MessageBox.Show($@"ReqIF type: {type.ToString()}", @"Invalid ReqIF type");
-                    return "xxxxxxxxxxxxx";
+                    return @"xxxxxxxxxxxxx";
 
             }
         }

@@ -6,7 +6,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using DataModels;
 using EA;
 using hoReverse.hoUtils;
 using ReqIFSharp;
@@ -28,6 +27,7 @@ namespace EaServices.Doors.ReqIfs
     public partial class ReqIf : DoorsModule
     {
         readonly string Tab = "\t";
+        protected static string NameSpace; // XHTML NameSpace
         
         public int CountPackage = 0;
         ReqIF _reqIf;
@@ -70,6 +70,7 @@ namespace EaServices.Doors.ReqIfs
             pkg, importFile)
         {
             _settings = settings;
+            NameSpace = settings.NameSpace;
         }
 
         /// <summary>
@@ -398,8 +399,43 @@ Value: '{eaValue}'
 
 
             string xhtmlcontent =
-                $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringHtml}</reqif-xhtml:div>";
+                $@"<{NameSpace}:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringHtml}</{NameSpace}:div>";
             return xhtmlcontent;
+        }
+        /// <summary>
+        /// Make ReqIF XHTML from a XHTML. In essence add XHTML namespace
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string MakeReqIfXhtmlFromXhtml(string stringText)
+        {
+            string xhtmlContent =
+                $@"<{NameSpace}:div xmlns:{NameSpace}=""http://www.w3.org/1999/xhtml"">{MakeNameSpace(stringText)}</{NameSpace}:div>";
+            return xhtmlContent;
+        }
+        /// <summary>
+        /// Make xhtml namespace and correct some peculiar things (not supported by xhtml for reqIF)
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="nameSpace"></param>
+        /// <returns></returns>
+        private static string MakeNameSpace(string text)
+        {
+            text = text.Replace("&nbsp;", "");
+            text = text.Replace("&laquo;", "");// <<
+            text = text.Replace("&raquo;", "");// >>
+            text = text.Replace(@"type=""1""", "");
+            text = text.Replace(@"value=""1""", "");
+
+
+            Regex rx = new Regex(@"</");
+            text = rx.Replace(text, $@"</{NameSpace}:");
+
+            rx = new Regex(@"<(\w)");
+            text = rx.Replace(text, $@"<{NameSpace}:$1");
+
+
+            return text;
         }
 
         /// <summary>
@@ -494,11 +530,11 @@ Value: '{eaValue}'
         private void ImportReqifFile(string file, string eaObjectType, string eaStereotype, int subModuleIndex, string stateNew,
             string stateChanged)
         {
-// Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+            // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
             if (_settings.EmbeddedFileStorageDictionary != "" && _subModuleIndex == 0)
             {
                 string sourceDir = Path.GetDirectoryName(file);
-                hoUtils.DirectoryExtension.CreateEmptyFolder(_settings.EmbeddedFileStorageDictionary);
+                hoUtils.DirectoryExtension.CreateEmptyDir(_settings.EmbeddedFileStorageDictionary);
                 hoUtils.DirectoryExtension.DirectoryCopy(sourceDir, _settings.EmbeddedFileStorageDictionary,
                     copySubDirs: true);
             }
@@ -832,18 +868,28 @@ ObjectId/Multiplicity: '{objectId}
         /// Compress the files of the directory
         /// </summary>
         /// <param name="zipFile">The path of the zip achive</param>
-        /// <param name="dirName">The directory to zip</param>
-        void Compress(string zipFile, string dirName)
+        /// <param name="dirNameReqIfFiles">The directory to zip</param>
+        /// <param name="dirNameFiles"></param>
+        void Compress(string zipFile, string dirNameReqIfFiles, string dirNameFiles="")
         {
             
             if (File.Exists(zipFile)) File.Delete(zipFile);
-            using (var zip = ZipFile.Open(zipFile, ZipArchiveMode.Create))
+            if (!String.IsNullOrEmpty(dirNameFiles))
             {
-                foreach (var file in Directory.GetFiles(dirName))
+                ZipFile.CreateFromDirectory(dirNameFiles, zipFile);
+            }
+
+            using (var zip = ZipFile.Open(zipFile, ZipArchiveMode.Update))
+            {
+               
+
+                    // ReqIF files
+                    foreach (var file in Directory.GetFiles(dirNameReqIfFiles))
                 {
                    if (Path.GetFileName(file).ToLower().EndsWith("reqif"))
                             zip.CreateEntryFromFile(file, Path.GetFileName(file));
                 }
+                
             }
         }
 

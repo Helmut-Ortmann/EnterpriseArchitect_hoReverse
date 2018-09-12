@@ -3,7 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using DataModels;
+using hoUtils;
 using hoUtils.Compression;
 using hoUtils.DirFile;
 using JetBrains.Annotations;
@@ -15,14 +17,12 @@ namespace EaServices.Doors.ReqIfs
     {
         // Modulspecifisch, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
-
-
         SpecObjectType _specObjectType;
 
         // Module specification (hierarchy)
         Specification _moduleSpecification;
 
-
+        private ExportEmbeddedEaFiles _exportEmbeddedEaFile;
 
         /// <summary>
         /// Export Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList
@@ -32,15 +32,32 @@ namespace EaServices.Doors.ReqIfs
         public bool ExportRequirements(int subModuleIndex = 0)
         {
             _subModuleIndex = subModuleIndex;
+            // Initialize
+            if (_subModuleIndex == 0)
+            {
+                // delete files and create directories
+                DirectoryExtension.CreateEmptyDir(_settings.EmbeddedFileStorageDictionary);
+                DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFiles));
+                string embeddedFileImages =
+                    Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFileImages);
+                DirectoryExtension.CreateEmptyDir(embeddedFileImages);
+                DirectoryExtension.DirectoryCopy(@"c:\Temp\mimetypes\", embeddedFileImages);
+                DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFilesPng));
+            }
+
+            _exportEmbeddedEaFile = new ExportEmbeddedEaFiles(
+                _settings.NameSpace, 
+                _settings.EmbeddedFileStorageDictionary,
+                _settings.EmbeddedFileImages, 
+                _settings.EmbeddedFiles);
             // Calculate the column/taggedValueType prefix for current module
             _prefixTv = "";
-
-
             _errorMessage1 = false;
             _exportFields = new ExportFields(_settings.WriteAttrNameList);
 
             // Write header, delete file if first package
             _reqIf = AddHeader(ImportModuleFile, newFile:subModuleIndex==0);
+            if (_reqIf == null) return false;
             _reqIfContent = _reqIf.CoreContent.SingleOrDefault();
             _specificationTypeModule = (SpecificationType)_reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType));
 
@@ -52,7 +69,8 @@ namespace EaServices.Doors.ReqIfs
             // serialize ReqIF
             string fileReqIf = Path.Combine(Zip.CreateTempDir(), Path.GetFileName(ImportModuleFile));
             SerializeReqIf(fileReqIf, compress:false);
-            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf));
+
+            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf),_settings.EmbeddedFileStorageDictionary);
             return true;
 
 
@@ -198,19 +216,21 @@ namespace EaServices.Doors.ReqIfs
                         string rtfText = el?.GetLinkedDocument();
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
                             x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
-
-                        if (String.IsNullOrEmpty(rtfText))
+                        // rtf text available
+                        if (! String.IsNullOrEmpty(rtfText))
                         {
                             string fileDir = _settings.EmbeddedFileStorageDictionary;
-                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir);
+                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir,_settings.EmbeddedFilesPng);
+                            xhtml = $@"{xhtml}
+{_exportEmbeddedEaFile.MakeXhtmlForEmbeddedFiles(el)}";
+
                             // Text = Linked Document
                             attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition = definition,
-                                TheValue = MakeXhtmlFromString(Rep, xhtml)
+                                TheValue = MakeReqIfXhtmlFromXhtml(xhtml)
                             };
-                            xxxx
-
+                         
                         }
                         else
                         {
@@ -220,7 +240,9 @@ namespace EaServices.Doors.ReqIfs
                                 Definition = definition,
                                 TheValue = MakeXhtmlFromString(Rep, r.Desc)
                             };
-                            
+                            _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
+
+
                         }
                         specObject.Values.Add(attributeValueXhtml);
 
@@ -538,10 +560,22 @@ namespace EaServices.Doors.ReqIfs
 
                 // Deserialize
                 ReqIFDeserializer deserializer = new ReqIFDeserializer();
-                return deserializer.Deserialize(file);
+                try
+                {
+                    return deserializer.Deserialize(file);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"File: {file}
+
+{e}", @"Can't deserialize existing ReqIF file");
+                    return null;
+                }
+               
             }
             else
             {
+                // Create new ReqIF file
                 var reqIf = new ReqIF
                 {
                     Lang = "en"

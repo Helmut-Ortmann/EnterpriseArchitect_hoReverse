@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using hoUtils;
 using Newtonsoft.Json;
 
 namespace EaServices.Doors
@@ -80,18 +81,80 @@ namespace EaServices.Doors
         private string _roundtripFile;
 
         /// <summary>
-        /// The dictionary to store the embedded files. 
+        /// The dictionary to store the embedded files. If this parameter isn't set a temp directory is used.
         ///
         /// Example: myImport.reqifz, myImport.csv, myImport.xml
         /// </summary>
         [JsonIgnore]
         public string EmbeddedFileStorageDictionary
         {
-            get => _embeddedFileStorageDictionary?.Replace(@"\", "/") ?? "";
+            get => String.IsNullOrWhiteSpace(_embeddedFileStorageDictionary) 
+                                ? DirectoryExtension.GetTempDir("ReqIfEmbeddedFiles") 
+                                :_embeddedFileStorageDictionary?.Replace(@"\", "/").Trim() ?? "";
             set => _embeddedFileStorageDictionary = value;
         }
-        [JsonProperty("EmbeddedFileStorageDictionary")]
+        [JsonProperty("EmbeddedFileStorageDictionary"), DefaultValue(" ")]
         private string _embeddedFileStorageDictionary;
+
+        /// <summary>
+        /// The dictionary inside EmbeddedFileStorageDictionary for png images in text
+        ///
+        /// Example: 'Files'
+        /// </summary>
+        [JsonIgnore]
+        public string EmbeddedFilesPng
+        {
+            get => _embeddedFilesPng?.Replace(@"\", "/").Trim() ?? "Files";
+            set => _embeddedFilesPng = value;
+        }
+        [JsonProperty("EmbeddedFilesPng"), DefaultValue("Files")]
+        private string _embeddedFilesPng;
+
+        /// <summary>
+        /// The relative path of the embedded files
+        ///
+        /// Example: 'Files'
+        /// </summary>
+        [JsonIgnore]
+        public string EmbeddedFiles
+        {
+            get => _embeddedFiles?.Replace(@"\", "/").Trim() ?? "EmbeddedFiles";
+            set => _embeddedFiles = value;
+        }
+        [JsonProperty("EmbeddedFiles"), DefaultValue("EmbeddedFiles")]
+        private string _embeddedFiles;
+
+        /// <summary>
+        /// The relative path of the embedded file images to visualize for each mime type
+        ///
+        /// Example: 'Files'
+        /// </summary>
+        [JsonIgnore]
+        public string EmbeddedFileImages
+        {
+            get => _embeddedFileImages?.Replace(@"\", "/").Trim() ?? "EmbeddedFileImages";
+            set => _embeddedFileImages = value;
+        }
+        [JsonProperty("EmbeddedFileImages"), DefaultValue("EmbeddedFileImages")]
+        private string _embeddedFileImages;
+
+        /// <summary>
+        /// The xhtml namespace name
+        ///
+        /// Example: 'Files'
+        /// </summary>
+        [JsonIgnore]
+        public string NameSpace
+        {
+            get => _nameSpace?.Trim() ?? @"reqif-xhtml";
+            set => _nameSpace = value;
+        }
+        [JsonProperty("NameSpace"), DefaultValue("reqif-xhtml")]
+        private string _nameSpace;
+
+
+
+
 
         /// <summary>
         /// List of PackageGuids. hoReverse puts the Requirements beneath this package.

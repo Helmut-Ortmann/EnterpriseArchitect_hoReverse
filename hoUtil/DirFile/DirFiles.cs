@@ -34,7 +34,7 @@ namespace hoUtils.DirFile
         }
 
         /// <summary>
-        /// Copy file and output error message
+        /// Copy file and output error message. As a target you may use a file or a directory.
         /// </summary>
         /// <param name="targetFilePath"></param>
         /// <param name="errorMessage"></param>
@@ -44,7 +44,12 @@ namespace hoUtils.DirFile
         {
             try
             {
-                File.Copy(sourceFilePath, targetFilePath,overwrite:true);
+                File.Copy(
+                    sourceFilePath,
+                    Directory.Exists(targetFilePath)
+                        ? Path.Combine(targetFilePath, Path.GetFileName(sourceFilePath))
+                        : targetFilePath,
+                    overwrite: true);
             }
             catch (Exception e)
             {

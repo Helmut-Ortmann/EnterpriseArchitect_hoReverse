@@ -7,25 +7,15 @@ namespace hoUtils.Compression
 {
     public static class Zip
     {
-        const string TempDirectory = "hoReqIf";
-
-
         /// <summary>
-        /// Create a temp directory
+        /// Create a temp dir for zipping
         /// </summary>
         /// <returns></returns>
         public static string CreateTempDir()
         {
-            string tempPath = Path.GetTempPath();
-            tempPath = Path.Combine(tempPath, TempDirectory);
-            // Delete directory if exists
-            if (Directory.Exists(tempPath))
-                Directory.Delete(tempPath, recursive: true);
-            Directory.CreateDirectory(tempPath);
-            return tempPath;
-
+            return DirectoryExtension.CreateTempDir("hoReqIf");
         }
-
+       
         /// <summary>
         /// Extract the zip file to an extract directory. If no extractDirectory exists a temp directory is created
         /// </summary>
@@ -36,7 +26,7 @@ namespace hoUtils.Compression
         {
 
 
-            // estimate extract path for a temporary dictionars
+            // estimate extract path for a temporary dictionary
             if (String.IsNullOrWhiteSpace(extractPath))
             {
                 extractPath = CreateTempDir();

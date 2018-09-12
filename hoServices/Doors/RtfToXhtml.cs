@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using hoUtils;
 using SautinSoft;
 
 namespace EaServices.Doors
@@ -14,8 +17,9 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="rtfText"></param>
         /// <param name="xhtmlDir"></param>
+        /// <param name="imageFileFolder"></param>
         /// <returns></returns>
-        public static string Convert(string rtfText, string xhtmlDir)
+        public static string Convert(string rtfText, string xhtmlDir, string imageFileFolder="Files")
         {
             // test purposes
             bool gen = false;
@@ -30,15 +34,19 @@ namespace EaServices.Doors
                 rtfGen.Encoding = SautinSoft.RtfToHtml.eEncoding.UTF_8;
                 //specify image options
                 rtfGen.ImageStyle.ImageFolder = xhtmlDir; //this folder must exist
-                rtfGen.ImageStyle.ImageSubFolder = "files"; //this folder will be created by the component
+                rtfGen.ImageStyle.ImageSubFolder = imageFileFolder; //this folder will be created by the component
                 rtfGen.ImageStyle.ImageFileName = "png"; //template name for images
-                rtfGen.ImageStyle.IncludeImageInHtml =
-                    false; //false - save images on HDD, true - save images inside HTML
+                rtfGen.ImageStyle.IncludeImageInHtml = false; //false - save images on HDD, true - save images inside HTML
 
                 xhtml = rtfGen.ConvertString(rtfText);
             }
             else
             {
+                // simulation 
+                string filesDirectory = Path.Combine(xhtmlDir, imageFileFolder);
+                if (!System.IO.Directory.Exists(filesDirectory)) Directory.CreateDirectory(filesDirectory);
+                // test data
+                DirectoryExtension.DirectoryCopy($@"c:\Temp\Convert\Test\Files\", filesDirectory, copySubDirs:true,overwrite:true);
                 xhtml = System.IO.File.ReadAllText(@"c:\Temp\Convert\Test\test.xhtml");
             }
 
@@ -47,7 +55,7 @@ namespace EaServices.Doors
             // <img src="test.files\png1.png" width="73" height="53" alt="" />
             // To:
             // <object data="test.files\png1.png" type="image/png" />
-            Regex rx = new Regex(@"img src=""([^""]*)""[^>]*>");
+            Regex rx = new Regex(@"<img src=""([^""]*)""[^>]*>");
 
             Match match = rx.Match(xhtml);
             while (match.Success)
@@ -56,6 +64,13 @@ namespace EaServices.Doors
                 xhtml = xhtml.Replace(match.Groups[0].Value, replaceString);
                 match = match.NextMatch();
             }
+            // delete everything before/including '<body>'
+            int pos = xhtml.IndexOf(@"<body>",StringComparison.Ordinal);
+            xhtml = xhtml.Substring(pos + 6);
+
+            // delete </body></html>
+            xhtml = xhtml.Replace("</body>", "");
+            xhtml = xhtml.Replace("</html>", "");
             return xhtml;
         }
     }

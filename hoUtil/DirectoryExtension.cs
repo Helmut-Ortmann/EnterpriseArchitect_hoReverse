@@ -6,17 +6,12 @@ namespace hoUtils
 {
     public static class DirectoryExtension
     {
+        
         /// <summary>
-        /// Create an empty folder. If there is a folder delete all containing files/folders
+        /// Clear recursive the folder
         /// </summary>
         /// <param name="folderName"></param>
-        public static bool CreateEmptyFolder(string folderName)
-        {
-            if (Directory.Exists(folderName)) ClearFolder(folderName);
-            if (! Directory.Exists(folderName)) Directory.CreateDirectory(folderName);
-            return true;
-        }
-
+        /// <returns></returns>
         public static bool ClearFolder(string folderName)
         {
             DirectoryInfo dir = new DirectoryInfo(folderName);
@@ -54,14 +49,16 @@ namespace hoUtils
 
             return true;
         }
+
         /// <summary>
         /// Copy Directories and their filed to target directory (recursive)
         /// </summary>
         /// <param name="sourceDirName"></param>
         /// <param name="destDirName"></param>
         /// <param name="copySubDirs">Recursive copy if true (default)</param>
+        /// <param name="overwrite"></param>
         public static bool DirectoryCopy(
-            string sourceDirName, string destDirName, bool copySubDirs=true)
+            string sourceDirName, string destDirName, bool copySubDirs=true, bool overwrite=false)
         {
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
@@ -91,7 +88,17 @@ Dictionary to delete doesn't exists"
                 string tempPath = Path.Combine(destDirName, file.Name);
 
                 // Copy the file.
-                file.CopyTo(tempPath, false);
+                try
+                {
+                    file.CopyTo(tempPath, overwrite);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"{tempPath}
+
+{e}", @"Error copying file");
+                }
+
             }
 
             // If copySubDirs is true, copy the subdirectories.
@@ -109,6 +116,40 @@ Dictionary to delete doesn't exists"
             }
             return true;
         }
-       
+        /// <summary>
+        /// Get a temp directory.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetTempDir(string directory)
+        {
+            return Path.Combine(Path.GetTempPath(), directory);
+
+
+        }
+        /// <summary>
+        /// Create a temp directory. Ensure that it is empty. 
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateTempDir(string directory)
+        {
+            string tempPath = GetTempDir(directory);
+            CreateEmptyDir(GetTempDir(directory));
+            return tempPath;
+
+        }
+        /// <summary>
+        /// Create a empty directory.  
+        /// </summary>
+        /// <returns></returns>
+        public static bool CreateEmptyDir(string directory)
+        {
+            // Delete directory if exists
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, recursive: true);
+            Directory.CreateDirectory(directory);
+            return true;
+
+        }
+
     }
 }

@@ -143,6 +143,7 @@
     <Compile Include="Doors\HtmlToDocx.cs" />
     <Compile Include="Doors\HtmlToText.cs" />
     <Compile Include="Doors\ImportSettings.cs" />
+    <Compile Include="Doors\ReqIfs\ExportEmbeddedEaFiles.cs" />
     <Compile Include="Doors\ReqIfs\ReqIf.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfExport.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRelation.cs" />

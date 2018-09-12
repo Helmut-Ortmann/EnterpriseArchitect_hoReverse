@@ -372,7 +372,7 @@
   // - AliasList        List of attribute names to import into the EA property 'Alias', e.g. ["RequirementID"] or ["ReqIF.ForeignID"]
   // - AttrNameList     List of attribute names to import into the EA property 'Name', e.g.  ["RequirementID", "Object Heading", "Object Text"]
   // - EmbeddedFileStorageDictionary
-  //                    Dictionary of embedded files to store. If blank or empty then don't store 
+  //                    Dictionary of embedded files to store. If blank or empty then use a temp directory. 
   //                    DOORS: Doors stores files as *.ole files which currently can't be opened
   // - IdList"          Only "XmlStruct":
   //                    List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   

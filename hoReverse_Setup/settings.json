@@ -373,7 +373,7 @@
   // - AttrNameList     List of attribute names to import into the EA property 'Name', e.g.  ["RequirementID", "Object Heading", "Object Text"]
   // - ExportMappingList List of Mapping EA properties and Tagged values to ReqIF Attributes
   // - EmbeddedFileStorageDictionary
-  //                    Dictionary of embedded files to store. If blank or empty then don't store 
+  //                    Dictionary of embedded files to store. If blank or empty then use a temp directory.
   //                    DOORS: Doors stores files as *.ole files which currently can't be opened
   // - IdList"          Only "XmlStruct":
   //                    List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
