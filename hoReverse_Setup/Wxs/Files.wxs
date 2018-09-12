@@ -264,6 +264,52 @@
       <Component Id="OpenMcdf.dll" Guid="1ECCD40A-235E-4D5F-AFBA-E326AE8FB826">
         <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
       </Component>
+     
+     
+    </ComponentGroup>
+    <!--
+      ReqIF mimetype images to visualize embedded files
+      -->
+    <ComponentGroup Id="MimeTypeImages"
+                    Directory="MIME_TYPE_IMAGES">
+       <Component Id="application_javascript.png" Guid="{8D775B54-0FA3-4BBE-B0F1-A57A1A5843ED}">
+          <File Id="application_javascript.png" Name="application-javascript.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-javascript.png" />
+      </Component>
+
+
+      <Component Id="application_x_java.png" Guid="{76612354-0EA8-4A93-87C9-A4F9B01AA93D}">
+        <File Id="application_x_java.png" Name="application-x-java.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-x-java.png" />
+      </Component>
+      <Component Id="application_msword.png" Guid="{C8890B40-5A4F-4C17-AAFE-373BD24B52C6}">
+        <File Id="application_msword.png" Name="application-msword.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-msword.png" />
+      </Component>
+      <Component Id="application_pdf.png" Guid="{E7E7964A-8694-4A01-BC71-73CF8A29BEC4}">
+        <File Id="application_pdf.png" Name="application-pdf.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-pdf.png" />
+      </Component>
+      <Component Id="application_vnd.ms_excel.png" Guid="{FECBA5FE-6DB1-4CE8-AF5E-2EA24F3E54E5}">
+        <File Id="application_vnd.ms_excel.png" Name="application-vnd.ms-excel.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-vnd.ms-excel.png" />
+      </Component>
+      <Component Id="application_vnd.ms_powerpoint.png" Guid="{0040C86D-B912-4D9A-B90F-B75CC21D78E8}">
+        <File Id="application_vnd.ms_powerpoint.png" Name="application-vnd.ms-powerpoint.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-vnd.ms-powerpoint.png" />
+      </Component>
+
+
+      <Component Id="text_xml.png" Guid="{A20E0089-EFAD-4B16-923E-7F2A6CD6B4AE}">
+        <File Id="text_xml.png" Name="text-xml.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-xml.png" />
+      </Component>
+      <Component Id="text_x_java_source.png" Guid="{B9E81450-547E-4F1B-B466-173F8812F46F}">
+        <File Id="text_x_java_source.png" Name="text-x-java-source.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-x-java-source.png" />
+      </Component>
+      <Component Id="application_x_java_archive.png" Guid="{E6A1C829-1ACA-45CC-8BA7-0142B2A13130}">
+        <File Id="application_x_java_archive.png" Name="application-x-java-archive.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-x-java-archive.png" />
+      </Component>
+      <Component Id="application_x_java_applet.png" Guid="{80953758-D07C-459D-94D1-A2C6BD1254FA}">
+        <File Id="application_x_java_applet.png" Name="application-x-java-applet.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-x-java-applet.png" />
+      </Component>
+      <Component Id="text_x_java.png" Guid="{692D0473-F83C-4F1F-BB6B-A8C06BF4991D}">
+        <File Id="text_x_java.png" Name=" text-x-java.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-x-java.png" />
+      </Component>
+     
     </ComponentGroup>
   </Fragment>
 </Wix>

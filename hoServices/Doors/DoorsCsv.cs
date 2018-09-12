@@ -12,7 +12,7 @@ namespace EaServices.Doors
         /// <summary>
         /// The Setting of the current item to import
         /// </summary>
-        FileImportSettingsItem _settings;
+        readonly FileImportSettingsItem _settings;
         public DoorsCsv(string jsonFilePath, EA.Repository rep) : base(jsonFilePath, rep)
         {
         }

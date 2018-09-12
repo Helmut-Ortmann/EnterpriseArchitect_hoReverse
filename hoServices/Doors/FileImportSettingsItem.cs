@@ -130,13 +130,13 @@ namespace EaServices.Doors
         /// Example: 'Files'
         /// </summary>
         [JsonIgnore]
-        public string EmbeddedFileImages
+        public string MimeTypeImages
         {
-            get => _embeddedFileImages?.Replace(@"\", "/").Trim() ?? "EmbeddedFileImages";
-            set => _embeddedFileImages = value;
+            get => _mimeTypeImages?.Replace(@"\", "/").Trim() ?? "MimeTypeImages";
+            set => _mimeTypeImages = value;
         }
-        [JsonProperty("EmbeddedFileImages"), DefaultValue("EmbeddedFileImages")]
-        private string _embeddedFileImages;
+        [JsonProperty("MimeTypeImages"), DefaultValue("MimeTypeImages")]
+        private string _mimeTypeImages;
 
         /// <summary>
         /// The xhtml namespace name

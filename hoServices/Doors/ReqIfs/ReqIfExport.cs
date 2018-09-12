@@ -35,20 +35,28 @@ namespace EaServices.Doors.ReqIfs
             // Initialize
             if (_subModuleIndex == 0)
             {
-                // delete files and create directories
+                // delete files and create directories for files to deliver:
+                // - Embedded files from EA 
+                // - Embedded png files for images in rtf
+                // - MimeTypeImages (files from installation)
+                // 
                 DirectoryExtension.CreateEmptyDir(_settings.EmbeddedFileStorageDictionary);
                 DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFiles));
-                string embeddedFileImages =
-                    Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFileImages);
-                DirectoryExtension.CreateEmptyDir(embeddedFileImages);
-                DirectoryExtension.DirectoryCopy(@"c:\Temp\mimetypes\", embeddedFileImages);
                 DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFilesPng));
+
+                // copy mimetype specific images
+                string installationPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string mimeTypeImagesInstallationPath = Path.Combine(installationPath, _settings.MimeTypeImages);
+                string mimeTypeTypeImagesInReqIf = Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.MimeTypeImages);
+                DirectoryExtension.CreateEmptyDir(mimeTypeTypeImagesInReqIf);
+                DirectoryExtension.DirectoryCopy(mimeTypeImagesInstallationPath, mimeTypeTypeImagesInReqIf);
+
+
             }
 
             _exportEmbeddedEaFile = new ExportEmbeddedEaFiles(
-                _settings.NameSpace, 
                 _settings.EmbeddedFileStorageDictionary,
-                _settings.EmbeddedFileImages, 
+                _settings.MimeTypeImages, 
                 _settings.EmbeddedFiles);
             // Calculate the column/taggedValueType prefix for current module
             _prefixTv = "";

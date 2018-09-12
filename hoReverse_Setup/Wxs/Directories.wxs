@@ -8,6 +8,8 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
         <Directory Id="LocalAppData"> <!--Prevent using UAC (User Access Control)-->
             <Directory Id="APPLICATIONFOLDER" Name="hoReverse"  > <!--APPLICATIONFOLDER-->
+              <Directory Id="MIME_TYPE_IMAGES" Name="MimeTypeImages" > <!-- Folder for mime type images -->
+              </Directory>
           </Directory>
         </Directory>
       </Directory>

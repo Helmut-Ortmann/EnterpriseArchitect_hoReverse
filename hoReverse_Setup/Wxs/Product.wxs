@@ -81,6 +81,7 @@
               Display="expand"
               ConfigurableDirectory="APPLICATIONFOLDER" >
       <ComponentGroupRef Id="ProductComponents"/>
+      <ComponentGroupRef Id="MimeTypeImages"/>
     </Feature>
     <!--
      UI: 
