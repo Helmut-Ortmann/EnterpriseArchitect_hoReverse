@@ -429,7 +429,10 @@ Second Element: Target of move connections and appearances", @"Select two elemen
         }
 
         #region addDiagramNote
-
+        /// <summary>
+        /// Add Diagram Note
+        /// </summary>
+        /// <param name="rep"></param>
         public static void AddDiagramNote(Repository rep)
         {
             ObjectType oType = rep.GetContextItemType();
@@ -459,14 +462,32 @@ Second Element: Target of move connections and appearances", @"Select two elemen
 
                 // get the position of the Element
 
+                // get the position of the Element
                 int left = (dia.cx / 2) - 100;
                 int right = left + 200;
                 int top = dia.cy - 150;
                 int bottom = top + 120;
-                //int right = diaObj.right + 2 * (diaObj.right - diaObj.left);
+                if (dia.DiagramObjects.Count > 0)
+                {
+                    List<EA.DiagramObject> lDiaObj = EaDiagram.MakeObjectListFrmCollection(dia.DiagramObjects);
 
-                string position = "l=" + left.ToString() + ";r=" + right.ToString() + ";t=" + top.ToString() + ";b=" +
-                                  bottom.ToString() + ";";
+                    right = (from r in lDiaObj
+                        select r.right).Max();
+                    left = (from r in lDiaObj
+                        select r.left).Min();
+                    //left = right - 200 > 0? right - 200:0 ;
+                    left = (left + (right - left) / 2) - 100;
+                    left = left < 0 ? 20 : left;
+                    right = left + 220;
+
+                    top = (from r in lDiaObj
+                              select r.bottom).Min() - 30;
+                    bottom = top - 120;
+
+                }
+
+                string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" +
+                                  bottom + ";";
 
                 DiagramObject diaObject = (DiagramObject) dia.DiagramObjects.AddNew(position, "");
                 dia.Update();
@@ -839,7 +860,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                             {
                                 if (el.Genfile != "")
                                 {
-                                    folderPath = Path.GetDirectoryName(HoUtil.GetGenFilePathElement(rep, el));
+                                    folderPath = Path.GetDirectoryName(HoUtil.GetGenFilePathElement(el));
                                     break;
                                 }
                             }
@@ -887,7 +908,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                             MessageBox.Show(@"Package has no language configured. Please select a language!");
                             return;
                         }
-                        path = HoUtil.GetFilePath(rep, el1.Gentype, pkg.CodePath);
+                        path = HoUtil.GetFilePath(el1.Gentype, pkg.CodePath);
                     }
                     else
                     {
@@ -909,7 +930,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
 
                 case ObjectType.otElement:
                     Element el = (Element)rep.GetContextObject();
-                    path = HoUtil.GetGenFilePathElement(rep, el);
+                    path = HoUtil.GetGenFilePathElement(el);
                     // remove filename
                     path = Regex.Replace(path, @"[a-zA-Z0-9\s_:.]*\.[a-zA-Z0-9]{0,4}$", "");
 
@@ -5520,7 +5541,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
 
         private static string AddReleaseInformation(Repository rep, Element el) {
             string txt;
-            string path = HoUtil.GetGenFilePathElement(rep, el);
+            string path = HoUtil.GetGenFilePathElement(el);
             if (path == "")
             {
                 MessageBox.Show(@"No file defined in property for: '" + el.Name + @"':" + el.Type);
@@ -5664,7 +5685,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
         private static List<Element> GetIncludedHeaderFilesFromCode(Repository rep, Element el)
         {
             List<Element> lEl = new List<Element>();
-            string path = HoUtil.GetGenFilePathElement(rep, el);
+            string path = HoUtil.GetGenFilePathElement(el);
             if (path == "")
             {
                 MessageBox.Show(@"No file defined in property for: '" + el.Name + "':" + el.Type);

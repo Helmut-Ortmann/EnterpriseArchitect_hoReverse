@@ -64,7 +64,7 @@ Let's discuss it, but it works.
 
 ## News
 
-3.1.3 Error fixing
+3.1.3 [ReqIF Export](ReqIF_Export), Error fixing
 -  Error message if "ReqIF/Import specification" is missing in Settings.json
 
 3.1.2 ReqIF Eport from EA

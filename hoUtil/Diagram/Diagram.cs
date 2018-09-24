@@ -323,6 +323,22 @@ namespace hoReverse.hoUtils.Diagrams
         }
         #endregion
 
+        /// <summary>
+        /// Make EA.DiagramObject list from collection
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static List<EA.DiagramObject> MakeObjectListFrmCollection(EA.Collection col)
+        {
+            List<EA.DiagramObject> lDiaObj = new List<EA.DiagramObject>();
+            foreach (EA.DiagramObject diaObj in col)
+            {
+                lDiaObj.Add(diaObj);
+            }
+
+            return lDiaObj;
+        }
+
 
 
     }

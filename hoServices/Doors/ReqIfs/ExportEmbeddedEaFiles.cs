@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using hoUtils.DirFile;
+using hoReverse.hoUtils;
 using File = EA.File;
 
 namespace EaServices.Doors.ReqIfs
@@ -91,7 +92,7 @@ namespace EaServices.Doors.ReqIfs
             }
 
             // copy embedded file
-            DirFiles.FileCopy(file.Name, Path.Combine(_dirFilesRoot, _embeddedFiles));
+            CopyEmbeddedFile(file.Name, Path.Combine(_dirFilesRoot, _embeddedFiles));
 
 
             xhtml = xhtml + $@"
@@ -105,7 +106,7 @@ namespace EaServices.Doors.ReqIfs
         }
 
         /// <summary>
-        /// Copy embedded Files to target
+        /// Copy embedded Files to target. The file may contain a local path by %id%
         /// </summary>
         /// <param name="el"></param>
         public void CopyEmbeddedFiles(EA.Element el)
@@ -113,8 +114,19 @@ namespace EaServices.Doors.ReqIfs
             foreach (EA.File file in el.Files)
             {
                 // copy embedded files
-                DirFiles.FileCopy(file.Name, Path.Combine(_dirFilesRoot, _embeddedFiles));
+                CopyEmbeddedFile(file.Name, Path.Combine(_dirFilesRoot, _embeddedFiles));
             }
+        }
+        /// <summary>
+        /// Copy file and take local path into consideration
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="target"></param>
+        private void CopyEmbeddedFile(string file, string target)
+        {
+            string fileName = HoUtil.GetFilePath("Linked File", file);
+            DirFiles.FileCopy(fileName, target);
+
         }
     }
 }

@@ -13,16 +13,16 @@ namespace EaServices.Doors
     public class RtfToXhtml
     {
         /// <summary>
-        /// Convert rtf to XHTML
+        /// Convert rtf to XHTML. It uses SautinSoft. You may need to have a license. 
         /// </summary>
         /// <param name="rtfText"></param>
-        /// <param name="xhtmlDir"></param>
+        /// <param name="xhtmlDir">The directory to store images.</param>
         /// <param name="imageFileFolder"></param>
         /// <returns></returns>
         public static string Convert(string rtfText, string xhtmlDir, string imageFileFolder="Files")
         {
             // test purposes
-            bool gen = false;
+            bool gen = true;
 
             string xhtml;
 

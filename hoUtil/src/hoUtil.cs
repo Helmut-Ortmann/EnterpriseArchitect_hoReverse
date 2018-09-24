@@ -1242,12 +1242,11 @@ namespace hoReverse.hoUtils
         /// <summary>
         /// Get file path for a string. It regards the local file path definition in %APPDATA%. To do so it needs the GenType (C,C++,..)
         /// </summary>
-        /// <param name="rep"></param>
         /// <param name="genType"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedParameter.Global
-        public static string GetFilePath(Repository rep, string genType, string path)
+        public static string GetFilePath(string genType, string path)
         {
             // check if a local path is defined
             Match m = Regex.Match(path, @"%[^%]*");
@@ -1286,9 +1285,9 @@ namespace hoReverse.hoUtils
         /// <param name="rep"></param>
         /// <param name="el"></param>
         /// <returns></returns>
-        public static string GetGenFilePathElement(Repository rep, EA.Element el)
+        public static string GetGenFilePathElement( EA.Element el)
         {
-            return GetFilePath(rep, el.Gentype, el.Genfile);
+            return GetFilePath(el.Gentype, el.Genfile);
 
         }
 

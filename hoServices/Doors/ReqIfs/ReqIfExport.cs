@@ -15,7 +15,7 @@ namespace EaServices.Doors.ReqIfs
 {
     public partial class ReqIf
     {
-        // Modulspecifisch, has to be estimated from ReqIF for a new module
+        // Modulespecific, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
         SpecObjectType _specObjectType;
 
@@ -69,7 +69,7 @@ namespace EaServices.Doors.ReqIfs
             _reqIfContent = _reqIf.CoreContent.SingleOrDefault();
             _specificationTypeModule = (SpecificationType)_reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType));
 
-            WriteModule(Pkg);
+            WriteModuleSpecification(Pkg);
 
             CreateSpecObjects();
             CreateSpecHierarchy();
@@ -367,10 +367,10 @@ namespace EaServices.Doors.ReqIfs
 
 
         /// <summary>
-        /// Write the ReqIF module for the pkg
+        /// Write the ReqIF moduleSpecification, DataTypes, SpecObjecttype for the pkg / module specification
         /// </summary>
         /// <param name="pkg"></param>
-        private void WriteModule([NotNull]EA.Package pkg)
+        private void WriteModuleSpecification([NotNull]EA.Package pkg)
         {
             // Module specification
             _moduleSpecification = new Specification
