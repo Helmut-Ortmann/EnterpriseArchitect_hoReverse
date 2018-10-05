@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using hoUtils;
 using SautinSoft;
 
@@ -29,16 +30,30 @@ namespace EaServices.Doors
             // generate XHTML
             if (gen)
             {
-                var rtfGen = new RtfToHtml();
-                rtfGen.OutputFormat = SautinSoft.RtfToHtml.eOutputFormat.XHTML_10;
-                rtfGen.Encoding = SautinSoft.RtfToHtml.eEncoding.UTF_8;
-                //specify image options
-                rtfGen.ImageStyle.ImageFolder = xhtmlDir; //this folder must exist
-                rtfGen.ImageStyle.ImageSubFolder = imageFileFolder; //this folder will be created by the component
-                rtfGen.ImageStyle.ImageFileName = "png"; //template name for images
-                rtfGen.ImageStyle.IncludeImageInHtml = false; //false - save images on HDD, true - save images inside HTML
+                try
+                {
+                    var rtfGen = new RtfToHtml
+                    {
+                        OutputFormat = RtfToHtml.eOutputFormat.XHTML_10,
+                        Serial = "10460301363", // Serial number developer license
+                        Encoding = RtfToHtml.eEncoding.UTF_8
+                    };
+                    //specify image options
+                    rtfGen.ImageStyle.ImageFolder = xhtmlDir; //this folder must exist
+                    rtfGen.ImageStyle.ImageSubFolder = imageFileFolder; //this folder will be created by the component
+                    rtfGen.ImageStyle.ImageFileName = "png"; //template name for images
+                    rtfGen.ImageStyle.IncludeImageInHtml = false; //false - save images on HDD, true - save images inside HTML
 
-                xhtml = rtfGen.ConvertString(rtfText);
+                    xhtml = rtfGen.ConvertString(rtfText);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"{e}
+
+Text to convert:
+{rtfText}", @"Error rtf to xhtml converting");
+                    xhtml = @"Can't convert EA rtf to ReqIF XHTML";
+                }
             }
             else
             {

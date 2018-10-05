@@ -65,7 +65,12 @@ Let's discuss it, but it works.
 ## News
 
 3.1.3 [ReqIF Export](ReqIF_Export), Error fixing
+-  hoReverse converts EA 'Linked Documents' to ReqIF XHTML format
+   Make sure the recipient can understand the format.
+   see Linked Document in:
+   https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIF_Export#features
 -  Error message if "ReqIF/Import specification" is missing in Settings.json
+-  Integrated developer license for sautinSoft RtfToHtml (www.sautinsoft.com)
 
 3.1.2 ReqIF Eport from EA
 -  Fix error nested AddinQuery (Elements without Tagged Values)

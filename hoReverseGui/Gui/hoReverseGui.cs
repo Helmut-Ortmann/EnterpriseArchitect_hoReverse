@@ -41,7 +41,7 @@ namespace hoReverse.Reverse
 
     public class HoReverseGui : UserControl, IhoReverseGui, IObjectSafety
     {
-        string Tab = @"\t";
+        readonly string Tab = @"\t";
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -771,6 +771,9 @@ namespace hoReverse.Reverse
             this.repoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hoToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lineStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.sQLWildcardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reqIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.analyzeCCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -789,9 +792,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.sQLWildcardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
-            this.reqIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1621,6 +1621,7 @@ namespace hoReverse.Reverse
             this._updateMethodParametersToolStripMenuItem.Text = "&Update Activity from Method";
             this._updateMethodParametersToolStripMenuItem.ToolTipText = "Updates the Activities according to selected contexts by:\r\n- Activity Name\r\n- Act" +
     "ivity Parameter\r\n";
+            this._updateMethodParametersToolStripMenuItem.Visible = false;
             this._updateMethodParametersToolStripMenuItem.Click += new System.EventHandler(this.UpdateMethodParametersToolStripMenuItem_Click);
             // 
             // _toolStripSeparator3
@@ -2267,19 +2268,19 @@ namespace hoReverse.Reverse
             // _aboutToolStripMenuItem
             // 
             this._aboutToolStripMenuItem.Name = "_aboutToolStripMenuItem";
-            this._aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this._aboutToolStripMenuItem.Text = "&About";
             this._aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(149, 6);
             // 
             // _helpF1ToolStripMenuItem
             // 
             this._helpF1ToolStripMenuItem.Name = "_helpF1ToolStripMenuItem";
-            this._helpF1ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this._helpF1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this._helpF1ToolStripMenuItem.Text = "&Help / WiKi";
             this._helpF1ToolStripMenuItem.ToolTipText = "Show help / WiKi";
             this._helpF1ToolStripMenuItem.Click += new System.EventHandler(this.HelpF1ToolStripMenuItem_Click);
@@ -2287,7 +2288,7 @@ namespace hoReverse.Reverse
             // readmeToolStripMenuItem
             // 
             this.readmeToolStripMenuItem.Name = "readmeToolStripMenuItem";
-            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.readmeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.readmeToolStripMenuItem.Text = "Readme";
             this.readmeToolStripMenuItem.ToolTipText = "Show readme";
             this.readmeToolStripMenuItem.Click += new System.EventHandler(this.ReadmeToolStripMenuItem_Click);
@@ -2295,7 +2296,7 @@ namespace hoReverse.Reverse
             // repoToolStripMenuItem
             // 
             this.repoToolStripMenuItem.Name = "repoToolStripMenuItem";
-            this.repoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.repoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.repoToolStripMenuItem.Text = "Repo";
             this.repoToolStripMenuItem.ToolTipText = "Show GitHub repository";
             this.repoToolStripMenuItem.Click += new System.EventHandler(this.RepoToolStripMenuItem_Click);
@@ -2303,7 +2304,7 @@ namespace hoReverse.Reverse
             // hoToolsToolStripMenuItem
             // 
             this.hoToolsToolStripMenuItem.Name = "hoToolsToolStripMenuItem";
-            this.hoToolsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hoToolsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.hoToolsToolStripMenuItem.Text = "hoTools";
             this.hoToolsToolStripMenuItem.ToolTipText = "Show WiKi hoTools";
             this.hoToolsToolStripMenuItem.Click += new System.EventHandler(this.hoToolsToolStripMenuItem_Click);
@@ -2311,20 +2312,39 @@ namespace hoReverse.Reverse
             // lineStyleToolStripMenuItem
             // 
             this.lineStyleToolStripMenuItem.Name = "lineStyleToolStripMenuItem";
-            this.lineStyleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lineStyleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.lineStyleToolStripMenuItem.Text = "LineStyle";
             this.lineStyleToolStripMenuItem.ToolTipText = "Show WiKi LineStyle";
             this.lineStyleToolStripMenuItem.Click += new System.EventHandler(this.LineStyleToolStripMenuItem_Click);
             // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(149, 6);
+            // 
+            // sQLWildcardsToolStripMenuItem
+            // 
+            this.sQLWildcardsToolStripMenuItem.Name = "sQLWildcardsToolStripMenuItem";
+            this.sQLWildcardsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sQLWildcardsToolStripMenuItem.Text = "SQL Wildcards";
+            this.sQLWildcardsToolStripMenuItem.Click += new System.EventHandler(this.SQLWildcardsToolStripMenuItem_Click);
+            // 
+            // reqIFToolStripMenuItem
+            // 
+            this.reqIFToolStripMenuItem.Name = "reqIFToolStripMenuItem";
+            this.reqIFToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.reqIFToolStripMenuItem.Text = "ReqIF";
+            this.reqIFToolStripMenuItem.Click += new System.EventHandler(this.ReqIFToolStripMenuItem_Click);
+            // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(149, 6);
             // 
             // analyzeCCToolStripMenuItem
             // 
             this.analyzeCCToolStripMenuItem.Name = "analyzeCCToolStripMenuItem";
-            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.analyzeCCToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.analyzeCCToolStripMenuItem.Text = "AnalyzeC/C++";
             this.analyzeCCToolStripMenuItem.Click += new System.EventHandler(this.AnalyzeCCToolStripMenuItem_Click);
             // 
@@ -2493,25 +2513,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
-            // 
-            // sQLWildcardsToolStripMenuItem
-            // 
-            this.sQLWildcardsToolStripMenuItem.Name = "sQLWildcardsToolStripMenuItem";
-            this.sQLWildcardsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.sQLWildcardsToolStripMenuItem.Text = "SQL Wildcards";
-            this.sQLWildcardsToolStripMenuItem.Click += new System.EventHandler(this.sQLWildcardsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator19
-            // 
-            this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(177, 6);
-            // 
-            // reqIFToolStripMenuItem
-            // 
-            this.reqIFToolStripMenuItem.Name = "reqIFToolStripMenuItem";
-            this.reqIFToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.reqIFToolStripMenuItem.Text = "ReqIF";
-            this.reqIFToolStripMenuItem.Click += new System.EventHandler(this.reqIFToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4553,12 +4554,12 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             WikiRef.WikiHoTools();
         }
 
-        private void sQLWildcardsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SQLWildcardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.Wildcards();
         }
 
-        private void reqIFToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReqIFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.ReqIF();
         }

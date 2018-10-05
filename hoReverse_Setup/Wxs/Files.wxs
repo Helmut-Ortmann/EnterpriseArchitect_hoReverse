@@ -34,6 +34,8 @@
         <!--<CreateFolder Directory="APPLICATIONFOLDER" /> -->
           <File Id="LicenseFile" Name="license.rtf" Source="license.rtf"  KeyPath="yes" />
       </Component>
+
+
       <Component Id="hoReverseGui.dll.config" Guid="{C6DEC4D3-5338-495E-9AF5-974FF40299D9}">
         <File Id="hoReverseGui.dll.config" Name="hoReverseGui.dll.config" Source="..\hoReverseRoot\hoReverseGui.dll.config" KeyPath="yes" />
       </Component>
@@ -264,6 +266,11 @@
       <Component Id="OpenMcdf.dll" Guid="1ECCD40A-235E-4D5F-AFBA-E326AE8FB826">
         <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
       </Component>
+
+      <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
+      <Component Id="SautinSoft.RtfToHtml.dll" Guid="{DC687D4A-3A4E-428F-9981-996FBD2AD065}">
+        <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="c:\hoData\ProgramUpdate\SautinSoft\Net 4.6.1\SautinSoft.RtfToHtml.dll" />
+      </Component>
      
      
     </ComponentGroup>
@@ -307,9 +314,11 @@
         <File Id="application_x_java_applet.png" Name="application-x-java-applet.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-x-java-applet.png" />
       </Component>
       <Component Id="text_x_java.png" Guid="{692D0473-F83C-4F1F-BB6B-A8C06BF4991D}">
-        <File Id="text_x_java.png" Name=" text-x-java.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-x-java.png" />
+        <File Id="text_x_java.png" Name="text-x-java.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-x-java.png" />
       </Component>
-     
+
+      
+
     </ComponentGroup>
   </Fragment>
 </Wix>

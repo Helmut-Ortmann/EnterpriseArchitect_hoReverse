@@ -106,7 +106,8 @@
       <HintPath>..\..\..\..\Knowledge\ReqIF\Tools\HtmlToRtf_Sautin\Net 4.5\SautinSoft.HtmlToRtf.dll</HintPath>
     </Reference>
     <Reference Include="SautinSoft.RtfToHtml, Version=6.1.12.20, Culture=neutral, PublicKeyToken=c666a5e96a3d5457, processorArchitecture=MSIL">
-      <HintPath>..\packages\sautinsoft.rtftohtml.6.1.12.20\lib\net45\SautinSoft.RtfToHtml.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\ProgramUpdate\SautinSoft\Net 4.6.1\SautinSoft.RtfToHtml.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />

@@ -18,7 +18,7 @@ namespace hoReverse.hoUtils.ActivityParameter
         //
         // init
         // final
-        private static readonly bool activityIsSimple = true; // Create Activity from function in the simple form
+        private static readonly bool ActivityIsSimple = true; // Create Activity from function in the simple form
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool CreateDefaultElementsForActivity(EA.Repository rep, 
@@ -70,65 +70,89 @@ namespace hoReverse.hoUtils.ActivityParameter
 
             // Check if update behavior, behavior exists
             string behaviorGuid = m.Behavior;
+
+            // Check if update Activity or Create a new one
             if (behaviorGuid.StartsWith("{") && behaviorGuid.EndsWith("}") )
             {
                 //behaviorGuid = behaviorGuid.Substring(1, behaviorGuid.Length-2);
                 EA.Element actForUpdate = rep.GetElementByGuid(behaviorGuid);
                 if (actForUpdate == null)
                 {
-                    MessageBox.Show($"Behavior GUID ={behaviorGuid}. Unable to find Activity for this GUIID", "Can't update Activity for Operation, no valid link found");
-                    return false;
+                    var res = MessageBox.Show($@"Can't update Activity for Operation, invalid link to Activity found
+
+Behavior GUID =GUID of expected Activity:
+{behaviorGuid}
+
+Unable to find Activity for this GUID",
+                        @"Invalid link to Activity found, Create a new one?", 
+                        MessageBoxButtons.OKCancel);
+                    if (res != DialogResult.OK) return false;
+                    CreateActivityFromOperation(rep, m, treePos, pkgSrc, elClass);
+
                 }
-                UpdateParameterFromOperation(rep, actForUpdate, m);// update parameters from Operation for Activity
-
-
+                else
+                    UpdateParameterFromOperation(rep, actForUpdate, m); // update parameters from Operation for Activity
                 return true;
             }
-            // Check if 
+            CreateActivityFromOperation(rep, m, treePos, pkgSrc, elClass);
+            return true;
+        }
 
+        /// <summary>
+        /// Create Activity for operation
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="m"></param>
+        /// <param name="treePos"></param>
+        /// <param name="pkgSrc"></param>
+        /// <param name="elClass"></param>
+        private static void CreateActivityFromOperation(Repository rep, Method m, int treePos, Package pkgSrc, Element elClass)
+        {
             // create a package with the name of the operation
-            Package pkgTrg = (Package)pkgSrc.Packages.AddNew(m.Name, "");
+            Package pkgTrg = (Package) pkgSrc.Packages.AddNew(m.Name, "");
             pkgTrg.TreePos = treePos;
             pkgTrg.Update();
             pkgSrc.Packages.Refresh();
 
             EA.Element frm = null; // frame beneath package
-            if (activityIsSimple == false)
+            if (ActivityIsSimple == false)
             {
                 // create Class Activity Diagram in target package
-                EA.Diagram pkgActDia = (EA.Diagram)pkgTrg.Diagrams.AddNew("Operation:" + m.Name + " Content", "Activity");
+                EA.Diagram pkgActDia = (EA.Diagram) pkgTrg.Diagrams.AddNew("Operation:" + m.Name + " Content", "Activity");
                 pkgActDia.Update();
                 pkgTrg.Diagrams.Refresh();
                 // prevent information loss
-                HoUtil.SetDiagramStyleFitToPage(pkgActDia);// after save diagram!
+                HoUtil.SetDiagramStyleFitToPage(pkgActDia); // after save diagram!
 
                 // add frame in Activity diagram
-                EA.DiagramObject frmObj = (EA.DiagramObject)pkgActDia.DiagramObjects.AddNew("l=100;r=400;t=25;b=50", "");
-                frm = (EA.Element)pkgTrg.Elements.AddNew(m.Name, "UMLDiagram");
+                EA.DiagramObject frmObj = (EA.DiagramObject) pkgActDia.DiagramObjects.AddNew("l=100;r=400;t=25;b=50", "");
+                frm = (EA.Element) pkgTrg.Elements.AddNew(m.Name, "UMLDiagram");
                 frm.Update();
                 frmObj.ElementID = frm.ElementID;
                 //frmObj.Style = "fontsz=200;pitch=34;DUID=265D32D5;font=Arial Narrow;bold=0;italic=0;ul=0;charset=0;";
                 frmObj.Update();
                 pkgTrg.Elements.Refresh();
                 pkgActDia.DiagramObjects.Refresh();
+            }
 
-            }
             // create activity with the name of the operation
-            EA.Element act = (EA.Element)pkgTrg.Elements.AddNew(m.Name, "Activity");
-            if (activityIsSimple == false)
+            EA.Element act = (EA.Element) pkgTrg.Elements.AddNew(m.Name, "Activity");
+            if (ActivityIsSimple == false)
             {
-                act.Notes = "Generated from Operation:\r\n" + m.Visibility + " " + m.Name + ":" + m.ReturnType + ";\r\nDetails see Operation definition!!";
+                act.Notes = "Generated from Operation:\r\n" + m.Visibility + " " + m.Name + ":" + m.ReturnType +
+                            ";\r\nDetails see Operation definition!!";
             }
+
             act.StereotypeEx = m.StereotypeEx;
             act.Update();
             pkgTrg.Elements.Refresh();
 
             // create activity diagram beneath Activity
-            EA.Diagram actDia = (EA.Diagram)act.Diagrams.AddNew(m.Name, "Activity");
+            EA.Diagram actDia = (EA.Diagram) act.Diagrams.AddNew(m.Name, "Activity");
             // update diagram properties
             actDia.ShowDetails = 0; // hide details
             // scale page to din A4
-            
+
             if (actDia.StyleEx.Length > 0)
             {
                 actDia.StyleEx = actDia.StyleEx.Replace("HideQuals=0", "HideQuals=1"); // hide qualifier
@@ -137,20 +161,24 @@ namespace hoReverse.hoUtils.ActivityParameter
             {
                 actDia.StyleEx = "HideQuals=1;";
             }
+
             // Hide Qualifier
             if (actDia.ExtendedStyle.Length > 0)
-            { actDia.ExtendedStyle = actDia.ExtendedStyle.Replace("ScalePI=0", "ScalePI=1");  }
-            else 
-            {  
+            {
+                actDia.ExtendedStyle = actDia.ExtendedStyle.Replace("ScalePI=0", "ScalePI=1");
+            }
+            else
+            {
                 actDia.ExtendedStyle = "ScalePI=1;";
             }
+
             actDia.Update();
             act.Diagrams.Refresh();
 
-            
+
             // put the activity on the diagram
             HoUtil.AddSequenceNumber(rep, actDia);
-            EA.DiagramObject actObj = (EA.DiagramObject)actDia.DiagramObjects.AddNew("l=30;r=780;t=30;b=1120", "");
+            EA.DiagramObject actObj = (EA.DiagramObject) actDia.DiagramObjects.AddNew("l=30;r=780;t=30;b=1120", "");
             actObj.ElementID = act.ElementID;
             actObj.Sequence = 1;
             actObj.Update();
@@ -160,12 +188,12 @@ namespace hoReverse.hoUtils.ActivityParameter
             // add default nodes (init/final)
             CreateDefaultElementsForActivity(rep, actDia, act);
 
-            if (activityIsSimple == false)
+            if (ActivityIsSimple == false)
             {
                 // Add Heading to diagram
                 HoUtil.AddSequenceNumber(rep, actDia);
-                EA.DiagramObject noteObj = (EA.DiagramObject)actDia.DiagramObjects.AddNew("l=40;r=700;t=25;b=50", "");
-                EA.Element note = (EA.Element)pkgTrg.Elements.AddNew("Text", "Text");
+                EA.DiagramObject noteObj = (EA.DiagramObject) actDia.DiagramObjects.AddNew("l=40;r=700;t=25;b=50", "");
+                EA.Element note = (EA.Element) pkgTrg.Elements.AddNew("Text", "Text");
 
                 note.Notes = m.Visibility + " " + elClass.Name + "_" + m.Name + ":" + m.ReturnType;
                 note.Update();
@@ -175,6 +203,7 @@ namespace hoReverse.hoUtils.ActivityParameter
                 noteObj.Update();
                 HoUtil.SetSequenceNumber(rep, actDia, noteObj, "1");
             }
+
             pkgTrg.Elements.Refresh();
             actDia.DiagramObjects.Refresh();
 
@@ -190,12 +219,12 @@ namespace hoReverse.hoUtils.ActivityParameter
             int pos = 0;
             foreach (EA.Element actPar in act.EmbeddedElements)
             {
-                if (! actPar.Type.Equals("ActivityParameter")) continue;
+                if (!actPar.Type.Equals("ActivityParameter")) continue;
                 HoUtil.VisualizePortForDiagramobject(rep, pos, actDia, actObj, actPar, null);
                 pos = pos + 1;
             }
 
-            if (activityIsSimple == false)
+            if (ActivityIsSimple == false)
             {
                 // link Overview frame to diagram
                 HoUtil.SetFrameLinksToDiagram(rep, frm, actDia);
@@ -204,8 +233,8 @@ namespace hoReverse.hoUtils.ActivityParameter
 
             // select operation
             rep.ShowInProjectView(m);
-            return true;
         }
+
         /// <summary>
         /// Create an Activity diagram beneath selected Activity.
         /// </summary>
