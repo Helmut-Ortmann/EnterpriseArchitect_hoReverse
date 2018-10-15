@@ -32,14 +32,14 @@ namespace EaServices.Doors.ReqIfs
         public string MakeXhtmlForEmbeddedFiles(EA.Element el)
         {
             
-            string xhtml = "<br /><br />Embedded Files:<br />";
+            string xhtml = "<br/><br/>Embedded Files:<br/>";
             // handle all file of Ea Element
             foreach (EA.File file in el.Files)
             {
                 xhtml = RunFile(file, xhtml);
             }
             // make all paths with slash
-            return $"{xhtml.Replace(@"\", @"/")}<br /><br />";
+            return $"{xhtml.Replace(@"\", @"/")}<br/><br/>";
         }
         /// <summary>
         /// Run for file. Make XHTML and copy the file

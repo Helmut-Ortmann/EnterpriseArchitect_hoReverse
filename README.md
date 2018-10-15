@@ -64,6 +64,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.4 Error fixing
+-  ReqIF from notes
+
 3.1.3 [ReqIF Export](ReqIF_Export), Error fixing
 -  hoReverse converts EA 'Linked Documents' to ReqIF XHTML format
    Make sure the recipient can understand the format.

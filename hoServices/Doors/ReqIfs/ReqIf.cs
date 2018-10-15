@@ -211,6 +211,13 @@ Roundtrip needs at least initial import and model elements in EA!
             try
             {
                 serializer.Serialize(_reqIf, pathSerialize, null);
+
+                //// Serialize makes <br/> and sometimes <br />
+                //// ReqIF Studio only supports <br/>
+                //string txtReqIf = File.ReadAllText(pathSerialize);
+                //txtReqIf = txtReqIf.Replace($@"{NameSpace}:br/>", $@"{NameSpace}:br />");
+                //File.WriteAllText(pathSerialize, txtReqIf);
+
             }
             catch (Exception e)
             {
@@ -367,6 +374,18 @@ Value: '{eaValue}'
 
             return true;
         }
+
+        /// <summary>
+        /// Add XHTML Namespace to string
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string AddXtmlNameSpace(string stringText)
+        {
+            string xhtmlContent =
+                $@"<{NameSpace}:div xmlns:{NameSpace}=""http://www.w3.org/1999/xhtml"">{MakeNameSpace(stringText)}</{NameSpace}:div>";
+            return xhtmlContent;
+        }
         /// <summary>
         /// Make XHTML from a simple string. It inserts the xhtml namespace and handles cr/lf
         /// </summary>
@@ -374,33 +393,62 @@ Value: '{eaValue}'
         /// <returns></returns>
         private static string MakeXhtmlFromString(string stringValue)
         {
-            stringValue = stringValue.Replace("\r\n", "<br></br>");
+            //stringValue = stringValue.Replace("\r\n", "<br></br>");
+            stringValue = stringValue.Replace("\r\n", "<br/>");
             stringValue = stringValue.Replace("&nbsp;", "");
-            stringValue = Regex.Replace(stringValue, @">\s*<","><");  // Replace Blanks between control sequences
+            stringValue = Regex.Replace(stringValue, @">\s*<", "><");  // Replace Blanks between control sequences
+            stringValue = LimitReqIfXhtml(stringValue);
+            return AddXtmlNameSpace(stringValue);
+        }
+        /// <summary>
+        /// Make XHTML from a html string. It inserts the xhtml namespace
+        /// </summary>
+        /// <param name="htmlValue"></param>
+        /// <returns></returns>
+        private static string MakeXhtmlFromHtml(string htmlValue)
+        {
+            //stringValue = stringValue.Replace("\r\n", "<br></br>");
+            htmlValue = htmlValue.Replace("&nbsp;", "");
+            //htmlValue = Regex.Replace(htmlValue, @">\s*<", "><");  // Replace Blanks between control sequences
+            htmlValue = LimitReqIfXhtml(htmlValue);
+            return AddXtmlNameSpace(htmlValue);
+        }
+        /// <summary>
+        /// Limit to ReqIF XHTML tags
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string LimitReqIfXhtml(string stringText)
+        {
+            // delete not allowed ReqIF things
+            // '<u>'
+            // </u>>
+            // ul type="xxxx" xxxx=disc, ...  remove type="xxx"
+            // li value="n"   n=Number        remove value="n"
+            stringText = stringText.Replace("<u>", "").Replace("</u>", "");
+
+            stringText = Regex.Replace(stringText, @"<ol type=""[^""]*""", "<ol");  // Replace type in ul
+            stringText = Regex.Replace(stringText, @"<ul type=""[^""]*""", "<ul");  // Replace type in ul
+            stringText = Regex.Replace(stringText, @"<li value=""[^""]*""", "<li");  // Replace value in li
+            stringText = Regex.Replace(stringText, @"<font [^>]*>", "");  // Replace font tag
+            stringText = Regex.Replace(stringText, @"</font>", "");  // Replace font tag
 
 
-            string xhtmlcontent =
-                $@"<reqif-xhtml:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringValue}</reqif-xhtml:div>";
-            return xhtmlcontent;
+
+            return stringText;
+
         }
 
         /// <summary>
-        /// Make XHTML from a string. It inserts the xhtml namespace and handles cr/lf
+        /// Make XHTML from a EA notes. It inserts the xhtml namespace and handles special characters
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="stringText"></param>
         /// <returns></returns>
-        private static string MakeXhtmlFromString(EA.Repository rep, string stringText)
+        private static string MakeXhtmlFromEaNotes(EA.Repository rep, string stringText)
         {
             string stringHtml = rep.GetFormatFromField("HTML", stringText);
-            stringHtml = stringHtml.Replace("\r\n", "");
-            stringHtml = stringHtml.Replace("&nbsp;", "");
-            stringHtml = Regex.Replace(stringHtml, @">\s*<", "><");  // Replace Blanks between control sequences
-
-
-            string xhtmlcontent =
-                $@"<{NameSpace}:div xmlns:reqif-xhtml=""http://www.w3.org/1999/xhtml"">{stringHtml}</{NameSpace}:div>";
-            return xhtmlcontent;
+            return MakeXhtmlFromHtml(stringHtml);
         }
         /// <summary>
         /// Make ReqIF XHTML from a XHTML. In essence add XHTML namespace
@@ -409,30 +457,29 @@ Value: '{eaValue}'
         /// <returns></returns>
         private static string MakeReqIfXhtmlFromXhtml(string stringText)
         {
-            string xhtmlContent =
-                $@"<{NameSpace}:div xmlns:{NameSpace}=""http://www.w3.org/1999/xhtml"">{MakeNameSpace(stringText)}</{NameSpace}:div>";
-            return xhtmlContent;
+            stringText = LimitReqIfXhtml(stringText);
+            return AddXtmlNameSpace(stringText);
+
         }
+
         /// <summary>
         /// Make xhtml namespace and correct some peculiar things (not supported by xhtml for reqIF)
         /// </summary>
         /// <param name="text"></param>
-        /// <param name="nameSpace"></param>
         /// <returns></returns>
         private static string MakeNameSpace(string text)
         {
-            text = text.Replace("&nbsp;", "");
-            text = text.Replace("&laquo;", "");// <<
-            text = text.Replace("&raquo;", "");// >>
-            text = text.Replace(@"type=""1""", "");
-            text = text.Replace(@"value=""1""", "");
-
+            text = text.Replace(@"&nbsp;", "");
+            text = text.Replace(@"&laquo;", "");// <<
+            text = text.Replace(@"&raquo;", "");// >>
 
             Regex rx = new Regex(@"</");
             text = rx.Replace(text, $@"</{NameSpace}:");
 
             rx = new Regex(@"<(\w)");
             text = rx.Replace(text, $@"<{NameSpace}:$1");
+
+            text = text.Replace($@"{NameSpace}:br />", $@"{NameSpace}:br/>");
 
 
             return text;

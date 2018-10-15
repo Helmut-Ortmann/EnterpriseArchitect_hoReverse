@@ -224,11 +224,14 @@ namespace EaServices.Doors.ReqIfs
                         string rtfText = el?.GetLinkedDocument();
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
                             x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
+
                         // rtf text available
                         if (! String.IsNullOrEmpty(rtfText))
                         {
                             string fileDir = _settings.EmbeddedFileStorageDictionary;
                             string xhtml = RtfToXhtml.Convert(rtfText, fileDir,_settings.EmbeddedFilesPng);
+
+                            // Handle embedded files of the EA-Element
                             xhtml = $@"{xhtml}
 {_exportEmbeddedEaFile.MakeXhtmlForEmbeddedFiles(el)}";
 
@@ -246,7 +249,7 @@ namespace EaServices.Doors.ReqIfs
                             attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition = definition,
-                                TheValue = MakeXhtmlFromString(Rep, r.Desc)
+                                TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
                             };
                             _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
 
@@ -270,7 +273,7 @@ namespace EaServices.Doors.ReqIfs
                             Definition =
                                 (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
                                     x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
-                            TheValue = MakeXhtmlFromString(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue,r.TvNote))
+                            TheValue = MakeXhtmlFromEaNotes(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue,r.TvNote))
                         };
                         specObject.Values.Add(attributeValueXhtml);
                     }
@@ -783,7 +786,7 @@ namespace EaServices.Doors.ReqIfs
             {
                 Definition = (AttributeDefinitionXHTML) specType.SpecAttributes.SingleOrDefault(x =>
                     x.GetType() == typeof(AttributeDefinitionXHTML) && x.Identifier == "specification-reqif-name"),
-                TheValue = MakeXhtmlFromString(Rep, pkg.Name)
+                TheValue = MakeXhtmlFromEaNotes(Rep, pkg.Name)
             };
             specElementWithAttributes.Values.Add(attributeValueXhtml);
 
@@ -793,7 +796,7 @@ namespace EaServices.Doors.ReqIfs
                 Definition = (AttributeDefinitionXHTML) specType.SpecAttributes.SingleOrDefault(x =>
                     x.GetType() == typeof(AttributeDefinitionXHTML) &&
                     x.Identifier == "specification-reqif-description"),
-                    TheValue = MakeXhtmlFromString(Rep, pkg.Notes)
+                    TheValue = MakeXhtmlFromEaNotes(Rep, pkg.Notes)
             };
             specElementWithAttributes.Values.Add(attributeValueXhtml);
 
