@@ -15,13 +15,14 @@ namespace EaServices.Doors
 		    return ConvertDoc(doc);
 	    }
         /// <summary>
-        /// Convert ReqIF XHTML to text 
+        /// Convert ReqIF XHTML to text. It removes images because they make no sense. 
         /// </summary>
         /// <param name="reqIfHhtml"></param>
         /// <returns></returns>
         public static string ConvertReqIfXhtml(string reqIfHhtml)
         {
             var xhtml = HtmlToDocx.XhtmlFromReqIf(reqIfHhtml);
+
             return ConvertHtml(HtmlToDocx.DeleteObjects(xhtml));
         }
 
@@ -92,7 +93,7 @@ namespace EaServices.Doors
 					    textInfo.IsFirstTextOfDocWritten.Value = textInfo.WritePrecedingWhiteSpace = true;
 				    }
 				    outText.Write(HtmlEntity.DeEntitize(Regex.Replace(html.TrimEnd(), @"\s{2,}", " ")));
-				    if (textInfo.LastCharWasSpace = char.IsWhiteSpace(html[html.Length - 1]))
+				    if (textInfo.LastCharWasSpace == char.IsWhiteSpace(html[html.Length - 1]))
 				    {
 					    outText.Write(' ');
 				    }

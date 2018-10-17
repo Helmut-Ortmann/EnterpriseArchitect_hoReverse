@@ -40,13 +40,16 @@ namespace EaServices.Doors
             //doc.Process(new HtmlParser("<div>sample text</div>"));
             try
             {
+
                 if (xhtml.Contains("<img"))
                 {
+                    // with images 
                     doc.Process(new HtmlParser(xhtml));
                     doc.Save();
                 }
                 else
                 {
+                    //without images
                     doc.Process(new HtmlParser(xhtml));
                     doc.Save();
                 }
@@ -118,9 +121,9 @@ namespace EaServices.Doors
         /// <returns></returns>
         public static string DeleteObjects(string xhtml)
         {
-            while ( xhtml.Contains("<img") )
+            if ( xhtml.Contains("<img") )
             {
-                string delOleObject = @"<img.*?</img>";
+                string delOleObject = @"<img.*?(</img>| />)";
                 Regex regDelOleObject = new Regex(delOleObject);
                 Match match = regDelOleObject.Match(xhtml);
                 while (match.Success)
@@ -152,23 +155,27 @@ namespace EaServices.Doors
                 xhtml = xhtml.Replace($"{match.Groups[1].Value}:", "");
             }
 
+            // Replace embedded object 
             //<object data="OLE_AB_4e7c971411315592_23_210006b143_2800000149__066872fb-03dd-45cd-85f6-2aaf7cecfaff_OBJECTTEXT_0.ole" type="text/rtf">
             //    <object data="OLE_AB_4e7c971411315592_23_210006b143_2800000149__066872fb-03dd-45cd-85f6-2aaf7cecfaff_OBJECTTEXT_0.png" type="image/png">OLE Object
             //    </object>
             //    </object></div>
-            string delOleObject = @"<object data=[^>]*>\s*(<object.*?\s*</object>)\s*</object>";
+            string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*?</object>)\s*?</object>";
             Regex regDelOleObject = new Regex(delOleObject);
             match = regDelOleObject.Match(xhtml);
             while (match.Success)
             {
-                xhtml = xhtml.Replace(match.Groups[0].Value, match.Groups[1].Value);
+               xhtml = xhtml.Replace(match.Groups[0].Value, match.Groups[1].Value);
                match =  match.NextMatch();
 
             }
 
 
             // change '<object' to '<img' 
-            string regex = @"<object.*type=\""([^\""]*)\"">.*</object>";
+            //string regex = @"<object.*type=\""([^\""]*)\"">.*</object>";
+            //<object.*type="([^"]*)".*?(</object>| />)
+            string regex = @"<object.*type=""([^""]*)"".*?(</object>| />)";
+
             Regex regObjectToImg = new Regex(regex);
             match = regObjectToImg.Match(xhtml);
             while (match.Success)

@@ -1036,8 +1036,8 @@ Origin:{Tab}'{Path.GetFileName(f)}'";
             }
 
 
-
-            bool IsGenerateDocx = true;
+            // generate docx or rtf
+            bool IsGenerateDocx = false;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             docFile = System.IO.Path.Combine(docFile, IsGenerateDocx ? "xxxxxxx.docx" : "xxxxxxx.rtf");
 
