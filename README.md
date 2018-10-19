@@ -64,8 +64,11 @@ Let's discuss it, but it works.
 
 ## News
 
-3.1.4 Error fixing
--  ReqIF from notes
+3.1.4 Sautin converter instead of MariGold for import (easily to change back), Error fixing
+-  Sautin converter instead of MariGold for import (looks as if better converting results XHTML to DOCX/rtf)
+-  Error fixing ReqIF from EA Notes
+-  Updated NuGetPackages (MariGold, SQLITE)
+-  Do Import/Export only with possible configuration
 
 3.1.3 [ReqIF Export](ReqIF_Export), Error fixing
 -  hoReverse converts EA 'Linked Documents' to ReqIF XHTML format

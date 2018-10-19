@@ -33,7 +33,6 @@ namespace EaServices.Doors
                 return;
             }
 
-            if (doc == null) return;
             var uri = new System.Uri(System.IO.Path.GetDirectoryName(docXFile));
             doc.ImagePath = uri.AbsoluteUri;
 
@@ -75,8 +74,8 @@ namespace EaServices.Doors
                 // write to *.docx
                 if (String.IsNullOrWhiteSpace(xhtml)) xhtml = "Empty!!!";
 
-                // Open the result for demonstation purposes.
-                SautinSoft.HtmlToRtf h = new SautinSoft.HtmlToRtf();
+                // Developer License
+                SautinSoft.HtmlToRtf h = new SautinSoft.HtmlToRtf {Serial = "10281946238"};
                 string xhtmlFile = System.IO.Path.GetDirectoryName(rtfFile);
                 xhtmlFile = System.IO.Path.Combine(xhtmlFile, "xxxxxx.xhtml");
 
@@ -156,11 +155,20 @@ namespace EaServices.Doors
             }
 
             // Replace embedded object 
-            //<object data="OLE_AB_4e7c971411315592_23_210006b143_2800000149__066872fb-03dd-45cd-85f6-2aaf7cecfaff_OBJECTTEXT_0.ole" type="text/rtf">
-            //    <object data="OLE_AB_4e7c971411315592_23_210006b143_2800000149__066872fb-03dd-45cd-85f6-2aaf7cecfaff_OBJECTTEXT_0.png" type="image/png">OLE Object
-            //    </object>
-            //    </object></div>
-            string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*?</object>)\s*?</object>";
+            /*
+                <object data="[^"]*?" type="[^"]*?"(>[^/><]*</object>1| />)
+                <object data="OLE_.ole" type="text/rtf">
+                    <object data="OLE_0.png" type="image/png">OLE Object
+                    </object>
+                </object>
+
+                <object data="OLE_AB_.ole" type="text/rtf">
+                   <object data="OLE_AB_0.png" type="image/png" />
+                </object></div>
+            */
+            //string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*?</object>)\s*?</object>";
+            string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*(</object>|>))\s*?</object>";
+
             Regex regDelOleObject = new Regex(delOleObject);
             match = regDelOleObject.Match(xhtml);
             while (match.Success)

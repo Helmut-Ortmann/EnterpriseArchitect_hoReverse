@@ -3179,72 +3179,89 @@ namespace hoReverse.Reverse
                     "Change selected EA items in Package (recursive)\r\nSelect\r\n-Package",
                     BulkChangeEaItemsRecursive_Click));
 
-                //-------------------------------------------------------------------------------------
-                // Importer: Import *.csv, ReqIf from according to specification in Settings.Json
-                _doToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
-                    _importSettings.ImportSettings,
-                    "Import *.csv, ReqIF",
-                    "Import Requirements (*.csv, ReqIF, DOORS ReqIf)",
-                    Importer_Click,
-                    MenuItemHover_MouseHover,  // Optional register the mouse hover event 
-                    "Locate Package",  MenuItemContext_MouseDown));
 
-                //--------------------------------------------------------------------------------------
-                // Add List of Roudtrip/Workflow ReqIF items
-                // Subset of all Import items
-                // Filter import settings for to export items 
-                if (_importSettings.ImportSettings == null)
-                {
-                    MessageBox.Show($@"Chapter '""Importer"":' is defect or missing in Settings.Json
-
-See File, Settings.json (current)
-https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf
-
-Consider resetting json to factury settings (menu File)
-
-If you don't need to import ReqIF & Co, you can ignore this message!!
-", @"No 'Import Specification' ReqIF & co is configured!");
-                }
-                else
-                {
-                    var roundtripBySettings = (from item in _importSettings.ImportSettings
-                        where item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
-                              item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
-                        select item).ToList();
-
-                    _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
-                        roundtripBySettings,
-                        "Roundtrip ReqIF",
-                        "Roundtrip Requirements ( ReqIF export roundtrip attributes)",
-                        Roundtrip_Click,
-                        MenuItemHover_MouseHover, // Optional register the mouse hover event 
-                        "Locate Package", MenuItemContext_MouseDown));
-
-                    //--------------------------------------------------
-                    // Add List of Export ReqIF items to do menue
-                    // Subset of all Import items
-                    // Filter import settings for to export items 
-                    var exportBySettings = (from item in _importSettings.ImportSettings
-                        where item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
-                              item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
-                        select item).ToList();
-
-                    _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
-                        exportBySettings,
-                        "Export ReqIF",
-                        "Export Requirements ( ReqIF export all)",
-                        Export_Click,
-                        MenuItemHover_MouseHover, // Optional register the mouse hover event 
-                        "Locate Package", MenuItemContext_MouseDown));
-                    _doMenuDiagramStyleInserted = true;
-                }
+                AddDoMenuImportExportRoundtrip();
             }
-            catch (Exception e1)
+
+                catch (Exception e1)
             {
                 MessageBox.Show($@"'{_jasonFilePath}'
 
 {e1}", @"Error loading 'Settings.json'");
+            }
+        }
+        /// <summary>
+        /// Add Import/Export/Roundtrip settings *.csv, ReqIF from Settings.json
+        /// It shows the menu item if they are plausible: Function, InputFile, RoundtripFile, ExportFile
+        /// </summary>
+        private void AddDoMenuImportExportRoundtrip()
+        {
+            if (_importSettings.ImportSettings == null)
+            {
+                MessageBox.Show($@"Chapter '""Importer"":' is defect or missing in Settings.Json
+
+See File, Settings.json (current)
+https://github.com/Helmut-Ortmann/EnterpriseArchitect_hoReverse/wiki/ReqIf
+
+Consider resetting json to factory settings (menu File)
+
+If you don't need to import/export ReqIF & Co, you can ignore this message!!
+", @"No 'Import Specification' ReqIF & co is configured!");
+            }
+            else
+            {
+                //-------------------------------------------------------------------------------------
+                // Importer: Import *.csv, ReqIf from according to specification in Settings.Json
+                var importBySettings = (from item in _importSettings.ImportSettings
+                    where (!String.IsNullOrWhiteSpace(item.InputFile))
+                    select item).ToList();
+
+
+                _doToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
+                    importBySettings,
+                    //_importSettings.ImportSettings,
+                    "Import *.csv, ReqIF",
+                    "Import Requirements (*.csv, ReqIF, DOORS ReqIf)",
+                    Importer_Click,
+                    MenuItemHover_MouseHover, // Optional register the mouse hover event 
+                    "Locate Package", MenuItemContext_MouseDown));
+
+
+                var roundtripBySettings = (from item in _importSettings.ImportSettings
+                    where !String.IsNullOrWhiteSpace(item.InputFile) &&
+                          !String.IsNullOrWhiteSpace(item.RoundtripFile) &&
+                          (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
+                           item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
+                    select item).ToList();
+
+                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
+                    roundtripBySettings,
+                    "Roundtrip ReqIF",
+                    "Roundtrip Requirements ( ReqIF export roundtrip attributes)",
+                    Roundtrip_Click,
+                    MenuItemHover_MouseHover, // Optional register the mouse hover event 
+                    "Locate Package", MenuItemContext_MouseDown));
+
+                //--------------------------------------------------
+                // Add List of Export ReqIF items to do menue
+                // Subset of all Import items
+                // Filter import settings for to export items 
+                // - An input or export file has to be defied
+                var exportBySettings = (from item in _importSettings.ImportSettings
+                    where (!String.IsNullOrWhiteSpace(item.ExportFile)) &&
+                          (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
+                           item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
+                    select item).ToList();
+
+                _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
+                    exportBySettings,
+                    "Export ReqIF",
+                    "Export Requirements ( ReqIF export all)",
+                    Export_Click,
+                    MenuItemHover_MouseHover, // Optional register the mouse hover event 
+                    "Locate Package", MenuItemContext_MouseDown));
+                _doMenuDiagramStyleInserted = true;
             }
         }
 

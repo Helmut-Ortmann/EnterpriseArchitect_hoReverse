@@ -210,10 +210,10 @@
       </Component>
       -->
       <Component Id="SQLite.Interop.dll" Guid="{3DFC900E-8BD6-4B50-ACFC-7DF08040ECC2}">
-        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\x86\SQLite.Interop.dll" />
+        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\System.Data.SQLite.Core.1.0.109.0\build\net46\x86\SQLite.Interop.dll" />
       </Component>
       <Component Id="System.Data.SQLite.dll" Guid="{B161BBE0-0A9C-4570-AE7A-91E10F380ACD}">
-        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\System.Data.SQLite.Core.1.0.108.0\lib\net46\System.Data.SQLite.dll" />
+        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\System.Data.SQLite.Core.1.0.109.0\lib\net46\System.Data.SQLite.dll" />
       </Component>
 
       <!-- Settings.json                                            -->
@@ -250,14 +250,14 @@
         -->
       <!-- HtmlAgilityPack -->
       <Component Id="HtmlAgilityPack.dll" Guid="{3783B4A7-6591-4783-AFD5-FB7F4E70A2D5}">
-        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.6\lib\Net45\HtmlAgilityPack.dll" />
+        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.9\lib\Net45\HtmlAgilityPack.dll" />
       </Component>
         
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">
-            <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="..\packages\MariGold.HtmlParser.1.0.1\lib\net35\MariGold.HtmlParser.dll" />
+            <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="..\packages\MariGold.HtmlParser.1.1.0\lib\netstandard2.0\MariGold.HtmlParser.dll" />
         </Component>
         <Component Id="MariGold.OpenXHTML.dll" Guid="9D3E3286-600E-4CA5-8270-9F20576BE18E">
-            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.4.0\lib\net40\MariGold.OpenXHTML.dll" />
+            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.5.0\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
         </Component>
         <Component Id="ReqIFSharp.dll" Guid="B19B5F34-14FE-4F28-BAE9-A73025277C78">
             <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.2\lib\net45\ReqIFSharp.dll" />
@@ -270,6 +270,11 @@
       <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
       <Component Id="SautinSoft.RtfToHtml.dll" Guid="{DC687D4A-3A4E-428F-9981-996FBD2AD065}">
         <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="c:\hoData\ProgramUpdate\SautinSoft\Net 4.6.1\SautinSoft.RtfToHtml.dll" />
+      </Component>
+
+      <!-- SautinSoft.HtmlToRtf.dll, this is a developer license, you have to replace it with your license (full or test)-->
+      <Component Id="SautinSoft.HtmlToRtf.dll" Guid="{223D20A3-B9A6-48C2-922F-C43888649397}">
+        <File Id="SautinSoft.HtmlToRtf.dll" Name="SautinSoft.HtmlToRtf.dll" KeyPath="yes" Source="c:\hoData\ProgramUpdate\SautinSoft\HtmlToRtf\Net 4.6.1\SautinSoft.HtmlToRtf.dll" />
       </Component>
      
      

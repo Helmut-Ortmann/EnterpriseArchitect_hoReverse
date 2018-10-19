@@ -49,7 +49,7 @@ namespace EaServices.Doors
         private string _inputFile;
 
         /// <summary>
-        /// The file to export. The default is the input file name with "_Export" at the end
+        /// The file to export. The default is the input file name with "_Export" at the end. If an export is defined than use this one.
         ///
         /// Example: myImport.reqifz, myImport.csv, myImport.xml
         /// </summary>
