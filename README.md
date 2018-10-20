@@ -64,6 +64,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.5 Fix Error EA Tagged Values with Blank in Enum Values (ReqIF)
+-  Export Example added
+
 3.1.4 Sautin converter instead of MariGold for import (easily to change back), Error fixing
 -  Sautin converter instead of MariGold for import (looks as if better converting results XHTML to DOCX/rtf)
 -  Error fixing ReqIF from EA Notes
