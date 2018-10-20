@@ -71,8 +71,8 @@ namespace EaServices.Doors.ReqIfs
 
             WriteModuleSpecification(Pkg);
 
-            CreateSpecObjects();
-            CreateSpecHierarchy();
+            if (! CreateSpecObjects()) return false;
+            if (!CreateSpecHierarchy()) return false;
 
             // serialize ReqIF
             string fileReqIf = Path.Combine(Zip.CreateTempDir(), Path.GetFileName(ImportModuleFile));
@@ -86,7 +86,7 @@ namespace EaServices.Doors.ReqIfs
         /// <summary>
         /// Create Specification with hierachy
         /// </summary>
-        private void CreateSpecHierarchy()
+        private bool CreateSpecHierarchy()
         {
             var parent = _moduleSpecification;
             foreach (EA.Element el in Pkg.Elements)
@@ -105,6 +105,8 @@ namespace EaServices.Doors.ReqIfs
                     CreateSpecHierarchyElement(specHierarchy, child);
                 }
             }
+
+            return true;
         }
         /// <summary>
         /// Create a SpecHierarchy with the link to the SpecObject
@@ -135,7 +137,7 @@ namespace EaServices.Doors.ReqIfs
         /// <summary>
         /// Create SpecObject for all Requirements of Package
         /// </summary>
-        private void CreateSpecObjects()
+        private bool CreateSpecObjects()
         {
             using (var db = new EaDataModel(_provider, _connectionString))
             {
@@ -287,7 +289,7 @@ namespace EaServices.Doors.ReqIfs
                             Definition = attributeDefinitionEnumeration
 
                         };
-                        SetReqIfEnumValue(attributeValueEnumeration, r.TvValue, attributeDefinitionEnumeration.IsMultiValued);
+                        if (! SetReqIfEnumValue(attributeValueEnumeration, r.TvValue, attributeDefinitionEnumeration.IsMultiValued)) return false;
                         specObject.Values.Add(attributeValueEnumeration);
                         
                     }
@@ -295,10 +297,12 @@ namespace EaServices.Doors.ReqIfs
                 }
             }
 
+            return true;
+
         }
 
         /// <summary>
-        /// Add Data Types for Enums
+        /// Add Data Types for Notes (Enums, Checklist)
         /// </summary>
         /// <param name="reqIf"></param>
         /// <param name="pkg"></param>
@@ -319,17 +323,18 @@ namespace EaServices.Doors.ReqIfs
                 // make ReqIF DataTypes
                 foreach (var tv in tvProperties)
                 {
+                    var propertyValue = tv.Property.Trim();
                     // Check if Enumeration-Datatype already exists
                     var dataTypeEnumeration = (DatatypeDefinitionEnumeration)_reqIfContent.DataTypes.FirstOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
-                                                                                                                        && x.LongName == tv.Property);
+                                                                                                                        && x.LongName == propertyValue);
                     if (dataTypeEnumeration != null) continue;
-                    string idEnum = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.DataType, pkg.Name,tv.Property);
+                    string idEnum = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.DataType, pkg.Name, propertyValue);
                     var datatypeDefinitionEnumeration = new DatatypeDefinitionEnumeration
                     {
                         Description = $"{tv.Notes}",
                         Identifier = idEnum,
                         LastChange = DateTime.Now,
-                        LongName = $"{tv.Property}"
+                        LongName = $"{propertyValue}"
                         
                     };
                     // get enumeration values
@@ -344,14 +349,14 @@ namespace EaServices.Doors.ReqIfs
                             var embeddedValue = new EmbeddedValue
                             {
                                 Key = index,
-                                OtherContent = value,
+                                OtherContent = value.Trim(),
 
                             };
                             var enumValue = new EnumValue
                             {
-                                Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.EnumValue,tv.Property,index.ToString()),
+                                Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.EnumValue, propertyValue, index.ToString()),
                                 LastChange = DateTime.Now,
-                                LongName = value,
+                                LongName = value.Trim(),
                                 Properties = embeddedValue
                             };
                             // Add enum value

@@ -212,12 +212,7 @@ Roundtrip needs at least initial import and model elements in EA!
             {
                 serializer.Serialize(_reqIf, pathSerialize, null);
 
-                //// Serialize makes <br/> and sometimes <br />
-                //// ReqIF Studio only supports <br/>
-                //string txtReqIf = File.ReadAllText(pathSerialize);
-                //txtReqIf = txtReqIf.Replace($@"{NameSpace}:br/>", $@"{NameSpace}:br />");
-                //File.WriteAllText(pathSerialize, txtReqIf);
-
+               
             }
             catch (Exception e)
             {
@@ -358,7 +353,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                     try
                     {
                         // take all the valid enums
-                        SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue, multiValuedEnum);
+                        if (! SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue, multiValuedEnum)) return false;
                     }
                     catch (Exception e)
                     {
@@ -486,33 +481,53 @@ Value: '{eaValue}'
         }
 
         /// <summary>
-        /// Set the values of a ReqIF enum (single value or multi value) in the ReqIF (Attributedefinition)
+        /// Set the values of a ReqIF enum (single value or multi value) in the ReqIF (AttributeDefinition)
         /// </summary>
         /// <param name="attributeValueEnumeration"></param>
         /// <param name="value"></param>
-        /// <param name="multiValueEnum"></param>
-        public void SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value,
-            bool multiValueEnum)
+        /// <param name="isMultiValueEnum"></param>
+        public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value,
+            bool isMultiValueEnum)
         {
-            // over all values split by ",:=;-"
-            if (String.IsNullOrWhiteSpace(value)) return;
+           
 
             // delete old values
             attributeValueEnumeration.Values.Clear();
             
-            if (!multiValueEnum)
+            if (!isMultiValueEnum)
             {
+                // single value enum
+                // Check if valid value
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    MessageBox.Show($@"Empty value of ReqIF Attribute: '{attributeValueEnumeration.Definition.LongName}'
+
+", @"Can't find enum value, break");
+                    return false;
+                }
+
                 var enumValue = attributeValueEnumeration.Definition.Type.SpecifiedValues
-                    .SingleOrDefault(x => x.LongName == value);
+                    .SingleOrDefault(x => x.LongName == value.Trim());
+                if (enumValue == null)
+                {
+                    MessageBox.Show($@"ReqIF Attribute: '{attributeValueEnumeration.Definition.LongName}'
+
+Value='{value}'
+", @"Can't find enum value, break");
+                    return false;
+                }
                 attributeValueEnumeration.Values.Add(enumValue);
             }
             else
             {   // all enums (multi value enum)
+                // no value is valid
+                if (String.IsNullOrWhiteSpace(value)) return true;
+
                 var enumValues = attributeValueEnumeration.Definition.Type.SpecifiedValues
                     .Select(x => x);
                 var values = Regex.Replace(value.Trim(), @"\r\n?|\n|;|,|:|-|=", ",").Split(',');
                 int index = 0;
-                foreach (var enumValue in enumValues)
+                foreach (EnumValue enumValue in enumValues)
                 {
                     if (values.Length >  index  && values[index] == "1")
                     {
@@ -522,6 +537,8 @@ Value: '{eaValue}'
 
                 }
             }
+
+            return true;
 
         }
        
