@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EaServices.Doors
 {
@@ -30,17 +32,24 @@ namespace EaServices.Doors
             return (from field in _fields
                 let n = field.Split('=')
                 select n[0]).ToArray();
-            //select new { Name = n[0], Macro = n.Length == 1 ? "" : n[1] }).ToList();//.ToList<ExportFieldItem>();
-
         }
         /// <summary>
-        /// returns true if the tagged Value with the name 'name' is writable (write back during export/roundtrip).
+        /// returns true if the tagged Value with the name 'fieldName' is writable (write back during export/roundtrip).
         /// </summary>
         /// <param name="fieldName"></param>
         /// <returns></returns>
         public bool IsWritableValue(string fieldName)
         {
-            return _fields.SingleOrDefault(x => x.Split('=')[0] == fieldName)!=null;
+            try
+            {
+                return _fields.FirstOrDefault(x => x.Split('=')[0] == fieldName) != null;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"File Name: {fieldName}", @"Error determine IsWritable for an Attribute");
+                return false;
+            }
+
         }
         /// <summary>
         /// Returns the macro name of a field
