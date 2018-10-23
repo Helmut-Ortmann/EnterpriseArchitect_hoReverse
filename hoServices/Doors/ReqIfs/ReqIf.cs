@@ -591,7 +591,7 @@ Value='{value}'
             return result && (!_errorMessage1);
         }
 
-        private void ImportReqifFile(string file, string eaObjectType, string eaStereotype, int subModuleIndex, string stateNew,
+        private bool ImportReqifFile(string file, string eaObjectType, string eaStereotype, int subModuleIndex, string stateNew,
             string stateChanged)
         {
             // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
@@ -605,7 +605,18 @@ Value='{value}'
 
             // Deserialize
             ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            _reqIf = deserializer.Deserialize(file);
+            try
+            {
+                _reqIf = deserializer.Deserialize(file);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"File: '{file}
+
+{e}", @"Error deserialize ReqIF file");
+                return false;
+            }
+           
             _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
 
             // prepare EA, existing requirements to detect deleted and changed requirements
@@ -636,6 +647,7 @@ Value='{value}'
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
+            return true;
         }
 
         /// <summary>

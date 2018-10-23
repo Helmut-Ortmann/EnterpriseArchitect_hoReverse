@@ -376,6 +376,7 @@
   //                    DOORS: Doors stores files as *.ole files which currently can't be opened
   // - IdList"          Only "XmlStruct":
   //                    List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
+  // - "AllowedOperations": "Import,Export"  // define which operations are possible "Import,Export,Roundtrip"
   //
   // DoorsCsv:
   // - Export to *.csv

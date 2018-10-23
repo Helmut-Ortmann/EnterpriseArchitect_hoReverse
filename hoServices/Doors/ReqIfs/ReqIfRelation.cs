@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using EA;
 using ReqIFSharp;
 
@@ -41,17 +43,22 @@ namespace EaServices.Doors.ReqIfs
 
 
                 // All EA requirements and their target
+            try
+            {
                 var relations = from r in _reqIf.CoreContent[0].SpecRelations
-                                join eaRS in _requirements on r.Source.Identifier equals eaRS.Multiplicity
-                                join eaRT in _requirements on r.Target.Identifier equals eaRT.Multiplicity
-                                orderby  r.Source.Identifier
-                                select new
-                                {
-                                    SourceReq = eaRS,
-                                    TargetReq = eaRT,
-                                    SObjectId=r.Source.Identifier,
-                                    TObjectId = r.Target.Identifier,
-                                };
+                    join eaRS in _requirements on r.Source.Identifier equals eaRS.Multiplicity
+                    join eaRT in _requirements on r.Target.Identifier equals eaRT.Multiplicity
+                    orderby r.Source.Identifier
+                    select new
+                    {
+                        SourceReq = eaRS,
+                        TargetReq = eaRT,
+                        SObjectId = r.Source.Identifier,
+                        TObjectId = r.Target.Identifier,
+                    };
+
+
+                
                 // Create the relations
                 EA.Element el = null; 
                 foreach (var rel in relations)
@@ -73,12 +80,14 @@ namespace EaServices.Doors.ReqIfs
 
                    
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Related link to requirement not available
 
-            
-           
-
-
-
+File:
+'{_settings.InputFile}'", @"Can't write ReqIF relations, skip!");
+            }
         }
 
         /// <summary>

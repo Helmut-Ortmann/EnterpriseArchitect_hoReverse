@@ -17,6 +17,35 @@ namespace EaServices.Doors
             Silent,       // ignore false OLE, not supported
             Verbose
         }
+
+        /// <summary>
+        /// Allowed operations on EA ReqIF
+        /// </summary>
+        [Flags]
+        public enum AllowedOperationsType
+        {
+            NotAssigned = 0x0,
+            None = 0x1,
+            Import = 0x2,
+            Export = 0x4,
+            Roundtrip = 0x8,
+            All = Import | Export | Roundtrip
+        }
+
+        /// <summary>
+        /// Allowed operations according to <see cref="AllowedOperationsType"/>
+        /// </summary>
+        public AllowedOperationsType AllowedOperation
+        {
+            get => _allowedOperations == AllowedOperationsType.NotAssigned
+                ? AllowedOperationsType.All
+                : _allowedOperations;
+        }
+        [JsonProperty("AllowedOperations")]
+        private AllowedOperationsType _allowedOperations;
+
+
+
         [JsonProperty("Verbosity"), DefaultValue("Silent")]
         public VerbosityType Verbosity  { get; set; }
 
@@ -95,6 +124,7 @@ namespace EaServices.Doors
         }
         [JsonProperty("EmbeddedFileStorageDictionary"), DefaultValue(" ")]
         private string _embeddedFileStorageDictionary;
+
 
         /// <summary>
         /// The dictionary inside EmbeddedFileStorageDictionary for png images in text

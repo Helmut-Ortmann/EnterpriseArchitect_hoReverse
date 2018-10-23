@@ -3213,7 +3213,8 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                 //-------------------------------------------------------------------------------------
                 // Importer: Import *.csv, ReqIf from according to specification in Settings.Json
                 var importBySettings = (from item in _importSettings.ImportSettings
-                    where (!String.IsNullOrWhiteSpace(item.InputFile))
+                    where !String.IsNullOrWhiteSpace(item.InputFile) && 
+                          (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Import) == FileImportSettingsItem.AllowedOperationsType.Import
                     select item).ToList();
 
 
@@ -3231,6 +3232,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                 var roundtripBySettings = (from item in _importSettings.ImportSettings
                     where !String.IsNullOrWhiteSpace(item.InputFile) &&
                           !String.IsNullOrWhiteSpace(item.RoundtripFile) &&
+                          (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Roundtrip) == FileImportSettingsItem.AllowedOperationsType.Roundtrip &&
                           (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
                            item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
                     select item).ToList();
@@ -3250,6 +3252,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                 // - An input or export file has to be defied
                 var exportBySettings = (from item in _importSettings.ImportSettings
                     where (!String.IsNullOrWhiteSpace(item.ExportFile)) &&
+                          (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Export) == FileImportSettingsItem.AllowedOperationsType.Export &&
                           (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
                            item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
                     select item).ToList();

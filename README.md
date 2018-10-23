@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+
+3.1.6 ReqIF error handling improved
+- Define which ReqIF is available for Import, Export, Roundtrip ("AllowedOperations": "Import,Export") 
+
 3.1.5 Fix Error EA Tagged Values with Blank in Enum Values (ReqIF)
 -  Export Example added
 
