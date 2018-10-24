@@ -283,12 +283,11 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                     return false;
             }
 
-            //var specType = (SpecObjectType)reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecObjectType));
             return true;
         }
 
         /// <summary>
-        /// Change ReqIF value of the specObject and the attribut value
+        /// Change ReqIF value of the specObject and the attribute value
         /// </summary>
         /// <param name="specObject"></param>
         /// <param name="name"></param>
@@ -297,77 +296,91 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
         /// <returns></returns>
         private bool ChangeValueReqIf(SpecObject specObject, string name, string eaValue, bool caseSensitive = false)
         {
-            AttributeValue attrValueObject = caseSensitive
-                ? specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name)
-                : specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName.ToLower() == name.ToLower());
-            bool multiValuedEnum = false;
-            // Attribute not part of ReqIF, skip
-            if (attrValueObject == null)
+            try
             {
-                // Create AttributValue and assign them to values.
-                AttributeDefinition attributeType =
-                    _moduleAttributeDefinitions.SingleOrDefault(x => x.LongName.ToLower() == name.ToLower());
-                switch (attributeType)
+                AttributeValue attrValueObject = caseSensitive
+                    ? specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name)
+                    : specObject.Values.SingleOrDefault(x =>
+                        x.AttributeDefinition.LongName.ToLower() == name.ToLower());
+                bool multiValuedEnum = false;
+                // Attribute not part of ReqIF, skip
+                if (attrValueObject == null)
                 {
-                    case AttributeDefinitionString _:
-                        attrValueObject = new AttributeValueString
-                        {
-                            AttributeDefinition = attributeType
-                        };
-                        break;
-                    case AttributeDefinitionXHTML _:
-                        attrValueObject = new AttributeValueXHTML
-                        {
-                            AttributeDefinition = attributeType
-                        };
-                        break;
-                    case AttributeDefinitionEnumeration moduleAttributDefinitionEnumeration:
-                        attrValueObject = new AttributeValueEnumeration
-                        {
-                            AttributeDefinition = attributeType
-                        };
-                        multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
+                    // Create AttributValue and assign them to values.
+                    AttributeDefinition attributeType =
+                        _moduleAttributeDefinitions.SingleOrDefault(x => x.LongName.ToLower() == name.ToLower());
+                    switch (attributeType)
+                    {
+                        case AttributeDefinitionString _:
+                            attrValueObject = new AttributeValueString
+                            {
+                                AttributeDefinition = attributeType
+                            };
+                            break;
+                        case AttributeDefinitionXHTML _:
+                            attrValueObject = new AttributeValueXHTML
+                            {
+                                AttributeDefinition = attributeType
+                            };
+                            break;
+                        case AttributeDefinitionEnumeration moduleAttributDefinitionEnumeration:
+                            attrValueObject = new AttributeValueEnumeration
+                            {
+                                AttributeDefinition = attributeType
+                            };
+                            multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
 
-                        break;
+                            break;
 
+                    }
+
+                    if (attrValueObject == null) return true; // not supported datatype
+                    specObject.Values.Add(attrValueObject);
                 }
 
-                if (attrValueObject == null) return true; // not supported datatype
-                specObject.Values.Add(attrValueObject);
-            }
+                var attrType = attrValueObject.AttributeDefinition; //specObj.Values[0].AttributeDefinition.LongName;
+                switch (attrType)
+                {
+                    case AttributeDefinitionXHTML _:
+                        // make xhtml and handle new line
+                        var xhtmlcontent = MakeXhtmlFromString(eaValue);
+                        attrValueObject.ObjectValue = xhtmlcontent;
+                        break;
 
-            var attrType = attrValueObject.AttributeDefinition; //specObj.Values[0].AttributeDefinition.LongName;
-            switch (attrType)
-            {
-                case AttributeDefinitionXHTML _:
-                    // make xhtml and handle new line
-                    var xhtmlcontent = MakeXhtmlFromString(eaValue);
-                    attrValueObject.ObjectValue = xhtmlcontent;
-                    break;
+                    case AttributeDefinitionString _:
+                        attrValueObject.ObjectValue = eaValue;
+                        break;
+                    case AttributeDefinitionEnumeration _:
 
-                case AttributeDefinitionString _:
-                    attrValueObject.ObjectValue = eaValue;
-                    break;
-                case AttributeDefinitionEnumeration _:
-
-                    try
-                    {
-                        // take all the valid enums
-                        if (! SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue, multiValuedEnum)) return false;
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show($@"Name: '{name}'
+                        try
+                        {
+                            // take all the valid enums
+                            if (!SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue,
+                                multiValuedEnum)) return false;
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show($@"Name: '{name}'
 
 Value: '{eaValue}'
 
 {e}", $@"Error enumeration value TV '{name}'.");
-                    }
+                        }
 
-                    break;
+                        break;
+                }
+
+                return true;
             }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"Name: '{name}'
 
-            return true;
+Value: '{eaValue}'
+
+{e}", $@"Error value TV '{name}'.");
+                return false;
+            }
         }
 
         /// <summary>
