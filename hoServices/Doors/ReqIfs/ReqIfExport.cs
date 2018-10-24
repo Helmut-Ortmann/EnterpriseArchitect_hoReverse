@@ -22,6 +22,7 @@ namespace EaServices.Doors.ReqIfs
         // Module specification (hierarchy)
         Specification _moduleSpecification;
 
+        // Handler embedded files
         private ExportEmbeddedEaFiles _exportEmbeddedEaFile;
 
         /// <summary>
@@ -69,6 +70,7 @@ namespace EaServices.Doors.ReqIfs
             _reqIfContent = _reqIf.CoreContent.SingleOrDefault();
             _specificationTypeModule = (SpecificationType)_reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType));
 
+            // Write the requirements for the current module/specification
             WriteModuleSpecification(Pkg);
 
             if (! CreateSpecObjects()) return false;

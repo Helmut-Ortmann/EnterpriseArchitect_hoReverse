@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Forms;
 using hoUtils.DirFile;
 using hoReverse.hoUtils;
 using File = EA.File;
@@ -10,6 +11,10 @@ namespace EaServices.Doors.ReqIfs
         readonly string _dirFilesRoot;
         readonly string _mimeTypeImages ;
         readonly string _embeddedFiles;
+
+        // Skip copying embedded files
+        private bool _skipEmbeddedFiles;
+
 
         /// <summary>
         /// Constructor export embedded files and create XHTM string for them. No namespace supported
@@ -23,6 +28,8 @@ namespace EaServices.Doors.ReqIfs
             _embeddedFiles = embeddedFiles;
             _dirFilesRoot = dirFilesRoot;
 
+            _skipEmbeddedFiles = false;
+
         }
         /// <summary>
         /// Returns xhtml string of the embedded files and copies the embedded files. 
@@ -31,27 +38,42 @@ namespace EaServices.Doors.ReqIfs
         /// <returns></returns>
         public string MakeXhtmlForEmbeddedFiles(EA.Element el)
         {
-            
             string xhtml = "<br/><br/>Embedded Files:<br/>";
             // handle all file of Ea Element
             foreach (EA.File file in el.Files)
             {
-                xhtml = RunFile(file, xhtml);
+                xhtml = ExportEmbeddedFiles(file, xhtml);
             }
             // make all paths with slash
             return $"{xhtml.Replace(@"\", @"/")}<br/><br/>";
         }
         /// <summary>
-        /// Run for file. Make XHTML and copy the file
+        /// Export Embedded Files. Make XHTML and copy the file
         /// </summary>
         /// <param name="file"></param>
         /// <param name="xhtml"></param>
         /// <returns></returns>
-        private string RunFile(File file, string xhtml)
+        private string ExportEmbeddedFiles(File file, string xhtml)
         {
             string defaultText = Path.GetFileName(file.Name);
 
             string fileName = (Path.GetFileName(file.Name));
+            // Check if file exists
+            if (!System.IO.File.Exists(fileName))
+            {
+                if (_skipEmbeddedFiles) return "";
+                var res = MessageBox.Show($@"File: '{fileName}'
+
+Yes: Skip this file, proceed with copying embedded files!
+No:  Skip all not existing embedded files without further warning for all Requirements", @"File doesn't exists, skip current file!", MessageBoxButtons.YesNo);
+                if (res == DialogResult.No)
+                {
+                    _skipEmbeddedFiles = true;
+                }
+                
+                return "";
+            }
+
             string imagePath;
             string mimeType;
             switch (Path.GetExtension(file.Name))
