@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using hoUtils.DirFile;
 using hoReverse.hoUtils;
@@ -58,21 +59,10 @@ namespace EaServices.Doors.ReqIfs
             string defaultText = Path.GetFileName(file.Name);
 
             string fileName = (Path.GetFileName(file.Name));
-            // Check if file exists
-            if (!System.IO.File.Exists(fileName))
-            {
-                if (_skipEmbeddedFiles) return "";
-                var res = MessageBox.Show($@"File: '{fileName}'
-
-Yes: Skip this file, proceed with copying embedded files!
-No:  Skip all not existing embedded files without further warning for all Requirements", @"File doesn't exists, skip current file!", MessageBoxButtons.YesNo);
-                if (res == DialogResult.No)
-                {
-                    _skipEmbeddedFiles = true;
-                }
-                
-                return "";
-            }
+            fileName = HoUtil.GetFilePath("Linked File", fileName);
+            
+            // Check if file is to process
+            if (! IsFileToProcess(fileName)) return "";
 
             string imagePath;
             string mimeType;
@@ -147,8 +137,36 @@ No:  Skip all not existing embedded files without further warning for all Requir
         private void CopyEmbeddedFile(string file, string target)
         {
             string fileName = HoUtil.GetFilePath("Linked File", file);
-            DirFiles.FileCopy(fileName, target);
+            if (IsFileToProcess(fileName))
+            {
+                DirFiles.FileCopy(fileName, target);
+            }
 
+        }
+        /// <summary>
+        /// Check if file is to process. If the file doesn't exists you can decide to simple skip the file or to skip all files
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private bool IsFileToProcess(string fileName)
+        {
+            // Check if file exists
+            if (!System.IO.File.Exists(fileName))
+            {
+                if (_skipEmbeddedFiles) return false;
+                var res = MessageBox.Show($@"File: '{fileName}'
+
+Yes: Skip this file, proceed with copying embedded files!
+No:  Skip all not existing embedded files without further warning for all Requirements", @"File doesn't exists, skip current file!", MessageBoxButtons.YesNo);
+                if (res == DialogResult.No)
+                {
+                    _skipEmbeddedFiles = true;
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

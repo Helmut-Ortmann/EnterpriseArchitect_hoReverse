@@ -143,14 +143,28 @@ namespace EaServices.Doors.ReqIfs
         {
             using (var db = new EaDataModel(_provider, _connectionString))
             {
-                var reqs = from r in db.t_object
-                    join pkg in db.t_package on r.Package_ID equals pkg.Package_ID
-                    join tv in db.t_objectproperties on r.Object_ID equals tv.Object_ID
-                    where pkg.ea_guid == Pkg.PackageGUID
-                    orderby r.Name, tv.Property
-                    select new {Name=r.Name,ModifiedOn=r.ModifiedDate, CreatedOn = r.CreatedDate, Author=r.Author,
-                        Guid =r.ea_guid, Desc=r.Note,
-                        TvName = tv.Property, TvValue=tv.Value, TvNote=tv.Notes};
+                // Read all Requirements for module/specification
+                var reqs = (from r in db.t_object
+                            join pkg in db.t_package on r.Package_ID equals pkg.Package_ID
+                            where pkg.ea_guid == Pkg.PackageGUID
+                            from tv in db.t_objectproperties.Where(tv2 => r.Object_ID == tv2.Object_ID)
+                                .DefaultIfEmpty() // <<= makes join left join
+
+                            select new
+                            {
+                                Name = r.Name,
+                                ModifiedOn = r.ModifiedDate,
+                                CreatedOn = r.CreatedDate,
+                                Author = r.Author,
+                                Guid = r.ea_guid,
+                                Desc = r.Note,
+                                TvName = tv.Property,
+                                TvValue = tv.Value,
+                                TvNote = tv.Notes
+                            }).ToArray();
+
+
+
                 string currentGuid = "";
                 SpecObject specObject = null;
                 foreach (var r in reqs)
@@ -213,23 +227,26 @@ namespace EaServices.Doors.ReqIfs
                         };
                         specObject.Values.Add(attributeValueXhtml);
                         // Attribute Name
-                        attributeValueXhtml = new AttributeValueXHTML
+                        if (r.Name != null)
                         {
-                            Definition =
-                                (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Name"),
-                            TheValue = MakeXhtmlFromString(r.Name)
-                        };
-                        specObject.Values.Add(attributeValueXhtml);
+                            attributeValueXhtml = new AttributeValueXHTML
+                            {
+                                Definition =
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Name"),
+                                TheValue = MakeXhtmlFromString(r.Name)
+                            };
+                            specObject.Values.Add(attributeValueXhtml);
+                        }
 
-                        
+
                         // Attribute Text (note or Linked Document)
                         EA.Element el = Rep.GetElementByGuid(r.Guid);
                         string rtfText = el?.GetLinkedDocument();
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
                             x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
 
-                        // rtf text available
+                        // rtf text/description available
                         if (! String.IsNullOrEmpty(rtfText))
                         {
                             string fileDir = _settings.EmbeddedFileStorageDictionary;
@@ -255,7 +272,6 @@ namespace EaServices.Doors.ReqIfs
                                 Definition = definition,
                                 TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
                             };
-                            _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
 
 
                         }
@@ -264,44 +280,58 @@ namespace EaServices.Doors.ReqIfs
 
                         _reqIfContent.SpecObjects.Add(specObject);
 
+                        // Export all embedded element files
+                        _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
 
+                        // new requirements
                     }
-                    // Add Tagged Value
-                    // Check if enumeration
-                    var dataTypeEnumeration = (DatatypeDefinitionEnumeration)_reqIfContent.DataTypes.SingleOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
-                                                                                                                         && x.LongName == r.TvName);
-                    if (dataTypeEnumeration == null)
-                    {
-                        var attributeValueXhtml = new AttributeValueXHTML
-                        {
-                            Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
-                            TheValue = MakeXhtmlFromEaNotes(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue,r.TvNote))
-                        };
-                        specObject.Values.Add(attributeValueXhtml);
-                    }
-                    else
-                    {
-                        var attributeDefinitionEnumeration =
-                            (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == r.TvName);
-                        var attributeValueEnumeration = new AttributeValueEnumeration
-                        {
-                            Definition = attributeDefinitionEnumeration
 
-                        };
-                        if (! SetReqIfEnumValue(attributeValueEnumeration, r.TvValue, attributeDefinitionEnumeration.IsMultiValued)) return false;
-                        specObject.Values.Add(attributeValueEnumeration);
-                        
+
+
+                    // Add Tagged Value if defined
+                    if (! String.IsNullOrWhiteSpace(r.TvName)) {
+
+                        // Check if tagged value is enumeration
+                        var dataTypeEnumeration =
+                            (DatatypeDefinitionEnumeration) _reqIfContent.DataTypes.SingleOrDefault(x =>
+                                x.GetType() == typeof(DatatypeDefinitionEnumeration)
+                                && x.LongName == r.TvName);
+                        if (dataTypeEnumeration == null)
+                        {
+                            var attributeValueXhtml = new AttributeValueXHTML
+                            {
+                                Definition =
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
+                                TheValue = MakeXhtmlFromEaNotes(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue, r.TvNote))
+                            };
+                            specObject.Values.Add(attributeValueXhtml);
+                        }
+                        else
+                        {
+                            var attributeDefinitionEnumeration =
+                                (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == r.TvName);
+                            var attributeValueEnumeration = new AttributeValueEnumeration
+                            {
+                                Definition = attributeDefinitionEnumeration
+
+                            };
+                            if (!SetReqIfEnumValue(attributeValueEnumeration, r.TvValue,
+                                attributeDefinitionEnumeration.IsMultiValued)) return false;
+                            specObject.Values.Add(attributeValueEnumeration);
+
+                        }
                     }
-                    
+
                 }
             }
 
             return true;
 
         }
+
+
 
         /// <summary>
         /// Add Data Types for Notes (Enums, Checklist)

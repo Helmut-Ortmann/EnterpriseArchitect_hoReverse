@@ -401,7 +401,8 @@ Value: '{eaValue}'
         /// <returns></returns>
         private static string MakeXhtmlFromString(string stringValue)
         {
-            //stringValue = stringValue.Replace("\r\n", "<br></br>");
+            if (String.IsNullOrWhiteSpace(stringValue)) stringValue = "";
+
             stringValue = stringValue.Replace("\r\n", "<br/>");
             stringValue = stringValue.Replace("&nbsp;", "");
             stringValue = Regex.Replace(stringValue, @">\s*<", "><");  // Replace Blanks between control sequences
