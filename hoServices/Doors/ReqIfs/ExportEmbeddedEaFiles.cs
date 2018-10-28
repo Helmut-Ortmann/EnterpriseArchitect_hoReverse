@@ -49,7 +49,7 @@ namespace EaServices.Doors.ReqIfs
             return $"{xhtml.Replace(@"\", @"/")}<br/><br/>";
         }
         /// <summary>
-        /// Export Embedded Files. Make XHTML and copy the file
+        /// Export Embedded Files. Make XHTML and copy the file. Consider the EA local path to access the file
         /// </summary>
         /// <param name="file"></param>
         /// <param name="xhtml"></param>
@@ -57,12 +57,14 @@ namespace EaServices.Doors.ReqIfs
         private string ExportEmbeddedFiles(File file, string xhtml)
         {
             string defaultText = Path.GetFileName(file.Name);
-
             string fileName = (Path.GetFileName(file.Name));
-            fileName = HoUtil.GetFilePath("Linked File", fileName);
-            
+
+
             // Check if file is to process
-            if (! IsFileToProcess(fileName)) return "";
+            string fullFileName = HoUtil.GetFilePath("Linked File", file.Name);
+            if (! IsFileToProcess(fullFileName)) return "";
+            // copy embedded file
+            CopyEmbeddedFile(fullFileName, Path.Combine(_dirFilesRoot, _embeddedFiles));
 
             string imagePath;
             string mimeType;
@@ -103,8 +105,7 @@ namespace EaServices.Doors.ReqIfs
                     break;
             }
 
-            // copy embedded file
-            CopyEmbeddedFile(file.Name, Path.Combine(_dirFilesRoot, _embeddedFiles));
+            
 
 
             xhtml = xhtml + $@"
