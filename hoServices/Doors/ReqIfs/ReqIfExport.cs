@@ -241,6 +241,10 @@ namespace EaServices.Doors.ReqIfs
 
 
                         // Attribute Text (note or Linked Document)
+                        // _settings.SpecHandling
+                        // - FileImportSettingsItem.SpecHandlingType.MixedMode  Preferred LinkedDocument, if no LinkedDocument then Notes
+                        // - FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
+                        // - FileImportSettingsItem.SpecHandlingType.OnlyNotes
                         EA.Element el = Rep.GetElementByGuid(r.Guid);
                         string rtfText = el?.GetLinkedDocument();
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
@@ -248,7 +252,11 @@ namespace EaServices.Doors.ReqIfs
 
                         // rtf text/description available and rtf export wanted (Mixed Mode or OnlyLinkedDocument)
                         if (  !String.IsNullOrEmpty(rtfText) &&
-                             _settings.SpecHandling == (FileImportSettingsItem.SpecHandlingType.MixedMode | FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument))
+                             (
+                                 _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                 _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
+                             )
+                           )
                         {
                             string fileDir = _settings.EmbeddedFileStorageDictionary;
                             string xhtml = RtfToXhtml.Convert(rtfText, fileDir,_settings.EmbeddedFilesPng);
@@ -271,7 +279,10 @@ namespace EaServices.Doors.ReqIfs
                             // Check export EA Notes
                             // No rtf export and Mixed Mode or OnlyNotes
                             if (!String.IsNullOrEmpty(r.Desc) &&
-                                _settings.SpecHandling == (FileImportSettingsItem.SpecHandlingType.MixedMode | FileImportSettingsItem.SpecHandlingType.OnlyNotes))
+                                  ( _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                    _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyNotes
+                                  )
+                               )
                             {
                                 // Text = notes.
                                 attributeValueXhtml = new AttributeValueXHTML
