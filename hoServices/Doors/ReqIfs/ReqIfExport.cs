@@ -246,8 +246,9 @@ namespace EaServices.Doors.ReqIfs
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
                             x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
 
-                        // rtf text/description available
-                        if (! String.IsNullOrEmpty(rtfText))
+                        // rtf text/description available and rtf export wanted (Mixed Mode or OnlyLinkedDocument)
+                        if (  !String.IsNullOrEmpty(rtfText) &&
+                             _settings.SpecHandling == (FileImportSettingsItem.SpecHandlingType.MixedMode | FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument))
                         {
                             string fileDir = _settings.EmbeddedFileStorageDictionary;
                             string xhtml = RtfToXhtml.Convert(rtfText, fileDir,_settings.EmbeddedFilesPng);
@@ -262,22 +263,28 @@ namespace EaServices.Doors.ReqIfs
                                 Definition = definition,
                                 TheValue = MakeReqIfXhtmlFromXhtml(xhtml)
                             };
-                         
+                            specObject.Values.Add(attributeValueXhtml);
+
                         }
                         else
                         {
-                            // Text = notes.
-                            attributeValueXhtml = new AttributeValueXHTML
+                            // Check export EA Notes
+                            // No rtf export and Mixed Mode or OnlyNotes
+                            if (!String.IsNullOrEmpty(r.Desc) &&
+                                _settings.SpecHandling == (FileImportSettingsItem.SpecHandlingType.MixedMode | FileImportSettingsItem.SpecHandlingType.OnlyNotes))
                             {
-                                Definition = definition,
-                                TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
-                            };
-
-
+                                // Text = notes.
+                                attributeValueXhtml = new AttributeValueXHTML
+                                {
+                                    Definition = definition,
+                                    TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
+                                };
+                                specObject.Values.Add(attributeValueXhtml);
+                            }
                         }
-                        specObject.Values.Add(attributeValueXhtml);
-
-
+                    
+                        //------------------  Values added to SpecObjects ----------------------------------------
+                        // Add the SpecObject
                         _reqIfContent.SpecObjects.Add(specObject);
 
                         // Export all embedded element files

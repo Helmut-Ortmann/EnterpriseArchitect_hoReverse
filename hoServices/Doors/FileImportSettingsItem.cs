@@ -19,6 +19,20 @@ namespace EaServices.Doors
         }
 
         /// <summary>
+        /// How to handle the EA Specifications
+        ///
+        /// Default: MixedMode
+        /// </summary>
+        public enum SpecHandlingType
+        {
+            MixedMode,              // Export: Use Linked Document if available, Import: Fill both:LinkedDocument and Notes
+            OnlyLinkedDocument,     
+            OnlyNotes
+        }
+        [JsonProperty("SpecHandling"), DefaultValue("MixedMode")]
+        public SpecHandlingType SpecHandling { get; set; }
+
+        /// <summary>
         /// Allowed operations on EA ReqIF
         /// </summary>
         [Flags]

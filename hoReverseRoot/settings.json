@@ -377,6 +377,8 @@
   // - IdList"          Only "XmlStruct":
   //                    List of attribute names to use for ImportType "XmlStruct" as unique ID, e.g.  ["ForeignID"]   
   // - "AllowedOperations": "Import,Export"  // define which operations are possible "Import,Export,Roundtrip"
+  // - SpecHandling:    Handling of the EA Specification: 'MixedMode', 'OnlyLinkedDocument', 'OnlyNotes' 
+  //                    - MixedMode: Export: Use Linked Document if available else use Notes, Import: fill both:LinkedDocument and Notes
   //
   // DoorsCsv:
   // - Export to *.csv

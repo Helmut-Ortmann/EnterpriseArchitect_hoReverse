@@ -2643,7 +2643,7 @@ namespace hoReverse.Reverse
 
                             if (s.Length > 252)
                             {
-                                MessageBox.Show($@"Currunt length: {s.Length}", @"Length of guard > 252 characters, guard truncated!!");
+                                MessageBox.Show($@"Current length: {s.Length}", @"Length of guard > 252 characters, guard truncated!!");
                                 s = s.Substring(0, 252);
                             }
                             con.TransitionGuard = s;
@@ -2652,7 +2652,7 @@ namespace hoReverse.Reverse
                         {
                             if (s.Length > 252)
                             {
-                                MessageBox.Show($@"Currunt length: {s.Length}", @"Length of name > 252 characters, name truncated!!");
+                                MessageBox.Show($@"Current length: {s.Length}", @"Length of name > 252 characters, name truncated!!");
                                 s = s.Substring(0, 252);
                                 con.Name = s;
                             }
