@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.7 Minor improvements
+-  ReqIF underline now supported <ins>text </ins>
+-  Import ReqIF using Mari.Gold (free) or Sautinsoft (commercial) to convert XHTML to rtf / Open XML (Linked Document format)
+   (configurable)
 
 3.1.6 ReqIF error handling improved
 - Define which ReqIF is available for Import, Export, Roundtrip ("AllowedOperations": "Import,Export") 

@@ -257,7 +257,7 @@
             <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="..\packages\MariGold.HtmlParser.1.1.0\lib\netstandard2.0\MariGold.HtmlParser.dll" />
         </Component>
         <Component Id="MariGold.OpenXHTML.dll" Guid="9D3E3286-600E-4CA5-8270-9F20576BE18E">
-            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.5.0\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
+            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.5.1\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
         </Component>
         <Component Id="ReqIFSharp.dll" Guid="B19B5F34-14FE-4F28-BAE9-A73025277C78">
             <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.3.2\lib\net45\ReqIFSharp.dll" />

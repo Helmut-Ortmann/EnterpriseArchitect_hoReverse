@@ -430,11 +430,11 @@ Value: '{eaValue}'
         private static string LimitReqIfXhtml(string stringText)
         {
             // delete not allowed ReqIF things
-            // '<u>'
+            // '<u>' underline, replace by 
             // </u>>
             // ul type="xxxx" xxxx=disc, ...  remove type="xxx"
             // li value="n"   n=Number        remove value="n"
-            stringText = stringText.Replace("<u>", "").Replace("</u>", "");
+            stringText = stringText.Replace("<u>", "<ins>").Replace("</u>", "</ins>");
 
             stringText = Regex.Replace(stringText, @"<ol type=""[^""]*""", "<ol");  // Replace type in ul
             stringText = Regex.Replace(stringText, @"<ul type=""[^""]*""", "<ul");  // Replace type in ul
@@ -1084,9 +1084,13 @@ Origin:{Tab}'{Path.GetFileName(f)}'";
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             docFile = System.IO.Path.Combine(docFile, IsGenerateDocx ? "xxxxxxx.docx" : "xxxxxxx.rtf");
 
-            if (docFile.EndsWith(".rtf"))
-                HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
-            else HtmlToDocx.Convert(docFile, xhtmlValue);
+
+            // decide what converter to use
+            // Mari.Gold.OpenXHTML (open source)
+            // SautinSoft.HtmlToRtf (commercial)
+            if (_settings.UseMariGold)
+                HtmlToDocx.Convert(docFile, xhtmlValue);
+            else HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
             try
             {
                 bool res = el.LoadLinkedDocument(docFile);

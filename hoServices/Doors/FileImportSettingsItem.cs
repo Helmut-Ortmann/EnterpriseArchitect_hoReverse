@@ -45,6 +45,14 @@ namespace EaServices.Doors
             Roundtrip = 0x8,
             All = Import | Export | Roundtrip
         }
+        /// <summary>
+        /// Decide whether to use the
+        /// - True: MariGold.OpenXHTML (Open Source)
+        /// - False: SautinSoft.HtmlToRtf (commercial, you need a license)
+        /// </summary>
+        [JsonProperty("UseMariGold"), DefaultValue("false")]
+        public bool UseMariGold { get; set; }
+
 
         /// <summary>
         /// Allowed operations according to <see cref="AllowedOperationsType"/>
