@@ -48,7 +48,7 @@ namespace EaServices.Doors.ReqIfs
         ExportFields _exportFields;
         List<ReqIFSharp.AttributeDefinition> _moduleAttributeDefinitions;
 
-        readonly FileImportSettingsItem _settings;
+        protected readonly FileImportSettingsItem _settings;
 
         bool _errorMessage1;
 
@@ -112,9 +112,10 @@ namespace EaServices.Doors.ReqIfs
 
         private bool RoundtripFile(string file, int subModuleIndex)
         {
-// Deserialize
-            ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            _reqIf = deserializer.Deserialize(file);
+            // Deserialize
+            _reqIf = DeSerializeReqIf(file, validate: _settings.ValidateReqIF);
+            if (_reqIf == null) return false;
+
             _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
             // Modules
             if (subModuleIndex >= _reqIf.CoreContent[0].Specifications.Count)
@@ -194,15 +195,62 @@ Roundtrip needs at least initial import and model elements in EA!
 
         }
 
-
-        
-
         /// <summary>
-        /// Serialize ReqIF
+        /// Deserialize ReqIF with or without XML validation. If error and no validation was selected ask if retrying with validation or cancel
         /// </summary>
         /// <param name="file"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
-        bool SerializeReqIf(string file, bool compress=true)
+        protected ReqIF DeSerializeReqIf(string file, bool validate=false)
+        {
+            // Deserialize
+            ReqIFDeserializer deserializer = new ReqIFDeserializer();
+            try
+            {
+                return deserializer.Deserialize(file, validate: validate);
+            }
+            catch (Exception e)
+            {
+                if (validate)
+                {
+                    MessageBox.Show($@"File: {file}
+Validate: true
+
+{e}", @"Can't deserialize existing ReqIF file");
+                    return null;
+                }
+                else
+                {
+                    // was without validation, ask if retry with validation
+                    var ret = MessageBox.Show($@"File: {file}
+Validate: false
+
+{e}", @"Can't deserialize existing ReqIF file, retry with XML validation?",MessageBoxButtons.RetryCancel);
+                    if (ret == DialogResult.Cancel) return null;
+                    try
+                    {
+                        return deserializer.Deserialize(file, validate: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($@"File: {file}
+Validate: true
+
+{ex}", @"Can't deserialize existing ReqIF file, break!");
+                        return null;
+                    }
+                    
+                }
+            }
+        }
+
+        /// <summary>
+/// Serialize ReqIF
+/// </summary>
+/// <param name="file"></param>
+/// <param name="compress"></param>
+/// <returns></returns>
+bool SerializeReqIf(string file, bool compress=true)
         {
             var serializer = new ReqIFSerializer(false);
             string prefix = Path.GetFileNameWithoutExtension(file).StartsWith("_") ? "" : "_";
@@ -618,19 +666,9 @@ Value='{value}'
             }
 
             // Deserialize
-            ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            try
-            {
-                _reqIf = deserializer.Deserialize(file);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($@"File: '{file}
-
-{e}", @"Error deserialize ReqIF file");
-                return false;
-            }
-           
+            _reqIf = DeSerializeReqIf(file, validate: _settings.ValidateReqIF);
+            if (_reqIf == null) return false;
+            
             _moduleAttributeDefinitions = GetTypesModule(_reqIf, subModuleIndex);
 
             // prepare EA, existing requirements to detect deleted and changed requirements

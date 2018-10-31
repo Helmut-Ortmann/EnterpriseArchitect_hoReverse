@@ -37,8 +37,8 @@ namespace EaServices.Doors
             Rep.EnableUIUpdates = false;
 
             // Deserialize
-            ReqIFDeserializer deserializer = new ReqIFDeserializer();
-            var reqIf = deserializer.Deserialize(ImportModuleFile);
+            var reqIf = DeSerializeReqIf(ImportModuleFile, validate: _settings.ValidateReqIF);
+             if (reqIf == null) return false;
 
             InitializeDoorsRequirementsTable(reqIf, subModuleIndex);
 

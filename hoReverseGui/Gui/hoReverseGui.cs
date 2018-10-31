@@ -4506,6 +4506,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
                 MessageBox.Show("", @"No repository loaded, break!!");
                 return false;
             }
+            DateTime startTime = DateTime.Now;
             Cursor.Current = Cursors.WaitCursor;
 
             EnableImportDialog(false);
@@ -4513,7 +4514,14 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             bool result = doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-            if (withMessage && result)  MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported by list={listNumber}, finished.");
+
+            // finished
+            TimeSpan span = DateTime.Now - startTime;
+            string duration = $"{span.Minutes}:{span.Seconds} minutes:seconds";
+            if (withMessage && result)
+                MessageBox.Show($@"Duration: {duration}
+
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported by list={listNumber}, finished.");
             return result;
         }
         /// <summary>
@@ -4528,14 +4536,23 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
                 MessageBox.Show("", @"No repository loaded, break!!");
                 return false;
             }
+            DateTime startTime = DateTime.Now;
             Cursor.Current = Cursors.WaitCursor;
 
             //EnableImportDialog(false);
             DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
             bool result = doorsModule.RoundtripBySetting(listNumber);
             //EnableImportDialog(true);
+
+
             Cursor.Current = Cursors.Default;
-            if (withMessage && result) MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Roundtrip by list={listNumber}, finished.");
+            // finished
+            TimeSpan span = DateTime.Now - startTime;
+            string duration = $"{span.Minutes}:{span.Seconds} minutes:seconds";
+            if (withMessage && result)
+                MessageBox.Show($@"Duration: {duration}
+
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Roundtrip by list={listNumber}, finished.");
             return result;
         }
         /// <summary>
@@ -4550,14 +4567,23 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
                 MessageBox.Show("", @"No repository loaded, break!!");
                 return false;
             }
+            DateTime startTime = DateTime.Now;
             Cursor.Current = Cursors.WaitCursor;
 
             //EnableImportDialog(false);
             DoorsModule doorsModule = new DoorsModule(_jasonFilePath, _repository);
             bool result = doorsModule.ExportBySetting(listNumber);
+
+
             //EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
-            if (withMessage && result) MessageBox.Show(@"See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exported by list={listNumber}, finished.");
+            // finished
+            TimeSpan span = DateTime.Now - startTime;
+            string duration = $"{span.Minutes}:{span.Seconds} minutes:seconds";
+            if (withMessage && result)
+                MessageBox.Show($@"Duration: {duration}
+
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exported by list={listNumber}, finished.");
             return result;
         }
 

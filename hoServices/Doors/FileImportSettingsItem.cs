@@ -32,6 +32,9 @@ namespace EaServices.Doors
         [JsonProperty("SpecHandling"), DefaultValue("MixedMode")]
         public SpecHandlingType SpecHandling { get; set; }
 
+        [JsonProperty("ValidateReqIF"), DefaultValue("false")]
+        public bool ValidateReqIF { get; set; }
+
         /// <summary>
         /// Allowed operations on EA ReqIF
         /// </summary>

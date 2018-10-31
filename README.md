@@ -68,6 +68,8 @@ Let's discuss it, but it works.
 -  ReqIF underline now supported <ins>text </ins>
 -  Import ReqIF using Mari.Gold (free) or Sautinsoft (commercial) to convert XHTML to rtf / Open XML (Linked Document format)
    (configurable)
+-  Possible ReqIF Schema validation with parameter 'ValidateReqIF'
+-  If ReqIF deserialization fails with out validation ask to try it once more with validation
 
 3.1.6 ReqIF error handling improved
 - Define which ReqIF is available for Import, Export, Roundtrip ("AllowedOperations": "Import,Export") 

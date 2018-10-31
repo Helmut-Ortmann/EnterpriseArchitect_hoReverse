@@ -624,20 +624,9 @@ namespace EaServices.Doors.ReqIfs
                 string[] importReqIfFile = Decompress(file);
                 if (String.IsNullOrWhiteSpace(importReqIfFile[0])) return null;
 
-                // Deserialize
-                ReqIFDeserializer deserializer = new ReqIFDeserializer();
-                try
-                {
-                    return deserializer.Deserialize(file);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($@"File: {file}
-
-{e}", @"Can't deserialize existing ReqIF file");
-                    return null;
-                }
-               
+               // deserialize file
+               return DeSerializeReqIf(file,_settings.ValidateReqIF);
+              
             }
             else
             {
