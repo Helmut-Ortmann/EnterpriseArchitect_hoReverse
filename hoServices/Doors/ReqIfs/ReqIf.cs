@@ -42,7 +42,7 @@ namespace EaServices.Doors.ReqIfs
         }
         int _subModuleIndex;
 
-        // Prefix Tagged Values and Columnnames
+        // Prefix Tagged Values and Column-names
         private string _prefixTv = "";
 
         ExportFields _exportFields;
@@ -495,6 +495,26 @@ Value: '{eaValue}'
             return stringText;
 
         }
+        /// <summary>
+        /// Get string with ReqIF Header Information 
+        /// </summary>
+        /// <returns></returns>
+        protected string GetHeaderInfo(ReqIF reqIf=null)
+        {
+            reqIf = reqIf ?? _reqIf;
+            if (reqIf == null) return "no ReqIF found, possible SW error";
+            if (reqIf.TheHeader == null) return "no ReqIF header found";
+            if (reqIf.TheHeader.Count == 0) return "ReqIF header count = 0";
+            return $@"Title:{Tab}{Tab}'{reqIf.TheHeader[0].Title}'
+ReqIFVersion:{Tab}'{reqIf.TheHeader[0].ReqIFVersion}'
+ReqIFToolId:{Tab}'{reqIf.TheHeader[0].ReqIFToolId}'
+RepositoryId:{Tab}'{reqIf.TheHeader[0].RepositoryId}'
+SourceToolId:{Tab}'{reqIf.TheHeader[0].SourceToolId}'
+CreationTime:{Tab}'{reqIf.TheHeader[0].CreationTime}'
+Identifier:{Tab}'{reqIf.TheHeader[0].Identifier}'
+Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
+";
+        }
 
         /// <summary>
         /// Make XHTML from a EA notes. It inserts the xhtml namespace and handles special characters
@@ -685,7 +705,7 @@ Value='{value}'
             AddReqIfRequirementsToDataTable(DtRequirements, reqIfModule.Children, 1);
 
             // Check imported ReqIF requirements
-            if (CheckImportedRequirements())
+            if (CheckImportedRequirements(file))
             {
                 CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, stateChanged, file);
 
@@ -708,12 +728,17 @@ Value='{value}'
         /// - all needed columns are available
         /// </summary>
         /// <returns></returns>
-        private bool CheckImportedRequirements()
+        private bool CheckImportedRequirements(string file)
         {
             bool result = true;
             if (DtRequirements == null || DtRequirements.Rows.Count == 0)
             {
-                MessageBox.Show("", @"No requirements imported, break!");
+                MessageBox.Show($@"Can't find requirements in file: 
+
+'{file}'
+
+{GetHeaderInfo()}
+", @"No requirements imported, break!");
                 return false;
             }
 
@@ -1223,14 +1248,16 @@ XHTML:'{xhtmlValue}
 
 
         /// <summary>
-        /// Add requirements from ReqIF recursive to datatable. One Row = one Requirement with the row-attributes as columns. It creates columns also for attributes without values.
+        /// Add requirements from ReqIF recursive to datatable. One Row = one Requirement with the row-attributes as columns.
+        /// It creates columns also for attributes without values.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="children"></param>
         /// <param name="level"></param>
-        private void AddReqIfRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
+        private bool AddReqIfRequirementsToDataTable(DataTable dt, List<SpecHierarchy> children, int level)
         {
-            if (children == null || children.Count == 0) return;
+            // no children available
+            if (children == null || children.Count == 0) return false;
 
             // go over hierarchy
             foreach (SpecHierarchy child in children)
@@ -1247,7 +1274,7 @@ XHTML:'{xhtmlValue}
 
 Length: {specObject.Identifier.Length}
 
-Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Indentifier has length > 50");
+Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Identifier has length > 50");
                     _errorMessage1 = true;
                 }
                 row["Id"] = specObject.Identifier.Length > 50 ? specObject.Identifier.Substring(0, 50) : specObject.Identifier;
@@ -1262,7 +1289,9 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ind
                 // handle the sub requirements
                 AddReqIfRequirementsToDataTable(dt, child.Children, level + 1);
             }
-            
+
+            return true;
+
 
         }
         /// <summary>

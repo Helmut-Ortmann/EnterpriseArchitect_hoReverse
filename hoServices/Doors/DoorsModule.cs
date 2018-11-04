@@ -465,7 +465,9 @@ namespace EaServices.Doors
                     if (item.WriteAttrNameList.Count == 0)
                     {
                         var attributesToVisualize = String.Join(", ",item.WriteAttrNameList.ToArray());
-                        MessageBox.Show($@"File: '{_importModuleFile}'
+                        MessageBox.Show($@"Roundtrip needs Attributes to write in Settings ('WriteAttrNameList' is empty):
+
+File: '{_importModuleFile}'
 
 Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 '{attributesToVisualize}'
