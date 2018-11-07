@@ -64,6 +64,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.1.8 ReqIF error fixing
+-  RelationalGroup: no taget requirement available, improved error message
+
 3.1.7 Minor improvements
 -  ReqIF underline now supported <ins>text </ins>
 -  Import ReqIF using Mari.Gold.Open.XHTML (free) or Sautinsoft (commercial) to convert XHTML to rtf / Open XML (Linked Document format)

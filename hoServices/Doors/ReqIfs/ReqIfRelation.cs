@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using EA;
+using hoLinqToSql.LinqUtils;
 using ReqIFSharp;
 
 namespace EaServices.Doors.ReqIfs
@@ -24,16 +25,16 @@ namespace EaServices.Doors.ReqIfs
         /// <summary>
         /// Write the EA dependencies according to ReqIF between the requirements
         /// </summary>
-        public void WriteRelations()
+        public bool WriteRelations()
         {
             // Read all requirements
-            string stereotypePradicate = _settings.Stereotype == "" ? "" : $" AND stereotype = '{_settings.Stereotype}' ";
+            string stereotypePredicate = _settings.Stereotype == "" ? "" : $" AND stereotype = '{_settings.Stereotype}' ";
             string sql = $@"select *
                     from t_object o
                     inner join t_package pkg on pkg.package_id = o.package_id 
                     where pkg.ea_guid in ( {_settings.PackageGuidCommaList} ) AND
                            o.object_type = '{_settings.ObjectType}' 
-                           {stereotypePradicate}";
+                           {stereotypePredicate}";
 
             EA.Collection reqCol =  _rep.GetElementSet(sql, 2);
             foreach (EA.Element req in reqCol)
@@ -45,16 +46,28 @@ namespace EaServices.Doors.ReqIfs
                 // All EA requirements and their target
             try
             {
-                var relations = from r in _reqIf.CoreContent[0].SpecRelations
-                    join eaRS in _requirements on r.Source.Identifier equals eaRS.Multiplicity
-                    join eaRT in _requirements on r.Target.Identifier equals eaRT.Multiplicity
-                    orderby r.Source.Identifier
+                    // check not existing references
+                    var notExistingTargets = (from r in _reqIf.CoreContent[0].SpecRelations
+                        join eaRS in _requirements on r.Source.Identifier ?? "" equals eaRS.Multiplicity ?? ""
+                        where r.Target == null
+                        select $"{eaRS.Multiplicity}:{eaRS.Name}").ToArray();
+                    if (notExistingTargets.Length > 0)
+                    {
+                        MessageBox.Show($@"{String.Join("\r\n", notExistingTargets)}",@"Target Requirements for Link not available, skip links");
+                       
+                    }
+
+
+                    var relations = from r in _reqIf.CoreContent[0].SpecRelations
+                    join eaRS in _requirements on r.Source?.Identifier??"" equals eaRS.Multiplicity??""
+                    join eaRT in _requirements on r.Target?.Identifier??"" equals eaRT.Multiplicity??""
+                    orderby r.Source?.Identifier??""
                     select new
                     {
                         SourceReq = eaRS,
                         TargetReq = eaRT,
-                        SObjectId = r.Source.Identifier,
-                        TObjectId = r.Target.Identifier,
+                        SObjectId = r.Source.Identifier??"",
+                        TObjectId = r.Target.Identifier??"",
                     };
 
 
@@ -80,13 +93,18 @@ namespace EaServices.Doors.ReqIfs
 
                    
                 }
+
+                return true;
             }
             catch (Exception e)
             {
                 MessageBox.Show($@"Related link to requirement not available
 
 File:
-'{_settings.InputFile}'", @"Can't write ReqIF relations, skip!");
+'{_settings.InputFile}'
+
+{e}", @"Can't write ReqIF relations in EA, skip relations!");
+                return false;
             }
         }
 
