@@ -3859,7 +3859,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                 MessageBox.Show($@"{importElement.ListNo}", $@"Guid in Importer settings.json invalid");
                 return;
             }
-            string guid = importElement.PackageGuidList[0];
+            string guid = importElement.PackageGuidList[0].Guid;
             EA.Package pkg = _repository.GetPackageByGuid(guid);
             if (pkg == null)
             {

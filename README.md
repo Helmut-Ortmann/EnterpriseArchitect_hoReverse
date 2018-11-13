@@ -65,7 +65,10 @@ Let's discuss it, but it works.
 ## News
 
 3.1.8 ReqIF error fixing
+-  ReqIF store LongName and Identifier of Specification in Package
+-  Preparation handle Identifier of Specification to identify the correct Specification
 -  RelationalGroup: no taget requirement available, improved error message
+-  ReqIF Error messages improved
 
 3.1.7 Minor improvements
 -  ReqIF underline now supported <ins>text </ins>

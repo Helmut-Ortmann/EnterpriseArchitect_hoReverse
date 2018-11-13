@@ -167,6 +167,8 @@
     <Compile Include="Doors\ReqIfs\ExportEmbeddedEaFiles.cs" />
     <Compile Include="Doors\ReqIfs\ReqIf.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfExport.cs" />
+    <Compile Include="Doors\ReqIfs\ReqIfFileItem.cs" />
+    <Compile Include="Doors\ReqIfs\ReqIfFileList.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRelation.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfUtils.cs" />
     <Compile Include="Doors\RtfToXhtml.cs" />

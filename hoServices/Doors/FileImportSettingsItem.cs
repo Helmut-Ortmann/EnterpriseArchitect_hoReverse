@@ -2,11 +2,37 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using hoUtils;
 using Newtonsoft.Json;
 
 namespace EaServices.Doors
 {
+    /// <summary>
+    /// Define a ReqIF module and it's package association
+    /// </summary>
+    public class ReqIfModuleAssign
+    {
+        //public string Guid;
+        //public string ReqIfModuleId;
+        public ReqIfModuleAssign(string guid, string reqIfModuleID)
+        {
+            Guid = guid;
+            ReqIfModuleId = reqIfModuleID;
+
+        }
+        public string Guid
+        {
+            get;
+            set;
+        }
+
+        public string ReqIfModuleId
+        {
+            get;
+            set;
+        }
+    }
     /// <summary>
     /// Settings item for file import like '*.csv' from DOORS 9.6 compatible export
     /// </summary>
@@ -212,16 +238,47 @@ namespace EaServices.Doors
 
 
         /// <summary>
-        /// List of PackageGuids. hoReverse puts the Requirements beneath this package.
+        /// List of PackageGuids. hoReverse puts the Requirements beneath this package. Possible formats:
+        /// "guid","guid=ReqIFModuleID"
         /// </summary>
         [JsonIgnore]
-        public List<string> PackageGuidList
+        public List<ReqIfModuleAssign> PackageGuidList
         {
-            get => _packageGuidList ?? new List<string>();
-            set => _packageGuidList = value;
+            get
+            {
+                var lPackageGuidList = new List<ReqIfModuleAssign>();
+                foreach (var item in _packageGuidList)
+                {
+                    string[] lItem = item.Split('=');
+                    string item0 = lItem[0].Trim();
+                    string item1 = lItem.Length == 2 ? lItem[1].Trim() : "";
+                    lPackageGuidList.Add(new ReqIfModuleAssign(item0, item1));
+                }
+                return lPackageGuidList;
+            }
         }
+
         [JsonProperty("PackageGuidList")]
         private List<string>  _packageGuidList;
+
+        /// <summary>
+        /// Get comma separated list of GUIDs like
+        /// 'guid1','guid2'
+        /// This is useful for SQL
+        /// </summary>
+        [JsonIgnore]
+        public string PackageGuidCommaList
+        {
+            //get => $"'{String.Join("','", PackageGuidList.ToArray())}'".Replace(" ", "");
+            get
+            {
+                var a = (from item in PackageGuidList
+                    select $"'{item.Guid}'").ToArray();
+                return $"{String.Join(",", a)}";
+            }
+        }
+
+
 
         /// <summary>
         /// Export Mapping List to map EA Attributes to ReqIF Attributes.
@@ -247,14 +304,7 @@ namespace EaServices.Doors
         private List<string> _exportMappingList;
 
 
-        /// <summary>
-        /// Get comma separated list of GUIDs ('guid1','guid2')
-        /// </summary>
-        [JsonIgnore]
-        public string PackageGuidCommaList
-        {
-            get => $"'{String.Join("','", PackageGuidList.ToArray())}'".Replace(" ","");
-        }
+        
 
         /// <summary>
         /// List of EA TaggedValue prefixe per ReqIF module. hoReverse uses this prefixes to allow same column names in ReqIF modules.

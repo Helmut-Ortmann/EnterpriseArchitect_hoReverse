@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using DataModels;
 using hoUtils;
 using hoUtils.Compression;
@@ -41,14 +40,14 @@ namespace EaServices.Doors.ReqIfs
                 // - Embedded png files for images in rtf
                 // - MimeTypeImages (files from installation)
                 // 
-                DirectoryExtension.CreateEmptyDir(_settings.EmbeddedFileStorageDictionary);
-                DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFiles));
-                DirectoryExtension.CreateEmptyDir(Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.EmbeddedFilesPng));
+                DirectoryExtension.CreateEmptyDir(Settings.EmbeddedFileStorageDictionary);
+                DirectoryExtension.CreateEmptyDir(Path.Combine(Settings.EmbeddedFileStorageDictionary, Settings.EmbeddedFiles));
+                DirectoryExtension.CreateEmptyDir(Path.Combine(Settings.EmbeddedFileStorageDictionary, Settings.EmbeddedFilesPng));
 
                 // copy mimetype specific images
                 string installationPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string mimeTypeImagesInstallationPath = Path.Combine(installationPath, _settings.MimeTypeImages);
-                string mimeTypeTypeImagesInReqIf = Path.Combine(_settings.EmbeddedFileStorageDictionary, _settings.MimeTypeImages);
+                string mimeTypeImagesInstallationPath = Path.Combine(installationPath, Settings.MimeTypeImages);
+                string mimeTypeTypeImagesInReqIf = Path.Combine(Settings.EmbeddedFileStorageDictionary, Settings.MimeTypeImages);
                 DirectoryExtension.CreateEmptyDir(mimeTypeTypeImagesInReqIf);
                 DirectoryExtension.DirectoryCopy(mimeTypeImagesInstallationPath, mimeTypeTypeImagesInReqIf);
 
@@ -56,13 +55,13 @@ namespace EaServices.Doors.ReqIfs
             }
 
             _exportEmbeddedEaFile = new ExportEmbeddedEaFiles(
-                _settings.EmbeddedFileStorageDictionary,
-                _settings.MimeTypeImages, 
-                _settings.EmbeddedFiles);
+                Settings.EmbeddedFileStorageDictionary,
+                Settings.MimeTypeImages, 
+                Settings.EmbeddedFiles);
             // Calculate the column/taggedValueType prefix for current module
             _prefixTv = "";
             _errorMessage1 = false;
-            _exportFields = new ExportFields(_settings.WriteAttrNameList);
+            _exportFields = new ExportFields(Settings.WriteAttrNameList);
 
             // Write header, delete file if first package
             _reqIf = AddHeader(ImportModuleFile, newFile:subModuleIndex==0);
@@ -80,7 +79,7 @@ namespace EaServices.Doors.ReqIfs
             string fileReqIf = Path.Combine(Zip.CreateTempDir(), Path.GetFileName(ImportModuleFile));
             SerializeReqIf(fileReqIf, compress:false);
 
-            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf),_settings.EmbeddedFileStorageDictionary);
+            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf),Settings.EmbeddedFileStorageDictionary);
             return true;
 
 
@@ -253,13 +252,13 @@ namespace EaServices.Doors.ReqIfs
                         // rtf text/description available and rtf export wanted (Mixed Mode or OnlyLinkedDocument)
                         if (  !String.IsNullOrEmpty(rtfText) &&
                              (
-                                 _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
-                                 _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
+                                 Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                 Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
                              )
                            )
                         {
-                            string fileDir = _settings.EmbeddedFileStorageDictionary;
-                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir,_settings.EmbeddedFilesPng);
+                            string fileDir = Settings.EmbeddedFileStorageDictionary;
+                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir,Settings.EmbeddedFilesPng);
 
                             // Handle embedded files of the EA-Element
                             xhtml = $@"{xhtml}
@@ -279,8 +278,8 @@ namespace EaServices.Doors.ReqIfs
                             // Check export EA Notes
                             // No rtf export and Mixed Mode or OnlyNotes
                             if (!String.IsNullOrEmpty(r.Desc) &&
-                                  ( _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
-                                    _settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyNotes
+                                  ( Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                    Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyNotes
                                   )
                                )
                             {
@@ -625,7 +624,7 @@ namespace EaServices.Doors.ReqIfs
                 if (String.IsNullOrWhiteSpace(importReqIfFile[0])) return null;
 
                // deserialize file
-               return DeSerializeReqIf(file,_settings.ValidateReqIF);
+               return DeSerializeReqIf(file,Settings.ValidateReqIF);
               
             }
             else
@@ -637,7 +636,7 @@ namespace EaServices.Doors.ReqIfs
                 };
                 var header = new ReqIFHeader()
                 {
-                    Title = $"{_settings.Name}",
+                    Title = $"{Settings.Name}",
                     CreationTime = DateTime.Now,
                     Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.ReqIfHeader),
                     RepositoryId = Rep.ProjectGUID,

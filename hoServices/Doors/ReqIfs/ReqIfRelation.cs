@@ -113,14 +113,15 @@ File:
         /// </summary>
         /// <param name="el"></param>
         /// <param name="packageGuidList"></param>
-        private void DeleteDependencies( EA.Element el, List<string> packageGuidList)
+        private void DeleteDependencies( EA.Element el, List<ReqIfModuleAssign> packageGuidList)
         {
             for (int i = el.Connectors.Count - 1; i >= 0; i--)
             {
                 var elConnector = (EA.Connector)el.Connectors.GetAt((short)i);
                 var elTarget = _rep.GetElementByID(elConnector.SupplierID);
                 string pkgTargetGuid = _rep.GetPackageByID(elTarget.PackageID).PackageGUID;
-                if ( packageGuidList.Contains(pkgTargetGuid))
+                // Check if guid exists
+                if (packageGuidList.Exists(y => y.Guid == pkgTargetGuid))
                         el.Connectors.DeleteAt((short)i, true);
             }
             el.Refresh();

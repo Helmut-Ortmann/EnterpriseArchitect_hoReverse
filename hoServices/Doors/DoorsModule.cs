@@ -480,8 +480,9 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                     // handle more than one package
                     int subPackageIndex = -1;
                     // handle zip files like
-                    foreach (string guid in item.PackageGuidList)
+                    foreach (var itemGuidList in item.PackageGuidList)
                     {
+                        string guid = itemGuidList.Guid;
                         subPackageIndex += 1;
                         _pkg = _rep.GetPackageByGuid(guid);
                         if (_pkg == null)
@@ -547,8 +548,9 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                     // handle more than one package
                     int subPackageIndex = -1;
                     // handle zip files like
-                    foreach (string guid in item.PackageGuidList)
+                    foreach (var itemGuidList in item.PackageGuidList)
                     {
+                        string guid = itemGuidList.Guid;
                         subPackageIndex += 1;
                         _pkg = _rep.GetPackageByGuid(guid);
                         if (_pkg == null)
@@ -629,8 +631,9 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 // handle more than one package
             int subPackageIndex = -1;
             // handle zip files like
-            foreach (string guid in item.PackageGuidList)
+            foreach (var itemGuidList in item.PackageGuidList)
             {
+                string guid = itemGuidList.Guid;
                 subPackageIndex += 1;
                 _pkg = _rep.GetPackageByGuid(guid);
                 if (_pkg == null)
