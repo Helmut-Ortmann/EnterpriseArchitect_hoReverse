@@ -649,34 +649,41 @@ Value='{value}'
             if (importReqIfFiles.Length == 0) return false;
 
             // Import all reqIf files with their specifications
-            ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles);
+            ReqIfFileList reqIfFileList = null;
+            if (String.IsNullOrWhiteSpace(Settings.PackageGuidList[0].ReqIfModuleId))
+               reqIfFileList = new ReqIfFileList(importReqIfFiles);
 
             // over all to import Packages/Specification/Modules
             bool processByReqIfSpecId = false;
             // Import by Specification ID (more reliable)
-            foreach (var item in Settings.PackageGuidList)
+            if (reqIfFileList != null)
             {
-                // Calculate the column/taggedValueType prefix for current module
-                _prefixTv = Settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
-                    ? Settings.PrefixTaggedValueTypeList[_subModuleIndex]
-                    : "";
-                string pkgGuid = item.Guid;
-                string reqIfId = item.ReqIfModuleId;
-                // ReqIF Specification ID found
-                if (!String.IsNullOrWhiteSpace(reqIfId))
+                foreach (var item in Settings.PackageGuidList)
                 {
-                    ReqIfFileItem reqIfFileItem = reqIfFileList.GetItemForReqIfId(reqIfId);
-                    // estimate package of guid list in settings 
-                    Pkg = Rep.GetPackageByGuid(pkgGuid);
+                    // Calculate the column/taggedValueType prefix for current module
+                    _prefixTv = Settings.PrefixTaggedValueTypeList.Count > _subModuleIndex
+                        ? Settings.PrefixTaggedValueTypeList[_subModuleIndex]
+                        : "";
+                    string pkgGuid = item.Guid;
+                    string reqIfId = item.ReqIfModuleId;
+                    // ReqIF Specification ID found
+                    if (!String.IsNullOrWhiteSpace(reqIfId))
+                    {
+                        ReqIfFileItem reqIfFileItem = reqIfFileList.GetItemForReqIfId(reqIfId);
+                        // estimate package of guid list in settings 
+                        Pkg = Rep.GetPackageByGuid(pkgGuid);
 
-                    ImportReqIfSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype, reqIfFileItem.SpecIndex, stateNew);
-                    if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
-                    if (result == false || _errorMessage1) return false;
-                    processByReqIfSpecId = true;
+                        ImportReqIfSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
+                            reqIfFileItem.SpecIndex, stateNew);
+                        if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
+                        if (result == false || _errorMessage1) return false;
+                        processByReqIfSpecId = true;
 
 
+                    }
                 }
             }
+
             // Import by sequence
             if (!processByReqIfSpecId)
             {

@@ -34,6 +34,7 @@ namespace EaServices.Doors.ReqIfs
             foreach (var reqIfFile in fileList)
             {
                 ReqIF reqIf = ReqIf.DeSerializeReqIf(reqIfFile, false);
+                if (reqIf == null) continue; // skip reqIF
                 int specContentIndex = 0;
                 // over all contents
                 foreach (var cont in reqIf.CoreContent)
