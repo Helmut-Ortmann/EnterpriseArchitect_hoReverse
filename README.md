@@ -69,6 +69,8 @@ Let's discuss it, but it works.
 -  Preparation handle Identifier of Specification to identify the correct Specification
 -  RelationalGroup: no taget requirement available, improved error message
 -  ReqIF Error messages improved
+-  ReqIF Sharp Library update to 1.4
+-  Update Relationships with ReqIFSharp library improved
 
 3.1.7 Minor improvements
 -  ReqIF underline now supported <ins>text </ins>

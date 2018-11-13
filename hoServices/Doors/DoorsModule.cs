@@ -157,9 +157,7 @@ namespace EaServices.Doors
 
         public virtual bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
-            int subModuleIndex=0,
-            string stateNew = "",
-            string stateChanged = "")
+            string stateNew = "")
         {
             return false;
         }
@@ -609,7 +607,7 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                         MessageBox.Show($@"File: '{_importModuleFile}'", @"Import files doesn't exists, break");
                         return false;
                     }
-                    if (!ImportByReqifFile(listNumber, item, ref result)) return false;
+                    if (!ImportByFile(listNumber, item, ref result)) return false;
                     // run for package
                     // handle links
                     if (_reqIfDeserialized != null && 
@@ -625,16 +623,17 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
             return result;
 
         }
-
-        private bool ImportByReqifFile(int listNumber, FileImportSettingsItem item, ref bool result)
+        /// <summary>
+        /// Import a list item / a file
+        /// </summary>
+        /// <param name="listNumber"></param>
+        /// <param name="item"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private bool ImportByFile(int listNumber, FileImportSettingsItem item, ref bool result)
         {
-// handle more than one package
-            int subPackageIndex = -1;
-            // handle zip files like
-            foreach (var itemGuidList in item.PackageGuidList)
-            {
-                string guid = itemGuidList.Guid;
-                subPackageIndex += 1;
+            if (item.PackageGuidList.Count == 0) return true;
+                string guid = item.PackageGuidList[0].Guid;
                 _pkg = _rep.GetPackageByGuid(guid);
                 if (_pkg == null)
                 {
@@ -671,9 +670,8 @@ Check Import settings in Settings.Json.",
 
                     case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                         var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                        result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,
-                                     eaStatusNew,
-                                     eaStatusChanged);
+                        result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, 
+                                     eaStatusNew);
                         _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
                         if (doorsReqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
@@ -682,14 +680,14 @@ Check Import settings in Settings.Json.",
 
                     case FileImportSettingsItem.ImportTypes.ReqIf:
                         var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                        result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, subPackageIndex,
-                                     eaStatusNew,
-                                     eaStatusChanged);
+                        result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype,
+                                     eaStatusNew);
                         _reqIfDeserialized = reqIf.ReqIFDeserialized;
                         if (reqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
                         //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
+                    
 
                     case FileImportSettingsItem.ImportTypes.XmlStruct:
                         var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
@@ -699,8 +697,6 @@ Check Import settings in Settings.Json.",
                         //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
                 }
-            }
-
             return true;
         }
 

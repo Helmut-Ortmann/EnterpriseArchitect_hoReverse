@@ -12,6 +12,7 @@ namespace EaServices.Doors.ReqIfs
     public class ReqIfFileItem
     {
         public string FilePath { get; set; }
+        public int SpecContentIndex { get; set; }
         public string SpecId { get; set; }
         public string SpecLongName { get; set; }
         /// <summary>
@@ -23,12 +24,14 @@ namespace EaServices.Doors.ReqIfs
         /// Create a ReqIfFileItem
         /// </summary>
         /// <param name="filePath"></param>
+        /// <param name="specContentIndex"></param>
         /// <param name="specId"></param>
         /// <param name="specLongName"></param>
         /// <param name="specIndex"></param>
-        public ReqIfFileItem(string filePath, string specId, string specLongName, int specIndex)
+        public ReqIfFileItem(string filePath, int specContentIndex, int specIndex, string specId, string specLongName )
         {
             FilePath = filePath;
+            SpecContentIndex = specContentIndex;
             SpecId = specId;
             SpecLongName = specLongName;
             SpecIndex = specIndex;

@@ -28,7 +28,6 @@ namespace EaServices.Doors
         /// async Task
         public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
             string eaStereotype = "",
-             int subModuleIndex = 0,
             string stateNew = "",
             string stateChanged = "")
          {
@@ -40,12 +39,12 @@ namespace EaServices.Doors
             var reqIf = DeSerializeReqIf(ImportModuleFile, validate: Settings.ValidateReqIF);
              if (reqIf == null) return false;
 
-            InitializeDoorsRequirementsTable(reqIf, subModuleIndex);
+            InitializeDoorsRequirementsTable(reqIf);
 
 
             //reqIf.CoreContent[0].Specifications.Dump();
             // over all submodules
-            Specification elModule = reqIf.CoreContent[0].Specifications[subModuleIndex];
+            Specification elModule = reqIf.CoreContent[0].Specifications[0];
             AddRequirements(DtRequirements, elModule.Children,1);
 
 
@@ -178,8 +177,7 @@ namespace EaServices.Doors
         /// It creates the table and the column names from the DOORS attributes and the standard attributes. 
         /// </summary>
         /// <param name="reqIf"></param>
-        /// <param name="subModuleIndex"></param>
-        private void InitializeDoorsRequirementsTable(ReqIF reqIf, int subModuleIndex)
+        private void InitializeDoorsRequirementsTable(ReqIF reqIf)
         {
             // Initialize table
             DtRequirements = new DataTable();
