@@ -80,12 +80,12 @@ namespace hoReverse.hoUtils.ODBC
                         }
                         catch (Exception ex1)
                         {
-                            MessageBox.Show("Error in ADODB connect: '" + connectionString + "'\n" + "Don't start EA with a shortcut like SDTL.eap!\n\n" + ex1.Message);
+                            MessageBox.Show(@"Error in ADODB connect: '" + connectionString + "'\n" + @"Don't start EA with a shortcut like SDTL.eap!\n\n" + ex1.Message);
                         }
                     }
                 }
 
-                MessageBox.Show("Error in ADODB connect: '" + connectionString + "'\n" + "Don't start EA with a shortcut like SDTL.eap!\n\n" + ex.Message);
+                MessageBox.Show(@"Error in ADODB connect: '" + connectionString + "'\n" + @"Don't start EA with a shortcut like SDTL.eap!\n\n" + ex.Message);
 
             }
            _cmd.ActiveConnection = _cn;
@@ -112,7 +112,7 @@ namespace hoReverse.hoUtils.ODBC
 
             catch (Exception ex)
             {
-                MessageBox.Show("Error in ADODB Execute" + _rep.ConnectionString + "\n'" + _cmd.CommandText + "'\n'" + ex.Message + "'");
+                MessageBox.Show(@"Error in ADODB Execute" + _rep.ConnectionString + "\n'" + _cmd.CommandText + "'\n'" + ex.Message + "'");
                 return false;
             }
 

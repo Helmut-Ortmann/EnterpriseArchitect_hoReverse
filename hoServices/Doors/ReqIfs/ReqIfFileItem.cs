@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace EaServices.Doors.ReqIfs
 {
     /// <summary>
-    /// Item to inventory reqIF files
+    /// Item to inventory reqIF files with FilePath, SpecContentIndex, SpecId, SpecLongName, SpecIndex
     /// </summary>
     public class ReqIfFileItem
     {

@@ -250,7 +250,7 @@
         -->
       <!-- HtmlAgilityPack -->
       <Component Id="HtmlAgilityPack.dll" Guid="{3783B4A7-6591-4783-AFD5-FB7F4E70A2D5}">
-        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.9\lib\Net45\HtmlAgilityPack.dll" />
+        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.10\lib\Net45\HtmlAgilityPack.dll" />
       </Component>
         
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">

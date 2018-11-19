@@ -16,7 +16,7 @@ namespace EaServices.Doors
         /// <returns></returns>
         public static void Convert(string docXFile, string xhtml)
         {
-		
+            // Make XHTML from ReqIF xhtml
             xhtml = XhtmlFromReqIf(xhtml);
             // write to *.docx
             if (String.IsNullOrWhiteSpace(xhtml)) xhtml = "Empty!!!";

@@ -155,13 +155,27 @@ namespace EaServices.Doors
 
         }
 
-        public virtual bool ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public virtual bool ImportForFile(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "")
         {
             return false;
         }
-        public virtual bool RoundtripUpdateRequirements(int subModuleIndex = 0)
+        /// <summary>
+        /// Used if addressing only by a specification index in the file
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool RoundtripForFile()
+        {
+            return true;
+        }
+        /// <summary>
+        /// Used for ReqIF to address by contentIndex and specIndex
+        /// </summary>
+        /// <param name="reqIfContentIndex"></param>
+        /// <param name="reqIfSpecIndex"></param>
+        /// <returns></returns>
+        public virtual bool RoundtripForFile(int reqIfContentIndex, int reqIfSpecIndex)
         {
             return true;
         }
@@ -169,7 +183,7 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public virtual bool ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public virtual bool ImportForFile(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")
@@ -500,16 +514,16 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                                 var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && doorsReqIf.RoundtripUpdateRequirements(subPackageIndex);
+                                result = result && doorsReqIf.RoundtripForFile();
                                 //await Task.Run(() =>
-                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
                                 var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && reqIf.RoundtripUpdateRequirements(subPackageIndex);
+                                result = result && reqIf.RoundtripForFile();
                                 //await Task.Run(() =>
-                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                         }
@@ -570,14 +584,14 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                                 var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && doorsReqIf.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
-                                //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                             case FileImportSettingsItem.ImportTypes.ReqIf:
                                 var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIf.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
-                                //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                                //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
                         }
@@ -624,7 +638,7 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
         }
         /// <summary>
-        /// Import a list item / a file
+        /// Import according to a list element / file. An item contains a file reference.
         /// </summary>
         /// <param name="listNumber"></param>
         /// <param name="item"></param>
@@ -662,39 +676,39 @@ Check Import settings in Settings.Json.",
                 {
                     case FileImportSettingsItem.ImportTypes.DoorsCsv:
                         var doorsCsv = new DoorsCsv(_rep, _pkg, item.InputFile, item);
-                        result = result && doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                        result = result && doorsCsv.ImportForFile(eaObjectType, eaStereotype, eaStatusNew,
                                      eaStatusChanged);
                         //await Task.Run(() =>
-                        //     doorsCsv.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        //     doorsCsv.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
 
                     case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                         var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                        result = result && doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, 
+                        result = result && doorsReqIf.ImportForFile(eaObjectType, eaStereotype, 
                                      eaStatusNew);
                         _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
                         if (doorsReqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
-                        //    doorsReqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
 
                     case FileImportSettingsItem.ImportTypes.ReqIf:
                         var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                        result = result && reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype,
+                        result = result && reqIf.ImportForFile(eaObjectType, eaStereotype,
                                      eaStatusNew);
                         _reqIfDeserialized = reqIf.ReqIFDeserialized;
                         if (reqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
-                        //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
                     
 
                     case FileImportSettingsItem.ImportTypes.XmlStruct:
                         var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
-                        result = result && xmlStruct.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew,
+                        result = result && xmlStruct.ImportForFile(eaObjectType, eaStereotype, eaStatusNew,
                                      eaStatusChanged);
                         //await Task.Run(() =>
-                        //    reqIf.ImportUpdateRequirements(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
+                        //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
                 }
             return true;

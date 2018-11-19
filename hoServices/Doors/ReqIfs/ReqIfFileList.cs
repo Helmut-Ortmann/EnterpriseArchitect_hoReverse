@@ -15,7 +15,12 @@ namespace EaServices.Doors.ReqIfs
     /// </summary>
     public class ReqIfFileList
     {
-        private List<ReqIfFileItem> _reqIfFileItemList;
+        private readonly List<ReqIfFileItem> _reqIfFileItemList;
+
+        public List<ReqIfFileItem> ReqIfFileItemList
+        {
+            get => _reqIfFileItemList;
+        }
 
         /// <summary>
         /// Inventory current reqIF list
@@ -51,6 +56,10 @@ namespace EaServices.Doors.ReqIfs
                     specContentIndex += 1;
                 }
 
+            }
+            if (_reqIfFileItemList.Count == 0)
+            {
+                MessageBox.Show("", @"Errors in ReqIF, break");
             }
         }
         /// <summary>

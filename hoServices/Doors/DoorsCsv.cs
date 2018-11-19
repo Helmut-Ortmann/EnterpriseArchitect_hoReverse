@@ -32,7 +32,7 @@ namespace EaServices.Doors
         /// Import and update Requirements. You can set EA ObjectType like "Requirement" or EA Stereotype like "FunctionalRequirement"
         /// </summary>
         /// async Task
-        public override bool ImportUpdateRequirements(string eaObjectType = "Requirement",
+        public override bool ImportForFile(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "",
             string stateChanged = "")

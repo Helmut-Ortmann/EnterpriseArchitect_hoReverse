@@ -4385,7 +4385,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements
             DoorsCsv doorsModule = new DoorsCsv(_repository, pkg, filePath);
-            doorsModule.ImportUpdateRequirements("Requirement","","");
+            doorsModule.ImportForFile("Requirement","","");
             EnableImportDialog(true);
 
 
@@ -4427,7 +4427,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             EnableImportDialog(false);
             // Generate Requirements
            DoorsCsv doorsModule = new DoorsCsv( _repository, pkg, filePath);
-            doorsModule.ImportUpdateRequirements("Requirement","","");
+            doorsModule.ImportForFile("Requirement","","");
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
 
