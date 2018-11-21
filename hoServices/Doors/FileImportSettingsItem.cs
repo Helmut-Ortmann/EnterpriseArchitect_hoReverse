@@ -257,6 +257,7 @@ namespace EaServices.Doors
                 return lPackageGuidList;
             }
         }
+        
 
         [JsonProperty("PackageGuidList")]
         private List<string>  _packageGuidList;
@@ -303,8 +304,18 @@ namespace EaServices.Doors
         [JsonProperty("ExportMappingList")]
         private List<string> _exportMappingList;
 
-
-        
+        /// <summary>
+        /// Get Package prefix for current module/specification
+        /// </summary>
+        /// <param name="packageIndex"></param>
+        /// <returns></returns>
+        public string GetPrefixTaggedValueType(int packageIndex)
+        {
+            // Calculate the column/taggedValueType prefix for current module
+             return PrefixTaggedValueTypeList.Count > packageIndex
+                ?PrefixTaggedValueTypeList[packageIndex]
+                : "";
+        }
 
         /// <summary>
         /// List of EA TaggedValue prefixe per ReqIF module. hoReverse uses this prefixes to allow same column names in ReqIF modules.

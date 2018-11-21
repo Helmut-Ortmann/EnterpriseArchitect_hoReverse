@@ -3179,7 +3179,8 @@ namespace hoReverse.Reverse
                     "Change selected EA items in Package (recursive)\r\nSelect\r\n-Package",
                     BulkChangeEaItemsRecursive_Click));
 
-
+                // Add menu entries to handele
+                // ReqIF & more
                 AddDoMenuImportExportRoundtrip();
             }
 
@@ -3215,7 +3216,8 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                 var importBySettings = (from item in _importSettings.ImportSettings
                     where !String.IsNullOrWhiteSpace(item.InputFile) && 
                           (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Import) == FileImportSettingsItem.AllowedOperationsType.Import
-                    select item).ToList();
+                    orderby item.ListNo.PadLeft(4, '0')
+                    select item).Distinct().ToList();
 
 
                 _doToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
@@ -3235,7 +3237,8 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                           (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Roundtrip) == FileImportSettingsItem.AllowedOperationsType.Roundtrip &&
                           (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
                            item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
-                    select item).ToList();
+                           orderby item.ListNo.PadLeft(4,'0')
+                           select item).Distinct().ToList();
 
                 _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
                     roundtripBySettings,
@@ -3255,7 +3258,8 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                           (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Export) == FileImportSettingsItem.AllowedOperationsType.Export &&
                           (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
                            item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
-                    select item).ToList();
+                           orderby item.ListNo.PadLeft(4, '0')
+                           select item).Distinct().ToList();
 
                 _doToolStripMenuItem.DropDownItems.Add(_importSettings.ConstructImporterMenuItems(
                     exportBySettings,

@@ -91,22 +91,14 @@ namespace EaServices.Doors.ReqIfs
             string[] importReqIfFiles = Decompress(ImportModuleFile);
             if (importReqIfFiles.Length == 0) return false;
 
-            // Import all reqIf files with their specifications
+            // Inventory all reqIf files with their specifications
             ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles);
             if (reqIfFileList.ReqIfFileItemList.Count == 0) return false;
             
+            // Check import settings
+            if (!CheckImportFile()) return false;
 
-            if (Settings.PackageGuidList.Count == 0)
-            {
-                MessageBox.Show(@"See: File, Settings
-
-Parameter: PackageGuidList
-is missing!
-", @"No Package GUID defined in Settings, break");
-                return false;
-            }
-
-            // over all to import Packages/Specification/Modules of the current *.reqifz file
+            // over all to roundtrip Packages/Specification/Modules of the current *.reqifz file
             // Import all Specifications of file
             // Import by Specification ID in item definition/file definition (more reliable)
             if (!String.IsNullOrWhiteSpace(Settings.PackageGuidList[0].ReqIfModuleId))
@@ -115,10 +107,8 @@ is missing!
                 int packageIndex = 0;
                 foreach (var item in Settings.PackageGuidList)
                 {
-                    // Calculate the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.PrefixTaggedValueTypeList.Count > packageIndex
-                        ? Settings.PrefixTaggedValueTypeList[packageIndex]
-                        : "";
+                    // get the column/taggedValueType prefix for current module
+                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
                     string pkgGuid = item.Guid;
                     string reqIfSpecId = item.ReqIfModuleId;
                     // ReqIF Specification ID found
@@ -127,6 +117,7 @@ is missing!
                         ReqIfFileItem reqIfFileItem = reqIfFileList.GetItemForReqIfId(reqIfSpecId);
                         // estimate package of guid list in settings 
                         Pkg = Rep.GetPackageByGuid(pkgGuid);
+                        Rep.ShowInProjectView(Pkg);
 
                         bool result = RoundtripSpecification(reqIfFileItem.FilePath, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex);
                         if (result == false || _errorMessage1) return false;
@@ -143,33 +134,16 @@ is missing!
                 foreach (var file in importReqIfFiles)
                 {
                     ReqIfFileItem reqIfFileItem = reqIfFileList.ReqIfFileItemList[packageIndex];
-                    // Calculate the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.PrefixTaggedValueTypeList.Count > packageIndex
-                        ? Settings.PrefixTaggedValueTypeList[packageIndex]
-                        : "";
+                    // get the column/taggedValueType prefix for current module
+                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
                     CountPackage += 1;
 
-                    // A Guid is available for the current index
-                    if (Settings.PackageGuidList.Count <= packageIndex)
-                    {
-                        var res = MessageBox.Show($@"File:{Tab}{file}
-
-Index:{Tab}{packageIndex}
-Count Guids:{Tab}{Settings.PackageGuidList.Count}
-List of available GUIDs:
-{String.Join("\r\n", Settings.PackageGuidList.Select(x => x.Guid))}
-
-Yes:{Tab}Skip current file
-Cancel{Tab}: Cancel whole import
-
-", @"The GUID list in settings doesn't contain a GUID for current file, skip or cancel", MessageBoxButtons.OKCancel
-                        );
-                        return res == DialogResult.OK;
-                    }
+                    if (! CheckGuidAvailable(packageIndex, file, out var isContinueWorking)) return isContinueWorking;
 
                     // estimate package of guid list in settings 
                     string pkgGuid = Settings.PackageGuidList[packageIndex].Guid;
                     Pkg = Rep.GetPackageByGuid(pkgGuid);
+                    Rep.ShowInProjectView(Pkg);
 
                     bool result = RoundtripSpecification(reqIfFileItem.FilePath, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex);
 
@@ -181,14 +155,69 @@ Cancel{Tab}: Cancel whole import
 
                 }
             }
+            // write the changes back
             Compress(ImportModuleFile, Path.GetDirectoryName(importReqIfFiles[0]));
             return true;
 
         }
 
+        /// <summary>
+        /// Check ig GUID is available for current package index
+        /// </summary>
+        /// <param name="packageIndex"></param>
+        /// <param name="file"></param>
+        /// <param name="isContinueWorking">In case of error: True continue working, False break</param>
+        /// <returns></returns>
+        private bool CheckGuidAvailable(int packageIndex, string file, out bool isContinueWorking)
+        {
+// A Guid is available for the current index
+            if (Settings.PackageGuidList.Count <= packageIndex)
+            {
+                var res = MessageBox.Show($@"File:{Tab}{file}
+
+Index:{Tab}{packageIndex}
+Count Guids:{Tab}{Settings.PackageGuidList.Count}
+List of available GUIDs:
+{String.Join("\r\n", Settings.PackageGuidList.Select(x => x.Guid))}
+
+Yes:{Tab}Skip current file
+Cancel{Tab}: Cancel whole import
+
+", @"The GUID list in settings doesn't contain a GUID for current file, skip or cancel", MessageBoxButtons.OKCancel
+                );
+                {
+                    // Error with or without continuation
+                    isContinueWorking = (res == DialogResult.OK);
+                    return false;
+                }
+            }
+
+            isContinueWorking = true;
+            return true;
+        }
 
         /// <summary>
-        /// RoundTrip a specification
+        /// Check import/roundtrip file
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckImportFile()
+        {
+            if (Settings.PackageGuidList.Count == 0)
+            {
+                MessageBox.Show(@"See: File, Settings
+
+Parameter: PackageGuidList
+is missing!
+", @"No Package GUID defined in Settings, break");
+                return false;
+            }
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// RoundTrip a specification. This means it exports the roundtrip attributes.
         /// </summary>
         /// <param name="file"></param>
         /// <param name="reqifContentIndex"></param>
@@ -200,30 +229,8 @@ Cancel{Tab}: Cancel whole import
             _reqIf = DeSerializeReqIf(file, validate: Settings.ValidateReqIF);
             if (_reqIf == null) return false;
 
-            _moduleAttributeDefinitions = GetTypesModule(_reqIf, 0, reqIfSpecIndex);
-            // Modules
-            if (reqIfSpecIndex >= _reqIf.CoreContent[reqifContentIndex].Specifications.Count)
-            {
-                MessageBox.Show($@"File: '{file}'
-Contains: {_reqIf.CoreContent.Count} modules
-Requested: {_reqIf.CoreContent.Count}
-Packages (per module one package/guid) are defined in Settings.json: 
-
-", @"More packages defined as Modules are in ReqIF file, break!");
-                return false;
-            }
-
-            // Modules
-            if (_reqIf.CoreContent[0].Specifications.Count == 0)
-            {
-                MessageBox.Show($@"File: '{file}'
-Contains: {_reqIf.CoreContent.Count} modules
-Requested: {_reqIf.CoreContent.Count}
-No module is defined in Settings.json: 
-
-", @"No module defined in ReqIF file, break!");
-                return false;
-            }
+            _moduleAttributeDefinitions = GetTypesModule(_reqIf, reqifContentIndex, reqIfSpecIndex);
+           
 
             if (Pkg.Elements.Count == 0)
             {
@@ -732,20 +739,12 @@ Value='{value}'
             string[] importReqIfFiles = Decompress(ImportModuleFile);
             if (importReqIfFiles.Length == 0) return false;
 
-            // Import all reqIf files with their specifications
+            // Inventory all reqIf files with their specifications
             ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles);
             if (reqIfFileList.ReqIfFileItemList.Count == 0) return false;
-            
 
-            if (Settings.PackageGuidList.Count == 0)
-            {
-                MessageBox.Show(@"See: File, Settings
-
-Parameter: PackageGuidList
-is missing!
-", @"No Package GUID defined in Settings, break");
-                return false;
-            }
+            // Check import settings
+            if (!CheckImportFile()) return false;
 
 
             // over all to import Packages/Specification/Modules of the current *.reqifz file
@@ -757,10 +756,9 @@ is missing!
                 int packageIndex = 0;
                 foreach (var item in Settings.PackageGuidList)
                 {
-                    // Calculate the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.PrefixTaggedValueTypeList.Count > packageIndex
-                        ? Settings.PrefixTaggedValueTypeList[packageIndex]
-                        : "";
+                    
+                    _prefixTv  = Settings.GetPrefixTaggedValueType(packageIndex);
+
                     string pkgGuid = item.Guid;
                     string reqIfSpecId = item.ReqIfModuleId;
                     // ReqIF Specification ID found
@@ -788,30 +786,15 @@ is missing!
                 foreach (var file in importReqIfFiles)
                 {
                     ReqIfFileItem reqIfFileItem = reqIfFileList.ReqIfFileItemList[packageIndex];
-                    // Calculate the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.PrefixTaggedValueTypeList.Count > packageIndex
-                        ? Settings.PrefixTaggedValueTypeList[packageIndex]
-                        : "";
+
+                    // get the column/taggedValueType prefix for current module
+                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
+
                     CountPackage += 1;
 
                     // A Guid is available for the current index
-                    if (Settings.PackageGuidList.Count <= packageIndex)
-                    {
-                        var res = MessageBox.Show($@"File:{Tab}{file}
-
-Index:{Tab}{packageIndex}
-Count Guids:{Tab}{Settings.PackageGuidList.Count}
-List of available GUIDs:
-{String.Join("\r\n", Settings.PackageGuidList.Select(x => x.Guid))}
-
-Yes:{Tab}Skip current file
-Cancel{Tab}: Cancel whole import
-
-", @"The GUID list in settings doesn't contain a GUID for current file, skip or cancel",MessageBoxButtons.OKCancel
-                        );
-                        return res == DialogResult.OK;
-                    }
-
+                    if (! CheckGuidAvailable(packageIndex, file, out var isContinueWorking)) return isContinueWorking;
+                   
                     // estimate package of guid list in settings 
                     string pkgGuid = Settings.PackageGuidList[packageIndex].Guid;
                     Pkg = Rep.GetPackageByGuid(pkgGuid);
@@ -829,7 +812,7 @@ Cancel{Tab}: Cancel whole import
             return result && (!_errorMessage1);
         }
 
-
+       
         /// <summary>
         /// Import ReqIF Specification
         /// </summary>
@@ -842,14 +825,7 @@ Cancel{Tab}: Cancel whole import
         /// <returns></returns>
         private bool ImportSpecification(string file, string eaObjectType, string eaStereotype, int reqIfContentIndex, int reqIfSpecIndex, string stateNew)
         {
-            // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
-            if (Settings.EmbeddedFileStorageDictionary != "" && _subModuleIndex == 0)
-            {
-                string sourceDir = Path.GetDirectoryName(file);
-                hoUtils.DirectoryExtension.CreateEmptyDir(Settings.EmbeddedFileStorageDictionary);
-                hoUtils.DirectoryExtension.DirectoryCopy(sourceDir, Settings.EmbeddedFileStorageDictionary,
-                    copySubDirs: true);
-            }
+            CopyEmbeddedFilesToTarget(file);
 
             // Deserialize
             _reqIf = DeSerializeReqIf(file, validate: Settings.ValidateReqIF);
@@ -864,7 +840,7 @@ Cancel{Tab}: Cancel whole import
 
             // Add requirements recursive for module to requirement table
             InitializeReqIfRequirementsTable(_reqIf);
-            Specification reqIfModule = _reqIf.CoreContent[0].Specifications[reqIfSpecIndex];
+            Specification reqIfModule = _reqIf.CoreContent[reqIfContentIndex].Specifications[reqIfSpecIndex];
 
             Rep.BatchAppend = true;
             Rep.EnableUIUpdates = false;
@@ -888,6 +864,21 @@ Cancel{Tab}: Cancel whole import
             Rep.EnableUIUpdates = true;
             Rep.ReloadPackage(Pkg.PackageID);
             return true;
+        }
+        /// <summary>
+        /// Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+        /// </summary>
+        /// <param name="file"></param>
+        private void CopyEmbeddedFilesToTarget(string file)
+        {
+            // Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+            if (Settings.EmbeddedFileStorageDictionary != "" && _subModuleIndex == 0)
+            {
+                string sourceDir = Path.GetDirectoryName(file);
+                hoUtils.DirectoryExtension.CreateEmptyDir(Settings.EmbeddedFileStorageDictionary);
+                hoUtils.DirectoryExtension.DirectoryCopy(sourceDir, Settings.EmbeddedFileStorageDictionary,
+                    copySubDirs: true);
+            }
         }
 
         /// <summary>
