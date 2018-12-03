@@ -71,6 +71,7 @@ Let's discuss it, but it works.
 -  ReqIF Error messages improved
 -  ReqIF Sharp Library update to 1.4
 -  Update Relationships with ReqIFSharp library improved
+-  Generate <<use>> Include from Code snippet
 
 3.1.7 Minor improvements
 -  ReqIF underline now supported <ins>text </ins>

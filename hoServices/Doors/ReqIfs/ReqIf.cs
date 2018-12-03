@@ -756,7 +756,7 @@ Value='{value}'
                 int packageIndex = 0;
                 foreach (var item in Settings.PackageGuidList)
                 {
-                    
+                    if (!String.IsNullOrWhiteSpace(item.ReqIfReqIfFleStorage)) Settings.EmbeddedFileStorageDictionary = item.ReqIfReqIfFleStorage;
                     _prefixTv  = Settings.GetPrefixTaggedValueType(packageIndex);
 
                     string pkgGuid = item.Guid;
@@ -1376,7 +1376,8 @@ XHTML:'{xhtmlValue}
             DtRequirements.Columns.Add("specObject", typeof(SpecObject));
             foreach (var attr in attributeDefinitions)
             {
-                // add Column
+                // add Column if not exists
+                if (DtRequirements.Columns.Contains(attr.LongName)) continue;
                 DtRequirements.Columns.Add(attr.LongName, typeof(string));
 
                 // add TaggedValueType to EA if not already exists

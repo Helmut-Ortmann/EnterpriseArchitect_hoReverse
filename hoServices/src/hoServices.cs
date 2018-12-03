@@ -2352,7 +2352,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
         /// - Make a Usage Connector from Class/Interface to Interface
         /// </summary>
         /// <param name="rep"></param>
-        public static void GenerateUseInterface(Repository rep)
+        public static void GenerateUseInterfacesFromFile(Repository rep)
         {
             Diagram dia = rep.GetCurrentDiagram();
             if (dia == null) return;
@@ -2405,7 +2405,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
 
                     }
 
-                    string connectionType = ifTarget.Name == elSource.Name ? "Realisation" : "Usage";
+                    string connectionType = ifTarget.Name == elSource.Name ? @"Realisation" : "Usage";
                     // Skip dependency if already exists
                     // - Name, Connection Type
                     bool skipCreateConnector = false;
@@ -2428,6 +2428,99 @@ Second Element: Target of move connections and appearances", @"Select two elemen
 
                 }
             }
+            rep.ReloadDiagram(dia.DiagramID);
+
+        }
+        /// <summary>
+        /// Generate "Usage" Interface for selected Class/Interface of Diagram node from text input
+        /// Reads the C-Code definition in in text field
+        /// - Creates/Reuse existing Interfaces 
+        /// - Creates a node of the Interface to connect to
+        /// - Make a Usage Connector from Class/Interface to Interface
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="codeSnippet"></param>
+        public static void GenerateUseInterfacesFromInput(Repository rep, string codeSnippet)
+        {
+            EA.Diagram dia = rep.GetCurrentDiagram();
+            if (dia == null) return;
+
+            if (rep.GetContextItemType() != EA.ObjectType.otElement) return;
+            EA.Element el = (EA.Element) rep.GetContextObject();
+            EA.Package pkg = rep.GetPackageByID(el.PackageID);
+
+            EA.DiagramObject obj = dia.GetDiagramObjectByID(el.ElementID, "");
+
+            // prevent information loss
+            rep.SaveDiagram(dia.DiagramID);
+            HoUtil.SetDiagramStyleFitToPage(dia);// after save diagram!
+
+                // Update style of selected Element (Interface/Class/..)
+                Element elSource = rep.GetElementByID(obj.ElementID);
+                obj.SetStyleEx("Notes", "300");
+                obj.Update();
+
+                // Note
+                // High: top, bottom from 0 decreasing (0=top)
+                // Wide: left, right from 0 increasing (0=left)
+                int pos = 0;
+                const int nodeWidth = 300;
+                const int nodeHigh = 100;
+                const int offsetRight = 100;
+                const int offsetHigh = 30;
+
+                int left = obj.right + offsetRight;
+                int topStart = obj.top;
+
+            // over includes of the selected objects
+            foreach (Element ifTarget in GetInterfacesFromCodeSnippet(rep, pkg, codeSnippet))
+            {
+
+                int top = topStart - pos * (offsetHigh + nodeHigh);
+                pos = pos + 1;
+                // If element don't already exists, create Interface Node on Diagram
+                if (dia.GetDiagramObjectByID(ifTarget.ElementID, "") == null)
+                {
+                    DiagramObject diaObjTarget =
+                        (DiagramObject) dia.DiagramObjects.AddNew(
+                            $"l={left};r={left + nodeWidth};t={top};b={top - nodeHigh}", "");
+
+                    diaObjTarget.ElementID = ifTarget.ElementID;
+                    diaObjTarget.SetStyleEx("AttPro", "0");
+                    diaObjTarget.SetStyleEx("AttPri", "0");
+                    diaObjTarget.SetStyleEx("AttPub", "0");
+                    diaObjTarget.SetStyleEx("OpPro", "0");
+                    diaObjTarget.SetStyleEx("OpPri", "0");
+                    diaObjTarget.SetStyleEx("OpPub", "0");
+                    diaObjTarget.SetStyleEx("Notes", "300");
+                    diaObjTarget.Update();
+                    dia.DiagramObjects.Refresh();
+
+                }
+
+                string connectionType = ifTarget.Name == elSource.Name ? @"Realisation" : "Usage";
+                // Skip dependency if already exists
+                // - Name, Connection Type
+                bool skipCreateConnector = false;
+                foreach (EA.Connector c in elSource.Connectors)
+                {
+                    if (c.SupplierID == ifTarget.ElementID &&
+                        c.Type.Equals(connectionType)) skipCreateConnector = true;
+                }
+
+                if (!skipCreateConnector)
+                {
+                    // Create a "Usage" Dependency from selected Class to create Diagram node with Interface
+                    EA.Connector con = (EA.Connector) elSource.Connectors.AddNew("", connectionType);
+                    //con.Stereotype = "use";
+                    con.SupplierID = ifTarget.ElementID;
+                    con.Update();
+                    elSource.Connectors.Refresh();
+                    ifTarget.Connectors.Refresh();
+                }
+            }
+
+
             rep.ReloadDiagram(dia.DiagramID);
 
         }
@@ -5732,6 +5825,23 @@ ElementType:{el.Type}",
 
             
             
+            return lEl;
+
+        }
+
+        /// <summary>
+        /// Get list of Interfaces for the code snippet. If the interface doesn't exist create one.
+        /// 
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="pkg"></param>
+        /// <param name="codeSnippet"></param>
+        /// <returns></returns>
+        private static List<Element> GetInterfacesFromCodeSnippet(Repository rep, EA.Package pkg, string codeSnippet)
+        {
+            List<Element> lEl = new List<Element>();
+            
+            lEl = GetInterfacesFromText(rep, rep.GetPackageByID(pkg.PackageID), codeSnippet, addMissingInterface: true);
             return lEl;
 
         }

@@ -15,10 +15,19 @@ namespace EaServices.Doors
     {
         //public string Guid;
         //public string ReqIfModuleId;
-        public ReqIfModuleAssign(string guid, string reqIfModuleID)
+        public ReqIfModuleAssign(string guid, string reqIfModuleId)
         {
             Guid = guid;
-            ReqIfModuleId = reqIfModuleID;
+            ReqIfModuleId = reqIfModuleId;
+
+        }
+        //public string Guid;
+        //public string ReqIfModuleId;
+        public ReqIfModuleAssign(string guid, string reqIfModuleId, string reqIfFleStorage)
+        {
+            Guid = guid;
+            ReqIfModuleId = reqIfModuleId;
+            ReqIfReqIfFleStorage = reqIfFleStorage;
 
         }
         public string Guid
@@ -28,6 +37,11 @@ namespace EaServices.Doors
         }
 
         public string ReqIfModuleId
+        {
+            get;
+            set;
+        }
+        public string ReqIfReqIfFleStorage
         {
             get;
             set;
@@ -240,6 +254,7 @@ namespace EaServices.Doors
         /// <summary>
         /// List of PackageGuids. hoReverse puts the Requirements beneath this package. Possible formats:
         /// "guid","guid=ReqIFModuleID"
+        /// "guid","guid=ReqIFModuleID=ReqIfFileStorage"
         /// </summary>
         [JsonIgnore]
         public List<ReqIfModuleAssign> PackageGuidList
@@ -250,9 +265,10 @@ namespace EaServices.Doors
                 foreach (var item in _packageGuidList)
                 {
                     string[] lItem = item.Split('=');
-                    string item0 = lItem[0].Trim();
-                    string item1 = lItem.Length == 2 ? lItem[1].Trim() : "";
-                    lPackageGuidList.Add(new ReqIfModuleAssign(item0, item1));
+                    string guid = lItem[0].Trim();
+                    string reqIfModuleId = lItem.Length >= 2 ? lItem[1].Trim() : "";
+                    string reqIfFleStorage = lItem.Length >= 3 ? lItem[2].Trim() : "";
+                    lPackageGuidList.Add(new ReqIfModuleAssign(guid, reqIfModuleId, reqIfFleStorage));
                 }
                 return lPackageGuidList;
             }

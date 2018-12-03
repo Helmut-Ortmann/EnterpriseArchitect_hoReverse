@@ -319,9 +319,22 @@ Note:
   <data name="_inserToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Select Class/Interface and generate Interfaces from code.
 
-hoReverse adds theInterfaces with:
+Precondition:
+- The Source file is correctly defined in the selected classifiers
+
+hoReverse adds the Interfaces with:
 - 'Usage' dependency if inlude has a different name as the selected Class
 - 'Realisation' dependency if inlude has the name of the selected</value>
+  </data>
+  <data name="generateIncludesFromCodeSnippetToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Generate &lt;&lt;use&gt;&gt; interfaces for selected classifier and code snippet
+- Select a Class/Component/Interface you want to attach interfaces &lt;&lt;use&gt;&gt;
+- Insert a code snippt which contains the "include ...." statemants
+
+hoReverse does:
+- Create not existing interfaces
+- Place the interfaces on the diagram
+- Make &lt;&lt;use&gt;&gt; dependencies</value>
   </data>
   <data name="_setMacroToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Set the macro/stereotype according to the comma seperated text list.

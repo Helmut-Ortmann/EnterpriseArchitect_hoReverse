@@ -259,6 +259,7 @@ namespace hoReverse.Reverse
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripMenuItem sQLWildcardsToolStripMenuItem;
         private ToolStripMenuItem reqIFToolStripMenuItem;
+        private ToolStripMenuItem generateIncludesFromCodeSnippetToolStripMenuItem;
         private ToolTip _toolTip1;
 
 
@@ -716,6 +717,7 @@ namespace hoReverse.Reverse
             this._showAllPortsActivityParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this._inserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateIncludesFromCodeSnippetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this._setMacroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._addMacroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1734,6 +1736,7 @@ namespace hoReverse.Reverse
             this._showAllPortsActivityParametersToolStripMenuItem,
             this._toolStripSeparator7,
             this._inserToolStripMenuItem,
+            this.generateIncludesFromCodeSnippetToolStripMenuItem,
             this._toolStripSeparator8,
             this._setMacroToolStripMenuItem,
             this._addMacroToolStripMenuItem,
@@ -1852,9 +1855,17 @@ namespace hoReverse.Reverse
             // 
             this._inserToolStripMenuItem.Name = "_inserToolStripMenuItem";
             this._inserToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this._inserToolStripMenuItem.Text = "Generate Include for classifier";
+            this._inserToolStripMenuItem.Text = "Generate Include for classifier from File";
             this._inserToolStripMenuItem.ToolTipText = resources.GetString("_inserToolStripMenuItem.ToolTipText");
             this._inserToolStripMenuItem.Click += new System.EventHandler(this._generateIncludeForClassifierToolStripMenuItem_Click);
+            // 
+            // generateIncludesFromCodeSnippetToolStripMenuItem
+            // 
+            this.generateIncludesFromCodeSnippetToolStripMenuItem.Name = "generateIncludesFromCodeSnippetToolStripMenuItem";
+            this.generateIncludesFromCodeSnippetToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.generateIncludesFromCodeSnippetToolStripMenuItem.Text = "Generate Includes from code snippet";
+            this.generateIncludesFromCodeSnippetToolStripMenuItem.ToolTipText = resources.GetString("generateIncludesFromCodeSnippetToolStripMenuItem.ToolTipText");
+            this.generateIncludesFromCodeSnippetToolStripMenuItem.Click += new System.EventHandler(this.GenerateIncludeForClassifierFromSnippetToolStripMenuItem_Click);
             // 
             // _toolStripSeparator8
             // 
@@ -3618,7 +3629,31 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                HoService.GenerateUseInterface(_repository);
+                HoService.GenerateUseInterfacesFromFile(_repository);
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception e10)
+            {
+                MessageBox.Show(e10.ToString(), @"Error generating used interfaces for selected Class/Interface");
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+
+        }
+        /// <summary>
+        /// Generate "Usage" Interface for selected Class/Interface of Diagram node from text input (code snippet)
+        /// - Creates/Reuse existing Interfaces 
+        /// - Creates a node of the Interface to connect to<param name="sender"></param>
+        /// - Make a Usage Connector from Class/Interface to Interface
+        /// </summary>
+        private void GenerateIncludeForClassifierFromSnippetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                HoService.GenerateUseInterfacesFromInput(_repository,_txtUserText.Text);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception e10)
