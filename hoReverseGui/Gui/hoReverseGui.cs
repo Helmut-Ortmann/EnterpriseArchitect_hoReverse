@@ -3247,7 +3247,8 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
                           !String.IsNullOrWhiteSpace(item.RoundtripFile) &&
                           (item.AllowedOperation & FileImportSettingsItem.AllowedOperationsType.Roundtrip) == FileImportSettingsItem.AllowedOperationsType.Roundtrip &&
                           (item.ImportType == FileImportSettingsItem.ImportTypes.DoorsReqIf ||
-                           item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf)
+                           item.ImportType == FileImportSettingsItem.ImportTypes.ReqIf
+                           )
                            orderby item.ListNo.PadLeft(4,'0')
                            select item).Distinct().ToList();
 
