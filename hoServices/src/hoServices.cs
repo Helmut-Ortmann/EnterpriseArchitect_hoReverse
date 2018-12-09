@@ -121,7 +121,102 @@ namespace hoReverse.Services
             curDiagram.ReloadSelectedObjectsAndConnector();
 
         }
+        /// <summary>
+        /// Move Clipboard items to selected package. Use a Search and copy the search results to clipboard.
+        /// </summary>
+        /// <param name="rep"></param>
+        [ServiceOperation("{BB133FEA-AEDD-4C8F-BBC1-A59F85F4624C}",
+            "Move EA clipboard items form Search to selected Package", // Description
+            "Select the package to move the EA clipboard items into. The clipboard items must contain a GUID or an Object-ID (left columns).", //Tooltip
+            isTextRequired: false)]
+        public static void MoveClipboardItemsToPackage(Repository rep)
+        {
+            if (rep.GetContextItemType() != EA.ObjectType.otPackage) return;
+            EA.Package pkg = (EA.Package)rep.GetContextObject();
 
+            string[] clipboardText = Clipboard.GetText().Split(new[] { Environment.NewLine },
+                StringSplitOptions.RemoveEmptyEntries);
+            if (clipboardText.Length < 2)
+            {
+                MessageBox.Show("", @"Clipboard doesn't contain a row");
+                return;
+            }
+
+            // skip heading
+            clipboardText = clipboardText.Skip(1).Take(clipboardText.Length - 1).ToArray();
+            string[] del = new[] { System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator };
+
+            var firstLine = clipboardText.FirstOrDefault();
+            if (String.IsNullOrEmpty(firstLine))
+            {
+                MessageBox.Show("", @"Clipboard empty");
+                return;
+            }
+            var firstLineAsArray = firstLine.Split(del, StringSplitOptions.None);
+            bool found = false;
+            bool isObjectId = false;
+            int column = -1;
+            foreach (var col in firstLineAsArray)
+            {
+                column += 1;
+                // Check GUID 
+                if (col.StartsWith("{") && col.EndsWith("}"))
+                {
+                    isObjectId = false;
+                    found = true;
+                    break;
+                }
+                if (Int32.TryParse(col, out int j))
+                {
+                    isObjectId = true;
+                    found = true;
+                    break;
+
+                }
+            }
+
+            if (found == false)
+            {
+                MessageBox.Show($@"Delimiter: '{del[0]}'
+
+Clipboard first data line:
+{firstLine}", @"Can't read an object_id or a GUID from Clipboard");
+                return;
+            }
+
+            int countCopied = 0;
+            foreach (var row in clipboardText)
+            {
+                var rowAsArray = row.Split(del, StringSplitOptions.None);
+                if (isObjectId)
+                {
+                    if (int.TryParse(rowAsArray[column], out int id))
+                    {
+                        EA.Element el = rep.GetElementByID(id);
+                        if (el == null) continue;
+                        el.PackageID = pkg.PackageID;
+                        el.Update();
+                        countCopied += 1;
+                    }
+                }
+                else
+                {
+                    if (rowAsArray[column].StartsWith("{") && rowAsArray[column].EndsWith("}"))
+                    {
+                        EA.Element el = rep.GetElementByGuid(rowAsArray[column]);
+                        if (el == null) continue;
+                        el.PackageID = pkg.PackageID;
+                        el.Update();
+                        countCopied += 1;
+                    }
+
+                }
+            }
+            // update package viewS
+            rep.RefreshModelView(pkg.PackageID);
+            MessageBox.Show($@"Package: {pkg.Name}", $@"{countCopied} elements from Clipboard copied to selected/contect package");
+
+        }
         /// <summary>
         /// Copy FQ (Full Qualified) Name to ClipBoard
         /// </summary>

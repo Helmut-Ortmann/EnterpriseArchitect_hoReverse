@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -98,63 +99,31 @@ namespace EaServices.Doors.ReqIfs
             // Check import settings
             if (!CheckImportFile()) return false;
 
-            // over all to roundtrip Packages/Specification/Modules of the current *.reqifz file
-            // Import all Specifications of file
-            // Import by Specification ID in item definition/file definition (more reliable)
-            if (!String.IsNullOrWhiteSpace(Settings.PackageGuidList[0].ReqIfModuleId))
+            // over all packages/guids
+            int packageIndex = 0;
+            foreach (var item in Settings.PackageGuidList)
             {
-                // over all packages/guids
-                int packageIndex = 0;
-                foreach (var item in Settings.PackageGuidList)
-                {
-                    // get the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
-                    string pkgGuid = item.Guid;
-                    string reqIfSpecId = item.ReqIfModuleId;
-                    // ReqIF Specification ID found
-                    if (!String.IsNullOrWhiteSpace(reqIfSpecId))
-                    {
-                        ReqIfFileItem reqIfFileItem = reqIfFileList.GetItemForReqIfId(reqIfSpecId);
-                        // estimate package of guid list in settings 
-                        Pkg = Rep.GetPackageByGuid(pkgGuid);
-                        Rep.ShowInProjectView(Pkg);
+                // get the column/taggedValueType prefix for current module
+                _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
+                string pkgGuid = item.Guid;
+                string reqIfSpecId = item.ReqIfModuleId;
 
-                        bool result = RoundtripSpecification(reqIfFileItem.FilePath, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex);
-                        if (result == false || _errorMessage1) return false;
-                    }
-                    // next package
-                    packageIndex += 1;
-                }
+                // Use reqIF Specification ID or iterate by sequence (package index)
+                ReqIfFileItem reqIfFileItem = String.IsNullOrWhiteSpace(reqIfSpecId)
+                    ? reqIfFileList.GetItemForIndex(packageIndex)
+                    : reqIfFileList.GetItemForReqIfId(reqIfSpecId);
+
+               // estimate package of guid list in settings 
+                Pkg = Rep.GetPackageByGuid(pkgGuid);
+                Rep.ShowInProjectView(Pkg);
+
+                bool result = RoundtripSpecification(reqIfFileItem.FilePath, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex);
+                if (result == false || _errorMessage1) return false;
+                // next package
+                packageIndex += 1;
             }
-            // run all packages in sequential order
-            else
-            {
-                // over all EA packages
-                int packageIndex = 0;
-                foreach (var file in importReqIfFiles)
-                {
-                    ReqIfFileItem reqIfFileItem = reqIfFileList.ReqIfFileItemList[packageIndex];
-                    // get the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
-                    CountPackage += 1;
 
-                    if (! CheckGuidAvailable(packageIndex, file, out var isContinueWorking)) return isContinueWorking;
-
-                    // estimate package of guid list in settings 
-                    string pkgGuid = Settings.PackageGuidList[packageIndex].Guid;
-                    Pkg = Rep.GetPackageByGuid(pkgGuid);
-                    Rep.ShowInProjectView(Pkg);
-
-                    bool result = RoundtripSpecification(reqIfFileItem.FilePath, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex);
-
-                    if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
-                    if (result == false || _errorMessage1) return false;
-
-                    packageIndex += 1;
-
-
-                }
-            }
+            
             // write the changes back
             Compress(ImportModuleFile, Path.GetDirectoryName(importReqIfFiles[0]));
             return true;
@@ -336,19 +305,22 @@ Validate: true
         }
 
         /// <summary>
-/// Serialize ReqIF
-/// </summary>
-/// <param name="file"></param>
-/// <param name="compress"></param>
-/// <returns></returns>
-bool SerializeReqIf(string file, bool compress=true)
+        /// Serialize ReqIF
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="compress"></param>
+        /// <param name="prefixReqIf">Prefix to add to the reqIF file (e.g. "_")</param>
+        /// <returns></returns>
+        bool SerializeReqIf(string file, bool compress=true, string prefixReqIf = "")
         {
             var serializer = new ReqIFSerializer(false);
-            string prefix = Path.GetFileNameWithoutExtension(file).StartsWith("_") ? "" : "_";
-            string pathSerialize = Path.Combine(Path.GetDirectoryName(file),
+            Debug.Assert(file != null, nameof(file) + " != null");
+            string pathSerialize = file;
+            try { 
+                string prefix = Path.GetFileNameWithoutExtension(file).StartsWith(prefixReqIf) ? ""  : prefixReqIf;
+                pathSerialize = Path.Combine(Path.GetDirectoryName(file) ?? throw new InvalidOperationException(),
                 $"{prefix}{Path.GetFileNameWithoutExtension(file)}.reqif");
-            try
-            {
+
                 serializer.Serialize(_reqIf, pathSerialize, null);
 
                
@@ -441,7 +413,6 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                     ? specObject.Values.SingleOrDefault(x => x.AttributeDefinition.LongName == name)
                     : specObject.Values.SingleOrDefault(x =>
                         x.AttributeDefinition.LongName.ToLower() == name.ToLower());
-                bool multiValuedEnum = false;
                 // Attribute not part of ReqIF, skip
                 if (attrValueObject == null)
                 {
@@ -467,8 +438,6 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                             {
                                 AttributeDefinition = attributeType
                             };
-                            multiValuedEnum = moduleAttributDefinitionEnumeration.IsMultiValued;
-
                             break;
 
                     }
@@ -494,8 +463,7 @@ Module in ReqIF: '{_subModuleIndex}'", @"Error getting identifier from ReqIF");
                         try
                         {
                             // take all the valid enums
-                            if (!SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue,
-                                multiValuedEnum)) return false;
+                            if (!SetReqIfEnumValue((AttributeValueEnumeration) attrValueObject, eaValue)) return false;
                         }
                         catch (Exception e)
                         {
@@ -658,16 +626,12 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
         /// </summary>
         /// <param name="attributeValueEnumeration"></param>
         /// <param name="value"></param>
-        /// <param name="isMultiValueEnum"></param>
-        public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value,
-            bool isMultiValueEnum)
+        public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value)
         {
-           
-
             // delete old values
             attributeValueEnumeration.Values.Clear();
             
-            if (!isMultiValueEnum)
+            if (!attributeValueEnumeration.Definition.IsMultiValued)
             {
                 // single value enum
                 // Check if valid value
@@ -746,69 +710,35 @@ Value='{value}'
             // Check import settings
             if (!CheckImportFile()) return false;
 
-
-            // over all to import Packages/Specification/Modules of the current *.reqifz file
-            // Import all Specifications of file
-            // Import by Specification ID in item definition/file definition (more reliable)
-            if (! String.IsNullOrWhiteSpace(Settings.PackageGuidList[0].ReqIfModuleId))
+            // over all packages/guids
+            int packageIndex = 0;
+            foreach (var item in Settings.PackageGuidList)
             {
-                // over all packages/guids
-                int packageIndex = 0;
-                foreach (var item in Settings.PackageGuidList)
-                {
-                    if (!String.IsNullOrWhiteSpace(item.ReqIfReqIfFleStorage)) Settings.EmbeddedFileStorageDictionary = item.ReqIfReqIfFleStorage;
-                    _prefixTv  = Settings.GetPrefixTaggedValueType(packageIndex);
+                if (!String.IsNullOrWhiteSpace(item.ReqIfReqIfFleStorage)) Settings.EmbeddedFileStorageDictionary = item.ReqIfReqIfFleStorage;
+                _prefixTv  = Settings.GetPrefixTaggedValueType(packageIndex);
 
-                    string pkgGuid = item.Guid;
-                    string reqIfSpecId = item.ReqIfModuleId;
-                    // ReqIF Specification ID found
-                    if (!String.IsNullOrWhiteSpace(reqIfSpecId))
-                    {
-                        ReqIfFileItem reqIfFileItem = reqIfFileList.GetItemForReqIfId(reqIfSpecId);
-                        // estimate package of guid list in settings 
-                        Pkg = Rep.GetPackageByGuid(pkgGuid);
+                string pkgGuid = item.Guid;
+                string reqIfSpecId = item.ReqIfModuleId;
 
-                        ImportSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
-                            reqIfFileItem.SpecContentIndex,  reqIfFileItem.SpecIndex, 
-                            stateNew);
-                        if (result == false || _errorMessage1) return false;
-                    }
-                    // next package
-                    packageIndex += 1;
-                }
+                
+                // Use reqIF Specification ID or iterate by sequence (package index)
+                ReqIfFileItem reqIfFileItem = String.IsNullOrWhiteSpace(reqIfSpecId)
+                    ? reqIfFileList.GetItemForIndex(packageIndex)
+                    : reqIfFileList.GetItemForReqIfId(reqIfSpecId);
+               
+
+                // estimate package of guid list in settings 
+                Pkg = Rep.GetPackageByGuid(pkgGuid);
+                Rep.ShowInProjectView(Pkg);
+
+                ImportSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
+                    reqIfFileItem.SpecContentIndex,  reqIfFileItem.SpecIndex, 
+                    stateNew);
+                if (result == false || _errorMessage1) return false;
+
+                // next package
+                packageIndex += 1;
             }
-
-            // Import all of current reqif file by sequence
-            else
-            {
-                // over all EA packages
-                int packageIndex = 0;
-                foreach (var file in importReqIfFiles)
-                {
-                    ReqIfFileItem reqIfFileItem = reqIfFileList.ReqIfFileItemList[packageIndex];
-
-                    // get the column/taggedValueType prefix for current module
-                    _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
-
-                    CountPackage += 1;
-
-                    // A Guid is available for the current index
-                    if (! CheckGuidAvailable(packageIndex, file, out var isContinueWorking)) return isContinueWorking;
-                   
-                    // estimate package of guid list in settings 
-                    string pkgGuid = Settings.PackageGuidList[packageIndex].Guid;
-                    Pkg = Rep.GetPackageByGuid(pkgGuid);
-
-                    ImportSpecification(file, eaObjectType, eaStereotype, reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex, stateNew);
-                    if (importReqIfFiles.Length > 1) _subModuleIndex += 1;
-                    if (result == false || _errorMessage1) return false;
-
-                    packageIndex += 1;
-
-
-                }
-            }
-
             return result && (!_errorMessage1);
         }
 

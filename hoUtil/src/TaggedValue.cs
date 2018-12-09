@@ -56,6 +56,7 @@ namespace hoReverse.hoUtils
             
             // create tagged value
             EA.TaggedValue tg = (EA.TaggedValue) el.TaggedValues.AddNew(name, "Tag");
+            tg.Update();
             el.TaggedValues.Refresh();
 
             return tg;
@@ -146,6 +147,7 @@ namespace hoReverse.hoUtils
 
             EA.TaggedValue tg = Add(el, name);
             tg.Update();
+            el.TaggedValues.Refresh();
 
             return tg;
 

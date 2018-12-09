@@ -63,7 +63,7 @@ namespace EaServices.Doors.ReqIfs
             }
         }
         /// <summary>
-        /// Get the ReqIF Item
+        /// Get the ReqIF Item for the specification ID
         /// </summary>
         /// <param name="specId"></param>
         /// <returns></returns>
@@ -82,6 +82,22 @@ namespace EaServices.Doors.ReqIfs
             }
 
             return items[0];
+        }
+        /// <summary>
+        /// Get the ReqIF Item for the specification ID
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public ReqIfFileItem GetItemForIndex(int index)
+        {
+            if (index < 0 || index >= ReqIfFileItemList.Count())
+            {
+                MessageBox.Show($@"GetItemForIndex: 
+Index: {index}", @"Can't estimate the package.");
+                return null;
+            }           
+
+            return ReqIfFileItemList[index];
         }
 
     }

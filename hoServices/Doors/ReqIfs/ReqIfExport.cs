@@ -334,8 +334,7 @@ namespace EaServices.Doors.ReqIfs
                                 Definition = attributeDefinitionEnumeration
 
                             };
-                            if (!SetReqIfEnumValue(attributeValueEnumeration, r.TvValue,
-                                attributeDefinitionEnumeration.IsMultiValued)) return false;
+                            if (!SetReqIfEnumValue(attributeValueEnumeration, r.TvValue)) return false;
                             specObject.Values.Add(attributeValueEnumeration);
 
                         }
@@ -355,6 +354,7 @@ namespace EaServices.Doors.ReqIfs
         /// </summary>
         /// <param name="reqIf"></param>
         /// <param name="pkg"></param>
+        // ReSharper disable once UnusedParameter.Local
         private void AddDatatypesForPackage(ReqIF reqIf, EA.Package pkg)
         {
             using (var db = new EaDataModel(_provider, _connectionString))
@@ -454,6 +454,7 @@ namespace EaServices.Doors.ReqIfs
         /// </summary>
         /// <param name="reqIf"></param>
         /// <param name="pkg"></param>
+        // ReSharper disable once UnusedParameter.Local
         private void AddSpeObjectTypeForModule(ReqIF reqIf, EA.Package pkg)
         {
             // SpecObjType of package/module
@@ -665,6 +666,7 @@ namespace EaServices.Doors.ReqIfs
         /// - String
         /// - XHTML
         /// </summary>
+        // ReSharper disable once UnusedParameter.Local
         private void AddCoreDataTypes(ReqIF reqIf)
         {
             var datatypeDefinitionBoolean =
@@ -721,6 +723,7 @@ namespace EaServices.Doors.ReqIfs
         /// <summary>
         /// Create and add the module <see cref="SpecificationType"/> with attribute definitions
         /// </summary>
+        // ReSharper disable once UnusedParameter.Local
         private SpecificationType AddSpecificationTypeModule(ReqIF reqIf)
         {
             var specificationTypeModule = new SpecificationType

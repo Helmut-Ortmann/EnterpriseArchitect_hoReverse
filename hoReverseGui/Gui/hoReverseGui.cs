@@ -3835,7 +3835,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void Importer_Click(object sender, EventArgs e)
+        private void Importer_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             Debug.Assert(item != null, nameof(item) + " != null");
