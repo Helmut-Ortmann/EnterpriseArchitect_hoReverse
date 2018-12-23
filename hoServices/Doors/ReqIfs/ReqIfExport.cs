@@ -86,8 +86,7 @@ namespace EaServices.Doors.ReqIfs
             string fileReqIf = Path.Combine(Zip.CreateTempDir(), Path.GetFileName(ImportModuleFile));
             SerializeReqIf(fileReqIf, compress:false);
 
-            Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf),Settings.EmbeddedFileStorageDictionary);
-            return true;
+           return  Compress(ImportModuleFile, Path.GetDirectoryName(fileReqIf),Settings.EmbeddedFileStorageDictionary);
 
 
         }

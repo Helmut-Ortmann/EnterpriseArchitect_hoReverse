@@ -137,7 +137,7 @@ Validate: true
                 return false;
             }
             if (compress)
-                Compress(ImportModuleFile, Path.GetDirectoryName(pathSerialize));
+                return Compress(ImportModuleFile, Path.GetDirectoryName(pathSerialize));
             return true;
         }
         /// <summary>
@@ -309,10 +309,17 @@ Value='{value}'
         /// <param name="zipFile">The path of the zip achive</param>
         /// <param name="dirNameReqIfFiles">The directory to zip</param>
         /// <param name="dirNameFiles"></param>
-        protected void Compress(string zipFile, string dirNameReqIfFiles, string dirNameFiles = "")
+        protected bool Compress(string zipFile, string dirNameReqIfFiles, string dirNameFiles = "")
         {
 
             if (File.Exists(zipFile)) File.Delete(zipFile);
+
+            // Check if directory for zip-file exists
+            if (! Directory.Exists(Path.GetDirectoryName(zipFile)))
+            {
+                MessageBox.Show($@"Zip-File: {zipFile}", @"Directory zip files doesn't exists, break;");
+                return false;
+            }
             if (!String.IsNullOrEmpty(dirNameFiles))
             {
                 ZipFile.CreateFromDirectory(dirNameFiles, zipFile);
@@ -330,6 +337,8 @@ Value='{value}'
                 }
 
             }
+
+            return true;
         }
         /// <summary>
         /// Decompress the import/export reqIf file if compressed format (*.reqifz). It returns an array of *.reqIF files.

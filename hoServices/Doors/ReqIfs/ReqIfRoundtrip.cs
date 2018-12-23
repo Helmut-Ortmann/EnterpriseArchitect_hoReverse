@@ -67,8 +67,7 @@ namespace EaServices.Doors.ReqIfs
 
 
             // write the changes back
-            Compress(ImportModuleFile, Path.GetDirectoryName(importReqIfFiles[0]));
-            return true;
+            return Compress(ImportModuleFile, Path.GetDirectoryName(importReqIfFiles[0]));
 
         }
         /// <summary>
