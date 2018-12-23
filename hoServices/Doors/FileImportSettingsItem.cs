@@ -59,7 +59,7 @@ namespace EaServices.Doors
         }
 
         /// <summary>
-        /// How to handle the EA Specifications
+        /// Enum to specify how to handle the ReqIF Text
         ///
         /// Default: MixedMode
         /// </summary>
@@ -73,6 +73,7 @@ namespace EaServices.Doors
         public SpecHandlingType SpecHandling { get; set; }
 
         [JsonProperty("ValidateReqIF"), DefaultValue("false")]
+        // ReSharper disable once InconsistentNaming
         public bool ValidateReqIF { get; set; }
 
         /// <summary>
@@ -309,6 +310,9 @@ namespace EaServices.Doors
         /// - EA.LinkedDocument
         /// - EA.Alias
         /// - EA.GUID (GUID of requirement or whatever EA type you use)
+        /// - EA.Name
+        /// - EA.TYPE
+        /// - EA.Stereotype
         /// - EA.Note (EA Notes)
         /// </summary>
         [JsonIgnore]

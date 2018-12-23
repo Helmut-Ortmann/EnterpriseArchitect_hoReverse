@@ -81,6 +81,12 @@ namespace EaServices.Doors
                     return "";
                 case "EA.GUID":
                     return el.ElementGUID;
+                case "EA.Name":
+                    return el.Name;
+                case "EA.Type":
+                    return el.Type;
+                case "EA.Stereotype":
+                    return el.Stereotype;
                 case "EA.Version":
                     return el.Version;
                 case "EA.Phase":

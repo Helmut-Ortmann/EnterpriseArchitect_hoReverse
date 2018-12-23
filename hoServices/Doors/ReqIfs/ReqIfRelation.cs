@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using EA;
-using hoLinqToSql.LinqUtils;
 using ReqIFSharp;
 
 namespace EaServices.Doors.ReqIfs

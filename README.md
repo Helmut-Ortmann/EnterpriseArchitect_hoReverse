@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.2.1 Bug fixing
+-  BugFix
+-  linq2db 2.6.1
+
 3.2 ReqIF error fixing
 -  ReqIF store LongName and Identifier of Specification in Package
 -  Preparation handle Identifier of Specification to identify the correct Specification
