@@ -64,9 +64,9 @@ namespace EaServices.Doors.ReqIfs
             _exportFields = new ExportFields(Settings.WriteAttrNameList);
 
             // Write header, delete file if first package
-            _reqIf = AddHeader(ImportModuleFile, newFile:subModuleIndex==0);
-            if (_reqIf == null) return false;
-            _reqIfContent = _reqIf.CoreContent.SingleOrDefault();
+            ReqIfDeserialized = AddHeader(ImportModuleFile, newFile:subModuleIndex==0);
+            if (ReqIfDeserialized == null) return false;
+            _reqIfContent = ReqIfDeserialized.CoreContent.SingleOrDefault();
             _specificationTypeModule = (SpecificationType)_reqIfContent.SpecTypes.SingleOrDefault(x => x.GetType() == typeof(SpecificationType));
 
             // Write the requirements for the current module/specification
@@ -346,6 +346,17 @@ namespace EaServices.Doors.ReqIfs
             return true;
 
         }
+        /// <summary>
+        /// Make XHTML from a EA notes. It inserts the xhtml namespace and handles special characters
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string MakeXhtmlFromEaNotes(EA.Repository rep, string stringText)
+        {
+            string stringHtml = rep.GetFormatFromField("HTML", stringText);
+            return MakeXhtmlFromHtml(stringHtml);
+        }
 
 
 
@@ -443,9 +454,9 @@ namespace EaServices.Doors.ReqIfs
 
             AddAttributesModuleSpecification(_moduleSpecification, pkg);
             // Add datatypes for packages (enums)
-            AddDatatypesForPackage(_reqIf, pkg);
+            AddDatatypesForPackage(ReqIfDeserialized, pkg);
             // AddSpecObj type for package/module
-            AddSpeObjectTypeForModule(_reqIf, pkg);
+            AddSpeObjectTypeForModule(ReqIfDeserialized, pkg);
 
         }
 
@@ -898,7 +909,18 @@ namespace EaServices.Doors.ReqIfs
             specElementWithAttributes.Values.Add(attributeValueXhtml);
 
         }
+        /// <summary>
+        /// Make ReqIF XHTML from a XHTML. In essence add XHTML namespace
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        private static string MakeReqIfXhtmlFromXhtml(string stringText)
+        {
+            stringText = LimitReqIfXhtml(stringText);
+            return AddXtmlNameSpace(stringText);
 
-        
+        }
+
+
     }
 }

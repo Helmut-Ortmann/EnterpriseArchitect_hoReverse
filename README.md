@@ -64,9 +64,11 @@ Let's discuss it, but it works.
 
 ## News
 
-3.2.1 Bug fixing
+3.2.1 ReqIF new EA Variables for Export/Roundtrip, Bug fixing
 -  BugFix
 -  linq2db 2.6.1
+-  ReqIF: Support special variable for TaggedValues: EA.Name, EA.Tye, EA.Stereotype for easier traceability
+-  Refracturing reqIF (split ReqIf, ReqIfImport, ReqIfExport, ReqIf, Roundtrip)
 
 3.2 ReqIF error fixing
 -  ReqIF store LongName and Identifier of Specification in Package

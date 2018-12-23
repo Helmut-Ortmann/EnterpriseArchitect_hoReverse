@@ -30,13 +30,15 @@ namespace EaServices.Doors
     /// </summary>
     public class DoorsModule
     {
+        protected int CountPackage;
+        protected readonly string Tab = "\t";
         public const int ShortNameLength = 60; 
-        protected int _count = 0;
-        protected int _countAll = 0;
-        protected int _countPkg = 0;
-        protected int _countItems = 0;
-        protected int _countChanged = 0;
-        protected int _countNew = 0;
+        protected int _count ;
+        protected int _countAll;
+        protected int _countPkg;
+        protected int _countItems;
+        protected int _countChanged;
+        protected int _countNew;
         protected int _level = -1;
 
         string _importModuleFile;
@@ -490,12 +492,10 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
 
                     // handle more than one package
-                    int subPackageIndex = -1;
                     // handle zip files like
                     foreach (var itemGuidList in item.PackageGuidList)
                     {
                         string guid = itemGuidList.Guid;
-                        subPackageIndex += 1;
                         _pkg = _rep.GetPackageByGuid(guid);
                         if (_pkg == null)
                         {
@@ -686,7 +686,7 @@ Check Import settings in Settings.Json.",
                         var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
                         result = result && doorsReqIf.ImportForFile(eaObjectType, eaStereotype, 
                                      eaStatusNew);
-                        _reqIfDeserialized = doorsReqIf.ReqIFDeserialized;
+                        _reqIfDeserialized = doorsReqIf.ReqIfDeserialized;
                         if (doorsReqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
                         //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
@@ -696,7 +696,7 @@ Check Import settings in Settings.Json.",
                         var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
                         result = result && reqIf.ImportForFile(eaObjectType, eaStereotype,
                                      eaStatusNew);
-                        _reqIfDeserialized = reqIf.ReqIFDeserialized;
+                        _reqIfDeserialized = reqIf.ReqIfDeserialized;
                         if (reqIf.CountPackage > 1) return result;
                         //await Task.Run(() =>
                         //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));

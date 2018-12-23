@@ -77,17 +77,17 @@ namespace EaServices.Doors.ReqIfs
         private bool RoundtripSpecification(string file, int reqifContentIndex, int reqIfSpecIndex)
         {
             // Deserialize
-            _reqIf = DeSerializeReqIf(file, validate: Settings.ValidateReqIF);
-            if (_reqIf == null) return false;
+            ReqIfDeserialized = DeSerializeReqIf(file, validate: Settings.ValidateReqIF);
+            if (ReqIfDeserialized == null) return false;
 
-            // The Atribute definitions
-            _moduleAttributeDefinitions = GetTypesModule(_reqIf, reqifContentIndex, reqIfSpecIndex);
+            // The Attribute definitions
+            _moduleAttributeDefinitions = GetTypesModule(ReqIfDeserialized, reqifContentIndex, reqIfSpecIndex);
 
 
             if (Pkg.Elements.Count == 0)
             {
                 MessageBox.Show($@"File: '{file}'
-Contains: {_reqIf.CoreContent.Count} modules
+Contains: {ReqIfDeserialized.CoreContent.Count} modules
 
 Roundtrip needs at least initial import and model elements in EA!
 
@@ -146,7 +146,7 @@ Roundtrip needs at least initial import and model elements in EA!
             SpecObject specObj;
             try
             {
-                specObj = _reqIf.CoreContent[0].SpecObjects.SingleOrDefault(x => x.Identifier == id);
+                specObj = ReqIfDeserialized.CoreContent[0].SpecObjects.SingleOrDefault(x => x.Identifier == id);
             }
             catch (Exception e)
             {
