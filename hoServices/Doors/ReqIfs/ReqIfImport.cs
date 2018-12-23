@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
 using ReqIFSharp;
-using File = System.IO.File;
 using Path = System.IO.Path;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 
@@ -24,7 +20,7 @@ namespace EaServices.Doors.ReqIfs
     /// - Modules (in settings give two package GUIDs
     /// Currently ReqIf doesn't support embedded files other than image (no ole, excel, pdf)
     /// </summary>
-    public partial class ReqIf
+    public class ReqIfImport:ReqIf
     {
     
         // Attributes not to import
@@ -34,8 +30,12 @@ namespace EaServices.Doors.ReqIfs
             "TableLinkIndicators", "TableRightBorder", "TableShowAttrs", "TableTopBorder"
         }; // DOORS Table requirements
 
-        
 
+        public ReqIfImport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) :
+            base(rep, pkg, importFile, settings)
+        {
+
+        }
 
 
         /// <summary>
@@ -73,74 +73,11 @@ Cancel{Tab}: Cancel whole import
             return true;
         }
 
-        /// <summary>
-        /// Check import/roundtrip file
-        /// </summary>
-        /// <returns></returns>
-        private bool CheckImportFile()
-        {
-            if (Settings.PackageGuidList.Count == 0)
-            {
-                MessageBox.Show(@"See: File, Settings
-
-Parameter: PackageGuidList
-is missing!
-", @"No Package GUID defined in Settings, break");
-                return false;
-            }
-
-            return true;
-        }
-        /// <summary>
-        /// Add XHTML Namespace to string
-        /// </summary>
-        /// <param name="stringText"></param>
-        /// <returns></returns>
-        private static string AddXtmlNameSpace(string stringText)
-        {
-            string xhtmlContent =
-                $@"<{NameSpace}:div xmlns:{NameSpace}=""http://www.w3.org/1999/xhtml"">{MakeNameSpace(stringText)}</{NameSpace}:div>";
-            return xhtmlContent;
-        }
         
-        /// <summary>
-        /// Make XHTML from a html string. It inserts the xhtml namespace
-        /// </summary>
-        /// <param name="htmlValue"></param>
-        /// <returns></returns>
-        private static string MakeXhtmlFromHtml(string htmlValue)
-        {
-            //stringValue = stringValue.Replace("\r\n", "<br></br>");
-            htmlValue = htmlValue.Replace("&nbsp;", "");
-            //htmlValue = Regex.Replace(htmlValue, @">\s*<", "><");  // Replace Blanks between control sequences
-            htmlValue = LimitReqIfXhtml(htmlValue);
-            return AddXtmlNameSpace(htmlValue);
-        }
-        /// <summary>
-        /// Limit to ReqIF XHTML tags
-        /// </summary>
-        /// <param name="stringText"></param>
-        /// <returns></returns>
-        private static string LimitReqIfXhtml(string stringText)
-        {
-            // delete not allowed ReqIF things
-            // '<u>' underline, replace by 
-            // </u>>
-            // ul type="xxxx" xxxx=disc, ...  remove type="xxx"
-            // li value="n"   n=Number        remove value="n"
-            stringText = stringText.Replace("<u>", "<ins>").Replace("</u>", "</ins>");
-
-            stringText = Regex.Replace(stringText, @"<ol type=""[^""]*""", "<ol");  // Replace type in ul
-            stringText = Regex.Replace(stringText, @"<ul type=""[^""]*""", "<ul");  // Replace type in ul
-            stringText = Regex.Replace(stringText, @"<li value=""[^""]*""", "<li");  // Replace value in li
-            stringText = Regex.Replace(stringText, @"<font [^>]*>", "");  // Replace font tag
-            stringText = Regex.Replace(stringText, @"</font>", "");  // Replace font tag
-
-
-
-            return stringText;
-
-        }
+        
+        
+        
+        
         /// <summary>
         /// Get string with ReqIF Header Information 
         /// </summary>
@@ -165,28 +102,7 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
         
        
 
-        /// <summary>
-        /// Make xhtml namespace and correct some peculiar things (not supported by xhtml for reqIF)
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        private static string MakeNameSpace(string text)
-        {
-            text = text.Replace(@"&nbsp;", "");
-            text = text.Replace(@"&laquo;", "");// <<
-            text = text.Replace(@"&raquo;", "");// >>
-
-            Regex rx = new Regex(@"</");
-            text = rx.Replace(text, $@"</{NameSpace}:");
-
-            rx = new Regex(@"<(\w)");
-            text = rx.Replace(text, $@"<{NameSpace}:$1");
-
-            text = text.Replace($@"{NameSpace}:br />", $@"{NameSpace}:br/>");
-
-
-            return text;
-        }
+        
 
         
 

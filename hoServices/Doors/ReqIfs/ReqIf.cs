@@ -15,35 +15,35 @@ namespace EaServices.Doors.ReqIfs
     /// Generalization of Import, Export, Roundtrip
     /// Currently generalization isn't implemented by class hierarchy.
     /// </summary>
-    public partial class ReqIf : DoorsModule
+    public class ReqIf : DoorsModule
     {
 
         protected static string NameSpace; // XHTML NameSpace
         /// <summary>
         /// The Attribute definitions of the specification
         /// </summary>
-        List<ReqIFSharp.AttributeDefinition> _moduleAttributeDefinitions;
+        protected List<ReqIFSharp.AttributeDefinition> _moduleAttributeDefinitions;
 
         protected readonly FileImportSettingsItem Settings;
 
         protected bool _errorMessage1;
 
 
-        ReqIFContent _reqIfContent;
+        protected ReqIFContent _reqIfContent;
 
         /// <summary>
         /// Deserialized ReqIF
         /// </summary>
-        public ReqIF ReqIfDeserialized { get; private set; }
+        public ReqIF ReqIfDeserialized { get; protected set; }
 
         protected int _subModuleIndex;
 
         // Prefix Tagged Values and Column-names
-        private string _prefixTv = "";
+        protected string _prefixTv = "";
         /// <summary>
         /// The export fields to  export for Export and Roundtrip
         /// </summary>
-        ExportFields _exportFields;
+        protected ExportFields _exportFields;
 
         /// <summary>
         /// ReqIF Import/Roundtrip/Export
@@ -141,6 +141,77 @@ Validate: true
             return true;
         }
         /// <summary>
+        /// Make xhtml namespace and correct some peculiar things (not supported by xhtml for reqIF)
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        protected static string MakeNameSpace(string text)
+        {
+            text = text.Replace(@"&nbsp;", "");
+            text = text.Replace(@"&laquo;", "");// <<
+            text = text.Replace(@"&raquo;", "");// >>
+
+            Regex rx = new Regex(@"</");
+            text = rx.Replace(text, $@"</{NameSpace}:");
+
+            rx = new Regex(@"<(\w)");
+            text = rx.Replace(text, $@"<{NameSpace}:$1");
+
+            text = text.Replace($@"{NameSpace}:br />", $@"{NameSpace}:br/>");
+
+
+            return text;
+        }
+        /// <summary>
+        /// Add XHTML Namespace to string
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        protected static string AddXtmlNameSpace(string stringText)
+        {
+            string xhtmlContent =
+                $@"<{NameSpace}:div xmlns:{NameSpace}=""http://www.w3.org/1999/xhtml"">{MakeNameSpace(stringText)}</{NameSpace}:div>";
+            return xhtmlContent;
+        }
+        /// <summary>
+        /// Limit to ReqIF XHTML tags
+        /// </summary>
+        /// <param name="stringText"></param>
+        /// <returns></returns>
+        protected static string LimitReqIfXhtml(string stringText)
+        {
+            // delete not allowed ReqIF things
+            // '<u>' underline, replace by 
+            // </u>>
+            // ul type="xxxx" xxxx=disc, ...  remove type="xxx"
+            // li value="n"   n=Number        remove value="n"
+            stringText = stringText.Replace("<u>", "<ins>").Replace("</u>", "</ins>");
+
+            stringText = Regex.Replace(stringText, @"<ol type=""[^""]*""", "<ol");  // Replace type in ul
+            stringText = Regex.Replace(stringText, @"<ul type=""[^""]*""", "<ul");  // Replace type in ul
+            stringText = Regex.Replace(stringText, @"<li value=""[^""]*""", "<li");  // Replace value in li
+            stringText = Regex.Replace(stringText, @"<font [^>]*>", "");  // Replace font tag
+            stringText = Regex.Replace(stringText, @"</font>", "");  // Replace font tag
+
+
+
+            return stringText;
+
+        }
+        /// <summary>
+        /// Make XHTML from a html string. It inserts the xhtml namespace
+        /// </summary>
+        /// <param name="htmlValue"></param>
+        /// <returns></returns>
+        protected static string MakeXhtmlFromHtml(string htmlValue)
+        {
+            //stringValue = stringValue.Replace("\r\n", "<br></br>");
+            htmlValue = htmlValue.Replace("&nbsp;", "");
+            //htmlValue = Regex.Replace(htmlValue, @">\s*<", "><");  // Replace Blanks between control sequences
+            htmlValue = LimitReqIfXhtml(htmlValue);
+            return AddXtmlNameSpace(htmlValue);
+        }
+        /// <summary>
         /// Make XHTML from a simple string. It inserts the xhtml namespace and handles cr/lf
         /// </summary>
         /// <param name="stringValue"></param>
@@ -217,7 +288,7 @@ Value='{value}'
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private string GetPrefixedTagValueName(string name)
+        protected string GetPrefixedTagValueName(string name)
         {
             if (name.StartsWith(_prefixTv)) return name;
             return $"{_prefixTv}{name}";
@@ -227,7 +298,7 @@ Value='{value}'
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private string GetUnPrefixedTagValueName(string name)
+        protected string GetUnPrefixedTagValueName(string name)
         {
             if (name.StartsWith(_prefixTv)) return name.Substring(_prefixTv.Length);
             return name;
@@ -363,11 +434,29 @@ Extract folder:  '{extractDirectory}'", @"Can't find '*.reqif' file in decompres
         /// <param name="attrValue"></param>
         /// <param name="makeName">True: Remove multiple whitespaces, control characters</param>
         /// <returns></returns>
-        private string GetStringAttrValue(string attrValue, bool makeName = false)
+        protected string GetStringAttrValue(string attrValue, bool makeName = false)
         {
             // convert xhtml or use the origianl text
             var text = attrValue.Contains("http://www.w3.org/1999/xhtml") ? HtmlToText.ConvertReqIfXhtml(attrValue) : attrValue;
             return makeName ? MakeNameFromString(text) : text;
+        }
+        /// <summary>
+        /// Check import/roundtrip file
+        /// </summary>
+        /// <returns></returns>
+        protected bool CheckImportFile()
+        {
+            if (Settings.PackageGuidList.Count == 0)
+            {
+                MessageBox.Show(@"See: File, Settings
+
+Parameter: PackageGuidList
+is missing!
+", @"No Package GUID defined in Settings, break");
+                return false;
+            }
+
+            return true;
         }
     }
 }

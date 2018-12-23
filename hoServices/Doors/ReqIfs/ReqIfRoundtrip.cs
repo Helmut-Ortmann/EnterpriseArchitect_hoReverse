@@ -8,9 +8,13 @@ using TaggedValue = hoReverse.hoUtils.TaggedValue;
 
 namespace EaServices.Doors.ReqIfs
 {
-    public partial class ReqIf
+    public class ReqIfRoundtrip:ReqIf
     {
-       
+        public ReqIfRoundtrip(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : 
+            base(rep,  pkg, importFile, settings)
+        {
+           
+        }
 
         /// <summary>
         /// Roundtrip for a compressed reqif file (*.reqif)

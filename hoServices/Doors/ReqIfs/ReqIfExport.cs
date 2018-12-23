@@ -12,7 +12,7 @@ using ReqIFSharp;
 
 namespace EaServices.Doors.ReqIfs
 {
-    public partial class ReqIf
+    public  class ReqIfExport:ReqIf
     {
         // Modulespecific, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
@@ -23,6 +23,13 @@ namespace EaServices.Doors.ReqIfs
 
         // Handler embedded files
         private ExportEmbeddedEaFiles _exportEmbeddedEaFile;
+
+        /// <inheritdoc />
+        public ReqIfExport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) :
+            base(rep, pkg, importFile, settings)
+        {
+
+        }
 
         /// <summary>
         /// Export Requirements according to TaggedValues/AttributeNames in _settings.WriteAttrNameList

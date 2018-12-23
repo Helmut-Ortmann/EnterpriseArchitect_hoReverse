@@ -508,27 +508,19 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                                 @"Package to import into isn't available, break!");
                             return false;
                         }
-
                         switch (item.ImportType)
                         {
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && doorsReqIf.RoundtripForFile();
+                            case FileImportSettingsItem.ImportTypes.ReqIf:
+                                var reqIfRoundtrip = new ReqIfs.ReqIfRoundtrip(_rep, _pkg, _importModuleFile, item);
+                                result = result && reqIfRoundtrip.RoundtripForFile();
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
-
-                            case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && reqIf.RoundtripForFile();
-                                //await Task.Run(() =>
-                                //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
+       
 
                         }
-
-
                     }
                 }
             }
@@ -581,18 +573,13 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
                         {
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                                var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && doorsReqIf.ExportRequirements(subPackageIndex);
+                            case FileImportSettingsItem.ImportTypes.ReqIf:
+                                var reqIfExport = new ReqIfs.ReqIfExport(_rep, _pkg, _importModuleFile, item);
+                                result = result && reqIfExport.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                                 break;
 
-                            case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIf = new ReqIfs.ReqIf(_rep, _pkg, _importModuleFile, item);
-                                result = result && reqIf.ExportRequirements(subPackageIndex);
-                                //await Task.Run(() =>
-                                //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                                break;
 
                         }
 
@@ -683,7 +670,8 @@ Check Import settings in Settings.Json.",
                         break;
 
                     case FileImportSettingsItem.ImportTypes.DoorsReqIf:
-                        var doorsReqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
+                    case FileImportSettingsItem.ImportTypes.ReqIf:
+                    var doorsReqIf = new ReqIfs.ReqIfImport(_rep, _pkg, item.InputFile, item);
                         result = result && doorsReqIf.ImportForFile(eaObjectType, eaStereotype, 
                                      eaStatusNew);
                         _reqIfDeserialized = doorsReqIf.ReqIfDeserialized;
@@ -692,17 +680,8 @@ Check Import settings in Settings.Json.",
                         //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
                         break;
 
-                    case FileImportSettingsItem.ImportTypes.ReqIf:
-                        var reqIf = new ReqIfs.ReqIf(_rep, _pkg, item.InputFile, item);
-                        result = result && reqIf.ImportForFile(eaObjectType, eaStereotype,
-                                     eaStatusNew);
-                        _reqIfDeserialized = reqIf.ReqIfDeserialized;
-                        if (reqIf.CountPackage > 1) return result;
-                        //await Task.Run(() =>
-                        //    reqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
-                        break;
                     
-
+                       
                     case FileImportSettingsItem.ImportTypes.XmlStruct:
                         var xmlStruct = new XmlStruct(_rep, _pkg, item.InputFile, item);
                         result = result && xmlStruct.ImportForFile(eaObjectType, eaStereotype, eaStatusNew,

@@ -46,7 +46,9 @@ namespace EaServices.Doors
             }
             catch (Exception e)
             {
-                MessageBox.Show($@"File Name: {fieldName}", @"Error determine IsWritable for an Attribute");
+                MessageBox.Show($@"File Name: {fieldName}
+
+{e}", @"Error determine IsWritable for an Attribute");
                 return false;
             }
 

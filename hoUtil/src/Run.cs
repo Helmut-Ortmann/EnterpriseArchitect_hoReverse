@@ -7,8 +7,8 @@ namespace hoReverse.hoUtils.RUN
 
     public class Run
     {
-        Repository _rep;
-        DateTime _start;
+        private Repository _rep;
+        private DateTime _start;
 
         public Run(Repository rep)
         {

@@ -2318,7 +2318,7 @@ namespace hoReverse.Reverse
             this.hoToolsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.hoToolsToolStripMenuItem.Text = "hoTools";
             this.hoToolsToolStripMenuItem.ToolTipText = "Show WiKi hoTools";
-            this.hoToolsToolStripMenuItem.Click += new System.EventHandler(this.hoToolsToolStripMenuItem_Click);
+            this.hoToolsToolStripMenuItem.Click += new System.EventHandler(this.HoToolsToolStripMenuItem_Click);
             // 
             // lineStyleToolStripMenuItem
             // 
@@ -4407,7 +4407,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void DoorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoorsImportcsvToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType type = _repository.GetContextItem(out var item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4437,7 +4437,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void DoorsImportcsvWithFileDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoorsImportcsvWithFileDialogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EA.ObjectType type = _repository.GetContextItem(out var item);
             if (type != EA.ObjectType.otPackage) return;
@@ -4506,7 +4506,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(1);
 
@@ -4514,7 +4514,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             MessageBox.Show(@"See File 1, settings for the import definitions.",@"Import DOORS *.csv Requirements finished.");
         }
 
-        private async void ImportDoorsReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportDoorsReqIFBySettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(2);
             MessageBox.Show(@"See File 2, settings for the import definitions.",@"Import DOORS *.reqIf Requirements finished.");
@@ -4522,12 +4522,12 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
 
         
 
-        private async void ImportReqIFBySettings4ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportReqIFBySettings4ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(4);
             MessageBox.Show(@"See File 4, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
         }
-        private async void ImportReqIFBySettings5ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportReqIFBySettings5ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ImportBySettings(5);
             MessageBox.Show(@"See File 5, settings for the import definitions.",@"Import ReqIf *.reqIf Requirements finished.");
@@ -4635,7 +4635,7 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
 
         }
 
-        private void hoToolsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HoToolsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiHoTools();
         }
