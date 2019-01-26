@@ -274,7 +274,11 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
 
 Expected Attribute: '{column}'
 
-Probable cause:
+Probable causes:
+- JSON import definition expects a non-existing ReqIF Attribute
+  - e.g. RtfNameList, AttrNameList, AttrNotes, ..
+  - See: File, Settings, ReqIF..
+  - Have you reload the settinge after change, File, Reload ...?
 - Incorrect ReqIF file. Missing Attribute definitions
 
 Available Attributes:
@@ -587,14 +591,48 @@ Origin:{Tab}'{Path.GetFileName(f)}'";
             // decide what converter to use
             // Mari.Gold.OpenXHTML (open source)
             // SautinSoft.HtmlToRtf (commercial)
+            bool isSuccess;
             if (Settings.UseMariGold)
-                HtmlToDocx.Convert(docFile, xhtmlValue);
-            else HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
+                isSuccess = HtmlToDocx.Convert(docFile, xhtmlValue);
+            else isSuccess = HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
+            if (!isSuccess)
+            {
+                ReportXhtmlError(el, importFile);
+                return false;
+            }
+
             try
             {
                 bool res = el.LoadLinkedDocument(docFile);
                 if (!res)
-                    MessageBox.Show($@"ImportFile: '{importFile}'
+                {
+                    ReportLoadLinkedDocument(el, importFile, docFile, xhtmlValue, null);
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                ReportLoadLinkedDocument(el, importFile, docFile, xhtmlValue, e);
+                return false;
+            }
+        return true;
+
+        }
+
+        /// <summary>
+        /// ReportLoadLinkedDocument
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="importFile"></param>
+        /// <param name="docFile"></param>
+        /// <param name="xhtmlValue"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private void ReportLoadLinkedDocument(EA.Element el, string importFile, string docFile, string xhtmlValue, Exception e=null)
+        {
+            string ex = "";
+            if (e != null) ex = e.ToString();
+            MessageBox.Show($@"ImportFile: '{importFile}'
 
 EA GUID           {Tab}: '{el.ElementGUID}'
 EA Multiplicity   {Tab}: '{el.Multiplicity}'
@@ -602,25 +640,27 @@ Name:             {Tab}: '{el.Name}'
 EaLastError       {Tab}: '{el.GetLastError()}'
 RtfDocxFile:      {Tab}: '{docFile}'
 
-XHTML:'{xhtmlValue}",
-                        @"Error loading Linked Document, break current requirement, continue!");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($@"ImportFile: '{importFile}'
-Id: '{el.Multiplicity}'
-Name: '{el.Name}'
-RtfDocxFile:'{docFile}'
-
 XHTML:'{xhtmlValue}
 
-{e}",
-                    @"Error loading Linked Document, break current requirement, continue");
-                return false;
-            }
+{ex}",
+                @"Error loading Linked Document, break current requirement, continue!");
 
-            return true;
+        }
+        /// <summary>
+        /// Report XHTML converting error
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="importFile"></param>
+        private void ReportXhtmlError(EA.Element el, string importFile)
+        {
+            MessageBox.Show($@"ImportFile: '{importFile}'
 
+EA GUID            {Tab}{Tab}{Tab}: '{el.ElementGUID}'
+EA Multiplicity/key{Tab}: '{el.Multiplicity}'
+Name:              {Tab}{Tab}{Tab}: '{el.Name}'
+Alias:             {Tab}{Tab}{Tab}: '{el.Alias}'
+",
+                @"Error *xhtml to *.rtf/*.docx, break current requirement, continue with next!");
         }
 
         /// <summary>

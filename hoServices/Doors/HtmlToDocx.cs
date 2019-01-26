@@ -14,7 +14,7 @@ namespace EaServices.Doors
         /// <param name="docXFile">The file to store the result *.docX document</param>
         /// <param name="xhtml"></param>
         /// <returns></returns>
-        public static void Convert(string docXFile, string xhtml)
+        public static bool Convert(string docXFile, string xhtml)
         {
             // Make XHTML from ReqIF xhtml
             xhtml = XhtmlFromReqIf(xhtml);
@@ -30,7 +30,7 @@ namespace EaServices.Doors
                 MessageBox.Show($@"File: '{docXFile}'
 
 {e}", @"Can't create WordDocument, already opened?");
-                return;
+                return false;
             }
 
             var uri = new System.Uri(System.IO.Path.GetDirectoryName(docXFile));
@@ -58,7 +58,10 @@ namespace EaServices.Doors
             catch (Exception e)
             {
                 MessageBox.Show($@"XHTML:'{xhtml}{Environment.NewLine}{Environment.NewLine}{e}", @"Error converting XHTML to *.docx");
+                return false;
             }
+
+            return true;
 
         }
         /// <summary>
@@ -66,7 +69,7 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="xhtml"></param>
         /// <param name="rtfFile"></param>
-        public static void ConvertSautin(string rtfFile, string xhtml )
+        public static bool ConvertSautin(string rtfFile, string xhtml )
         {
             try
             {
@@ -99,17 +102,22 @@ namespace EaServices.Doors
                     if (! ok)
                     {
                         MessageBox.Show($@"XHTML:'{xhtml}{Environment.NewLine}File:{rtfFile}", @"Error0 converting XHTML to *.rtf");
+                        return false;
                     }
                 }
                 else
                 {
                     MessageBox.Show($@"XHTML:'{xhtml}{Environment.NewLine}File:{rtfFile}", @"Error1 converting XHTML to *.rtf");
+                    return false;
                 }
             }
             catch (Exception e)
             {
                 MessageBox.Show($@"XHTML:'{xhtml}{Environment.NewLine}{Environment.NewLine}{e}", @"Error converting XHTML to *.rtf");
+                return false;
             }
+
+            return true;
         }
 
 

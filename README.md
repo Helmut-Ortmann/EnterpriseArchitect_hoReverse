@@ -64,6 +64,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.2.2 
+-  ReqIF improved error messages to be more meaningful 
+
 3.2.1 ReqIF new EA Variables for Export/Roundtrip, Bug fixing
 -  BugFix
 -  linq2db 2.6.1
