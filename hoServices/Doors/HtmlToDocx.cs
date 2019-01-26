@@ -175,9 +175,18 @@ namespace EaServices.Doors
                 </object></div>
             */
             //string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*?</object>)\s*?</object>";
-            string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*(</object>|>))\s*?</object>";
+            //if (xhtml.Contains(
+            //    "FR Adaptive Cruise Control Acceleration interface_000990e4/_2223425e-7766-41f9-b1c4-f5ccdc9b48ed_2.ole")
+            //)
+            //{
+            //    string a = "aaa";
+            //}
 
-            Regex regDelOleObject = new Regex(delOleObject);
+            string delOleObject = @"<object data=[^>]*>\s*?(<object.*?\s*(</object>|>))\s*?</object>";
+            delOleObject = @"<object\s+[^<]*(<object.*?\s*(</object>|>))\s*?</object>";
+
+
+                     Regex regDelOleObject = new Regex(delOleObject);
             match = regDelOleObject.Match(xhtml);
             while (match.Success)
             {
@@ -216,7 +225,7 @@ namespace EaServices.Doors
 
             }
 
-            return xhtml;
+            return xhtml; // xhtml.Replace("</object>", "</img>");
         }
         /// <summary>
         /// Get embedded files as List of file paths

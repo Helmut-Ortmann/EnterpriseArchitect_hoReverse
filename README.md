@@ -64,7 +64,7 @@ Let's discuss it, but it works.
 
 ## News
 
-3.2.2 
+3.2.2 ReqIF error formatting OLE objects fixed (DOORS)
 -  ReqIF improved error messages to be more meaningful 
 
 3.2.1 ReqIF new EA Variables for Export/Roundtrip, Bug fixing
