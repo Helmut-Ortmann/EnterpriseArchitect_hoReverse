@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -19,8 +20,11 @@ using hoReverse.hoUtils.WiKiRefs;
 using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
 using hoLinqToSql.LinqUtils;
+using EaServices.Doors.ReqIfs.Inventory;
 
 using hoUtils.BulkChange;
+
+using MoreLinq;
 
 
 // ReSharper disable RedundantDelegateCreation
@@ -260,6 +264,8 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem sQLWildcardsToolStripMenuItem;
         private ToolStripMenuItem reqIFToolStripMenuItem;
         private ToolStripMenuItem generateIncludesFromCodeSnippetToolStripMenuItem;
+        private ToolStripMenuItem _reqIfMenuItem;
+        private ToolStripMenuItem InfoReqIfInquiryToolStripMenuItem;
         private ToolTip _toolTip1;
 
 
@@ -738,6 +744,8 @@ namespace hoReverse.Reverse
             this.showFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._reqIfMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InfoReqIfInquiryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1485,6 +1493,7 @@ namespace hoReverse.Reverse
             this._doToolStripMenuItem,
             this._codeToolStripMenuItem,
             this._autoToolStripMenuItem,
+            this._reqIfMenuItem,
             this._versionControlToolStripMenuItem,
             this._maintenanceToolStripMenuItem,
             this._helpToolStripMenuItem,
@@ -2029,6 +2038,24 @@ namespace hoReverse.Reverse
     "lete the whole folder. VS-Code will recreate it!";
             this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.ShowSymbolDataBaseFoldersToolStripMenuItem_Click);
             // 
+            // _reqIfMenuItem
+            // 
+            this._reqIfMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.InfoReqIfInquiryToolStripMenuItem});
+            this._reqIfMenuItem.Name = "_reqIfMenuItem";
+            this._reqIfMenuItem.Size = new System.Drawing.Size(48, 20);
+            this._reqIfMenuItem.Text = "ReqIF";
+            this._reqIfMenuItem.ToolTipText = "Info for a ReqIF file\r\n\r\nFor a file, e.g. *.reqif, or *.reqifz it outputs the ent" +
+    "ries with:\r\n- File-Name\r\n- Identifier\r\n- Number of requirements\r\n- Number of lin" +
+    "ks";
+            // 
+            // InfoReqIfInquiryToolStripMenuItem
+            // 
+            this.InfoReqIfInquiryToolStripMenuItem.Name = "InfoReqIfInquiryToolStripMenuItem";
+            this.InfoReqIfInquiryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.InfoReqIfInquiryToolStripMenuItem.Text = "Info *.reqif/*reqifz -file";
+            this.InfoReqIfInquiryToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryToolStripMenuItem_Click);
+            // 
             // _versionControlToolStripMenuItem
             // 
             this._versionControlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2044,9 +2071,10 @@ namespace hoReverse.Reverse
             this._changeXmlPathToolStripMenuItem1,
             this._toolStripSeparator5});
             this._versionControlToolStripMenuItem.Name = "_versionControlToolStripMenuItem";
-            this._versionControlToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
-            this._versionControlToolStripMenuItem.Text = "&VersionControl";
-            this._versionControlToolStripMenuItem.ToolTipText = "Sets the svn keywords:\r\n- svnDoc, svnRevision\r\nfor a package.";
+            this._versionControlToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
+            this._versionControlToolStripMenuItem.Text = "&VC";
+            this._versionControlToolStripMenuItem.ToolTipText = "VersionControl (most SVN):\r\n\r\nSets the svn keywords:\r\n- svnDoc, svnRevision\r\nfor " +
+    "a package.";
             // 
             // _svnLogToolStripMenuItem
             // 
@@ -2150,7 +2178,7 @@ namespace hoReverse.Reverse
             this._maintenanceToolStripMenuItem.Name = "_maintenanceToolStripMenuItem";
             this._maintenanceToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this._maintenanceToolStripMenuItem.Text = "Maintenance";
-            this._maintenanceToolStripMenuItem.ToolTipText = "Experimental";
+            this._maintenanceToolStripMenuItem.ToolTipText = "Maintenance, experimental";
             // 
             // _vCGetStateToolStripMenuItem
             // 
@@ -4648,6 +4676,58 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
         private void ReqIFToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.ReqIF();
+        }
+
+        private void InfoReqIfInquiryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InquiryReqIF(false);
+        }
+        /// <summary>
+        /// Inquiry a reqIF file, choose ReqIF file/directory by Dialog
+        /// </summary>
+        /// <param name="validate"></param>
+        private void InquiryReqIF(bool validate=false)
+        {
+            string folderSelection = "Folder Selection (click no file)";
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            {
+                //InitialDirectory = @"D:\",
+                Title = @"Input *.reqifz file or folder with *.reqifz/*.reqif files",
+
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                FileName = folderSelection,
+
+            DefaultExt = "reqifz",
+            Filter = @"Reqifz files(*.reqifz)|*.reqifz| Folders|*|All files(*.*)|*.*",
+            FilterIndex = 1,
+            RestoreDirectory = true,
+
+                ReadOnlyChecked = false,
+                ShowReadOnly = false
+            };
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                string file = openFileDialog1.FileName;
+                file = file.Replace(folderSelection, "");
+                DataTable dt = ReqIfInventory.Inventory(file, validate);
+                string xml = dt == null ? Xml.MakeEmptyXml() : Xml.MakeXmlFromDataTable(dt);
+                _repository.RunModelSearch("", "", "", xml);
+
+                //var csv = dt.Rows.Cast<DataRow>().Select(
+                //                 x=>new {
+                //                            File = x.Field<string>("File") , 
+                //                            Id =x.Field<string>("Id")
+                //                     }
+                //                 )
+                //    .ToDelimitedString(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator);
+                //Clipboard.SetText(csv);
+                
+               Cursor.Current = Cursors.Default;
+            }
         }
     }
 }

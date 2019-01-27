@@ -73,6 +73,13 @@ namespace EaServices.Doors
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
             ReadImportSettings();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DoorsModule()
+        {
+
+        }
 
         /// <summary>
         /// Initialize DoorsModule for handling a file

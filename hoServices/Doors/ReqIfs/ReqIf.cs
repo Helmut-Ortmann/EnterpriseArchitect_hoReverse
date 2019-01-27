@@ -45,6 +45,11 @@ namespace EaServices.Doors.ReqIfs
         /// </summary>
         protected ExportFields _exportFields;
 
+
+        public ReqIf()
+        {
+
+        }
         /// <summary>
         /// ReqIF Import/Roundtrip/Export
         /// </summary>
@@ -345,7 +350,7 @@ Value='{value}'
         /// </summary>
         /// <param name="importReqIfFile"></param>
         /// <returns>The path to the *.reqif file</returns>
-        protected string[] Decompress(string importReqIfFile)
+        public string[] Decompress(string importReqIfFile)
         {
             // *.reqifz for compressed ReqIf File
             if (importReqIfFile.ToUpper().EndsWith("Z"))

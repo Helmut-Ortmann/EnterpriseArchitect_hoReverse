@@ -99,6 +99,7 @@
     <Reference Include="OpenMcdf, Version=2.1.1.5, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="ReqIFSharp, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReqIFSharp.1.4.0\lib\net45\ReqIFSharp.dll</HintPath>
     </Reference>
@@ -167,6 +168,8 @@
     <Compile Include="Doors\ReqIfs\ReqIfExport.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfFileItem.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfFileList.cs" />
+    <Compile Include="Doors\ReqIfs\Inventory\ReqIfInventory.cs" />
+    <Compile Include="Doors\ReqIfs\Inventory\ReqIfInventoryitem.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRelation.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRoundtrip.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfUtils.cs" />
