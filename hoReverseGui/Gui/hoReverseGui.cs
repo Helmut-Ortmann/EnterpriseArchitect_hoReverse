@@ -266,6 +266,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem generateIncludesFromCodeSnippetToolStripMenuItem;
         private ToolStripMenuItem _reqIfMenuItem;
         private ToolStripMenuItem InfoReqIfInquiryToolStripMenuItem;
+        private ToolStripMenuItem InfoReqIfInquiryValidationToolStripMenuItem;
         private ToolTip _toolTip1;
 
 
@@ -802,6 +803,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.InfoReqIfInquiryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -2041,7 +2043,8 @@ namespace hoReverse.Reverse
             // _reqIfMenuItem
             // 
             this._reqIfMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.InfoReqIfInquiryToolStripMenuItem});
+            this.InfoReqIfInquiryToolStripMenuItem,
+            this.InfoReqIfInquiryValidationToolStripMenuItem});
             this._reqIfMenuItem.Name = "_reqIfMenuItem";
             this._reqIfMenuItem.Size = new System.Drawing.Size(48, 20);
             this._reqIfMenuItem.Text = "ReqIF";
@@ -2052,8 +2055,10 @@ namespace hoReverse.Reverse
             // InfoReqIfInquiryToolStripMenuItem
             // 
             this.InfoReqIfInquiryToolStripMenuItem.Name = "InfoReqIfInquiryToolStripMenuItem";
-            this.InfoReqIfInquiryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.InfoReqIfInquiryToolStripMenuItem.Text = "Info *.reqif/*reqifz -file";
+            this.InfoReqIfInquiryToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.InfoReqIfInquiryToolStripMenuItem.Text = "Info *.reqif/*.reqifz -file";
+            this.InfoReqIfInquiryToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nNo " +
+    "validation of reqif.";
             this.InfoReqIfInquiryToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
@@ -2552,6 +2557,15 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            // 
+            // InfoReqIfInquiryValidationToolStripMenuItem
+            // 
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Name = "InfoReqIfInquiryValidationToolStripMenuItem";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Text = "Info *.reqif/*.reqifz with validation";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nWit" +
+    "h validation of reqif.\r\n";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryValidationToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -4728,6 +4742,11 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
                 
                Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void InfoReqIfInquiryValidationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InquiryReqIF(true);
         }
     }
 }
