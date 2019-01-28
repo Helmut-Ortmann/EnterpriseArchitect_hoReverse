@@ -4713,8 +4713,8 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
                 CheckPathExists = true,
                 FileName = folderSelection,
 
-            DefaultExt = "reqifz",
-            Filter = @"Reqifz files(*.reqifz)|*.reqifz| Folders|*|All files(*.*)|*.*",
+            // DefaultExt = "reqifz",
+            Filter = @"Reqifz files(*.reqifz, *.reqif)|*.reqifz;*.reqif| Folders|*|All files(*.*)|*.*",
             FilterIndex = 1,
             RestoreDirectory = true,
 
@@ -4726,7 +4726,10 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
             {
                 Cursor.Current = Cursors.WaitCursor;
                 string file = openFileDialog1.FileName;
-                file = file.Replace(folderSelection, "");
+
+                // folder selected
+                if (file.Contains(folderSelection)) file = Path.GetDirectoryName(file);
+
                 DataTable dt = ReqIfInventory.Inventory(file, validate);
                 string xml = dt == null ? Xml.MakeEmptyXml() : Xml.MakeXmlFromDataTable(dt);
                 _repository.RunModelSearch("", "", "", xml);

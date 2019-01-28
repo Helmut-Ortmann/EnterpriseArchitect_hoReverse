@@ -250,7 +250,7 @@
         -->
       <!-- HtmlAgilityPack -->
       <Component Id="HtmlAgilityPack.dll" Guid="{3783B4A7-6591-4783-AFD5-FB7F4E70A2D5}">
-        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.11\lib\Net45\HtmlAgilityPack.dll" />
+        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.14\lib\Net45\HtmlAgilityPack.dll" />
       </Component>
         
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">
@@ -267,11 +267,7 @@
         <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
       </Component>
 
-      <Component Id="OpenMcdf.dll" Guid="1ECCD40A-235E-4D5F-AFBA-E326AE8FB826">
-        <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
-      </Component>
-
-      <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
+     <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
       <Component Id="SautinSoft.RtfToHtml.dll" Guid="{DC687D4A-3A4E-428F-9981-996FBD2AD065}">
         <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="c:\hoData\ProgramUpdate\SautinSoft\Net 4.6.1\SautinSoft.RtfToHtml.dll" />
       </Component>
@@ -288,7 +284,7 @@
       -->
     <ComponentGroup Id="MimeTypeImages"
                     Directory="MIME_TYPE_IMAGES">
-       <Component Id="application_javascript.png" Guid="{8D775B54-0FA3-4BBE-B0F1-A57A1A5843ED}">
+       <Component Id="application_Fjqueravascript.png" Guid="{8D775B54-0FA3-4BBE-B0F1-A57A1A5843ED}">
           <File Id="application_javascript.png" Name="application-javascript.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\application-javascript.png" />
       </Component>
 

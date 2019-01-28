@@ -356,7 +356,7 @@ Value='{value}'
             if (importReqIfFile.ToUpper().EndsWith("Z"))
             {
                 string extractDirectory = hoUtils.Compression.Zip.ExtractZip(importReqIfFile);
-                if (String.IsNullOrWhiteSpace(extractDirectory)) return new string[0];
+                if (String.IsNullOrWhiteSpace(extractDirectory)) return new string[] {};
 
                 // extract reqif files from achive
                 string pattern = "*.reqif";
