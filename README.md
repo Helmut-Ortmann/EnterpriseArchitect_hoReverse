@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.2.3 ReqIF Version '1.2' leads to validation error, changed to '1.0'
+
 3.2.2 ReqIF error formatting OLE objects fixed (DOORS)
 -  ReqIF improved error messages to be more meaningful 
 

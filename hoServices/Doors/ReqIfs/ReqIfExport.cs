@@ -659,7 +659,7 @@ namespace EaServices.Doors.ReqIfs
                     Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.ReqIfHeader),
                     RepositoryId = Rep.ProjectGUID,
                     ReqIFToolId = $"hoReverse V{Assembly.GetExecutingAssembly().GetName().Version}",
-                    ReqIFVersion = "1.2",
+                    ReqIFVersion = "1.0",
                     SourceToolId = $"SPARX EA Lib={Rep.LibraryVersion}",
                     Comment = $"Export EA from {Rep.ConnectionString}"
                 };
