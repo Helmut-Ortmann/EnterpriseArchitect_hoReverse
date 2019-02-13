@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.2.4 ReqIF csharp 1.4.1 (error fixed), liq2db updated to 2.6.4
+
 3.2.3 ReqIF Version '1.2' leads to validation error, changed to '1.0'
 
 3.2.2 ReqIF error formatting OLE objects fixed (DOORS)

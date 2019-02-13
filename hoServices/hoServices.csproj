@@ -84,8 +84,8 @@
     <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="linq2db, Version=2.6.3.0, Culture=neutral, PublicKeyToken=e41013125f9e410a, processorArchitecture=MSIL">
-      <HintPath>..\packages\linq2db.2.6.3\lib\net46\linq2db.dll</HintPath>
+    <Reference Include="linq2db, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e41013125f9e410a, processorArchitecture=MSIL">
+      <HintPath>..\packages\linq2db.2.6.4\lib\net46\linq2db.dll</HintPath>
     </Reference>
     <Reference Include="MariGold.HtmlParser, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MariGold.HtmlParser.1.1.0\lib\netstandard2.0\MariGold.HtmlParser.dll</HintPath>
@@ -100,8 +100,8 @@
       <HintPath>..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
-    <Reference Include="ReqIFSharp, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReqIFSharp.1.4.0\lib\net45\ReqIFSharp.dll</HintPath>
+    <Reference Include="ReqIFSharp, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReqIFSharp.1.4.1\lib\net45\ReqIFSharp.dll</HintPath>
     </Reference>
     <Reference Include="SautinSoft.HtmlToRtf, Version=7.0.8.16, Culture=neutral, PublicKeyToken=bce916f184012969, processorArchitecture=MSIL">
       <HintPath>..\packages\sautinsoft.htmltortf.7.0.8.16\lib\net461\SautinSoft.HtmlToRtf.dll</HintPath>
