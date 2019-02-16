@@ -151,7 +151,8 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
                 ReqIfFileItem reqIfFileItem = String.IsNullOrWhiteSpace(reqIfSpecId)
                     ? reqIfFileList.GetItemForIndex(packageIndex)
                     : reqIfFileList.GetItemForReqIfId(reqIfSpecId);
-               
+                // couldn't find a GUID, Error message output
+                if (reqIfFileItem == null) continue;
 
                 // estimate package of guid list in settings 
                 Pkg = Rep.GetPackageByGuid(pkgGuid);
