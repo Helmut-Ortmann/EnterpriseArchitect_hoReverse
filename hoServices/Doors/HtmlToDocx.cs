@@ -78,7 +78,23 @@ namespace EaServices.Doors
                 if (String.IsNullOrWhiteSpace(xhtml)) xhtml = "Empty!!!";
 
                 // Developer License
-                SautinSoft.HtmlToRtf h = new SautinSoft.HtmlToRtf {Serial = "10281946238"};
+                SautinSoft.HtmlToRtf h;
+                try
+                {
+                    h = new SautinSoft.HtmlToRtf { Serial = "10281946238" };
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"No license available
+
+You may use convert to *.docx (Settings: ""UseMariGold""     :  ""true""
+
+{e}
+", @"Can't load SautinSoft library, Break");
+                    return false;
+
+                }
+                
                 string xhtmlFile = System.IO.Path.GetDirectoryName(rtfFile);
                 xhtmlFile = System.IO.Path.Combine(xhtmlFile, "xxxxxx.xhtml");
 

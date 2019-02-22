@@ -3026,7 +3026,9 @@ namespace hoReverse.Reverse
                 "ClosedXml.dll",
                 "DocumentFormat.OpenXml.dll",
                 "KBCsv.dll",
-                "KBCsv.Extensions.Data.dll"
+                "KBCsv.Extensions.Data.dll",
+                "SautinSoft.RtfToHtml.dll",
+                "SautinSoft.HtmlToRtf.dll"
 
             };
             HoUtil.AboutMessage("C - Reverse Engineering Workbench",

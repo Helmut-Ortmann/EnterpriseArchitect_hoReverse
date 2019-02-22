@@ -32,7 +32,7 @@ namespace EaServices.Doors
             {
                 try
                 {
-                    var rtfGen = new RtfToHtml
+                    RtfToHtml rtfGen = new RtfToHtml
                     {
                         OutputFormat = RtfToHtml.eOutputFormat.XHTML_10,
                         Serial = "10460301363", // Serial number developer license
