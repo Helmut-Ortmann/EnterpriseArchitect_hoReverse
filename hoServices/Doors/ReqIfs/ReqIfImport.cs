@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Security;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using hoReverse.hoUtils;
@@ -107,11 +109,14 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
         
 
         /// <summary>
-        /// Import and update ReqIF Requirements in EA from ReqIF (compressed file). Derive Tagged Values from ReqSpec Attribute definition
+        /// Import and update ReqIF Requirements in EA from ReqIF (compressed file). Derive Tagged Values from ReqSpec Attribute definition.
+        /// It catches COM errors
         /// </summary>
         /// <param name="eaObjectType">EA Object type to create</param>
         /// <param name="eaStereotype">EA stereotype to create</param>
         /// <param name="stateNew">The EA state if the EA element is created</param>
+        [HandleProcessCorruptedStateExceptions]
+        [SecurityCritical]
         public override bool ImportForFile(string eaObjectType = "Requirement",
             string eaStereotype = "",
             string stateNew = "")
@@ -140,31 +145,60 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
             int packageIndex = 0;
             foreach (var item in Settings.PackageGuidList)
             {
-                if (!String.IsNullOrWhiteSpace(item.ReqIfReqIfFleStorage)) Settings.EmbeddedFileStorageDictionary = item.ReqIfReqIfFleStorage;
-                _prefixTv  = Settings.GetPrefixTaggedValueType(packageIndex);
+                
+
+                if (!String.IsNullOrWhiteSpace(item.ReqIfReqIfFleStorage))
+                    Settings.EmbeddedFileStorageDictionary = item.ReqIfReqIfFleStorage;
+                _prefixTv = Settings.GetPrefixTaggedValueType(packageIndex);
 
                 string pkgGuid = item.Guid;
                 string reqIfSpecId = item.ReqIfModuleId;
+                try
+                {
+                    // Use reqIF Specification ID or iterate by sequence (package index)
+                    ReqIfFileItem reqIfFileItem = String.IsNullOrWhiteSpace(reqIfSpecId)
+                        ? reqIfFileList.GetItemForIndex(packageIndex)
+                        : reqIfFileList.GetItemForReqIfId(reqIfSpecId);
+                    // couldn't find a GUID, Error message output
+                    if (reqIfFileItem == null) continue;
 
-                
-                // Use reqIF Specification ID or iterate by sequence (package index)
-                ReqIfFileItem reqIfFileItem = String.IsNullOrWhiteSpace(reqIfSpecId)
-                    ? reqIfFileList.GetItemForIndex(packageIndex)
-                    : reqIfFileList.GetItemForReqIfId(reqIfSpecId);
-                // couldn't find a GUID, Error message output
-                if (reqIfFileItem == null) continue;
+                    // estimate package of guid list in settings 
+                    Pkg = Rep.GetPackageByGuid(pkgGuid);
+                    try
+                    {
+                        Rep.ShowInProjectView(Pkg);
+                    }
+                    catch (Exception e)
+                    {
+                                MessageBox.Show($@"GUID={pkgGuid}
+SpecificationID={reqIfSpecId}
+Consider:
+- Integrity EA Check + repair
+- Compact EA Repository
 
-                // estimate package of guid list in settings 
-                Pkg = Rep.GetPackageByGuid(pkgGuid);
-                Rep.ShowInProjectView(Pkg);
+{e}", @"Exception import into package");
+                        return false;
+                    }
+                    
 
-                ImportSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
-                    reqIfFileItem.SpecContentIndex,  reqIfFileItem.SpecIndex, 
-                    stateNew);
-                if (result == false || _errorMessage1) return false;
+                    ImportSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
+                        reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex,
+                        stateNew);
+                    // Reload package to update
+                    Rep.ReloadPackage(Pkg.PackageID);
+                    if (result == false || _errorMessage1) return false;
 
-                // next package
-                packageIndex += 1;
+                    // next package
+                    packageIndex += 1;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($@"GUID={pkgGuid}
+SpecificationID={reqIfSpecId}
+
+{e}", @"Exception import into package");
+                    return false;
+                }
             }
             return result && (!_errorMessage1);
         }

@@ -38,7 +38,7 @@ namespace hoUtils.Compression
             // extraction path.
             if (!extractPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 extractPath += Path.DirectorySeparatorChar;
-            using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+            using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Read))
             {
                 try
                 {

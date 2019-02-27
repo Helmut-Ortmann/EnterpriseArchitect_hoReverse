@@ -4458,13 +4458,13 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
 
             EA.Package pkg = (EA.Package) item;
             
-            string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeperated.csv";
+            string filePath = @"c:\ho\ownCloud\shared\BLE_Sens_SWACommaSeparated.csv";
             if (!File.Exists(filePath))
             {
-                MessageBox.Show($@"{filePath}", @"*.csv to import DOORS requirements doesn't exists");
+                MessageBox.Show($@"{filePath}", @"*.ReqIF or *.csv to import requirements doesn't exists");
                 return;
             }
-
+            
             EnableImportDialog(false);
             Cursor.Current = Cursors.WaitCursor;
             // Generate Requirements

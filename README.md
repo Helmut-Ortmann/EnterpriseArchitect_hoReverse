@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.2.6 ReqIF Deserialize in ReqIF Readonly mode, handle COM Exception
+
 3.2.5 ReqIF fix error encapsulate SautinSoft converter
 
 3.2.4 ReqIF csharp 1.4.1 (error fixed), liq2db updated to 2.6.4
