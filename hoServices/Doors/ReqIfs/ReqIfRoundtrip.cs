@@ -35,7 +35,7 @@ namespace EaServices.Doors.ReqIfs
             if (importReqIfFiles.Length == 0) return false;
 
             // Inventory all reqIf files with their specifications
-            ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles);
+            ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles, Settings);
             if (reqIfFileList.ReqIfFileItemList.Count == 0) return false;
 
             // Check import settings

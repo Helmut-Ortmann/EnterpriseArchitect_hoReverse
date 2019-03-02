@@ -22,6 +22,8 @@ namespace EaServices.Doors.ReqIfs
             get => _reqIfFileItemList;
         }
 
+        private FileImportSettingsItem _setting;
+
         /// <summary>
         /// Inventory current reqIF list
         /// - FileName
@@ -33,9 +35,10 @@ namespace EaServices.Doors.ReqIfs
 
         /// </summary>
         /// <param name="fileList"></param>
-        public ReqIfFileList(string[] fileList)
+        public ReqIfFileList(string[] fileList, FileImportSettingsItem setting)
         {
             _reqIfFileItemList = new List<ReqIfFileItem>();
+            _setting = setting;
             foreach (var reqIfFile in fileList)
             {
                 ReqIF reqIf = ReqIf.DeSerializeReqIf(reqIfFile, false);
@@ -72,7 +75,8 @@ namespace EaServices.Doors.ReqIfs
             var items = _reqIfFileItemList.Where(id => id.SpecId == specId).ToArray();
             if (! items.Any())
             {
-                MessageBox.Show($@"Id={specId}", @"Can't find ReqIF Specification ID");
+                if (! _setting.ContinueIfNoSpecificationId)
+                    MessageBox.Show($@"Id={specId}", @"Can't find ReqIF Specification ID");
                 return null;
             }
             if (items.Count() > 1) 

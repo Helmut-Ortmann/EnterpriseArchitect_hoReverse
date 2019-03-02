@@ -135,7 +135,7 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
             if (importReqIfFiles.Length == 0) return false;
 
             // Inventory all reqIf files with their specifications
-            ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles);
+            ReqIfFileList reqIfFileList = new ReqIfFileList(importReqIfFiles, Settings);
             if (reqIfFileList.ReqIfFileItemList.Count == 0) return false;
 
             // Check import settings
@@ -164,8 +164,21 @@ Comment:{Tab}'{reqIf.TheHeader[0].Comment}'
 
                     // estimate package of guid list in settings 
                     Pkg = Rep.GetPackageByGuid(pkgGuid);
+                    if (Pkg == null)
+                    {
+                        MessageBox.Show($@"GUID={pkgGuid}
+SpecificationID={reqIfSpecId}
+Consider:
+- Integrity EA Check + repair
+- Compact EA Repository
+- Check configuration/package guid
+
+", @"Exception invalid package in configuration, skip package");
+                        continue;
+                    }
                     try
                     {
+                        Rep.RefreshModelView(Pkg.PackageID);
                         Rep.ShowInProjectView(Pkg);
                     }
                     catch (Exception e)
@@ -184,8 +197,7 @@ Consider:
                     ImportSpecification(reqIfFileItem.FilePath, eaObjectType, eaStereotype,
                         reqIfFileItem.SpecContentIndex, reqIfFileItem.SpecIndex,
                         stateNew);
-                    // Reload package to update
-                    Rep.ReloadPackage(Pkg.PackageID);
+                    
                     if (result == false || _errorMessage1) return false;
 
                     // next package
@@ -242,8 +254,10 @@ SpecificationID={reqIfSpecId}
             // Check imported ReqIF requirements
             if (CheckImportedRequirements(file))
             {
+                //Rep.RefreshModelView(Pkg.PackageID);
                 CreateUpdateDeleteEaRequirements(eaObjectType, eaStereotype, stateNew, "", file);
 
+                //Rep.RefreshModelView(Pkg.PackageID);
                 MoveDeletedRequirements();
                 
 
@@ -253,7 +267,10 @@ SpecificationID={reqIfSpecId}
 
             Rep.BatchAppend = false;
             Rep.EnableUIUpdates = true;
+
+            // Update package content
             Rep.ReloadPackage(Pkg.PackageID);
+            Rep.RefreshModelView(Pkg.PackageID);
             return true;
         }
         /// <summary>

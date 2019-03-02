@@ -76,6 +76,10 @@ namespace EaServices.Doors
         // ReSharper disable once InconsistentNaming
         public bool ValidateReqIF { get; set; }
 
+        [JsonProperty("ContinueIfNoSpecificationId"), DefaultValue("false")]
+        // ReSharper disable once InconsistentNaming
+        public bool ContinueIfNoSpecificationId { get; set; }
+
         /// <summary>
         /// Allowed operations on EA ReqIF
         /// </summary>

@@ -65,6 +65,11 @@ Let's discuss it, but it works.
 ## News
 
 3.2.6 ReqIF Deserialize in ReqIF Readonly mode, handle COM Exception
+- ReqIF:
+  - Deserialize in ReqIF Readonly mode
+  - handle COM Exception
+  - Skip package if guid is wrong
+  - Skip without error message if ContinueIfNoSpecificationId = true
 
 3.2.5 ReqIF fix error encapsulate SautinSoft converter
 
