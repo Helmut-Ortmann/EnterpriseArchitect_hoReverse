@@ -57,8 +57,8 @@ namespace EaServices.Doors.ReqIfs
         /// <param name="pkg"></param>
         /// <param name="importFile"></param>
         /// <param name="settings"></param>
-        public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep,
-            pkg, importFile)
+        public ReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings, List<ReqIfLog> reqIfLogList = null) : base(rep,
+            pkg, importFile, reqIfLogList)
         {
             Settings = settings;
             NameSpace = settings.NameSpace;

@@ -98,8 +98,7 @@ namespace EaServices.Doors
         public DoorsModule(EA.Repository rep, EA.Package pkg, string importModuleFile, List<ReqIfLog> reqIfLogList = null)
         {
             _importModuleFile = importModuleFile;
-            _reqIfLogList = reqIfLogList;
-            Init(rep, pkg);
+            Init(rep, pkg, reqIfLogList);
         }
 
 
@@ -111,8 +110,7 @@ namespace EaServices.Doors
         /// <param name="reqIfLogList"></param>
         public DoorsModule(EA.Repository rep, EA.Package pkg, List<ReqIfLog> reqIfLogList = null)
         {
-            _reqIfLogList = reqIfLogList;
-            Init(rep, pkg);
+            Init(rep, pkg, reqIfLogList);
         }
 
         /// <summary>
@@ -691,7 +689,7 @@ Check Import settings in Settings.Json.",
 
                     case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                     case FileImportSettingsItem.ImportTypes.ReqIf:
-                    var doorsReqIf = new ReqIfs.ReqIfImport(_rep, _pkg, item.InputFile, item);
+                    var doorsReqIf = new ReqIfs.ReqIfImport(_rep, _pkg, item.InputFile, item, _reqIfLogList);
                         result = result && doorsReqIf.ImportForFile(eaObjectType, eaStereotype, 
                                      eaStatusNew);
                         _reqIfDeserialized = doorsReqIf.ReqIfDeserialized;

@@ -4608,7 +4608,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             if (withMessage && result)
                 MessageBox.Show($@"Duration: {duration}
 
-See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported by list={listNumber}, finished.");
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"{reqIfLogList} Modules/Specifications imported by list={listNumber}, finished.");
             return result;
         }
         /// <summary>

@@ -33,8 +33,8 @@ namespace EaServices.Doors.ReqIfs
         }; // DOORS Table requirements
 
 
-        public ReqIfImport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) :
-            base(rep, pkg, importFile, settings)
+        public ReqIfImport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings, List<ReqIfLog> reqIfLogList) :
+            base(rep, pkg, importFile, settings, reqIfLogList)
         {
 
         }
