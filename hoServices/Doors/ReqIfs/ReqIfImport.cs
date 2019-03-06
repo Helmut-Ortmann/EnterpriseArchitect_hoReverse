@@ -200,6 +200,10 @@ Consider:
                     
                     if (result == false || _errorMessage1) return false;
 
+                    // List all what is done
+                    _reqIfLogList.Add(new ReqIfLog(reqIfFileItem.FilePath,Pkg.Name, Pkg.PackageGUID, reqIfSpecId, "")); 
+
+
                     // next package
                     packageIndex += 1;
                 }

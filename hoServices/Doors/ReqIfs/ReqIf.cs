@@ -17,7 +17,6 @@ namespace EaServices.Doors.ReqIfs
     /// </summary>
     public class ReqIf : DoorsModule
     {
-
         protected static string NameSpace; // XHTML NameSpace
         /// <summary>
         /// The Attribute definitions of the specification
@@ -50,6 +49,7 @@ namespace EaServices.Doors.ReqIfs
         {
 
         }
+
         /// <summary>
         /// ReqIF Import/Roundtrip/Export
         /// </summary>

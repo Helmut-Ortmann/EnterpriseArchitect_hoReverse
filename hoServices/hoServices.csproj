@@ -173,6 +173,7 @@
     <Compile Include="Doors\ReqIfs\ReqIfRelation.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfRoundtrip.cs" />
     <Compile Include="Doors\ReqIfs\ReqIfUtils.cs" />
+    <Compile Include="Doors\ReqIfs\ReqIf_Log.cs" />
     <Compile Include="Doors\RtfToXhtml.cs" />
     <Compile Include="Doors\XmlStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

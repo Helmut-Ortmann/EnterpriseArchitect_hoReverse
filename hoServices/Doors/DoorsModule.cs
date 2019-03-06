@@ -30,6 +30,11 @@ namespace EaServices.Doors
     /// </summary>
     public class DoorsModule
     {
+        /// <summary>
+        /// List of changes during one command
+        /// </summary>
+        protected List<ReqIfLog> _reqIfLogList;
+
         protected int CountPackage;
         protected readonly string Tab = "\t";
         public const int ShortNameLength = 60; 
@@ -66,11 +71,13 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="jsonFilePath"></param>
         /// <param name="rep"></param>
-        public DoorsModule(string jsonFilePath, EA.Repository rep)
+        /// <param name="reqIfLogList"></param>
+        public DoorsModule(string jsonFilePath, EA.Repository rep, List<ReqIfLog> reqIfLogList = null)
         {
             _jsonFilePath = jsonFilePath;
             _rep = rep;
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
+            _reqIfLogList = reqIfLogList;
             ReadImportSettings();
         }
         /// <summary>
@@ -87,9 +94,11 @@ namespace EaServices.Doors
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
         /// <param name="importModuleFile"></param>
-        public DoorsModule(EA.Repository rep, EA.Package pkg, string importModuleFile)
+        /// <param name="reqIfLogList"></param>
+        public DoorsModule(EA.Repository rep, EA.Package pkg, string importModuleFile, List<ReqIfLog> reqIfLogList = null)
         {
             _importModuleFile = importModuleFile;
+            _reqIfLogList = reqIfLogList;
             Init(rep, pkg);
         }
 
@@ -99,8 +108,10 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
-        public DoorsModule(EA.Repository rep, EA.Package pkg)
+        /// <param name="reqIfLogList"></param>
+        public DoorsModule(EA.Repository rep, EA.Package pkg, List<ReqIfLog> reqIfLogList = null)
         {
+            _reqIfLogList = reqIfLogList;
             Init(rep, pkg);
         }
 
@@ -109,11 +120,13 @@ namespace EaServices.Doors
         /// </summary>
         /// <param name="rep"></param>
         /// <param name="pkg"></param>
-        private void Init(EA.Repository rep, EA.Package pkg)
+        /// <param name="reqIfLogList"></param>
+        private void Init(EA.Repository rep, EA.Package pkg, List<ReqIfLog> reqIfLogList = null)
         {
             _pkg = pkg;
             _rep = rep;
             _reqIfDeserialized = null;
+            _reqIfLogList = reqIfLogList;
 
             // get connection string of repository
             _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
