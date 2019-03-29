@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using DataModels;
 using hoUtils;
 using hoUtils.Compression;
@@ -174,11 +175,12 @@ namespace EaServices.Doors.ReqIfs
                 SpecObject specObject = null;
                 foreach (var r in reqs)
                 {
+                    EA.Element el = null;
                     // new Requirements
                     if (currentGuid != r.Guid)
                     {
                         currentGuid = r.Guid;
-                        
+                        el = Rep.GetElementByGuid(currentGuid);
                         specObject = new SpecObject
                         {
                             LongName = $"{r.Name}",
@@ -208,25 +210,28 @@ namespace EaServices.Doors.ReqIfs
                         attributeValueDate = new AttributeValueDate
                         {
                             Definition =
-                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.FirstOrDefault(x =>
                                     x.GetType() == typeof(AttributeDefinitionDate) && x.LongName == "ReqIF.ForeignModifiedOn"),
                             TheValue = r.ModifiedOn??DateTime.Now
                         };
-                        specObject.Values.Add(attributeValueDate);
+                        //specObject.Values.Add(attributeValueDate);
+                        AddAttributeToSpecObj(specObject, attributeValueDate );
                         // Created by
                         var attributeValueXhtml = new AttributeValueXHTML()
                         {
                             Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.FirstOrDefault(x =>
                                     x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignCreatedBy"),
                             TheValue = MakeXhtmlFromString(r.Author)
                         };
-                        specObject.Values.Add(attributeValueXhtml);
+                        //specObject.Values.Add(attributeValueXhtml);
+                        AddAttributeToSpecObj(specObject, attributeValueXhtml);
+
                         // Modified by
                         attributeValueXhtml = new AttributeValueXHTML
                         {
                             Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.FirstOrDefault(x =>
                                     x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignModifiedBy"),
                             TheValue = MakeXhtmlFromString("not supported")
                         };
@@ -237,7 +242,7 @@ namespace EaServices.Doors.ReqIfs
                             attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
-                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.FirstOrDefault(x =>
                                         x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Name"),
                                 TheValue = MakeXhtmlFromString(r.Name)
                             };
@@ -250,7 +255,7 @@ namespace EaServices.Doors.ReqIfs
                         // - FileImportSettingsItem.SpecHandlingType.MixedMode  Preferred LinkedDocument, if no LinkedDocument then Notes
                         // - FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
                         // - FileImportSettingsItem.SpecHandlingType.OnlyNotes
-                        EA.Element el = Rep.GetElementByGuid(r.Guid);
+
                         string rtfText = el?.GetLinkedDocument();
                         var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
                             x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
@@ -306,8 +311,7 @@ namespace EaServices.Doors.ReqIfs
                         // Export all embedded element files
                         _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
 
-                        // new requirements
-                    }
+ 
 
 
 
@@ -316,15 +320,15 @@ namespace EaServices.Doors.ReqIfs
 
                         // Check if tagged value is enumeration
                         var dataTypeEnumeration =
-                            (DatatypeDefinitionEnumeration) _reqIfContent.DataTypes.SingleOrDefault(x =>
+                            (DatatypeDefinitionEnumeration) _reqIfContent.DataTypes.FirstOrDefault(x =>
                                 x.GetType() == typeof(DatatypeDefinitionEnumeration)
                                 && x.LongName == r.TvName);
                         if (dataTypeEnumeration == null)
                         {
-                            var attributeValueXhtml = new AttributeValueXHTML
+                            attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
-                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.FirstOrDefault(x =>
                                         x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
                                 TheValue = MakeXhtmlFromEaNotes(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue, r.TvNote))
                             };
@@ -333,17 +337,19 @@ namespace EaServices.Doors.ReqIfs
                         else
                         {
                             var attributeDefinitionEnumeration =
-                                (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.FirstOrDefault(x =>
                                     x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == r.TvName);
                             var attributeValueEnumeration = new AttributeValueEnumeration
                             {
                                 Definition = attributeDefinitionEnumeration
 
                             };
-                            if (!SetReqIfEnumValue(attributeValueEnumeration, r.TvValue)) return false;
+                            if (!SetReqIfEnumValue(attributeValueEnumeration, r.TvValue, el)) return false;
                             specObject.Values.Add(attributeValueEnumeration);
 
                         }
+                        // new requirements
+                    }
                     }
 
                 }
@@ -352,6 +358,35 @@ namespace EaServices.Doors.ReqIfs
             return true;
 
         }
+
+        /// <summary>
+        /// Add ReqIF Attribute Value to ReqIF Specification
+        /// </summary>
+        /// <param name="specObject"></param>
+        /// <param name="attrValue"></param>
+        /// <param name="errorText"></param>
+        /// <returns></returns>
+        private bool AddAttributeToSpecObj(SpecObject specObject, AttributeValue attrValue, EA.Element el=null, string errorText="")
+        {
+            try
+            {
+                specObject.Values.Add(attrValue);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($@"{errorText}
+
+Req:      {el?.Name};
+Req GUID: {el?.ElementGUID}
+Type:     {attrValue.GetType()}
+Value:    {attrValue}
+", @"Error adding Attribute value to SpecObj");
+            }
+
+            return true;
+        }
+
+
         /// <summary>
         /// Make XHTML from a EA notes. It inserts the xhtml namespace and handles special characters
         /// </summary>

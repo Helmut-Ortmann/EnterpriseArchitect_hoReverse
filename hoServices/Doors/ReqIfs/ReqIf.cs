@@ -236,7 +236,7 @@ Validate: true
         /// </summary>
         /// <param name="attributeValueEnumeration"></param>
         /// <param name="value"></param>
-        public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value)
+        public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value, EA.Element el = null)
         {
             // delete old values
             attributeValueEnumeration.Values.Clear();
@@ -248,6 +248,9 @@ Validate: true
                 if (String.IsNullOrWhiteSpace(value))
                 {
                     MessageBox.Show($@"Empty value of ReqIF Attribute: '{attributeValueEnumeration.Definition.LongName}'
+
+Req:     '{el?.Name}'
+ReqGuid: '{el?.ElementGUID}'
 
 ", @"Can't find enum value, break");
                     return false;

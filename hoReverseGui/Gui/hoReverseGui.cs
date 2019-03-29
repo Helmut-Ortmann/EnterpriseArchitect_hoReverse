@@ -4608,7 +4608,14 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             if (withMessage && result)
                 MessageBox.Show($@"Duration: {duration}
 
-See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"{reqIfLogList} Modules/Specifications imported by list={listNumber}, finished.");
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)
+
+Clipboard contains the imported Modules/Specifications as csv", $@"{reqIfLogList} Modules/Specifications imported by list={listNumber}, finished.");
+            // make a csv
+            var del = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+            var textCb = (from item in reqIfLogList
+                select $@"{item.File}{del}{item.ModuleId}{del}{item.PkgGuid}{del}{item.PkgName}{del}{item.Comment}").ToArray();
+            Clipboard.SetText(String.Join(";", textCb));
             return result;
         }
         /// <summary>
