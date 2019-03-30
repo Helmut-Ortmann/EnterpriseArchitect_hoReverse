@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -18,6 +19,8 @@ namespace EaServices.Doors.ReqIfs
         // Modulespecific, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
         SpecObjectType _specObjectType;
+
+        private bool _ErrorTvReported = false;
 
         // Module specification (hierarchy)
         Specification _moduleSpecification;
@@ -180,142 +183,160 @@ namespace EaServices.Doors.ReqIfs
                     if (currentGuid != r.Guid)
                     {
                         currentGuid = r.Guid;
-                        el = Rep.GetElementByGuid(currentGuid);
-                        specObject = new SpecObject
+                        try
                         {
-                            LongName = $"{r.Name}",
-                            Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.SpecObject, ReqIfUtils.IdFromGuid(r.Guid)),
-                            LastChange = DateTime.Now,
-                            Type       = _specObjectType
-                        };
-                        // ID
-                        var attributeValueString = new AttributeValueString
-                        {
-                            Definition =
-                                (AttributeDefinitionString)_specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionString) && x.LongName == "ReqIF.ForeignId"),
-                            TheValue = r.Guid
-                        };
-                        specObject.Values.Add(attributeValueString);
-                        // Created on
-                        var attributeValueDate = new AttributeValueDate
-                        {
-                            Definition =
-                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.SingleOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionDate) && x.LongName == "ReqIF.ForeignCreatedOn"),
-                            TheValue = r.CreatedOn??DateTime.Now
-                        };
-                        specObject.Values.Add(attributeValueDate);
-                        // Modified on
-                        attributeValueDate = new AttributeValueDate
-                        {
-                            Definition =
-                                (AttributeDefinitionDate)_specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionDate) && x.LongName == "ReqIF.ForeignModifiedOn"),
-                            TheValue = r.ModifiedOn??DateTime.Now
-                        };
-                        //specObject.Values.Add(attributeValueDate);
-                        AddAttributeToSpecObj(specObject, attributeValueDate );
-                        // Created by
-                        var attributeValueXhtml = new AttributeValueXHTML()
-                        {
-                            Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignCreatedBy"),
-                            TheValue = MakeXhtmlFromString(r.Author)
-                        };
-                        //specObject.Values.Add(attributeValueXhtml);
-                        AddAttributeToSpecObj(specObject, attributeValueXhtml);
-
-                        // Modified by
-                        attributeValueXhtml = new AttributeValueXHTML
-                        {
-                            Definition =
-                                (AttributeDefinitionXHTML)_specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.ForeignModifiedBy"),
-                            TheValue = MakeXhtmlFromString("not supported")
-                        };
-                        specObject.Values.Add(attributeValueXhtml);
-                        // Attribute Name
-                        if (r.Name != null)
-                        {
+                            el = Rep.GetElementByGuid(currentGuid);
+                            specObject = new SpecObject
+                            {
+                                LongName = $"{r.Name}",
+                                Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.SpecObject,
+                                    ReqIfUtils.IdFromGuid(r.Guid)),
+                                LastChange = DateTime.Now,
+                                Type = _specObjectType
+                            };
+                            // ID
+                            var attributeValueString = new AttributeValueString
+                            {
+                                Definition =
+                                    (AttributeDefinitionString) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionString) &&
+                                        x.LongName == "ReqIF.ForeignId"),
+                                TheValue = r.Guid
+                            };
+                            specObject.Values.Add(attributeValueString);
+                            // Created on
+                            var attributeValueDate = new AttributeValueDate
+                            {
+                                Definition =
+                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionDate) &&
+                                        x.LongName == "ReqIF.ForeignCreatedOn"),
+                                TheValue = r.CreatedOn ?? DateTime.Now
+                            };
+                            specObject.Values.Add(attributeValueDate);
+                            // Modified on
+                            attributeValueDate = new AttributeValueDate
+                            {
+                                Definition =
+                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionDate) &&
+                                        x.LongName == "ReqIF.ForeignModifiedOn"),
+                                TheValue = r.ModifiedOn ?? DateTime.Now
+                            };
+                            specObject.Values.Add(attributeValueDate);
+                            // Created by
+                            var attributeValueXhtml = new AttributeValueXHTML()
+                            {
+                                Definition =
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                                        x.LongName == "ReqIF.ForeignCreatedBy"),
+                                TheValue = MakeXhtmlFromString(r.Author)
+                            };
+                            specObject.Values.Add(attributeValueXhtml);
+                            // Modified by
                             attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
-                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                        x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Name"),
-                                TheValue = MakeXhtmlFromString(r.Name)
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                                        x.LongName == "ReqIF.ForeignModifiedBy"),
+                                TheValue = MakeXhtmlFromString("not supported")
                             };
                             specObject.Values.Add(attributeValueXhtml);
-                        }
-
-
-                        // Attribute Text (note or Linked Document)
-                        // _settings.SpecHandling
-                        // - FileImportSettingsItem.SpecHandlingType.MixedMode  Preferred LinkedDocument, if no LinkedDocument then Notes
-                        // - FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
-                        // - FileImportSettingsItem.SpecHandlingType.OnlyNotes
-
-                        string rtfText = el?.GetLinkedDocument();
-                        var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
-                            x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
-
-                        // rtf text/description available and rtf export wanted (Mixed Mode or OnlyLinkedDocument)
-                        if (  !String.IsNullOrEmpty(rtfText) &&
-                             (
-                                 Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
-                                 Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
-                             )
-                           )
-                        {
-                            string fileDir = Settings.EmbeddedFileStorageDictionary;
-                            string xhtml = RtfToXhtml.Convert(rtfText, fileDir,Settings.EmbeddedFilesPng);
-
-                            // Handle embedded files of the EA-Element
-                            xhtml = $@"{xhtml}
-{_exportEmbeddedEaFile.MakeXhtmlForEmbeddedFiles(el)}";
-
-                            // Text = Linked Document
-                            attributeValueXhtml = new AttributeValueXHTML
+                            // Attribute Name
+                            if (r.Name != null)
                             {
-                                Definition = definition,
-                                TheValue = MakeReqIfXhtmlFromXhtml(xhtml)
-                            };
-                            specObject.Values.Add(attributeValueXhtml);
-
-                        }
-                        else
-                        {
-                            // Check export EA Notes
-                            // No rtf export and Mixed Mode or OnlyNotes
-                            if (!String.IsNullOrEmpty(r.Desc) &&
-                                  ( Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
-                                    Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyNotes
-                                  )
-                               )
-                            {
-                                // Text = notes.
                                 attributeValueXhtml = new AttributeValueXHTML
                                 {
-                                    Definition = definition,
-                                    TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
+                                    Definition =
+                                        (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                            x.GetType() == typeof(AttributeDefinitionXHTML) &&
+                                            x.LongName == "ReqIF.Name"),
+                                    TheValue = MakeXhtmlFromString(r.Name)
                                 };
                                 specObject.Values.Add(attributeValueXhtml);
                             }
+
+
+                            // Attribute Text (note or Linked Document)
+                            // _settings.SpecHandling
+                            // - FileImportSettingsItem.SpecHandlingType.MixedMode  Preferred LinkedDocument, if no LinkedDocument then Notes
+                            // - FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
+                            // - FileImportSettingsItem.SpecHandlingType.OnlyNotes
+
+                            string rtfText = el?.GetLinkedDocument();
+                            var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(
+                                x =>
+                                    x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
+
+                            // rtf text/description available and rtf export wanted (Mixed Mode or OnlyLinkedDocument)
+                            if (!String.IsNullOrEmpty(rtfText) &&
+                                (
+                                    Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                    Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyLinkedDocument
+                                )
+                            )
+                            {
+                                string fileDir = Settings.EmbeddedFileStorageDictionary;
+                                string xhtml = RtfToXhtml.Convert(rtfText, fileDir, Settings.EmbeddedFilesPng);
+
+                                // Handle embedded files of the EA-Element
+                                xhtml = $@"{xhtml}
+{_exportEmbeddedEaFile.MakeXhtmlForEmbeddedFiles(el)}";
+
+                                // Text = Linked Document
+                                attributeValueXhtml = new AttributeValueXHTML
+                                {
+                                    Definition = definition,
+                                    TheValue = MakeReqIfXhtmlFromXhtml(xhtml)
+                                };
+                                specObject.Values.Add(attributeValueXhtml);
+
+                            }
+                            else
+                            {
+                                // Check export EA Notes
+                                // No rtf export and Mixed Mode or OnlyNotes
+                                if (!String.IsNullOrEmpty(r.Desc) &&
+                                    (Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.MixedMode ||
+                                     Settings.SpecHandling == FileImportSettingsItem.SpecHandlingType.OnlyNotes
+                                    )
+                                )
+                                {
+                                    // Text = notes.
+                                    attributeValueXhtml = new AttributeValueXHTML
+                                    {
+                                        Definition = definition,
+                                        TheValue = MakeXhtmlFromEaNotes(Rep, r.Desc)
+                                    };
+                                    specObject.Values.Add(attributeValueXhtml);
+                                }
+                            }
+
+                            //------------------  Values added to SpecObjects ----------------------------------------
+                            // Add the SpecObject
+                            _reqIfContent.SpecObjects.Add(specObject);
+
+                            // Export all embedded element files
+                            _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
                         }
-                    
-                        //------------------  Values added to SpecObjects ----------------------------------------
-                        // Add the SpecObject
-                        _reqIfContent.SpecObjects.Add(specObject);
+                        catch (Exception e)
+                        {
 
-                        // Export all embedded element files
-                        _exportEmbeddedEaFile.CopyEmbeddedFiles(el);
+                            MessageBox.Show($@"Req Name:  '{el?.Name}'
+Req Guid: '{el?.ElementGUID}'
 
- 
+{e}",@"Error exporting EA Requirements to ReqIf");
+                        }
+
+                        
 
 
 
-                    // Add Tagged Value if defined
+
+
+                        // Add Tagged Value if defined
                     if (! String.IsNullOrWhiteSpace(r.TvName)) {
 
                         // Check if tagged value is enumeration
@@ -325,7 +346,7 @@ namespace EaServices.Doors.ReqIfs
                                 && x.LongName == r.TvName);
                         if (dataTypeEnumeration == null)
                         {
-                            attributeValueXhtml = new AttributeValueXHTML
+                            var attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
                                     (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.FirstOrDefault(x =>
@@ -424,6 +445,16 @@ Value:    {attrValue}
                 // make ReqIF DataTypes
                 foreach (var tv in tvProperties)
                 {
+                    // don't use ReqIF standard Attributes which starts by 'ReqIF.'
+                    if (tv.Property.StartsWith("ReqIF."))
+                    {
+                        if (_ErrorTvReported) continue;
+                        MessageBox.Show($@"Tagged Value skipped: '{tv.Property}'
+
+All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF standard attributes which starts with 'ReqIF.'");
+                        _ErrorTvReported = true;
+                    }
+
                     var propertyValue = tv.Property.Trim();
                     // Check if Enumeration-Datatype already exists
                     var dataTypeEnumeration = (DatatypeDefinitionEnumeration)_reqIfContent.DataTypes.FirstOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
@@ -473,6 +504,16 @@ Value:    {attrValue}
 
         }
 
+        /// <summary>
+        /// Check if Attribute ID exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private bool IsReqIfDataTypeExists( string id)
+        {
+            return _specObjectType.SpecAttributes.Any(x =>
+                x.Identifier == id);
+        }
 
 
         /// <summary>
@@ -493,6 +534,7 @@ Value:    {attrValue}
             };
            _reqIfContent.Specifications.Add(_moduleSpecification);
 
+           // Add Module Specification
             AddAttributesModuleSpecification(_moduleSpecification, pkg);
             // Add datatypes for packages (enums)
             AddDatatypesForPackage(ReqIfDeserialized, pkg);
@@ -528,7 +570,7 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.ChapterName",
@@ -537,7 +579,7 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.Text",
@@ -546,7 +588,8 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-           _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+           //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.ForeignModifiedBy",
@@ -555,7 +598,8 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.ForeignCreatedBy",
@@ -564,7 +608,7 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
 
             var attributeDefinitionDate = new AttributeDefinitionDate
             {
@@ -574,7 +618,9 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionDate)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionDate))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+
+
             attributeDefinitionDate = new AttributeDefinitionDate
             {
                 LongName = "ReqIF.ForeignModifiedOn",
@@ -583,7 +629,8 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionDate)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionDate))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+
             var attributeDefinitionBool = new AttributeDefinitionBoolean
             {
                 LongName = "ReqIF.ForeignDeleted",
@@ -592,7 +639,8 @@ Value:    {attrValue}
                 Type = (DatatypeDefinitionBoolean)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionBoolean))
             };
-            _specObjectType.SpecAttributes.Add(attributeDefinitionBool);
+            //_specObjectType.SpecAttributes.Add(attributeDefinitionBool);
+
             var attributeDefinitionString = new AttributeDefinitionString
             {
                 LongName = "ReqIF.ForeignId",
@@ -704,7 +752,9 @@ Value:    {attrValue}
                 _reqIfContent = new ReqIFContent();
                 reqIf.CoreContent.Add(_reqIfContent);
 
+                // Create basic data types like boolean
                 AddCoreDataTypes(reqIf);
+                // Create basic attribute types like Name, Description, Changed, Modified, By
                 _specificationTypeModule = AddSpecificationTypeModule(reqIf);
                 return reqIf;
 
@@ -793,7 +843,10 @@ Value:    {attrValue}
 
 
         /// <summary>
-        /// Add Attribut definitions to SpecificationType of Modules
+        /// Add Attribute definitions to SpecificationType of Modules
+        /// - Name
+        /// - Description
+        /// - Created, Modified, by,..
         /// </summary>
         /// <param name="specType"></param>
         private void AddAttributeDefinitionsToModuleSpecificationType(SpecType specType)
@@ -807,6 +860,16 @@ Value:    {attrValue}
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
             specType.SpecAttributes.Add(attributeDefinitionReqIfName);
+
+            var attributeDefinitionReqIfChapterName = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ChapterName",
+                Identifier = "specification-reqif-chapter-name",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionReqIfChapterName);
 
             var attributeDefinitionReqIfDescription = new AttributeDefinitionXHTML
             {
@@ -867,6 +930,36 @@ Value:    {attrValue}
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
             specType.SpecAttributes.Add(attributeDefinitionReqPrefix);
+
+
+
+            var attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Name",
+                Identifier = "specification-reqif-Name",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.ChapterName",
+                Identifier = "specification-reqif-ChapterName",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionXhtml);
+            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+            {
+                LongName = "ReqIF.Text",
+                Identifier = "specification-reqif-text",
+                LastChange = DateTime.Now,
+                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
+                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+            };
+            specType.SpecAttributes.Add(attributeDefinitionXhtml);
 
         }
 
