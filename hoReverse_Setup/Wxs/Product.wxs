@@ -23,7 +23,7 @@
   // Change AssemblyFileVersion accordingly
   -->
   <!-- The post processing of the WIX Setup projects changes the *.msi file name to:
-       'hoReverse 3.3.msi' (3.2.7=ProductVersion)
+       'hoReverse 3.3.0.msi' (3.3.0=ProductVersion)
        The Scripts you find in: Setup\Script\..
        see also: http://kentie.net/article/wixnameversion/index.htm
   -->
