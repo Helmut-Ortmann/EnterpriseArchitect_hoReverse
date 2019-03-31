@@ -33,8 +33,8 @@ namespace EaServices.Doors.ReqIfs
         }; // DOORS Table requirements
 
 
-        public ReqIfImport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) :
-            base(rep, pkg, importFile, settings)
+        public ReqIfImport(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings, List<ReqIfLog> reqIfLogList) :
+            base(rep, pkg, importFile, settings, reqIfLogList)
         {
 
         }
@@ -199,6 +199,10 @@ Consider:
                         stateNew);
                     
                     if (result == false || _errorMessage1) return false;
+
+                    // List all what is done
+                    _reqIfLogList.Add(new ReqIfLog(reqIfFileItem.FilePath,Pkg.Name, Pkg.PackageGUID, reqIfSpecId, "")); 
+
 
                     // next package
                     packageIndex += 1;

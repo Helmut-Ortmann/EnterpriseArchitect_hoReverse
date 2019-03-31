@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EaServices.Doors.ReqIfs;
 using hoReverse.hoUtils;
 using ReqIFSharp;
 
@@ -18,7 +19,8 @@ namespace EaServices.Doors
         /// <param name="pkg"></param>
         /// <param name="importFile"></param>
         /// <param name="settings"></param>
-        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings) : base(rep, pkg, importFile,  settings)
+        /// <param name="reqIfLog"></param>
+        public DoorsReqIf(EA.Repository rep, EA.Package pkg, string importFile, FileImportSettingsItem settings, List<ReqIfLog> reqIfLog) : base(rep, pkg, importFile,  settings, reqIfLog)
         {
             
         }

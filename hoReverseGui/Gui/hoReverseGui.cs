@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +9,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using EaServices.Doors;
+using EaServices.Doors.ReqIfs;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
 using hoReverse.Services;
@@ -4585,6 +4587,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         /// <param name="withMessage"></param>
         private bool ImportBySettings(int listNumber, bool withMessage=false)
         {
+            List<ReqIfLog> reqIfLogList = new List<ReqIfLog>();
             if (_repository == null || String.IsNullOrEmpty(_repository.ConnectionString))
             {
                 MessageBox.Show("", @"No repository loaded, break!!");
@@ -4594,7 +4597,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             Cursor.Current = Cursors.WaitCursor;
 
             EnableImportDialog(false);
-            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository);
+            DoorsModule doorsModule = new EaServices.Doors.DoorsModule(_jasonFilePath, _repository, reqIfLogList);
             bool result = doorsModule.ImportBySetting(listNumber);
             EnableImportDialog(true);
             Cursor.Current = Cursors.Default;
@@ -4605,7 +4608,14 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             if (withMessage && result)
                 MessageBox.Show($@"Duration: {duration}
 
-See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Imported by list={listNumber}, finished.");
+See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)
+
+Clipboard contains the imported Modules/Specifications as csv", $@"{reqIfLogList} Modules/Specifications imported by list={listNumber}, finished.");
+            // make a csv
+            var del = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+            var textCb = (from item in reqIfLogList
+                select $@"{item.File}{del}{item.ModuleId}{del}{item.PkgGuid}{del}{item.PkgName}{del}{item.Comment}").ToArray();
+            Clipboard.SetText(String.Join(";", textCb));
             return result;
         }
         /// <summary>
