@@ -64,7 +64,11 @@ Let's discuss it, but it works.
 
 ## News
 
-3.2.7
+3.3 ReqIF Export fixing and optimizing
+- No Tagged Values starting with 'ReqIF.' are supported (conflicts with existing Attributes)
+- Error fixing
+
+3.2.7 ReqIF Tutorial as *.eap file
 
 3.2.6 ReqIF Deserialize in ReqIF Readonly mode, handle COM Exception
 - ReqIF:

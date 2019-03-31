@@ -155,6 +155,7 @@ Validate: true
             text = text.Replace(@"&nbsp;", "");
             text = text.Replace(@"&laquo;", "");// <<
             text = text.Replace(@"&raquo;", "");// >>
+            text = FilterXmlEntities(text);
 
             Regex rx = new Regex(@"</");
             text = rx.Replace(text, $@"</{NameSpace}:");
@@ -197,6 +198,7 @@ Validate: true
             stringText = Regex.Replace(stringText, @"<li value=""[^""]*""", "<li");  // Replace value in li
             stringText = Regex.Replace(stringText, @"<font [^>]*>", "");  // Replace font tag
             stringText = Regex.Replace(stringText, @"</font>", "");  // Replace font tag
+            stringText = FilterXmlEntities(stringText);
 
 
 
@@ -212,9 +214,34 @@ Validate: true
         {
             //stringValue = stringValue.Replace("\r\n", "<br></br>");
             htmlValue = htmlValue.Replace("&nbsp;", "");
+            htmlValue = htmlValue.Replace("&nbsp;", "");
+            htmlValue = FilterXmlEntities(htmlValue);
+
             //htmlValue = Regex.Replace(htmlValue, @">\s*<", "><");  // Replace Blanks between control sequences
             htmlValue = LimitReqIfXhtml(htmlValue);
             return AddXtmlNameSpace(htmlValue);
+        }
+        /// <summary>
+        /// Filter xml entities
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        protected static string FilterXmlEntities(string text)
+        {
+            text = text.Replace("&nbsp;", "");
+            text = text.Replace("&nbsp;", "");
+            text = text.Replace("Ü", "&#220;");
+            text = text.Replace("Ä", "&#197;");
+            text = text.Replace("Ö", "&#214;");
+            text = text.Replace("ü", "&#252;");
+            text = text.Replace("ä", "&#228;");
+            text = text.Replace("ö", "&#246;");
+            text = text.Replace("&Uuml;", "&#220;");
+            text = text.Replace("&Auml;", "&#197;");
+            text = text.Replace("&Ouml;", "&#214;");
+            text = text.Replace("&uuml;", "&#252;");
+            text = text.Replace("&auml;", "&#228;");
+            return text.Replace("&ouml;", "&#246;");
         }
         /// <summary>
         /// Make XHTML from a simple string. It inserts the xhtml namespace and handles cr/lf
@@ -227,6 +254,18 @@ Validate: true
 
             stringValue = stringValue.Replace("\r\n", "<br/>");
             stringValue = stringValue.Replace("&nbsp;", "");
+            stringValue = stringValue.Replace("Ü", "&#220;");
+            stringValue = stringValue.Replace("Ä", "&#197;");
+            stringValue = stringValue.Replace("Ö", "&#214;");
+            stringValue = stringValue.Replace("ü", "&#252;");
+            stringValue = stringValue.Replace("ä", "&#228;");
+            stringValue = stringValue.Replace("ö", "&#246;");
+            stringValue = stringValue.Replace("&Uuml;", "&#220;");
+            stringValue = stringValue.Replace("&Auml;", "&#197;");
+            stringValue = stringValue.Replace("&Ouml;", "&#214;");
+            stringValue = stringValue.Replace("&uuml;", "&#252;");
+            stringValue = stringValue.Replace("&auml;", "&#228;");
+            stringValue = stringValue.Replace("&ouml;", "&#246;");
             stringValue = Regex.Replace(stringValue, @">\s*<", "><");  // Replace Blanks between control sequences
             stringValue = LimitReqIfXhtml(stringValue);
             return AddXtmlNameSpace(stringValue);
@@ -238,6 +277,7 @@ Validate: true
         /// <param name="value"></param>
         public bool SetReqIfEnumValue(AttributeValueEnumeration attributeValueEnumeration, string value, EA.Element el = null)
         {
+            if (attributeValueEnumeration.Definition == null) return true;
             // delete old values
             attributeValueEnumeration.Values.Clear();
 

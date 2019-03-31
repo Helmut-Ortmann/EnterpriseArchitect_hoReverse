@@ -198,7 +198,7 @@ namespace EaServices.Doors.ReqIfs
                             var attributeValueString = new AttributeValueString
                             {
                                 Definition =
-                                    (AttributeDefinitionString) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionString) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionString) &&
                                         x.LongName == "ReqIF.ForeignId"),
                                 TheValue = r.Guid
@@ -208,7 +208,7 @@ namespace EaServices.Doors.ReqIfs
                             var attributeValueDate = new AttributeValueDate
                             {
                                 Definition =
-                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionDate) &&
                                         x.LongName == "ReqIF.ForeignCreatedOn"),
                                 TheValue = r.CreatedOn ?? DateTime.Now
@@ -218,7 +218,7 @@ namespace EaServices.Doors.ReqIfs
                             attributeValueDate = new AttributeValueDate
                             {
                                 Definition =
-                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionDate) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionDate) &&
                                         x.LongName == "ReqIF.ForeignModifiedOn"),
                                 TheValue = r.ModifiedOn ?? DateTime.Now
@@ -228,7 +228,7 @@ namespace EaServices.Doors.ReqIfs
                             var attributeValueXhtml = new AttributeValueXHTML()
                             {
                                 Definition =
-                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionXHTML) &&
                                         x.LongName == "ReqIF.ForeignCreatedBy"),
                                 TheValue = MakeXhtmlFromString(r.Author)
@@ -238,7 +238,7 @@ namespace EaServices.Doors.ReqIfs
                             attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
-                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                    (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionXHTML) &&
                                         x.LongName == "ReqIF.ForeignModifiedBy"),
                                 TheValue = MakeXhtmlFromString("not supported")
@@ -250,7 +250,7 @@ namespace EaServices.Doors.ReqIfs
                                 attributeValueXhtml = new AttributeValueXHTML
                                 {
                                     Definition =
-                                        (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(x =>
+                                        (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.First(x =>
                                             x.GetType() == typeof(AttributeDefinitionXHTML) &&
                                             x.LongName == "ReqIF.Name"),
                                     TheValue = MakeXhtmlFromString(r.Name)
@@ -266,7 +266,7 @@ namespace EaServices.Doors.ReqIfs
                             // - FileImportSettingsItem.SpecHandlingType.OnlyNotes
 
                             string rtfText = el?.GetLinkedDocument();
-                            var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.SingleOrDefault(
+                            var definition = (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.First(
                                 x =>
                                     x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == "ReqIF.Text");
 
@@ -336,8 +336,8 @@ Req Guid: '{el?.ElementGUID}'
 
 
 
-                        // Add Tagged Value if defined
-                    if (! String.IsNullOrWhiteSpace(r.TvName)) {
+                    // Add Tagged Value if defined
+                    if (! String.IsNullOrWhiteSpace(r.TvName) && ! r.TvName.StartsWith("ReqIF.")) {
 
                         // Check if tagged value is enumeration
                         var dataTypeEnumeration =
@@ -570,7 +570,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.ChapterName",
@@ -579,7 +579,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.Text",
@@ -588,7 +588,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-           //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+           _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
 
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
@@ -598,7 +598,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
 
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
@@ -608,7 +608,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
 
             var attributeDefinitionDate = new AttributeDefinitionDate
             {
@@ -618,7 +618,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionDate)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionDate))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
 
 
             attributeDefinitionDate = new AttributeDefinitionDate
@@ -629,7 +629,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionDate)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionDate))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionDate);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionDate);
 
             var attributeDefinitionBool = new AttributeDefinitionBoolean
             {
@@ -639,7 +639,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionBoolean)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionBoolean))
             };
-            //_specObjectType.SpecAttributes.Add(attributeDefinitionBool);
+            _specObjectType.SpecAttributes.Add(attributeDefinitionBool);
 
             var attributeDefinitionString = new AttributeDefinitionString
             {
@@ -666,20 +666,23 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 // add attributes of the tagged values
                 foreach (var tvName in tvs)
                 {
-                    
+
                     var dataTypeEnumeration = (DatatypeDefinitionEnumeration)_reqIfContent.DataTypes.SingleOrDefault(x => x.GetType() == typeof(DatatypeDefinitionEnumeration)
                                                                                                                         && x.LongName == tvName);
+                    // no ReqIF Standard-Attributes as Tagged Values 
+                    if (tvName.StartsWith("ReqIF.")) continue;
                     if (dataTypeEnumeration == null)
                     {
-                        attributeDefinitionXhtml = new AttributeDefinitionXHTML
-                        {
-                            LongName = $"{tvName}",
-                            Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.Attribute, pkg.Name, tvName),
-                            LastChange = DateTime.Now,
-                            Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
-                                x.GetType() == typeof(DatatypeDefinitionXHTML))
-                        };
-                        _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
+
+                            attributeDefinitionXhtml = new AttributeDefinitionXHTML
+                            {
+                                LongName = $"{tvName}",
+                                Identifier = ReqIfUtils.MakeReqIfId(ReqIfUtils.ReqIfIdType.Attribute, pkg.Name, tvName),
+                                LastChange = DateTime.Now,
+                                Type = (DatatypeDefinitionXHTML) _reqIfContent.DataTypes.SingleOrDefault(x =>
+                                    x.GetType() == typeof(DatatypeDefinitionXHTML))
+                            };
+                            _specObjectType.SpecAttributes.Add(attributeDefinitionXhtml);
 
                     }
                     else
@@ -941,7 +944,8 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            specType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
+
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.ChapterName",
@@ -950,7 +954,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            specType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
             attributeDefinitionXhtml = new AttributeDefinitionXHTML
             {
                 LongName = "ReqIF.Text",
@@ -959,7 +963,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                 Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
-            specType.SpecAttributes.Add(attributeDefinitionXhtml);
+            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
 
         }
 
