@@ -94,7 +94,8 @@ namespace EaServices.Doors.ReqIfs
         /// <returns></returns>
         public static string GetEaTaggedValue(string value, string note)
         {
-            return (value??"").StartsWith("<memo>") ? note??"" : value??"";
+            if (value == null) return "";
+            return value.StartsWith("<memo>") ? note??"" : value??"";
         }
     }
 }

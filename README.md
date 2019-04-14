@@ -64,6 +64,9 @@ Let's discuss it, but it works.
 
 ## News
 
+3.4 ReqIF Handle structured Tagged Values (same name in different structures)
+    - Fix error in handling tagged values (missing some values)
+	- Repeated Tagged Value names are made unique by adding a '.', period
 3.3 ReqIF Export fixing and optimizing
 - No Tagged Values starting with 'ReqIF.' are supported (conflicts with existing Attributes)
 - Error fixing
