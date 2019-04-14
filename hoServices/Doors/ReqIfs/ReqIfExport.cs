@@ -10,6 +10,7 @@ using hoUtils;
 using hoUtils.Compression;
 using hoUtils.DirFile;
 using JetBrains.Annotations;
+using LinqToDB;
 using ReqIFSharp;
 
 namespace EaServices.Doors.ReqIfs
@@ -158,6 +159,7 @@ namespace EaServices.Doors.ReqIfs
                             where pkg.ea_guid == Pkg.PackageGUID
                             from tv in db.t_objectproperties.Where(tv2 => r.Object_ID == tv2.Object_ID)
                                 .DefaultIfEmpty() // <<= makes join left join
+                            orderby r.ea_guid, tv.Property // ensure requirements are on a stretch
 
                             select new
                             {
@@ -176,12 +178,16 @@ namespace EaServices.Doors.ReqIfs
 
                 string currentGuid = "";
                 SpecObject specObject = null;
+                EA.Element el = null;
+                string lastTaggedValueName = "";
+                string taggedValueNameModifier = "";
                 foreach (var r in reqs)
                 {
-                    EA.Element el = null;
                     // new Requirements
                     if (currentGuid != r.Guid)
                     {
+                        lastTaggedValueName = "";
+                        taggedValueNameModifier = "";
                         currentGuid = r.Guid;
                         try
                         {
@@ -329,28 +335,35 @@ Req Guid: '{el?.ElementGUID}'
 
 {e}",@"Error exporting EA Requirements to ReqIf");
                         }
-
-                        
-
+                    } // new requirement
 
 
-
-
+                    //--------------------------------------------------------------------------------------
                     // Add Tagged Value if defined
-                    if (! String.IsNullOrWhiteSpace(r.TvName) && ! r.TvName.StartsWith("ReqIF.")) {
+                    if (! String.IsNullOrWhiteSpace(r.TvName) && ! r.TvName.StartsWith("ReqIF."))
+                    {
+                        string tvName = r.TvName;
+                        // Handle repeated tagged value name
+                        // This is possible with structured Tagged Values
+                        if (tvName == lastTaggedValueName)
+                        {
+                            taggedValueNameModifier = $"{taggedValueNameModifier}.";
+                            tvName = $"{tvName}{taggedValueNameModifier}";
+                            lastTaggedValueName = tvName;
+                        } else lastTaggedValueName = tvName;
 
                         // Check if tagged value is enumeration
                         var dataTypeEnumeration =
                             (DatatypeDefinitionEnumeration) _reqIfContent.DataTypes.FirstOrDefault(x =>
                                 x.GetType() == typeof(DatatypeDefinitionEnumeration)
-                                && x.LongName == r.TvName);
+                                && x.LongName == tvName);
                         if (dataTypeEnumeration == null)
                         {
                             var attributeValueXhtml = new AttributeValueXHTML
                             {
                                 Definition =
                                     (AttributeDefinitionXHTML) _specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                        x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == r.TvName),
+                                        x.GetType() == typeof(AttributeDefinitionXHTML) && x.LongName == tvName),
                                 TheValue = MakeXhtmlFromEaNotes(Rep, ReqIfUtils.GetEaTaggedValue(r.TvValue, r.TvNote))
                             };
                             specObject.Values.Add(attributeValueXhtml);
@@ -359,7 +372,7 @@ Req Guid: '{el?.ElementGUID}'
                         {
                             var attributeDefinitionEnumeration =
                                 (AttributeDefinitionEnumeration) _specObjectType.SpecAttributes.FirstOrDefault(x =>
-                                    x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == r.TvName);
+                                    x.GetType() == typeof(AttributeDefinitionEnumeration) && x.LongName == tvName);
                             var attributeValueEnumeration = new AttributeValueEnumeration
                             {
                                 Definition = attributeDefinitionEnumeration
@@ -369,10 +382,7 @@ Req Guid: '{el?.ElementGUID}'
                             specObject.Values.Add(attributeValueEnumeration);
 
                         }
-                        // new requirements
                     }
-                    }
-
                 }
             }
 
