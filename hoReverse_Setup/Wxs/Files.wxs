@@ -239,7 +239,7 @@
         <File Id="KBCsv.Extensions.Data" KeyPath="yes" Name="KBCsv.Extensions.Data.dll"  Source="..\packages\KBCsv.Extensions.Data.5.0.0\lib\net45\KBCsv.Extensions.Data.dll" />
       </Component>
       <Component Id="DocumentFormat.OpenXml" Guid="F6FBBA69-A929-413B-A13B-BBDD7851D1F7">
-        <File Id="DocumentFormat.OpenXml" KeyPath="yes" Name="DocumentFormat.OpenXml.dll"  Source="..\packages\DocumentFormat.OpenXml.2.8.1\lib\net46\DocumentFormat.OpenXml.dll" />
+        <File Id="DocumentFormat.OpenXml" KeyPath="yes" Name="DocumentFormat.OpenXml.dll"  Source="..\packages\DocumentFormat.OpenXml.2.9.1\lib\net46\DocumentFormat.OpenXml.dll" />
       </Component>
       <Component Id="ClosedXml" Guid="969900BC-0842-4E36-B550-35AA37682D19">
         <File Id="ClosedXml" KeyPath="yes" Name="ClosedXml.dll"  Source="..\packages\ClosedXML.0.93.1\lib\net46\ClosedXML.dll" />
@@ -250,14 +250,14 @@
         -->
       <!-- HtmlAgilityPack -->
       <Component Id="HtmlAgilityPack.dll" Guid="{3783B4A7-6591-4783-AFD5-FB7F4E70A2D5}">
-        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.14\lib\Net45\HtmlAgilityPack.dll" />
+        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.11.3\lib\Net45\HtmlAgilityPack.dll" />
       </Component>
         
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">
             <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="..\packages\MariGold.HtmlParser.1.1.0\lib\netstandard2.0\MariGold.HtmlParser.dll" />
         </Component>
         <Component Id="MariGold.OpenXHTML.dll" Guid="9D3E3286-600E-4CA5-8270-9F20576BE18E">
-            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.5.1\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
+            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.6.0\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
         </Component>
         <Component Id="ReqIFSharp.dll" Guid="B19B5F34-14FE-4F28-BAE9-A73025277C78">
             <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.4.1\lib\net45\ReqIFSharp.dll" />
@@ -269,7 +269,7 @@
 
      <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
       <Component Id="SautinSoft.HtmlToRtf.dll" Guid="{DC687D4A-3A4E-428F-9981-996FBD2AD065}">
-        <File Id="SautinSoft.HtmlToRtf.dll" Name="SautinSoft.HtmlToRtf.dll" KeyPath="yes" Source="..\packages\sautinsoft.htmltortf.7.0.8.16\lib\net461\SautinSoft.HtmlToRtf.dll" />
+        <File Id="SautinSoft.HtmlToRtf.dll" Name="SautinSoft.HtmlToRtf.dll" KeyPath="yes" Source="..\packages\sautinsoft.htmltortf.7.1.4.17\lib\net461\SautinSoft.HtmlToRtf.dll" />
       </Component>
       <Component Id="SautinSoft.RtfToHtml.dll" Guid="{D95E61CB-09FD-4417-92DD-C14331A336AB}">
         <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="..\packages\sautinsoft.rtftohtml.6.1.12.20\lib\Net 4.6.1\SautinSoft.RtfToHtml.dll" />
@@ -278,7 +278,7 @@
 
       <!-- MoreLinq-->
       <Component Id="MoreLinq.dll" Guid="{2B8C60EC-125A-4A5D-8684-CC79A1543FFB}">
-        <File Id="MoreLinq.dll" Name="MoreLinq.dll" KeyPath="yes" Source="..\packages\morelinq.3.1.0\lib\net451\MoreLinq.dll" />
+        <File Id="MoreLinq.dll" Name="MoreLinq.dll" KeyPath="yes" Source="..\packages\morelinq.3.1.1\lib\net451\MoreLinq.dll" />
       </Component>
      
      
