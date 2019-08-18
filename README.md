@@ -64,6 +64,12 @@ Let's discuss it, but it works.
 
 ## News
 
+3.6 Fix error Bulk change for not existing profile
+
+3.5 Nugut changed to Package Reference
+- Update linq2db library
+- Adapt to VS2019
+
 3.4 ReqIF Handle structured Tagged Values (same name in different structures)
     - Fix error in handling tagged values (missing some values)
 	- Repeated Tagged Value names are made unique by adding a '.', period

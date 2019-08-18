@@ -112,6 +112,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
+      <Project>{8df4f058-9e5e-42ff-b9f5-f6b826983e97}</Project>
+      <Name>hoLinqToSql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\hoReverseGui\hoReverseGui.csproj">
       <Project>{a479d38e-2d90-4b0d-9c0b-1f85dddbbd92}</Project>
       <Name>hoReverseGui</Name>
