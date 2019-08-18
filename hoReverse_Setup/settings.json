@@ -454,7 +454,7 @@
 		  "EmbeddedFileStorageDictionary" : "c:/Temp/ReqIF/Store/12/",
 		  "WriteAttrNameList": [ "_ArchBlockId=EA.GUID", "_ArchitectureStatComment","_ArchitectureStatus","_SortingCrit"]
 	  },
-	  ,
+
 	  {
 		  "Name"            :  "14. Export 'RoundTrip_Arch.reqifz'",
 		  "Description"     :  "Roundtrip with DOORS",

@@ -3,10 +3,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using EA;
 using hoReverse.Reverse;
 using hoReverse.Settings;
 using hoReverse.HistoryList;
@@ -15,9 +11,6 @@ using hoReverse.Services;
 using hoReverse.hoUtils;
 using hoReverse.hoUtils.Appls;
 using hoReverse.hoUtils.ActionPins;
-using hoLinqToSql.LinqUtils;
-
-
 using GlobalHotkeys;
 
 namespace hoReverse

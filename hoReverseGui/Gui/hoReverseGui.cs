@@ -18,10 +18,10 @@ using hoReverse.hoUtils.Cutils;
 using hoReverse.hoUtils.Diagrams;
 using hoReverse.Reverse.EaAddinShortcuts;
 using hoReverse.hoUtils.WiKiRefs;
+using hoLinqToSql.LinqUtils;
 
 using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
-using hoLinqToSql.LinqUtils;
 using EaServices.Doors.ReqIfs.Inventory;
 
 using hoUtils.BulkChange;
@@ -3020,7 +3020,7 @@ namespace hoReverse.Reverse
                 "Microsoft.SqlServer.Types.dll",
                 "Oracle.ManagedDataAccess.dll",
                 "Npgsql.dll",
-                "Sybase.AdoNet2.AseClient.dll",
+                "Sybase.AdoNet.AseClient.dll",
                 "SQLite.Interop.dll",
                 "System.Data.SQLite.dll",
                 "OpenMcdf.dll",

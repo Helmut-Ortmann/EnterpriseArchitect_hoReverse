@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -10,18 +9,17 @@ using hoUtils;
 using hoUtils.Compression;
 using hoUtils.DirFile;
 using JetBrains.Annotations;
-using LinqToDB;
 using ReqIFSharp;
 
 namespace EaServices.Doors.ReqIfs
 {
     public  class ReqIfExport:ReqIf
     {
-        // Modulespecific, has to be estimated from ReqIF for a new module
+        // Module specific, has to be estimated from ReqIF for a new module
         SpecificationType _specificationTypeModule;
         SpecObjectType _specObjectType;
 
-        private bool _ErrorTvReported = false;
+        private bool _errorTvReported = false;
 
         // Module specification (hierarchy)
         Specification _moduleSpecification;
@@ -458,11 +456,11 @@ Value:    {attrValue}
                     // don't use ReqIF standard Attributes which starts by 'ReqIF.'
                     if (tv.Property.StartsWith("ReqIF."))
                     {
-                        if (_ErrorTvReported) continue;
+                        if (_errorTvReported) continue;
                         MessageBox.Show($@"Tagged Value skipped: '{tv.Property}'
 
 All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF standard attributes which starts with 'ReqIF.'");
-                        _ErrorTvReported = true;
+                        _errorTvReported = true;
                     }
 
                     var propertyValue = tv.Property.Trim();
@@ -943,38 +941,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                     x.GetType() == typeof(DatatypeDefinitionXHTML))
             };
             specType.SpecAttributes.Add(attributeDefinitionReqPrefix);
-
-
-
-            var attributeDefinitionXhtml = new AttributeDefinitionXHTML
-            {
-                LongName = "ReqIF.Name",
-                Identifier = "specification-reqif-Name",
-                LastChange = DateTime.Now,
-                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
-                    x.GetType() == typeof(DatatypeDefinitionXHTML))
-            };
-            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
-
-            attributeDefinitionXhtml = new AttributeDefinitionXHTML
-            {
-                LongName = "ReqIF.ChapterName",
-                Identifier = "specification-reqif-ChapterName",
-                LastChange = DateTime.Now,
-                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
-                    x.GetType() == typeof(DatatypeDefinitionXHTML))
-            };
-            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
-            attributeDefinitionXhtml = new AttributeDefinitionXHTML
-            {
-                LongName = "ReqIF.Text",
-                Identifier = "specification-reqif-text",
-                LastChange = DateTime.Now,
-                Type = (DatatypeDefinitionXHTML)_reqIfContent.DataTypes.SingleOrDefault(x =>
-                    x.GetType() == typeof(DatatypeDefinitionXHTML))
-            };
-            //specType.SpecAttributes.Add(attributeDefinitionXhtml);
-
+            
         }
 
 

@@ -58,7 +58,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
       <Name>hoLinqToSql</Name>
-      <Project>{fed206af-e583-48c6-9952-bad2c41b3aa4}</Project>
+      <Project>{8df4f058-9e5e-42ff-b9f5-f6b826983e97}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
@@ -99,6 +99,14 @@
     <ProjectReference Include="..\hoUtil\hoUtil.csproj">
       <Name>hoUtil</Name>
       <Project>{9376680e-9420-4fc1-8de8-4311fca18efc}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\NugetCollectorProject\NugetCollectorProject.csproj">
+      <Name>NugetCollectorProject</Name>
+      <Project>{4648f25c-38f6-429b-b471-30e80edb795c}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>

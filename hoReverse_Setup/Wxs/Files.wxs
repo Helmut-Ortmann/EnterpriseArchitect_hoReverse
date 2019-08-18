@@ -182,103 +182,117 @@
         <RegistryValue Root="HKCR" Key="CLSID\{DD87A8BF-0F6C-347A-9C46-9DB1B1607A45}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{DD87A8BF-0F6C-347A-9C46-9DB1B1607A45}\InprocServer32" Name="CodeBase" Value="file:///[#fil02E0194699D3BBAAFAF95B9435C57812]" Type="string" Action="write" />
       </Component>
-       <!-- linq2db                   -->
-      <!-- linq2db                   -->
-      <!-- Supported databases Access, MySQL, SqlServer, Oracle, Sybase, Postgres (tested: Access, MySQL, SqlServer) -->
-      <Component Id="linq2db.dll" Guid="{7F7E0442-6625-451E-841E-E4D304EFBCBA}">
-        <File Id="linq2db.dll" KeyPath="yes" Name="linq2db.dll" Source="..\packages\linq2db.2.6.4\lib\net45\linq2db.dll" />
-      </Component>
-      <!-- Separate install MySql.Data.dll-->
-      <Component Id="MySql.Data.dll" Guid="{1D9AF997-5EFF-4F2A-9410-72EAA69473CC}">
-        <File Id="MySql.Data.dll" KeyPath="yes" Name="MySql.Data.dll" Source="..\packages\MySql.Data.8.0.12\lib\net452\MySql.Data.dll" />
-      </Component>
-      <Component Id="Microsoft.SqlServer.Types.dll" Guid="{EABD70B2-374E-4959-AB91-38863D06ABFA}">
-        <File Id="Microsoft.SqlServer.Types.dll" KeyPath="yes" Name="Microsoft.SqlServer.Types.dll" Source="..\packages\linq2db.SqlServer.2.6.4\tools\Microsoft.SqlServer.Types.dll" />
-      </Component>
-      <Component Id="Oracle.ManagedDataAccess.dll" Guid="{1BE3E59F-3CA1-4725-8FB6-086E0DAD8D03}">
-        <File Id="Oracle.ManagedDataAccess.dll" KeyPath="yes" Name="Oracle.ManagedDataAccess.dll" Source="..\packages\linq2db.Oracle.Managed.2.6.4\tools\Oracle.ManagedDataAccess.dll" />
-      </Component>
-      <Component Id="Npgsql.dll" Guid="{B63E7AC0-5F42-49A3-8ABD-4B84B8C9160D}">
-        <File Id="Npgsql.dll" KeyPath="yes" Name="Npgsql.dll" Source="..\packages\linq2db.PostgreSQL.2.6.4\tools\Npgsql.dll" />
-      </Component>
-      <Component Id="AdoNetCore.AseClient.dll" Guid="{A3853976-5D6F-430E-AB0D-D87648B009D3}">
-        <File Id="AdoNetCore.AseClient.dll" KeyPath="yes" Name="AdoNetCore.AseClient.dll" Source="..\packages\AdoNetCore.AseClient.0.13.1\lib\net46\AdoNetCore.AseClient.dll" />
-      </Component>
-      <!--
-      <Component Id="sybdrvado20.dll" Guid="{66897A7E-5F3D-41CE-9E3F-F2F36CF4C50D}">
-        <File Id="sybdrvado20.dll" KeyPath="yes" Name="sybdrvado20.dll" Source="..\packages\linq2db.Sybase.1.9.0\tools\sybdrvado20.dll" />
-      </Component>
-      -->
-      <Component Id="SQLite.Interop.dll" Guid="{3DFC900E-8BD6-4B50-ACFC-7DF08040ECC2}">
-        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="..\packages\System.Data.SQLite.Core.1.0.109.0\build\net46\x86\SQLite.Interop.dll" />
-      </Component>
-      <Component Id="System.Data.SQLite.dll" Guid="{B161BBE0-0A9C-4570-AE7A-91E10F380ACD}">
-        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="..\packages\System.Data.SQLite.Core.1.0.109.0\lib\net46\System.Data.SQLite.dll" />
-      </Component>
-
       <!-- Settings.json                                            -->
       <Component Id="UserSearches.json" Guid="{1FD90E6F-33A0-4E68-8E9E-FA919554D3D6}">
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />
       </Component>
-      <Component Id="Newtonsoft.Json" Guid="{8062C079-8ED3-427F-B0AA-6A7BBC159B62}">
-        <File Id="Newtonsoft.Json" KeyPath="yes" Name="Newtonsoft.Json.dll"  Source="..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll" />
+
+
+      <!-- Nuget Packages
+          Nuget Packages are all in the otherwise empty project 'NugetCollectorProject'
+          Don't forget to include all nuget packages in this project
+          Add to load the dll:
+          Source="$(var.NugetCollectorProject.TargetDir)\NugetDll.dll" 
+          -->
+      <Component Id="Newtonsoft.Json" Guid="48483AD6-80C5-41C6-87DB-CE36684E4ACD">
+        <File Id="Newtonsoft.Json" KeyPath="yes" Name="Newtonsoft.Json.dll"  Source="$(var.NugetCollectorProject.TargetDir)\Newtonsoft.Json.dll" />
       </Component>
+      <Component Id="KBCsv" Guid="30620E70-7C9D-45E4-BEC8-6A3B8D5107EA">
+        <File Id="KBCsv" KeyPath="yes" Name="KBCsv.dll"  Source="$(var.NugetCollectorProject.TargetDir)\KBCsv.dll" />
+      </Component>
+      <Component Id="KBCsv.Extensions.Data" Guid="97618C61-D0E0-41B0-8A2D-F82ECC5AF35E">
+        <File Id="KBCsv.Extensions.Data" KeyPath="yes" Name="KBCsv.Extensions.Data.dll"  Source="$(var.NugetCollectorProject.TargetDir)\KBCsv.Extensions.Data.dll" />
+      </Component>
+      <!--   Nuget: Get-Project –All | Add-BindingRedirect    -->
+      <!-- DocumentFormat.OpenXml.2.9.1 / DocumentFormat.OpenXml.2.9.1 -->
+      <Component Id="DocumentFormat.OpenXml" Guid="F6FBBA69-A929-413B-A13B-BBDD7851D1F7">
+        <File Id="DocumentFormat.OpenXml" KeyPath="yes" Name="DocumentFormat.OpenXml.dll"  Source="$(var.NugetCollectorProject.TargetDir)\DocumentFormat.OpenXml.dll" />
+      </Component>
+
+      <!-- ClosedXml needs: DocumentFormat.OpenXml 2.7.2-->
+      <Component Id="ClosedXml" Guid="969900BC-0842-4E36-B550-35AA37682D19">
+        <File Id="ClosedXml" KeyPath="yes" Name="ClosedXml.dll"  Source="$(var.NugetCollectorProject.TargetDir)\ClosedXML.dll" />
+      </Component>
+
+      <Component Id="FastMember.dll" Guid="{C5F1B203-7AA4-4ED6-9077-1E0E0FB8C9F1}">
+        <File Id="FastMember.dll" KeyPath="yes" Name="FastMember.dll"  Source="$(var.NugetCollectorProject.TargetDir)\FastMember.dll" />
+      </Component>
+
+      <!-- linq2db                   -->
+      <!-- Supported databases Access, MySQL, SqlServer, Oracle, Sybase, Postgres (tested: Access, MySQL, SqlServer) -->
+      <Component Id="linq2db.dll" Guid="{7F7E0442-6625-451E-841E-E4D304EFBCBA}">
+        <File Id="linq2db.dll" KeyPath="yes" Name="linq2db.dll" Source="$(var.NugetCollectorProject.TargetDir)\linq2db.dll" />
+      </Component>
+      <!-- Separate install MySql.Data.dll-->
+      <Component Id="MySql.Data.dll" Guid="{1D9AF997-5EFF-4F2A-9410-72EAA69473CC}">
+        <File Id="MySql.Data.dll" KeyPath="yes" Name="MySql.Data.dll" Source="$(var.NugetCollectorProject.TargetDir)\MySql.Data.dll" />
+      </Component>
+      <Component Id="Microsoft.SqlServer.Types.dll" Guid="{EABD70B2-374E-4959-AB91-38863D06ABFA}">
+        <File Id="Microsoft.SqlServer.Types.dll" KeyPath="yes" Name="Microsoft.SqlServer.Types.dll" Source="$(var.NugetCollectorProject.TargetDir)\Microsoft.SqlServer.Types.dll" />
+      </Component>
+      <Component Id="Oracle.ManagedDataAccess.dll" Guid="{1BE3E59F-3CA1-4725-8FB6-086E0DAD8D03}">
+        <File Id="Oracle.ManagedDataAccess.dll" KeyPath="yes" Name="Oracle.ManagedDataAccess.dll" Source="$(var.NugetCollectorProject.TargetDir)\Oracle.ManagedDataAccess.dll" />
+      </Component>
+      <Component Id="Npgsql.dll" Guid="{B63E7AC0-5F42-49A3-8ABD-4B84B8C9160D}">
+        <File Id="Npgsql.dll" KeyPath="yes" Name="Npgsql.dll" Source="$(var.NugetCollectorProject.TargetDir)\Npgsql.dll" />
+      </Component>
+      <Component Id="AdoNetCore.AseClient.dll" Guid="{A3853976-5D6F-430E-AB0D-D87648B009D3}">
+        <File Id="AdoNetCore.AseClient.dll" KeyPath="yes" Name="AdoNetCore.AseClient.dll" Source="$(var.NugetCollectorProject.TargetDir)\AdoNetCore.AseClient.dll" />
+      </Component>
+      <Component Id="Sybase.AdoNet.AseClient.dll" Guid="{AF240101-8497-42E2-A2EE-7502385B7744}">
+        <File Id="Sybase.AdoNet.AseClient.dll" KeyPath="yes" Name="Sybase.AdoNet.AseClient.dll" Source="$(var.NugetCollectorProject.TargetDir)\Sybase.AdoNet.AseClient.dll" />
+      </Component>
+      
+      <Component Id="SQLite.Interop.dll" Guid="{3DFC900E-8BD6-4B50-ACFC-7DF08040ECC2}">
+        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="$(var.NugetCollectorProject.TargetDir)\x86\SQLite.Interop.dll" />
+      </Component>
+      <Component Id="System.Data.SQLite.dll" Guid="{B161BBE0-0A9C-4570-AE7A-91E10F380ACD}">
+        <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="$(var.NugetCollectorProject.TargetDir)\System.Data.SQLite.dll" />
+      </Component>
+
+
+      
        <!-- Delete all files, in theory WIX/Installer should do this by their one, but it doesn't work 
        Note: This may leads to problems if there are dependencies
        -->
       <Component Id="DeleteFiles" Guid="C4132857-ECC3-4071-B7E8-90788C9A5416">
         <RemoveFile Id="Purge" Name="*.*" On="uninstall" />
       </Component>
-      <!--
-      Export/Import via *.xml, *.csc, Excel,   
-      -->
-     <Component Id="KBCsv" Guid="30620E70-7C9D-45E4-BEC8-6A3B8D5107EA">
-        <File Id="KBCsv" KeyPath="yes" Name="KBCsv.dll"  Source="..\packages\KBCsv.5.0.0\lib\netstandard1.0\KBCsv.dll" />
-      </Component>
-      <Component Id="KBCsv.Extensions.Data" Guid="97618C61-D0E0-41B0-8A2D-F82ECC5AF35E">
-        <File Id="KBCsv.Extensions.Data" KeyPath="yes" Name="KBCsv.Extensions.Data.dll"  Source="..\packages\KBCsv.Extensions.Data.5.0.0\lib\net45\KBCsv.Extensions.Data.dll" />
-      </Component>
-      <Component Id="DocumentFormat.OpenXml" Guid="F6FBBA69-A929-413B-A13B-BBDD7851D1F7">
-        <File Id="DocumentFormat.OpenXml" KeyPath="yes" Name="DocumentFormat.OpenXml.dll"  Source="..\packages\DocumentFormat.OpenXml.2.8.1\lib\net46\DocumentFormat.OpenXml.dll" />
-      </Component>
-      <Component Id="ClosedXml" Guid="969900BC-0842-4E36-B550-35AA37682D19">
-        <File Id="ClosedXml" KeyPath="yes" Name="ClosedXml.dll"  Source="..\packages\ClosedXML.0.93.1\lib\net46\ClosedXML.dll" />
-      </Component>
-      
+     
         <!--
         ReqIF 
         -->
       <!-- HtmlAgilityPack -->
       <Component Id="HtmlAgilityPack.dll" Guid="{3783B4A7-6591-4783-AFD5-FB7F4E70A2D5}">
-        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="..\packages\HtmlAgilityPack.1.8.14\lib\Net45\HtmlAgilityPack.dll" />
+        <File Id="HtmlAgilityPack.dll" KeyPath="yes" Name="HtmlAgilityPack.dll" Source="$(var.NugetCollectorProject.TargetDir)\HtmlAgilityPack.dll" />
       </Component>
         
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">
-            <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="..\packages\MariGold.HtmlParser.1.1.0\lib\netstandard2.0\MariGold.HtmlParser.dll" />
+            <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="$(var.NugetCollectorProject.TargetDir)\MariGold.HtmlParser.dll" />
         </Component>
         <Component Id="MariGold.OpenXHTML.dll" Guid="9D3E3286-600E-4CA5-8270-9F20576BE18E">
-            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="..\packages\MariGold.OpenXHTML.2.5.1\lib\netstandard2.0\MariGold.OpenXHTML.dll" />
+            <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="$(var.NugetCollectorProject.TargetDir)\MariGold.OpenXHTML.dll" />
         </Component>
         <Component Id="ReqIFSharp.dll" Guid="B19B5F34-14FE-4F28-BAE9-A73025277C78">
-            <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="..\packages\ReqIFSharp.1.4.1\lib\net45\ReqIFSharp.dll" />
+            <File Id="ReqIFSharp.dll" KeyPath="yes" Name="ReqIFSharp.dll"  Source="$(var.NugetCollectorProject.TargetDir)\ReqIFSharp.dll" />
         </Component>
 
       <Component Id="OpenMcdf.dll" Guid="1ECCD40A-235E-4D5F-AFBA-E326AE8FB826">
-        <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="..\packages\OpenMcdf-2.2.1.1.5\lib\net461\OpenMcdf.dll" />
+        <File Id="OpenMcdf.dll" KeyPath="yes" Name="OpenMcdf.dll"  Source="$(var.NugetCollectorProject.TargetDir)\OpenMcdf.dll" />
       </Component>
 
      <!-- SautinSoft.RtfToHtml.dll, this is a developer license, you have to replace it with your license (full or test)-->
       <Component Id="SautinSoft.HtmlToRtf.dll" Guid="{DC687D4A-3A4E-428F-9981-996FBD2AD065}">
-        <File Id="SautinSoft.HtmlToRtf.dll" Name="SautinSoft.HtmlToRtf.dll" KeyPath="yes" Source="..\packages\sautinsoft.htmltortf.7.0.8.16\lib\net461\SautinSoft.HtmlToRtf.dll" />
+        <File Id="SautinSoft.HtmlToRtf.dll" Name="SautinSoft.HtmlToRtf.dll" KeyPath="yes" Source="$(var.NugetCollectorProject.TargetDir)\SautinSoft.HtmlToRtf.dll" />
       </Component>
       <Component Id="SautinSoft.RtfToHtml.dll" Guid="{D95E61CB-09FD-4417-92DD-C14331A336AB}">
-        <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="..\packages\sautinsoft.rtftohtml.6.1.12.20\lib\Net 4.6.1\SautinSoft.RtfToHtml.dll" />
+        <File Id="SautinSoft.RtfToHtml.dll" Name="SautinSoft.RtfToHtml.dll" KeyPath="yes" Source="$(var.NugetCollectorProject.TargetDir)\SautinSoft.RtfToHtml.dll" />
       </Component>
 
 
       <!-- MoreLinq-->
       <Component Id="MoreLinq.dll" Guid="{2B8C60EC-125A-4A5D-8684-CC79A1543FFB}">
-        <File Id="MoreLinq.dll" Name="MoreLinq.dll" KeyPath="yes" Source="..\packages\morelinq.3.1.0\lib\net451\MoreLinq.dll" />
+        <File Id="MoreLinq.dll" Name="MoreLinq.dll" KeyPath="yes" Source="$(var.NugetCollectorProject.TargetDir)\MoreLinq.dll" />
       </Component>
      
      
