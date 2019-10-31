@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.7 ReqIFSharp Library 2.0 upgrade
+
 3.6 Fix error Bulk change for not existing profile
 
 3.5 Nugut changed to Package Reference
