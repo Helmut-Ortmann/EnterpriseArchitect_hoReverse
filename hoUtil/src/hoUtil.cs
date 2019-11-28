@@ -134,7 +134,7 @@ namespace hoReverse.hoUtils
         {
             string cnString = rep.ConnectionString.ToUpper();
 
-            if (cnString.EndsWith(".EAP"))
+            if (cnString.EndsWith(".EAP") || cnString.Contains(".EAPX"))
             {
                 FileInfo f = new FileInfo(cnString);
                 if (f.Length > 20000) return "*";
@@ -142,7 +142,7 @@ namespace hoReverse.hoUtils
                 // ReSharper disable once PossibleNullReferenceException
                 string shortcut = tr.ReadLine().ToUpper();
                 tr.Close();
-                if (shortcut.Contains(".EAP")) return "*";
+                if (shortcut.Contains(".EAP") || shortcut.Contains(".EAPX")) return "*";
                 if (shortcut.Contains("DBTYPE=")) return "%";
                 return "";
 

@@ -56,7 +56,7 @@ namespace hoReverse.hoUtils.ODBC
                 // check if shortcut was chosen
                 // The first line contains the connection string
                 connectionString = connectionString.ToUpper();
-                if (connectionString.Contains(".EAP"))
+                if (connectionString.Contains(".EAP") || connectionString.Contains(".EAPX"))
                 {
                     start = connectionString.IndexOf("DATA SOURCE=") + 12;
                     connectionString = connectionString.Substring(start);

@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.8 Error connection string MySQL (remove LazyLoad=0/1;)
+
 3.7 ReqIFSharp Library 2.0 upgrade
 
 3.6 Fix error Bulk change for not existing profile
