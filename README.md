@@ -64,7 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
-3.8 Error connection string MySQL (remove LazyLoad=0/1;)
+3.8 ReqIF: Error connection string MySQL (remove LazyLoad=0/1;)
+    - ReqIF: interpret shortcute
 
 3.7 ReqIFSharp Library 2.0 upgrade
 
