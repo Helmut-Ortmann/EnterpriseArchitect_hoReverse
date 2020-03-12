@@ -179,6 +179,8 @@ namespace EaServices.Doors.ReqIfs
                 EA.Element el = null;
                 string lastTaggedValueName = "";
                 string taggedValueNameModifier = "";
+
+                // over all requirements
                 foreach (var r in reqs)
                 {
                     // new Requirements

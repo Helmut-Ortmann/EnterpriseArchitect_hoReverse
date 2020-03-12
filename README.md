@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.9 ReqIF: Allow xml entities like '&'"<>' in ReqIF attributes like names
+
 3.8 ReqIF: Error connection string MySQL (remove LazyLoad=0/1;)
     - ReqIF: interpret shortcute
 

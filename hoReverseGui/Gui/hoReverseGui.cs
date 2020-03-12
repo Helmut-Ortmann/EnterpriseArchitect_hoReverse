@@ -48,6 +48,8 @@ namespace hoReverse.Reverse
     public class HoReverseGui : UserControl, IhoReverseGui, IObjectSafety
     {
         readonly string Tab = @"\t";
+
+        private readonly string _version = "3.9"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -3033,7 +3035,7 @@ namespace hoReverse.Reverse
                 "SautinSoft.HtmlToRtf.dll"
 
             };
-            HoUtil.AboutMessage("C - Reverse Engineering Workbench",
+            HoUtil.AboutMessage($"V{_version}\r\n\r\nC - Reverse Engineering Workbench",
                 "About hoReverse Workbench",
                 dllNames,
                 _repository,
@@ -4615,7 +4617,16 @@ Clipboard contains the imported Modules/Specifications as csv", $@"{reqIfLogList
             var del = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
             var textCb = (from item in reqIfLogList
                 select $@"{item.File}{del}{item.ModuleId}{del}{item.PkgGuid}{del}{item.PkgName}{del}{item.Comment}").ToArray();
-            Clipboard.SetText(String.Join(";", textCb));
+            try
+            {
+                Clipboard.SetText(String.Join(";", textCb));
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch (Exception e)
+            {
+               
+            }
+           
             return result;
         }
         /// <summary>

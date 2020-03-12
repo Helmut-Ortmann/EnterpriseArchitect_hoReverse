@@ -253,6 +253,7 @@ SpecificationID={reqIfSpecId}
             Rep.EnableUIUpdates = false;
             UpdatePackage();
 
+            // Read the requirements and put them to data Table
             AddReqIfRequirementsToDataTable(DtRequirements, reqIfModule.Children, 1);
 
             // Check imported ReqIF requirements

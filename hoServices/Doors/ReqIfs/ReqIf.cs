@@ -206,7 +206,7 @@ Validate: true
 
         }
         /// <summary>
-        /// Make XHTML from a html string. It inserts the xhtml namespace
+        /// Make XHTML from a html string. It inserts the xhtml namespace and escape xml entities. It also handles EA lists for notes
         /// </summary>
         /// <param name="htmlValue"></param>
         /// <returns></returns>
@@ -241,16 +241,64 @@ Validate: true
             text = text.Replace("&Ouml;", "&#214;");
             text = text.Replace("&uuml;", "&#252;");
             text = text.Replace("&auml;", "&#228;");
+
+           
+
+
             return text.Replace("&ouml;", "&#246;");
         }
         /// <summary>
-        /// Make XHTML from a simple string. It inserts the xhtml namespace and handles cr/lf
+        /// Replace special xml characters against XML entities
+        /// Use: System.Net.WebUtility.HtmlEncode(stringValue);
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        protected static string EscapeXhtml(string text)
+        {
+            text = text.Replace(@"&", "&amp;");
+            text = text.Replace(">", "&gt;");
+            text = text.Replace("<", "&lt;");
+            text = text.Replace(@"""", "&quot;");
+            text = text.Replace(@"'", "&apos;");
+
+            return text;
+
+        }
+        /// <summary>
+        /// Replace special xml characters against XML entities
+        /// Use: System.Net.WebUtility.HtmlDecode(stringValue);
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        protected static string UnEscapeXhtml(string text)
+        {
+
+            text = text.Replace("&gt;", ">" );
+            text = text.Replace("&lt;","<" );
+            text = text.Replace( "&quot;", @"""");
+            text = text.Replace("&apos;",@"'");
+
+            text = text.Replace("&amp;", @"&");
+
+            return text;
+
+        }
+
+        /// <summary>
+        /// Make XHTML from a simple string. It inserts the xhtml namespace, handles cr/lf, escapes xml entities
         /// </summary>
         /// <param name="stringValue"></param>
         /// <returns></returns>
         protected static string MakeXhtmlFromString(string stringValue)
         {
             if (String.IsNullOrWhiteSpace(stringValue)) stringValue = "";
+            stringValue = System.Net.WebUtility.HtmlEncode(stringValue);
+            //stringValue = stringValue.Replace(">", "&gt;");
+            //stringValue = stringValue.Replace("<", "&lt;");
+            //stringValue = stringValue.Replace(@"""", "&quot;");
+            //stringValue = stringValue.Replace(@"'", "&apos;");
+            //stringValue = stringValue.Replace(@"&", "&amp;");
+
 
             stringValue = stringValue.Replace("\r\n", "<br/>");
             stringValue = stringValue.Replace("&nbsp;", "");
@@ -260,6 +308,9 @@ Validate: true
             stringValue = stringValue.Replace("ü", "&#252;");
             stringValue = stringValue.Replace("ä", "&#228;");
             stringValue = stringValue.Replace("ö", "&#246;");
+
+
+
             stringValue = stringValue.Replace("&Uuml;", "&#220;");
             stringValue = stringValue.Replace("&Auml;", "&#197;");
             stringValue = stringValue.Replace("&Ouml;", "&#214;");

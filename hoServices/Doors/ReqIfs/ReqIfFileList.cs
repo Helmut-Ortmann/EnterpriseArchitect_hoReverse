@@ -97,7 +97,10 @@ namespace EaServices.Doors.ReqIfs
             if (index < 0 || index >= ReqIfFileItemList.Count())
             {
                 MessageBox.Show($@"GetItemForIndex: 
-Index: {index}", @"Can't estimate the package.");
+Index: {index}
+ReqIfModules: {ReqIfFileItemList.Count()}
+There aren't enough ReqIF Modules to match the amount of configured packages:
+", @"Can't estimate the package.");
                 return null;
             }           
 

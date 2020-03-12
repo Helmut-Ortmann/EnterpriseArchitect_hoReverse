@@ -26,7 +26,7 @@ namespace hoReverse
         //    STANDARD,
         //    ADMIN
         //}
-        public static string Release = "1.0.0"; // overwritten by EA_OnPostInitialized
+        public static string Release = "3.9.0"; // not overwritten by EA_OnPostInitialized
         // EA Addin specification in registry:
         // Key:   hoReverse
         // Value: hoReverse.ReverseRoot
@@ -355,7 +355,7 @@ namespace hoReverse
         public override void EA_OnPostInitialized(EA.Repository rep)
         {
 
-             Release =  FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+             // Release =  FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
              _repository = rep;
              _repositoryStatic = rep;
              ShowWindow();
