@@ -64,6 +64,18 @@ Let's discuss it, but it works.
 
 ## News
 
+3.10 Searches and Criticality (project specific)
+- Searches with right Click in text field
+  - Simple
+  - Quick Search
+  - Diagram Search
+  - Recently Diagram Modified
+- Criticality (project specific), for ZF Action and ZF Activity
+  - QM
+  - ASIL-A
+  - ASIL B
+  - ASIL C 
+
 3.9 ReqIF: Allow xml entities like '&'"<>' in ReqIF attributes like names
 
 3.8 ReqIF: Error connection string MySQL (remove LazyLoad=0/1;)

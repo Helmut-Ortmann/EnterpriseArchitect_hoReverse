@@ -1950,7 +1950,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                     if (basicType == "Activity" & extension.ToLower() == "comp=yes")
                     {
                         Diagram actDia = ActivityPar.CreateActivityCompositeDiagram(rep, elTarget);
-                        HoUtil.SetActivityCompositeDiagram(rep, elTarget, actDia.DiagramID.ToString());
+                        HoUtil.SetActivityAsWithCompositeDiagram(rep, elTarget, actDia.DiagramID.ToString());
                         //elTarget.
                     }
 
@@ -2063,8 +2063,10 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                     int initBottom = initTop - 20;
                     string initPosition = "l=" + initLeft + ";r=" + initRight + ";t=" + initTop + ";b=" + initBottom + ";";
                     // set target
+                    elTarget.Name = name;
                     diaObjTarget = ActivityPar.CreateInitFinalNode(rep, dia,
                         elTarget, 100, initPosition);
+                    
                 }
 
                 var con = DrawConnectorBetweenElements(elSource, elTarget,"ControlFlow","");

@@ -146,11 +146,12 @@ First Stereotype to set:
                 }
 
                 // Properties
-                if (bulkElement.PropertiesApply != null)
+                if (bulkElement.PropertiesApply != null  )
                 {
                     foreach (string s in bulkElement.PropertiesApply)
                     {
                         var l = s.Split('=');
+                        if (l.Length != 2) continue;  // Check if property is a value pair like "Name=Value"
                         string propertyName = l[0];
                         string propertyValue = l[1];
                         switch (propertyName)

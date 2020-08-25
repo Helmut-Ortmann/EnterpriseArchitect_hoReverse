@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using EA;
 using hoUtils.BulkChange;
@@ -81,7 +82,7 @@ namespace hoReverse.Services
             BulkElementChangeWrapper(rep, 1);
         }
         /// <summary>
-        /// Bulk change Elements 4 according to Settings.Json, third entry 
+        /// Bulk change Elements 3 according to Settings.Json, third entry 
         /// </summary>
         [ServiceOperation("{5AE828EC-2DFD-4842-8EA9-7E60A64A2F45}", "Bulk change Elements to 3",
             "Select Diagram Elements, Browser Package, Browser Elements (see Settings.Json: 'BulkItems: 3. entry)", isTextRequired: false)]
@@ -99,7 +100,7 @@ namespace hoReverse.Services
             BulkElementChangeWrapper(rep, 3);
         }
         /// <summary>
-        /// Bulk change Elements 1 according to Settings.Json, first entry 
+        /// Bulk change Elements 5 according to Settings.Json, first entry 
         /// </summary>
         [ServiceOperation("{4D0947E2-0C4D-41A8-8D85-B1D935EF532B}", "Bulk change Elements to 5",
             "Select Diagram Elements, Browser Package, Browser Elements (see Settings.Json: 'BulkItems: 5. entry)", isTextRequired: false)]
@@ -107,6 +108,30 @@ namespace hoReverse.Services
         {
             BulkElementChangeWrapper(rep, 4);
         }
+
+        /// <summary>
+        /// Bulk change Elements 6 according to Settings.Json, first entry 
+        /// </summary>
+        [ServiceOperation("{8EAE538B-6521-4D10-AFCF-36C301EECA1D}", "Bulk change Elements to 6",
+            "Select Diagram Elements, Browser Package, Browser Elements (see Settings.Json: 'BulkItems: 6. entry)", isTextRequired: false)]
+        public static void BulkElementChange6(EA.Repository rep)
+        {
+            BulkElementChangeWrapper(rep, 5);
+        }
+
+
+
+        public static void BulkElementChangeWrapper(Repository rep, IList<string> typesCheck, IList<string> stereotypesCheck, IList<string> stereotypesApply, IList<TvItem> taggedValuesApply, IList<string> propertiesApply)
+        {
+            
+
+            BulkElementItem bulkElement = new BulkElementItem { Name = "", Description = "", TypesCheck= typesCheck , StereotypesCheck = stereotypesCheck, StereotypesApply= stereotypesApply, TaggedValuesApply=taggedValuesApply, PropertiesApply= propertiesApply };
+            BulkItemChange.BulkChange(rep, bulkElement);
+        }
+
+
+
+
         /// <summary>
         /// Wrapper to change Diagram style
         /// </summary>

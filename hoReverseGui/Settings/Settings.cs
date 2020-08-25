@@ -253,6 +253,66 @@ namespace hoReverse.Settings
 
             }
         }
+        public string DiagramSearchName
+        {
+            get
+            {
+                return "Diagram Name";
+                if (this.CurrentConfig.AppSettings.Settings["DiagramNameSearchName"].Value == null)
+                {
+                    return "Simple Search";
+                }
+                else
+                {
+                    return (this.CurrentConfig.AppSettings.Settings["DiagramNameSearchName"].Value);
+                }
+            }
+            set
+            {
+                this.CurrentConfig.AppSettings.Settings["DiagramNameSearchName"].Value = value;
+
+            }
+        }
+        public string SimpleSearchName
+        {
+            get
+            {
+                return "Simple";
+                if (this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value == null)
+                {
+                    return "Simple";
+                }
+                else
+                {
+                    return (this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value);
+                }
+            }
+            set
+            {
+                this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value = value;
+
+            }
+        }
+        public string RecentModifiedDiagramsSearch
+        {
+            get
+            {
+                return "Recently Modified Diagrams";
+                if (this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value == null)
+                {
+                    return "Simple Search";
+                }
+                else
+                {
+                    return (this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value);
+                }
+            }
+            set
+            {
+                this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value = value;
+
+            }
+        }
 
         public string QuickSearchName
         {

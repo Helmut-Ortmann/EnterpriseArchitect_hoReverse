@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.9"; 
+        private readonly string _version = "3.10"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -271,6 +271,14 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem _reqIfMenuItem;
         private ToolStripMenuItem InfoReqIfInquiryToolStripMenuItem;
         private ToolStripMenuItem InfoReqIfInquiryValidationToolStripMenuItem;
+        private ToolStripMenuItem _diagramSearchToolStripMenuItem;
+        private ToolStripMenuItem _simpleSearchToolStripMenuItem;
+        private ToolStripMenuItem _recentlyModifiedDiagramsToolStripMenuItem;
+        private ToolStripMenuItem _actionQMToolStripMenuItem;
+        private ToolStripMenuItem _actionASILAToolStripMenuItem;
+        private ToolStripMenuItem _actionASILBToolStripMenuItem;
+        private ToolStripMenuItem _actionASILCToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator20;
         private ToolTip _toolTip1;
 
 
@@ -659,11 +667,19 @@ namespace hoReverse.Reverse
             this._btnFinal = new System.Windows.Forms.Button();
             this._btnBezier = new System.Windows.Forms.Button();
             this._contextMenuStripTextField = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this._quickSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._diagramSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._simpleSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._recentlyModifiedDiagramsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._actionQMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._actionASILAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._actionASILBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._actionASILCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.endIfMacroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.externToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this._deleteToolStripMenuItemTextField = new System.Windows.Forms.ToolStripMenuItem();
-            this._quickSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._insertBeneathNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._addActivityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._addCompositeActivityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -751,6 +767,7 @@ namespace hoReverse.Reverse
             this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._reqIfMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.InfoReqIfInquiryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InfoReqIfInquiryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -807,7 +824,6 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.InfoReqIfInquiryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1222,11 +1238,19 @@ namespace hoReverse.Reverse
             // 
             this._contextMenuStripTextField.ImageScalingSize = new System.Drawing.Size(20, 20);
             this._contextMenuStripTextField.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._quickSearchToolStripMenuItem,
+            this._diagramSearchToolStripMenuItem,
+            this._simpleSearchToolStripMenuItem,
+            this._recentlyModifiedDiagramsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this._actionQMToolStripMenuItem,
+            this._actionASILAToolStripMenuItem,
+            this._actionASILBToolStripMenuItem,
+            this._actionASILCToolStripMenuItem,
+            this.toolStripSeparator20,
             this.endIfMacroToolStripMenuItem,
             this.externToolStripMenuItem,
-            this.toolStripSeparator2,
             this._deleteToolStripMenuItemTextField,
-            this._quickSearchToolStripMenuItem,
             this._insertBeneathNodeToolStripMenuItem,
             this._addActivityToolStripMenuItem,
             this._addCompositeActivityToolStripMenuItem,
@@ -1235,13 +1259,80 @@ namespace hoReverse.Reverse
             this._showAllPortsToolStripMenuItem,
             this._insertTextIntoNodeToolStripMenuItem});
             this._contextMenuStripTextField.Name = "_contextMenuStripTextField";
-            this._contextMenuStripTextField.Size = new System.Drawing.Size(230, 252);
+            this._contextMenuStripTextField.Size = new System.Drawing.Size(231, 434);
             this._toolTip.SetToolTip(this._contextMenuStripTextField, "Show all ports of selected classifier");
+            // 
+            // _quickSearchToolStripMenuItem
+            // 
+            this._quickSearchToolStripMenuItem.Name = "_quickSearchToolStripMenuItem";
+            this._quickSearchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._quickSearchToolStripMenuItem.Text = "&Quick Search";
+            this._quickSearchToolStripMenuItem.ToolTipText = "Call the quick search.";
+            this._quickSearchToolStripMenuItem.Click += new System.EventHandler(this.QuickSearchToolStripMenuItem_Click);
+            // 
+            // _diagramSearchToolStripMenuItem
+            // 
+            this._diagramSearchToolStripMenuItem.Name = "_diagramSearchToolStripMenuItem";
+            this._diagramSearchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._diagramSearchToolStripMenuItem.Text = "Diagram Search";
+            this._diagramSearchToolStripMenuItem.Click += new System.EventHandler(this.DiagramSearchToolStripMenuItem_Click);
+            // 
+            // _simpleSearchToolStripMenuItem
+            // 
+            this._simpleSearchToolStripMenuItem.Name = "_simpleSearchToolStripMenuItem";
+            this._simpleSearchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._simpleSearchToolStripMenuItem.Text = "Simple Search";
+            this._simpleSearchToolStripMenuItem.Click += new System.EventHandler(this.SimpleSearchToolStripMenuItem_Click);
+            // 
+            // _recentlyModifiedDiagramsToolStripMenuItem
+            // 
+            this._recentlyModifiedDiagramsToolStripMenuItem.Name = "_recentlyModifiedDiagramsToolStripMenuItem";
+            this._recentlyModifiedDiagramsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._recentlyModifiedDiagramsToolStripMenuItem.Text = "RecentlyModifiedDiagrams";
+            this._recentlyModifiedDiagramsToolStripMenuItem.Click += new System.EventHandler(this.RecentlyModifedDiagramsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(227, 6);
+            // 
+            // _actionQMToolStripMenuItem
+            // 
+            this._actionQMToolStripMenuItem.Name = "_actionQMToolStripMenuItem";
+            this._actionQMToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._actionQMToolStripMenuItem.Text = "QM";
+            this._actionQMToolStripMenuItem.Click += new System.EventHandler(this.QmMenuItem_Click);
+            // 
+            // _actionASILAToolStripMenuItem
+            // 
+            this._actionASILAToolStripMenuItem.Name = "_actionASILAToolStripMenuItem";
+            this._actionASILAToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._actionASILAToolStripMenuItem.Text = "ASIL-A";
+            this._actionASILAToolStripMenuItem.Click += new System.EventHandler(this.AsilAMenuItem_Click);
+            // 
+            // _actionASILBToolStripMenuItem
+            // 
+            this._actionASILBToolStripMenuItem.Name = "_actionASILBToolStripMenuItem";
+            this._actionASILBToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._actionASILBToolStripMenuItem.Text = "ASIL-B";
+            this._actionASILBToolStripMenuItem.Click += new System.EventHandler(this.AsilBMenuItem_Click);
+            // 
+            // _actionASILCToolStripMenuItem
+            // 
+            this._actionASILCToolStripMenuItem.Name = "_actionASILCToolStripMenuItem";
+            this._actionASILCToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this._actionASILCToolStripMenuItem.Text = "ASIL-C";
+            this._actionASILCToolStripMenuItem.Click += new System.EventHandler(this.AsilCMenuItem_Click);
+            // 
+            // toolStripSeparator20
+            // 
+            this.toolStripSeparator20.Name = "toolStripSeparator20";
+            this.toolStripSeparator20.Size = new System.Drawing.Size(227, 6);
             // 
             // endIfMacroToolStripMenuItem
             // 
             this.endIfMacroToolStripMenuItem.Name = "endIfMacroToolStripMenuItem";
-            this.endIfMacroToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.endIfMacroToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.endIfMacroToolStripMenuItem.Text = "#endif";
             this.endIfMacroToolStripMenuItem.ToolTipText = "Write #endif into selected element";
             this.endIfMacroToolStripMenuItem.Click += new System.EventHandler(this.EndifMacroToolStripMenuItem_Click);
@@ -1249,36 +1340,23 @@ namespace hoReverse.Reverse
             // externToolStripMenuItem
             // 
             this.externToolStripMenuItem.Name = "externToolStripMenuItem";
-            this.externToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.externToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.externToolStripMenuItem.Text = "extern Function/Variable";
             this.externToolStripMenuItem.ToolTipText = "Set the stereotype <<extern>> for function/variable";
             this.externToolStripMenuItem.Click += new System.EventHandler(this.ExternToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(226, 6);
-            // 
             // _deleteToolStripMenuItemTextField
             // 
             this._deleteToolStripMenuItemTextField.Name = "_deleteToolStripMenuItemTextField";
-            this._deleteToolStripMenuItemTextField.Size = new System.Drawing.Size(229, 22);
+            this._deleteToolStripMenuItemTextField.Size = new System.Drawing.Size(230, 22);
             this._deleteToolStripMenuItemTextField.Text = "&Delete";
             this._deleteToolStripMenuItemTextField.ToolTipText = "Delete the text box.";
             this._deleteToolStripMenuItemTextField.Click += new System.EventHandler(this.DeleteToolStripMenuItemTextField_Click);
             // 
-            // _quickSearchToolStripMenuItem
-            // 
-            this._quickSearchToolStripMenuItem.Name = "_quickSearchToolStripMenuItem";
-            this._quickSearchToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this._quickSearchToolStripMenuItem.Text = "&Quick Search";
-            this._quickSearchToolStripMenuItem.ToolTipText = "Call the quick search.";
-            this._quickSearchToolStripMenuItem.Click += new System.EventHandler(this.QuickSearchToolStripMenuItem_Click);
-            // 
             // _insertBeneathNodeToolStripMenuItem
             // 
             this._insertBeneathNodeToolStripMenuItem.Name = "_insertBeneathNodeToolStripMenuItem";
-            this._insertBeneathNodeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._insertBeneathNodeToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._insertBeneathNodeToolStripMenuItem.Text = "&Insert Code";
             this._insertBeneathNodeToolStripMenuItem.ToolTipText = "Insert Code beneatch selected node in Activity Diagram";
             this._insertBeneathNodeToolStripMenuItem.Click += new System.EventHandler(this.InsertBeneathNodeToolStripMenuItem_Click);
@@ -1286,7 +1364,7 @@ namespace hoReverse.Reverse
             // _addActivityToolStripMenuItem
             // 
             this._addActivityToolStripMenuItem.Name = "_addActivityToolStripMenuItem";
-            this._addActivityToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._addActivityToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._addActivityToolStripMenuItem.Text = "&Activity";
             this._addActivityToolStripMenuItem.ToolTipText = "Add Activity beneath selected Node";
             this._addActivityToolStripMenuItem.Click += new System.EventHandler(this.AddActivityToolStripMenuItem_Click);
@@ -1294,7 +1372,7 @@ namespace hoReverse.Reverse
             // _addCompositeActivityToolStripMenuItem
             // 
             this._addCompositeActivityToolStripMenuItem.Name = "_addCompositeActivityToolStripMenuItem";
-            this._addCompositeActivityToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._addCompositeActivityToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._addCompositeActivityToolStripMenuItem.Text = "&Composite Activity";
             this._addCompositeActivityToolStripMenuItem.ToolTipText = "Add Composite Activity beneatch selected Node";
             this._addCompositeActivityToolStripMenuItem.Click += new System.EventHandler(this.AddCompositeActivityToolStripMenuItem_Click);
@@ -1302,7 +1380,7 @@ namespace hoReverse.Reverse
             // _addFinalToolStripMenuItem
             // 
             this._addFinalToolStripMenuItem.Name = "_addFinalToolStripMenuItem";
-            this._addFinalToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._addFinalToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._addFinalToolStripMenuItem.Text = "&Final";
             this._addFinalToolStripMenuItem.ToolTipText = "Add Final beneath selected Node";
             this._addFinalToolStripMenuItem.Click += new System.EventHandler(this.AddFinalToolStripMenuItem_Click);
@@ -1310,7 +1388,7 @@ namespace hoReverse.Reverse
             // _addMergeToolStripMenuItem
             // 
             this._addMergeToolStripMenuItem.Name = "_addMergeToolStripMenuItem";
-            this._addMergeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._addMergeToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._addMergeToolStripMenuItem.Text = "&Merge";
             this._addMergeToolStripMenuItem.ToolTipText = "Add merge beneath selected node";
             this._addMergeToolStripMenuItem.Click += new System.EventHandler(this.AddMergeToolStripMenuItem_Click);
@@ -1318,7 +1396,7 @@ namespace hoReverse.Reverse
             // _showAllPortsToolStripMenuItem
             // 
             this._showAllPortsToolStripMenuItem.Name = "_showAllPortsToolStripMenuItem";
-            this._showAllPortsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._showAllPortsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._showAllPortsToolStripMenuItem.Text = "&Show all ports";
             this._showAllPortsToolStripMenuItem.ToolTipText = "Show all ports of selected classifier";
             this._showAllPortsToolStripMenuItem.Click += new System.EventHandler(this.ShowAllPortsToolStripMenuItem_Click);
@@ -1326,7 +1404,7 @@ namespace hoReverse.Reverse
             // _insertTextIntoNodeToolStripMenuItem
             // 
             this._insertTextIntoNodeToolStripMenuItem.Name = "_insertTextIntoNodeToolStripMenuItem";
-            this._insertTextIntoNodeToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this._insertTextIntoNodeToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this._insertTextIntoNodeToolStripMenuItem.Text = "&Insert text into Element Notes";
             this._insertTextIntoNodeToolStripMenuItem.ToolTipText = "Insert text into seleted Element Notes";
             this._insertTextIntoNodeToolStripMenuItem.Click += new System.EventHandler(this.InsertTextIntoNodeToolStripMenuItem_Click);
@@ -2065,6 +2143,15 @@ namespace hoReverse.Reverse
     "validation of reqif.";
             this.InfoReqIfInquiryToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryToolStripMenuItem_Click);
             // 
+            // InfoReqIfInquiryValidationToolStripMenuItem
+            // 
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Name = "InfoReqIfInquiryValidationToolStripMenuItem";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Text = "Info *.reqif/*.reqifz with validation";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nWit" +
+    "h validation of reqif.\r\n";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryValidationToolStripMenuItem_Click);
+            // 
             // _versionControlToolStripMenuItem
             // 
             this._versionControlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2088,7 +2175,7 @@ namespace hoReverse.Reverse
             // _svnLogToolStripMenuItem
             // 
             this._svnLogToolStripMenuItem.Name = "_svnLogToolStripMenuItem";
-            this._svnLogToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._svnLogToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._svnLogToolStripMenuItem.Text = "&Show Tortoise Log";
             this._svnLogToolStripMenuItem.ToolTipText = "Opend the Tortoise Log window";
             this._svnLogToolStripMenuItem.Click += new System.EventHandler(this.SvnLogToolStripMenuItem_Click);
@@ -2096,7 +2183,7 @@ namespace hoReverse.Reverse
             // _svnTortoiseRepobrowserToolStripMenuItem
             // 
             this._svnTortoiseRepobrowserToolStripMenuItem.Name = "_svnTortoiseRepobrowserToolStripMenuItem";
-            this._svnTortoiseRepobrowserToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._svnTortoiseRepobrowserToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._svnTortoiseRepobrowserToolStripMenuItem.Text = "&Show Tortoise Repo Browser";
             this._svnTortoiseRepobrowserToolStripMenuItem.ToolTipText = "Opens the Tortoise Repo Browser for the selected package";
             this._svnTortoiseRepobrowserToolStripMenuItem.Click += new System.EventHandler(this.SvnTortoiseRepobrowserToolStripMenuItem_Click);
@@ -2104,7 +2191,7 @@ namespace hoReverse.Reverse
             // _showDirectoryToolStripMenuItem
             // 
             this._showDirectoryToolStripMenuItem.Name = "_showDirectoryToolStripMenuItem";
-            this._showDirectoryToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._showDirectoryToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._showDirectoryToolStripMenuItem.Text = "&Show Directory (VC or Code)";
             this._showDirectoryToolStripMenuItem.ToolTipText = "Show Version Control directory of *.xml file or oh code";
             this._showDirectoryToolStripMenuItem.Click += new System.EventHandler(this.ShowDirectoryToolStripMenuItem_Click);
@@ -2112,12 +2199,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator1
             // 
             this._toolStripSeparator1.Name = "_toolStripSeparator1";
-            this._toolStripSeparator1.Size = new System.Drawing.Size(288, 6);
+            this._toolStripSeparator1.Size = new System.Drawing.Size(287, 6);
             // 
             // _getVcLatestrecursiveToolStripMenuItem
             // 
             this._getVcLatestrecursiveToolStripMenuItem.Name = "_getVcLatestrecursiveToolStripMenuItem";
-            this._getVcLatestrecursiveToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._getVcLatestrecursiveToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._getVcLatestrecursiveToolStripMenuItem.Text = "&GetVCLatest (recursive)";
             this._getVcLatestrecursiveToolStripMenuItem.ToolTipText = "GetAllLatest for package (recursive)";
             this._getVcLatestrecursiveToolStripMenuItem.Click += new System.EventHandler(this.GetVcLastestRecursiveToolStripMenuItem_Click);
@@ -2125,7 +2212,7 @@ namespace hoReverse.Reverse
             // _setSvnKeywordsToolStripMenuItem
             // 
             this._setSvnKeywordsToolStripMenuItem.Name = "_setSvnKeywordsToolStripMenuItem";
-            this._setSvnKeywordsToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._setSvnKeywordsToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._setSvnKeywordsToolStripMenuItem.Text = "&Set svn keywords";
             this._setSvnKeywordsToolStripMenuItem.ToolTipText = "Set the svn Module Package keywords for a VC package";
             this._setSvnKeywordsToolStripMenuItem.Click += new System.EventHandler(this.SetSvnKeywordsToolStripMenuItem_Click);
@@ -2133,7 +2220,7 @@ namespace hoReverse.Reverse
             // _setSvnTaggedValuesToolStripMenuItem1
             // 
             this._setSvnTaggedValuesToolStripMenuItem1.Name = "_setSvnTaggedValuesToolStripMenuItem1";
-            this._setSvnTaggedValuesToolStripMenuItem1.Size = new System.Drawing.Size(291, 22);
+            this._setSvnTaggedValuesToolStripMenuItem1.Size = new System.Drawing.Size(290, 22);
             this._setSvnTaggedValuesToolStripMenuItem1.Text = "&Set svn Module Tagged Values";
             this._setSvnTaggedValuesToolStripMenuItem1.ToolTipText = "Set module package tagged values of a module package.\r\n\r\nModule Package\r\n   Archi" +
     "ctecture\r\n      Structure\r\n         Module\r\n\r\nTags:\r\nsvnDate\r\nsvnRevision";
@@ -2142,7 +2229,7 @@ namespace hoReverse.Reverse
             // _setSvnTaggedValuesToolStripMenuItem
             // 
             this._setSvnTaggedValuesToolStripMenuItem.Name = "_setSvnTaggedValuesToolStripMenuItem";
-            this._setSvnTaggedValuesToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this._setSvnTaggedValuesToolStripMenuItem.Size = new System.Drawing.Size(290, 22);
             this._setSvnTaggedValuesToolStripMenuItem.Text = "&Set svn Module Tagged Values (recursive)";
             this._setSvnTaggedValuesToolStripMenuItem.ToolTipText = "Sets svn module package Tagged Values for a Version controlled Package (recursive" +
     ") which is a module package. \r\n\r\nA module package contains subpackages Architect" +
@@ -2152,12 +2239,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator2
             // 
             this._toolStripSeparator2.Name = "_toolStripSeparator2";
-            this._toolStripSeparator2.Size = new System.Drawing.Size(288, 6);
+            this._toolStripSeparator2.Size = new System.Drawing.Size(287, 6);
             // 
             // _changeXmlPathToolStripMenuItem1
             // 
             this._changeXmlPathToolStripMenuItem1.Name = "_changeXmlPathToolStripMenuItem1";
-            this._changeXmlPathToolStripMenuItem1.Size = new System.Drawing.Size(291, 22);
+            this._changeXmlPathToolStripMenuItem1.Size = new System.Drawing.Size(290, 22);
             this._changeXmlPathToolStripMenuItem1.Text = "&ChangeXmlPath";
             this._changeXmlPathToolStripMenuItem1.ToolTipText = resources.GetString("_changeXmlPathToolStripMenuItem1.ToolTipText");
             this._changeXmlPathToolStripMenuItem1.Click += new System.EventHandler(this.ChangeXmlPathToolStripMenuItem_Click);
@@ -2165,7 +2252,7 @@ namespace hoReverse.Reverse
             // _toolStripSeparator5
             // 
             this._toolStripSeparator5.Name = "_toolStripSeparator5";
-            this._toolStripSeparator5.Size = new System.Drawing.Size(288, 6);
+            this._toolStripSeparator5.Size = new System.Drawing.Size(287, 6);
             // 
             // _maintenanceToolStripMenuItem
             // 
@@ -2561,15 +2648,6 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
-            // 
-            // InfoReqIfInquiryValidationToolStripMenuItem
-            // 
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Name = "InfoReqIfInquiryValidationToolStripMenuItem";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Text = "Info *.reqif/*.reqifz with validation";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nWit" +
-    "h validation of reqif.\r\n";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryValidationToolStripMenuItem_Click);
             // 
             // HoReverseGui
             // 
@@ -2973,11 +3051,38 @@ namespace hoReverse.Reverse
             HoService.CreateDecisionFromText(_repository, decisionName);
         }
 
-
+        // Double left/right Click
         private void TxtUserText_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            
             // force cr lf at line end
             _txtUserText.Text = Clipboard.GetText().Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    break;
+                // Double mouse click right runs the searchThiel
+                case MouseButtons.Right:
+                    var searchName = "Quick Search";
+                    var searchTerm = "";
+                    try
+                    {
+                        // run SQL search and display in Search Window
+                        _repository.RunModelSearch(searchName, _txtUserText.Text, "", "");
+                        return;
+                    }
+                    catch (Exception e1)
+                    {
+                        MessageBox.Show($@"Can't find search!{Environment.NewLine}{Environment.NewLine}- MDG hoTools.. enabled?{Environment.NewLine}- SQL path in Settings correct?{Environment.NewLine}- LINQPad support enabled (Settings General)? :{Environment.NewLine}'{searchName}' '{searchTerm}'{Environment.NewLine}'{Environment.NewLine}'{Environment.NewLine}- EA Search{Environment.NewLine}{Environment.NewLine}Note:{Environment.NewLine}- Define path in File, Settings{Environment.NewLine}- LINQPad needs a license and has to be installed!{Environment.NewLine}{Environment.NewLine}{e}",
+                            $@"Error start search.");
+                        return ;
+                    }
+                    break;
+
+
+
+            }
 
         }
 
@@ -3099,6 +3204,98 @@ namespace hoReverse.Reverse
         {
             HoService.RunQuickSearch(_repository, _addinSettings.QuickSearchName, _txtUserText.Text);
         }
+        private void DiagramSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HoService.RunQuickSearch(_repository, _addinSettings.DiagramSearchName, _txtUserText.Text.Replace($"{Environment.NewLine}", ""));
+        }
+        private void SimpleSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HoService.RunQuickSearch(_repository, _addinSettings.SimpleSearchName, _txtUserText.Text);
+        }
+        private void RecentlyModifedDiagramsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HoService.RunQuickSearch(_repository, _addinSettings.RecentModifiedDiagramsSearch, "");
+        }
+        /// <summary>
+        /// Set the Action/Activity to QM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void QmMenuItem_Click(object sender, EventArgs e)
+        {
+            SetCriticality("Action", "QM");
+            SetCriticality("Activity", "QM");
+        }
+        /// <summary>
+        /// Set the Action/Activity to QM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AsilAMenuItem_Click(object sender, EventArgs e)
+        {
+            SetCriticality("Action", "ASIL-A");
+            SetCriticality("Activity", "ASIL-A");
+        }
+        /// <summary>
+        /// Set the Action/Activity to QM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AsilBMenuItem_Click(object sender, EventArgs e)
+        {
+            SetCriticality("Action", "ASIL-B");
+            SetCriticality("Activity", "ASIL-B");
+        }
+        /// <summary>
+        /// Set the Action/Activity to QM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AsilCMenuItem_Click(object sender, EventArgs e)
+        {
+            SetCriticality("Action", "ASIL-C");
+            SetCriticality("Activity", "ASIL-C");
+        }
+
+        private void SetCriticality(string type, string criticality)
+        {
+            string stereotype = $"ZF_LE::LE {type}";
+            TvItem t1 = new TvItem {Name = $"ZF_LE::LE {type}::Criticality", Value = criticality};
+
+            HoService.BulkElementChangeWrapper(_repository,
+                new List<string>(new[] {$"{type}"}),
+                new List<string>(new[] {""}),
+                new List<string>(new[] {$"{stereotype}"}),
+                new List<TvItem>(new[] {t1}),
+                new List<string>(new[] {""}));
+        }
+
+        /// <summary>
+        /// Set the Action/Activity to QM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        //private void QmMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    IList<string> tagList = new List<string>(new[] { "Action" });
+        //    TvItem t1 = new TvItem { Name = "ZF_LE::LE Action::Criticality", Value = "ASIL-A" };
+
+        //    HoService.BulkElementChangeWrapper(_repository,
+        //        new List<string>(new[] { "Action" }),
+        //        new List<string>(new[] { "" }),
+        //        new List<string>(new[] { "ZF_LE::LE Action" }),
+        //        new List<TvItem>(new[] { t1 }),
+        //        new List<string>(new[] { "" }));
+
+        //    HoService.BulkElementChangeWrapper(_repository,
+        //        new List<string>(new[] { "Activity" }),
+        //        new List<string>(new[] { "" }),
+        //        new List<string>(new[] { "ZF_LE::LE Action" }),
+        //        new List<TvItem>(new[] { t1 }),
+        //        new List<string>(new[] { "" }));
+
+        //}
+       
 
         private void InsertTextIntoNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {

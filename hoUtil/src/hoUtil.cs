@@ -768,7 +768,7 @@ namespace hoReverse.hoUtils
         /// <param name="s"></param>
         /// <returns></returns>
         // ReSharper disable once UnusedMethodReturnValue.Global
-        public static Boolean SetActivityCompositeDiagram(Repository rep, EA.Element el, string s)
+        public static Boolean SetActivityAsWithCompositeDiagram(Repository rep, EA.Element el, string s)
         {
             string updateStr = @"update t_object set pdata1 = '" + s + "', ntype = 8 " +
                                " where object_ID = " + el.ElementID;
