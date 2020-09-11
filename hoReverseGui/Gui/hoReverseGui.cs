@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.10"; 
+        private readonly string _version = "3.10.1"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -422,10 +422,11 @@ namespace hoReverse.Reverse
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
                 progressBar1.Value = 0;
-                // check for ZF
+                //--------------------------------------------------------------------
+                // check for ZF, currently always false
                 _autoToolStripMenuItem.Visible = false;
                 progressBar1.Visible = false;
-                if (_repository.ConnectionString.Contains("WLE") )
+                if (_repository.ConnectionString.Contains("WLE") && false)
                 {
                     // Check if source folder exists
                     if (!_addinSettings.IsFolderPathCSourceCode()) return;
