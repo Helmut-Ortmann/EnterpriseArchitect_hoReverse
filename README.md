@@ -63,6 +63,7 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+3.11 *.msi installer to remove all remnants
 
 3.10 Searches and Criticality (project specific)
 - Searches with right Click in text field

@@ -23,12 +23,12 @@
   // Change AssemblyFileVersion accordingly
   -->
   <!-- The post processing of the WIX Setup projects changes the *.msi file name to:
-       'hoReverse 3.10.1.msi' (3.10.0=ProductVersion)
+       'hoReverse 3.11.1.msi' (3.10.0=ProductVersion)
        Change: Version in About and Version in GUI About!
        The Scripts you find in: Setup\Script\..
        see also: http://kentie.net/article/wixnameversion/index.htm
   -->
-  <?define ProductVersion="3.10.1" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
+  <?define ProductVersion="3.11.0" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
   <?define UpgradeCode="F098804C-0151-46DC-9924-76688804EC45" ?>
   <?define Manufacturer="hoModeler.de" ?>
   <?define ProductName="hoReverse Workbench" ?>
