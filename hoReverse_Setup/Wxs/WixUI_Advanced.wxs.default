@@ -109,6 +109,7 @@ Todo:
             <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="3">Installed AND PATCH</Publish>
 
             <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+            <Publish Dialog="FeaturesDlg" Control="Install" Event="DoAction" Value="FindRelatedProducts">1</Publish>
         </UI>
 
         <InstallUISequence>
