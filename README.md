@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 3.11 *.msi installer to remove all remnants
+     - Update properties as service
+     - copy properties as service
 
 3.10 Searches and Criticality (project specific)
 - Searches with right Click in text field

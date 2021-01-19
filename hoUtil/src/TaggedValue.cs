@@ -1,6 +1,8 @@
 ﻿// ReSharper disable once CheckNamespace
 
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -8,6 +10,7 @@ namespace hoReverse.hoUtils
 {
     public static class TaggedValue
     {
+        private const string MemoString = "<memo>";
         /// <summary>
         /// Get the value of an element tagged value. It handles Memo field with a lang of > 255
         /// </summary>
@@ -15,7 +18,7 @@ namespace hoReverse.hoUtils
         /// <returns></returns>
         public static string GetTaggedValue(EA.TaggedValue tg)
         {
-            return tg.Value == "<memo>"? tg.Notes : tg.Value;
+            return tg.Value == MemoString ? tg.Notes : tg.Value;
         }
 
         /// <summary>
@@ -84,11 +87,11 @@ namespace hoReverse.hoUtils
                 else
                 {
                    if (taggedValue.Name.ToLower() == name.ToLower())
-                        {
-                            return GetTaggedValue(taggedValue);
-                        }
-                    }
-             }
+                   {
+                       return GetTaggedValue(taggedValue);
+                   }
+                }
+            }
 
             return "";
 
@@ -105,8 +108,8 @@ namespace hoReverse.hoUtils
 
             EA.TaggedValue tg = Add(el, name);
             string value = tg.Value;
-            if (value.ToLower() == "<memo>") return tg;
-            tg.Value = "<memo>";
+            if (value.ToLower() == MemoString) return tg;
+            tg.Value = MemoString;
             tg.Notes = value;
             tg.Update();
             return tg;
@@ -124,7 +127,7 @@ namespace hoReverse.hoUtils
             EA.TaggedValue tg = Add(el, name);
             if (value.Length > 255)
             {
-                tg.Value = "<memo>";
+                tg.Value = MemoString;
                 tg.Notes = value;
             }
             else
@@ -182,7 +185,83 @@ namespace hoReverse.hoUtils
             return true;
 
         }
+        /// <summary>
+        /// Get Tagged Value with 'Name'. If tagged value doesn't exists a new one is created
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue AddTaggedValue(EA.Element el, string name)
+        {
+            EA.TaggedValue tagStart = null;
+            foreach (EA.TaggedValue taggedValue in el.TaggedValues)
+            {
+                if (taggedValue.Name == name)
+                {
+                    tagStart = taggedValue;
+                    break;
+                }
+            }
+            if (tagStart == null)
+            {
+                // create tagged value
+                tagStart = (EA.TaggedValue)el.TaggedValues.AddNew(name, "Tag");
+                el.TaggedValues.Refresh();
+            }
+            return tagStart;
+        }
 
+        /// <summary>
+        /// Set Tagged Value with 'Name' to a value. If tagged value doesn't exists a new one is created. 
+        /// </summary>
+        /// <param name="el"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EA.TaggedValue SetTaggedValue(EA.Element el, string name, string value)
+        {
+            EA.TaggedValue tg = AddTaggedValue(el, name);
+            tg.Value = value;
+            tg.Update();
+            return tg;
+        }
+
+        /// <summary>
+        /// Set Tagged Value with 'Name' to a value. It handles long memo fields.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static void SetTaggedValue(EA.TaggedValue tag, string value)
+        {
+            tag.Value = value.Length > 255 ? MemoString : value;
+            tag.Notes = value;
+            tag.Update();
+        }
+        /// <summary>
+        /// Set Tagged Value with 'Name' to a value. It handles long memo fields.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static void SetTaggedValue(EA.AttributeTag tag, string value)
+        {
+            tag.Value = value.Length > 255 ? MemoString : value;
+            tag.Notes = value;
+            tag.Update();
+        }
+        /// <summary>
+        /// Set Tagged Value with 'Name' to a value. It handles long memo fields.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static void SetTaggedValue(EA.MethodTag tag, string value)
+        {
+            tag.Value = value.Length > 255 ? MemoString : value;
+            tag.Notes = value;
+            tag.Update();
+        }
 
         /// <summary>
         /// Delete all tagged values for Element
@@ -261,6 +340,88 @@ namespace hoReverse.hoUtils
                 return false;
             }
 
+        }
+        /// <summary>
+        /// Element Tagged Values
+        /// - Copy Tagged Values from a template (constructor)
+        /// </summary>
+        public class ElTagValue
+        {
+            private readonly List<EA.TaggedValue> _lTv = new List<EA.TaggedValue>();
+            private readonly List<EA.TaggedValue> _lTvEx = new List<EA.TaggedValue>();
+            private readonly List<string> _lStereotype = new List<string>();
+            private EA.Element _el;
+            public ElTagValue(EA.Element el, string stereotypeEx = null)
+            {
+                _el = el;
+                if (stereotypeEx != null)
+                {
+                    foreach (var s in stereotypeEx.Split(','))
+                    {
+                        _lStereotype.Add(s);
+                    }
+                }
+                foreach (EA.TaggedValue tvEx in el.TaggedValuesEx)
+                {
+                    _lTvEx.Add(tvEx);
+                }
+                foreach (EA.TaggedValue tv in el.TaggedValues)
+                {
+                    _lTv.Add(tv);
+                }
+            }
+            /// <summary>
+            /// Copy TV to current element
+            /// </summary>
+            /// <param name="el"></param>
+            public void Copy(EA.Element el)
+            {
+                //var done = SyncTaggedValues(el);
+                foreach (EA.TaggedValue tv in _lTv)
+                {
+                    var tvNew = TaggedValue.Add(el, tv.Name);
+
+                    TaggedValue.SetTaggedValue(tvNew, tv.Value);
+                    tvNew.Update();
+
+                }
+
+                el.Update();
+                el.TaggedValues.Refresh();
+
+            }
+            /// <summary>
+            /// Synchronize all Tagged Values of an Element with its profile/stereotypes
+            /// </summary>
+            /// <param name="rep"></param>
+            /// <param name="el"></param>
+            /// <returns></returns>
+            public bool SyncTaggedValues(EA.Repository rep, EA.Element el)
+            {
+                foreach (EA.TaggedValue tv in _el.TaggedValues)
+                {
+                    // synchronize stereotypes/tagged vales
+                    var lFqName = Regex.Split(tv.FQName, "::");
+                    if (lFqName.Length == 3)
+                    {
+                        var sProfile = lFqName[0];
+                        var sStereotype = lFqName[1];
+                        //seems not to work
+                        //ret = ret || el.SynchTaggedValues(sProfile, sStereotype);
+                        string par = $"Profile={sProfile};Stereotype={sStereotype};";
+                        var ret1 = rep.CustomCommand("Repository", "SynchProfile", par);
+                        if (ret1 != "True")
+                        {
+                            MessageBox.Show($@"{par}", @"Error synchronize EA.Element");
+                            return false;
+                        }
+
+                    }
+
+                }
+                return true;
+
+            }
         }
     }
 }
