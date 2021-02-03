@@ -120,9 +120,6 @@
   <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>130, 17</value>
   </metadata>
-  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>130, 17</value>
-  </metadata>
   <data name="_btnInsert.ToolTip" xml:space="preserve">
     <value>If Behavior: Insert Behavior from text:
 1. Action, CallAction, Activity (loop)
@@ -144,6 +141,21 @@ Issues:
 
 If structural Element:
 Insert &amp; update  attributes from C-Code for selected element:</value>
+  </data>
+  <data name="_btnActivityCompositeFromText.ToolTip" xml:space="preserve">
+    <value>Create Activity with Composite Diagram and text beneath selected element
+
+or
+
+Select a package, diagram or element in Browser to create an Activity with beneath Diagram without putting it on Diagram</value>
+  </data>
+  <data name="_btnFinal.ToolTip" xml:space="preserve">
+    <value>Create Init or Final node in Activity Diagram:
+
+- If node selected: Create a Final beneath the selected object. After that, it shrinks the Activity to fit the enclosed Nodes.
+- If no node selected: Create Init node at the top of the diagram
+
+If Structural Element: Insert &amp; updates C- functions from code.</value>
   </data>
   <metadata name="_contextMenuStripTextField.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>351, 17</value>

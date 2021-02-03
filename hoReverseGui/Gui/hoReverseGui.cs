@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.10.1"; 
+        private readonly string _version = "3.12.0"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -1183,7 +1183,7 @@ namespace hoReverse.Reverse
             this._btnActivityCompositeFromText.Size = new System.Drawing.Size(47, 26);
             this._btnActivityCompositeFromText.TabIndex = 43;
             this._btnActivityCompositeFromText.Text = "ActC";
-            this._toolTip.SetToolTip(this._btnActivityCompositeFromText, "Create Activity with Composite Diagram and text beneath selected element");
+            this._toolTip.SetToolTip(this._btnActivityCompositeFromText, resources.GetString("_btnActivityCompositeFromText.ToolTip"));
             this._btnActivityCompositeFromText.UseVisualStyleBackColor = true;
             this._btnActivityCompositeFromText.Click += new System.EventHandler(this.BtnActivityCompositeFromText_Click);
             // 
@@ -1218,9 +1218,7 @@ namespace hoReverse.Reverse
             this._btnFinal.Size = new System.Drawing.Size(23, 26);
             this._btnFinal.TabIndex = 46;
             this._btnFinal.Text = "F";
-            this._toolTip.SetToolTip(this._btnFinal, "If Behavior: Create a Final beneath the selected object. After that, it shrinks t" +
-        "he Activity to fit the enclosed Nodes.\r\n\r\nIf Structural Element: Insert & update" +
-        "s C- functions from code.");
+            this._toolTip.SetToolTip(this._btnFinal, resources.GetString("_btnFinal.ToolTip"));
             this._btnFinal.UseVisualStyleBackColor = true;
             this._btnFinal.Click += new System.EventHandler(this.BtnFinal_Click);
             // 
@@ -1260,7 +1258,7 @@ namespace hoReverse.Reverse
             this._showAllPortsToolStripMenuItem,
             this._insertTextIntoNodeToolStripMenuItem});
             this._contextMenuStripTextField.Name = "_contextMenuStripTextField";
-            this._contextMenuStripTextField.Size = new System.Drawing.Size(231, 434);
+            this._contextMenuStripTextField.Size = new System.Drawing.Size(231, 412);
             this._toolTip.SetToolTip(this._contextMenuStripTextField, "Show all ports of selected classifier");
             // 
             // _quickSearchToolStripMenuItem
@@ -2841,9 +2839,16 @@ namespace hoReverse.Reverse
             HoService.CreateNoteFromText(_repository, _txtUserText.Text);
         }
 
-
+        /// <summary>
+        /// Create Activity with an Activity Diagram beneath the Activity. Make also this Activity diagram to a composite Diagram of the Activity.
+        /// - Node in Diagram selected: Create Activity and connect it with the previously selected node
+        /// - No Node in Diagram selected. Create Activity in the selected Tree Element (Package or Element)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnActivityCompositeFromText_Click(object sender, EventArgs e)
         {
+            
             HoService.CreateCompositeActivityFromText(_repository, Cutil.RemoveCasts(_txtUserText.Text.Trim()));
 
         }
@@ -2976,11 +2981,24 @@ namespace hoReverse.Reverse
         {
             ShowHistory();
         }
+        /// <summary>
+        /// Create :
+        /// Final object if a DiagramObject is selected
+        /// Init object if a Diagram is the ContextObject and no DiagramObject is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void BtnFinal_Click(object sender, EventArgs e)
         {
-            EA.Element el = HoUtil.GetElementFromContextObject(_repository);
-            if (el == null) return;
+
+           EA.Element el = HoUtil.GetElementFromContextObject(_repository);
+            // ActivityInitial at the top of the diagram
+            if (el == null)
+            {
+                HoService.InsertDiagramElement(_repository, "StateNode", "100");
+                return;
+            }
             if ("Interface Class Component".Contains(el.Type))
                 HoService.CreateOperationsFromTextService(_repository, _txtUserText.Text);
             else HoService.InsertDiagramElementAndConnect(_repository, "StateNode", "101");
@@ -3234,8 +3252,8 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void AsilAMenuItem_Click(object sender, EventArgs e)
         {
-            SetCriticality("Action", "ASIL-A");
-            SetCriticality("Activity", "ASIL-A");
+            SetCriticality("Action", "ASIL A");
+            SetCriticality("Activity", "ASIL A");
         }
         /// <summary>
         /// Set the Action/Activity to QM
@@ -3244,8 +3262,8 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void AsilBMenuItem_Click(object sender, EventArgs e)
         {
-            SetCriticality("Action", "ASIL-B");
-            SetCriticality("Activity", "ASIL-B");
+            SetCriticality("Action", "ASIL B");
+            SetCriticality("Activity", "ASIL B");
         }
         /// <summary>
         /// Set the Action/Activity to QM
@@ -3254,8 +3272,8 @@ namespace hoReverse.Reverse
         /// <param name="e"></param>
         private void AsilCMenuItem_Click(object sender, EventArgs e)
         {
-            SetCriticality("Action", "ASIL-C");
-            SetCriticality("Activity", "ASIL-C");
+            SetCriticality("Action", "ASIL C");
+            SetCriticality("Activity", "ASIL C");
         }
 
         private void SetCriticality(string type, string criticality)

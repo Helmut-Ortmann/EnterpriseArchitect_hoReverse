@@ -63,6 +63,15 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+3.12 Improvements generating Activity nodes
+- F Final can also create an Init on the Activity Diagram
+  - DiagramObject selected: Create Final node
+  - no Diagram selected: Create an Init node
+- ActC Create Activity with beneath Diagram
+  - Select a Package,an Element, or a Diagram in the Browser to create only the Activity with the beneath Diagram.
+
+
+
 3.11 *.msi installer to remove all remnants
      - Update properties as service
      - copy properties as service

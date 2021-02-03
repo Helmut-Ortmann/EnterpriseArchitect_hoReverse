@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using DocumentFormat.OpenXml.Packaging;
 using EaServices.MOVE;
 using EA;
 using hoReverse.hoUtils.ODBC;
@@ -1903,8 +1904,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 MessageBox.Show(type + @": '" + name + @"' has more than 255 characters.", @"Name is to long");
                 return null;
             }
-            Element elParent = null;
-            Element elTarget;
+
 
             string basicType = type;
             if (type == "CallOperation" || type == "CallBehavior") basicType = "Action";
@@ -1913,10 +1913,41 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             if (dia == null) return null;
 
             rep.SaveDiagram(dia.DiagramID);
+            Element elParent = null;
 
             // only one diagram object selected as source
             var elSource = srcEl ?? HoUtil.GetElementFromContextObject(rep);
-            if (elSource == null)  return null;
+            if (elSource == null)
+            {
+                // Package selected/Context Element
+                if (rep.GetContextItemType() == ObjectType.otPackage)
+                {
+                    var pkg = (EA.Package)rep.GetContextObject();
+                    elSource = rep.GetElementByGuid(pkg.PackageGUID);
+                    DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+                    return null;
+                }
+                // Diagram selected, Context Element
+                if (rep.GetContextItemType() == ObjectType.otDiagram)
+                {
+                    var diaContext = (EA.Diagram)rep.GetContextObject();
+                    if (diaContext.ParentID > 0)
+                    {
+                        elSource = rep.GetElementByID(diaContext.ParentID);
+                    }
+                    else
+                    {
+                        var pkg = rep.GetPackageByID(diaContext.PackageID);
+                        elSource = rep.GetElementByGuid(pkg.PackageGUID);
+                    }
+
+                    DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+                    return null;
+                }
+                return null;
+            }
+
+
             var diaObjSource = dia.GetDiagramObjectByID(elSource.ElementID, "");
 
             string noValifTypes = "Note, Constraint, Boundary, Text, UMLDiagram, DiagramFrame";
@@ -1927,132 +1958,107 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             {
                 dia.GetDiagramObjectByID(elSource.ParentID, "");
             }
-                
-                try
+           
+            var elTarget = DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+            if (elTarget == null) return null; // not created target element
+            if (diaObjSource == null) return null; // not created diagram object
+
+            int left = diaObjSource.left + offsetHorizental;
+            int right = diaObjSource.right + offsetHorizental;
+            int top = diaObjSource.top + offsetVertical;
+            int bottom = diaObjSource.bottom + offsetVertical;
+            int length;
+
+            if (basicType == "StateNode")
+            {
+                left = left - 10 + (right - left) / 2;
+                right = left + 20;
+                top = bottom - 20;
+                bottom = top - 20;
+            }
+            if ((basicType == "Decision") | (basicType == "MergeNode"))
+            {
+                if (guardString == "no")
                 {
-                    if (elSource.ParentID > 0 ) {
-                        elParent = rep.GetElementByID(elSource.ParentID);
-                        elTarget = (Element)elParent.Elements.AddNew(name, basicType);
-                        if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
-                        elParent.Elements.Refresh();
-                       
-                    }
-                    else 
-                    {
-                        var pkg = rep.GetPackageByID(elSource.PackageID);
-                        elTarget = (Element)pkg.Elements.AddNew(name, basicType);
-                        if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
-                        pkg.Elements.Refresh();
-                    }
-                    elTarget.ParentID = elSource.ParentID;
-                    elTarget.Update();
-                    // make a Composite Element which is refined by Activity Diagram
-                    if (basicType == "Activity" & extension.ToLower() == "comp=yes")
-                    {
-                        Diagram actDia = ActivityPar.CreateActivityCompositeDiagram(rep, elTarget);
-                        HoUtil.SetActivityAsWithCompositeDiagram(rep, elTarget, actDia.DiagramID.ToString());
-                        //elTarget.
-                    }
+                    if (elSource.Type == "Decision") left = left + (right -left) + 200;
+                    else left = left + (right -left) + 50;
+                    bottom = bottom - 5;
+                }
+                left = left - 15 + (right - left)/2;
+                right = left + 30; 
+                top = bottom - 20;
+                bottom = top - 40;
+            }
+            if (basicType == "Action" | basicType == "Activity")
+            {
+                length = name.Length * WidthPerCharacter / 10;
+
+                if (extension.ToLower() == "comp=no")
+                { /* Activity ind diagram */
+                    if (length < 500) length = 500;
+                    left = left + ((right - left) / 2) - (length / 2);
+                    right = left + length;
+                    top = bottom - 20;
+                    bottom = top - 200;
+                    if (basicType == "Activity") bottom = top - 400;
+
 
                 }
-                catch { return null; }
-
-                int left = diaObjSource.left + offsetHorizental;
-                int right = diaObjSource.right + offsetHorizental;
-                int top = diaObjSource.top + offsetVertical;
-                int bottom = diaObjSource.bottom + offsetVertical;
-                int length;
-
-                if (basicType == "StateNode")
+                else if (extension.ToLower() == "comp=yes")
                 {
-                    left = left - 10 + (right - left) / 2;
-                    right = left + 20;
+                    if (length < 220) length = 220;
+                    left = left + ((right - left) / 2) - (length / 2);
+                    right = left + length;
+                    top = bottom - 40;
+                    bottom = top - 40;
+                }
+                else
+                {
+
+                    if (length < 220) length = 220;
+                    left = left + ((right - left) / 2) - (length / 2);
+                    right = left + length;
                     top = bottom - 20;
                     bottom = top - 20;
                 }
-                if ((basicType == "Decision") | (basicType == "MergeNode"))
+
+            }
+            // limit values
+            if (left < 5) left = 5;
+            string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
+            // end note
+            if ( elParent != null && elParent.Type == "Activity" && extension == "101")
+            {
+                DiagramObject diaObj = dia.GetDiagramObjectByID(elParent.ElementID,"");
+                if (diaObj != null)
                 {
-                    if (guardString == "no")
-                    {
-                        if (elSource.Type == "Decision") left = left + (right -left) + 200;
-                        else left = left + (right -left) + 50;
-                        bottom = bottom - 5;
-                    }
-                    left = left - 15 + (right - left)/2;
-                    right = left + 30; 
-                    top = bottom - 20;
-                    bottom = top - 40;
+                    diaObj.bottom = bottom - 40;
+                    diaObj.Update();
                 }
-                if (basicType == "Action" | basicType == "Activity")
-                {
-                    length = name.Length * WidthPerCharacter / 10;
-
-                    if (extension.ToLower() == "comp=no")
-                    { /* Activity ind diagram */
-                        if (length < 500) length = 500;
-                        left = left + ((right - left) / 2) - (length / 2);
-                        right = left + length;
-                        top = bottom - 20;
-                        bottom = top - 200;
-                        if (basicType == "Activity") bottom = top - 400;
+            }
 
 
-                    }
-                    else if (extension.ToLower() == "comp=yes")
-                    {
-                        if (length < 220) length = 220;
-                        left = left + ((right - left) / 2) - (length / 2);
-                        right = left + length;
-                        top = bottom - 40;
-                        bottom = top - 40;
-                    }
-                    else
-                    {
+            HoUtil.AddSequenceNumber(rep, dia);
+            var diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
+            diaObjTarget.ElementID = elTarget.ElementID;
+            diaObjTarget.Sequence = 1;
+            diaObjTarget.Update();
+            HoUtil.SetSequenceNumber(rep, dia, diaObjTarget, "1");
 
-                        if (length < 220) length = 220;
-                        left = left + ((right - left) / 2) - (length / 2);
-                        right = left + length;
-                        top = bottom - 20;
-                        bottom = top - 20;
-                    }
-
-                }
-                // limit values
-                if (left < 5) left = 5;
-                string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
-                // end note
-                if ( elParent != null && elParent.Type == "Activity" && extension == "101")
-                {
-                    DiagramObject diaObj = dia.GetDiagramObjectByID(elParent.ElementID,"");
-                    if (diaObj != null)
-                    {
-                        diaObj.bottom = bottom - 40;
-                        diaObj.Update();
-                    }
-                }
-
-
-                HoUtil.AddSequenceNumber(rep, dia);
-                var diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
-                diaObjTarget.ElementID = elTarget.ElementID;
-                diaObjTarget.Sequence = 1;
-                diaObjTarget.Update();
-                HoUtil.SetSequenceNumber(rep, dia, diaObjTarget, "1");
-
-                // position the label:
-                // LBL=CX=180:  length of label
-                // CY=13:       hight of label
-                // OX=26:       x-position of label (relative object)
-                // CY=13:       y-position of label (relative object)
-                if (basicType == "Decision" & name.Length > 0)
-                {
-                    if (name.Length > 25) length = 25 * WidthPerCharacter / 10;
-                    else length = name.Length * WidthPerCharacter / 10;
-                    // string s = "DUID=E2352ABC;LBL=CX=180:CY=13:OX=29:OY=-4:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;;"; 
-                    string s = "DUID=E2352ABC;LBL=CX=180:CY=13:OX=-"+ length+ ":OY=-4:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;;"; 
-                    HoUtil.SetDiagramObjectLabel(rep,
-                        diaObjTarget.ElementID, diaObjTarget.DiagramID, diaObjTarget.InstanceID, s);
-                }
+            // position the label:
+            // LBL=CX=180:  length of label
+            // CY=13:       hight of label
+            // OX=26:       x-position of label (relative object)
+            // CY=13:       y-position of label (relative object)
+            if (basicType == "Decision" & name.Length > 0)
+            {
+                if (name.Length > 25) length = 25 * WidthPerCharacter / 10;
+                else length = name.Length * WidthPerCharacter / 10;
+                // string s = "DUID=E2352ABC;LBL=CX=180:CY=13:OX=29:OY=-4:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;;"; 
+                string s = "DUID=E2352ABC;LBL=CX=180:CY=13:OX=-"+ length+ ":OY=-4:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=0:ALT=0:ROT=0;;"; 
+                HoUtil.SetDiagramObjectLabel(rep,
+                    diaObjTarget.ElementID, diaObjTarget.DiagramID, diaObjTarget.InstanceID, s);
+            }
 
             if (extension == "Comp=no")
                 { /* Activity in diagram */
@@ -2148,6 +2154,67 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             return diaObjTarget;
                 
             
+        }
+        /// <summary>
+        /// Create a DiagramObject beneath a source element
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <param name="name"></param>
+        /// <param name="extension"></param>
+        /// <param name="elSource">The element to store the target in the same place</param>
+        /// <param name="basicType"></param>
+        /// <param name="elParent"></param>
+        /// <returns></returns>
+        private static EA.Element DiagramObjectFromContext(Repository rep, string name, string extension, Element elSource,
+            string basicType, ref Element elParent)
+        {
+            Element elTarget;
+            try
+            {
+                // Source is a package
+                if (elSource.Type == "Package")
+                {
+                    var pkg = rep.GetPackageByGuid(elSource.ElementGUID);
+                    elTarget = (Element)pkg.Elements.AddNew(name, basicType);
+                    if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
+                    pkg.Elements.Refresh();
+
+                }
+                else
+                {
+                    // source is an Element
+                    if (elSource.ParentID > 0)
+                    {
+                        elParent = rep.GetElementByID(elSource.ParentID);
+                        elTarget = (Element) elParent.Elements.AddNew(name, basicType);
+                        if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
+                        elParent.Elements.Refresh();
+                    }
+                    else
+                    {
+                        var pkg = rep.GetPackageByID(elSource.PackageID);
+                        elTarget = (Element) pkg.Elements.AddNew(name, basicType);
+                        if (basicType == "StateNode") elTarget.Subtype = Convert.ToInt32(extension);
+                        pkg.Elements.Refresh();
+                    }
+                }
+
+                elTarget.ParentID = elSource.ParentID;
+                elTarget.Update();
+                // make a Composite Element which is refined by Activity Diagram
+                if (basicType == "Activity" & extension.ToLower() == "comp=yes")
+                {
+                    Diagram actDia = ActivityPar.CreateActivityCompositeDiagram(rep, elTarget);
+                    HoUtil.SetActivityAsWithCompositeDiagram(rep, elTarget, actDia.DiagramID.ToString());
+                    //elTarget.
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            return elTarget;
         }
 
         /// <summary>
@@ -5332,8 +5399,75 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
                 svnHandle.gotoRepoBrowser();
             }
         }
+        #region insertDiagramElement
 
-                    #region insertDiagramElementAndConnect
+        /// <summary>insertDiagramElement insert a diagram element 
+        /// <para>type: type of the node like "Action", Activity", "MergeNode"</para>
+        ///       MergeNode may have the subType "no" to draw a transition with a "no" guard.
+        /// <para>subTyp: subType of the node:
+        ///       StateNode: 100=ActivityInitial, 101 ActivityFinal
+        /// </para>guardString  of the connector "","yes","no",..
+        ///        if "yes" or "" it will locate the node under the last selected element
+        /// </summary> 
+        public static void InsertDiagramElement(Repository rep, string type, string subType)
+        {
+
+            Diagram dia = rep.GetCurrentDiagram();
+            if (dia == null)
+            {
+                return;
+            }
+            if (dia.Type != "Activity") return;
+
+            rep.SaveDiagram(dia.DiagramID);
+
+            EA.Package pkg = rep.GetPackageByID(dia.PackageID);
+            // Check if parent is an Element
+            EA.Element elNeu;
+            var parentId = dia.ParentID;
+            if (parentId != 0)
+            {
+                // Parent is Element
+                EA.Element el = rep.GetElementByID(parentId);
+                elNeu = (EA.Element) el.Elements.AddNew(dia.Name, type);
+                elNeu.Subtype = Int32.Parse(subType);
+                el.Elements.Refresh();
+                elNeu.Update();
+            }
+            else
+            {
+                // parent is a package
+                pkg = rep.GetPackageByID(dia.PackageID);
+                elNeu = (EA.Element)pkg.Elements.AddNew(dia.Name, type);
+                elNeu.Subtype = Int32.Parse(subType);
+                pkg.Elements.Refresh();
+                elNeu.Update();
+            }
+            //pkg.Update();
+
+            int size = 20;
+            int left = 300;
+            int right = left + size;
+            int top = -50;
+            int bottom = top-size;
+
+            string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
+            // add diagramobject to diagram
+            var dObj = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
+            dObj.Style = "LBL=CX=41:CY=14:OX=-10:OY=-19:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:ALT=0:ROT=0;";
+            dObj.ElementID = elNeu.ElementID;
+            dObj.Sequence = 1;
+            dObj.Update();
+            pkg.Elements.Refresh();
+            dia.Update();
+           
+            rep.ReloadDiagram(dia.DiagramID);
+        }
+#endregion
+
+
+
+        #region insertDiagramElementAndConnect
         /// <summary>insertDiagramElement insert a diagram element and connects it to all selected diagramobject 
         /// <para>type: type of the node like "Action", Activity", "MergeNode"</para>
         ///       MergeNode may have the subType "no" to draw a transition with a "no" guard.
@@ -6661,11 +6795,11 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
 
                 string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
                 var diaObject = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
-                dia.Update();
                 diaObject.ElementID = elNewElement.ElementID;
                 diaObject.Sequence = 1; // put element to top
                 diaObject.Update();
                 pkg.Elements.Refresh();
+                dia.Update();
 
                 
                 // make a connector
@@ -6766,11 +6900,11 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
 
                 string position = "l=" + left + ";r=" + right + ";t=" + top + ";b=" + bottom + ";";
                 var diaObject = (DiagramObject) dia.DiagramObjects.AddNew(position, "");
-                dia.Update();
                 diaObject.ElementID = elNewNote.ElementID;
                 diaObject.Sequence = 1; // put element to top
                 diaObject.Update();
                 pkg.Elements.Refresh();
+                dia.Update();
 
                 // connect Element to node
                 if (!String.IsNullOrWhiteSpace(connectorType))
