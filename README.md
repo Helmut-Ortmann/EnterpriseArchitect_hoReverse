@@ -69,6 +69,9 @@ Let's discuss it, but it works.
   - no Diagram selected: Create an Init node
 - ActC Create Activity with beneath Diagram
   - Select a Package,an Element, or a Diagram in the Browser to create only the Activity with the beneath Diagram.
+- Move diagram elements beneath selected browser package/element
+  - It don't move elements which have a parent (you have to move the root
+  - don't make itself to a parent
 
 
 

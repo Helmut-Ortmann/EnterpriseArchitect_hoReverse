@@ -39,7 +39,7 @@ namespace hoReverse.Services
         {
             if (DiagramStyle.DiagramStyleItems == null && DiagramStyle.DiagramStyleItems.Count <= pos)
             {
-                MessageBox.Show("", "No Diagram style in 'Settings.json' found");
+                MessageBox.Show("", @"No Diagram style in 'Settings.json' found");
                 return;
             }
             // [0] StyleEx
@@ -142,6 +142,72 @@ namespace hoReverse.Services
             DiagramStyleWrapper(rep, 4);
         }
 
+        /// <summary>
+        /// Move selected Diagram Objects of type Element to selected Browser Package or Element 
+        /// </summary>
+        [ServiceOperation("{D2BF543E-517F-4097-B8F3-FD24ED1FE6FB}", "Move DiagramObjets to Browser",
+            "Select Diagramobjects and in Browser to move target (Package/Element)", isTextRequired: false)]
+        public static void DiagramObjectMove(Repository rep)
+        {
+            // Package in browser selected
+            // only copy elements of type element
+            if (rep.GetTreeSelectedItemType() == EA.ObjectType.otPackage)
+            {
+
+                EA.Package pkg = (EA.Package)rep.GetTreeSelectedObject();
+
+                // get selected DiagramObjects
+                EaDiagram eaDia = new EaDiagram(rep, getAllDiagramObject: false);
+
+                // Handle selected diagram and its selected items (connector/objects)
+                if (eaDia.Dia != null)
+                {
+                    // over all selected objects
+                    foreach (var dObj in eaDia.SelObjects)
+                    {
+                        EA.Element el = rep.GetElementByID(dObj.ElementID);
+                        // don't change nested elements, you have to move the root element
+                        if (el.Type != "Package" && el.ObjectType == EA.ObjectType.otElement && el.ParentID == 0 )
+                        {
+                            el.PackageID = pkg.PackageID;
+                            el.Update();
+                        }
+                    }
+
+
+                }
+            }
+            // Element in browser selected
+            if (rep.GetTreeSelectedItemType() == EA.ObjectType.otElement)
+            {
+
+                EA.Element elTarget = (EA.Element)rep.GetTreeSelectedObject();
+
+                // get selected DiagramObjects
+                EaDiagram eaDia = new EaDiagram(rep, getAllDiagramObject: false);
+
+                // Handle selected diagram and its selected items (connector/objects)
+                if (eaDia.Dia != null)
+                {
+                    // over all selected objects
+                    foreach (var dObj in eaDia.SelObjects)
+                    {
+                        EA.Element el = rep.GetElementByID(dObj.ElementID);
+                        // don't change nested elements, you have to move the root element
+                        // don't copy to itself
+                        if (el.Type != "Package" && el.ObjectType == EA.ObjectType.otElement && el.ParentID == 0 && el.ElementID != elTarget.ElementID)
+                        {
+
+                            el.ParentID = elTarget.ElementID;
+                            el.Update();
+                        }
+                    }
+
+
+                }
+            }
+        }
+
 
         /// <summary>
         /// Wrapper to change DiagramObject style
@@ -153,7 +219,7 @@ namespace hoReverse.Services
         {
             if (DiagramStyle.DiagramStyleItems == null && DiagramStyle.DiagramObjectStyleItems.Count <= pos)
             {
-                MessageBox.Show("", "No DiagramObject style in 'Settings.json' found");
+                MessageBox.Show("", @"No DiagramObject style in 'Settings.json' found");
                 return;
             }
             string style = $@"{DiagramStyle.DiagramObjectStyleItems[pos].Style}".Trim();

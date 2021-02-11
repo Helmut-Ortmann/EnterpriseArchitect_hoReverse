@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.12.0"; 
+        private readonly string _version = "3.12.4"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -279,6 +279,7 @@ namespace hoReverse.Reverse
         private ToolStripMenuItem _actionASILBToolStripMenuItem;
         private ToolStripMenuItem _actionASILCToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator20;
+        private ToolStripMenuItem moveToPackageToolStripMenuItem;
         private ToolTip _toolTip1;
 
 
@@ -721,6 +722,7 @@ namespace hoReverse.Reverse
             this.setFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this._copyGuidSqlToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToPackageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._createSharedMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.standardDiagramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -753,6 +755,9 @@ namespace hoReverse.Reverse
             this._toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this._copyReleaseInformationToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this._reqIfMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InfoReqIfInquiryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InfoReqIfInquiryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -766,9 +771,6 @@ namespace hoReverse.Reverse
             this.showFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.showSymbolDataBaseFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._reqIfMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InfoReqIfInquiryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InfoReqIfInquiryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._versionControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._svnTortoiseRepobrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1575,8 +1577,8 @@ namespace hoReverse.Reverse
             this._fileToolStripMenuItem,
             this._doToolStripMenuItem,
             this._codeToolStripMenuItem,
-            this._autoToolStripMenuItem,
             this._reqIfMenuItem,
+            this._autoToolStripMenuItem,
             this._versionControlToolStripMenuItem,
             this._maintenanceToolStripMenuItem,
             this._helpToolStripMenuItem,
@@ -1688,6 +1690,7 @@ namespace hoReverse.Reverse
             this.setFolderToolStripMenuItem,
             this._toolStripSeparator4,
             this._copyGuidSqlToClipboardToolStripMenuItem,
+            this.moveToPackageToolStripMenuItem,
             this._createSharedMemoryToolStripMenuItem,
             this.toolStripSeparator4,
             this.standardDiagramToolStripMenuItem,
@@ -1751,6 +1754,15 @@ namespace hoReverse.Reverse
             this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this._copyGuidSqlToClipboardToolStripMenuItem.Text = "&Copy GUID + SQL to clipboard";
             this._copyGuidSqlToClipboardToolStripMenuItem.Click += new System.EventHandler(this.CopyGuidSqlToClipboardToolStripMenuItem_Click);
+            // 
+            // moveToPackageToolStripMenuItem
+            // 
+            this.moveToPackageToolStripMenuItem.Name = "moveToPackageToolStripMenuItem";
+            this.moveToPackageToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.moveToPackageToolStripMenuItem.Text = "Move to Browser (Package, Element)";
+            this.moveToPackageToolStripMenuItem.ToolTipText = "Move the selected diagram Elements to the selected Browser item:\r\n\r\nPackage or El" +
+    "ement.\r\n\r\nIf nested elements:\r\n- Only the root is moved";
+            this.moveToPackageToolStripMenuItem.Click += new System.EventHandler(this.moveDiagramElementToToolStripMenuItem_Click);
             // 
             // _createSharedMemoryToolStripMenuItem
             // 
@@ -2007,6 +2019,36 @@ namespace hoReverse.Reverse
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(279, 6);
             // 
+            // _reqIfMenuItem
+            // 
+            this._reqIfMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.InfoReqIfInquiryToolStripMenuItem,
+            this.InfoReqIfInquiryValidationToolStripMenuItem});
+            this._reqIfMenuItem.Name = "_reqIfMenuItem";
+            this._reqIfMenuItem.Size = new System.Drawing.Size(48, 20);
+            this._reqIfMenuItem.Text = "ReqIF";
+            this._reqIfMenuItem.ToolTipText = "Info for a ReqIF file\r\n\r\nFor a file, e.g. *.reqif, or *.reqifz it outputs the ent" +
+    "ries with:\r\n- File-Name\r\n- Identifier\r\n- Number of requirements\r\n- Number of lin" +
+    "ks";
+            // 
+            // InfoReqIfInquiryToolStripMenuItem
+            // 
+            this.InfoReqIfInquiryToolStripMenuItem.Name = "InfoReqIfInquiryToolStripMenuItem";
+            this.InfoReqIfInquiryToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.InfoReqIfInquiryToolStripMenuItem.Text = "Info *.reqif/*.reqifz -file";
+            this.InfoReqIfInquiryToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nNo " +
+    "validation of reqif.";
+            this.InfoReqIfInquiryToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryToolStripMenuItem_Click);
+            // 
+            // InfoReqIfInquiryValidationToolStripMenuItem
+            // 
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Name = "InfoReqIfInquiryValidationToolStripMenuItem";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Text = "Info *.reqif/*.reqifz with validation";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nWit" +
+    "h validation of reqif.\r\n";
+            this.InfoReqIfInquiryValidationToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryValidationToolStripMenuItem_Click);
+            // 
             // _autoToolStripMenuItem
             // 
             this._autoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2120,36 +2162,6 @@ namespace hoReverse.Reverse
             this.showSymbolDataBaseFoldersToolStripMenuItem.ToolTipText = "Show the folder with the VC-Cide Symbol database.\r\n\r\nIn case of unknown issues de" +
     "lete the whole folder. VS-Code will recreate it!";
             this.showSymbolDataBaseFoldersToolStripMenuItem.Click += new System.EventHandler(this.ShowSymbolDataBaseFoldersToolStripMenuItem_Click);
-            // 
-            // _reqIfMenuItem
-            // 
-            this._reqIfMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.InfoReqIfInquiryToolStripMenuItem,
-            this.InfoReqIfInquiryValidationToolStripMenuItem});
-            this._reqIfMenuItem.Name = "_reqIfMenuItem";
-            this._reqIfMenuItem.Size = new System.Drawing.Size(48, 20);
-            this._reqIfMenuItem.Text = "ReqIF";
-            this._reqIfMenuItem.ToolTipText = "Info for a ReqIF file\r\n\r\nFor a file, e.g. *.reqif, or *.reqifz it outputs the ent" +
-    "ries with:\r\n- File-Name\r\n- Identifier\r\n- Number of requirements\r\n- Number of lin" +
-    "ks";
-            // 
-            // InfoReqIfInquiryToolStripMenuItem
-            // 
-            this.InfoReqIfInquiryToolStripMenuItem.Name = "InfoReqIfInquiryToolStripMenuItem";
-            this.InfoReqIfInquiryToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
-            this.InfoReqIfInquiryToolStripMenuItem.Text = "Info *.reqif/*.reqifz -file";
-            this.InfoReqIfInquiryToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nNo " +
-    "validation of reqif.";
-            this.InfoReqIfInquiryToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryToolStripMenuItem_Click);
-            // 
-            // InfoReqIfInquiryValidationToolStripMenuItem
-            // 
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Name = "InfoReqIfInquiryValidationToolStripMenuItem";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Text = "Info *.reqif/*.reqifz with validation";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.ToolTipText = "Inquiry ReqIF (Folder or file)\r\n\r\nFiles:\r\n- *.reqifz\r\n- *.reqif\r\n\r\nFolder:\r\n\r\nWit" +
-    "h validation of reqif.\r\n";
-            this.InfoReqIfInquiryValidationToolStripMenuItem.Click += new System.EventHandler(this.InfoReqIfInquiryValidationToolStripMenuItem_Click);
             // 
             // _versionControlToolStripMenuItem
             // 
@@ -4989,6 +5001,17 @@ See Chapter: 'Importer' in Settings.Json (%APPDATA%ho/../Settings.json)", $@"Exp
         private void InfoReqIfInquiryValidationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InquiryReqIF(true);
+        }
+
+        /// <summary>
+        /// Move the selected diagram elements to the selected package or element in browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void moveDiagramElementToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HoService.DiagramObjectMove(_repository);
+            
         }
     }
 }
