@@ -151,18 +151,33 @@ namespace hoReverse.Services
         {
             // Package in browser selected
             // only copy elements of type element
-            if (rep.GetTreeSelectedItemType() == EA.ObjectType.otPackage)
+            EA.ObjectType objType = rep.GetTreeSelectedItemType();
+
+            // if diagram: get the Element or Package
+
+            EA.Package pkg = null;
+            EA.Element elTarget = null;
+            if (objType == EA.ObjectType.otDiagram)
             {
+                var dia = (EA.Diagram)rep.GetTreeSelectedObject();
+                if (dia.ParentID == 0) pkg = rep.GetPackageByID(dia.PackageID);
+                else elTarget = rep.GetElementByID(dia.ParentID);
+            }
 
-                EA.Package pkg = (EA.Package)rep.GetTreeSelectedObject();
-
+            if (objType == EA.ObjectType.otPackage || pkg != null)
+            {
                 // get selected DiagramObjects
                 EaDiagram eaDia = new EaDiagram(rep, getAllDiagramObject: false);
 
                 // Handle selected diagram and its selected items (connector/objects)
                 if (eaDia.Dia != null)
                 {
+                    
+                    if (objType == EA.ObjectType.otPackage && pkg == null)
+                            pkg = (EA.Package)rep.GetTreeSelectedObject();
                     // over all selected objects
+                    var count = 0;
+
                     foreach (var dObj in eaDia.SelObjects)
                     {
                         EA.Element el = rep.GetElementByID(dObj.ElementID);
@@ -171,17 +186,27 @@ namespace hoReverse.Services
                         {
                             el.PackageID = pkg.PackageID;
                             el.Update();
+                            count = count + 1;
                         }
+                    }
+                    rep.RefreshModelView(pkg.PackageID);
+                    if (count != eaDia.SelObjects.Count)
+                    {
+                        MessageBox.Show($@"Total items: {eaDia.SelObjects.Count}
+Moved items: {count}
+
+If item is a nested item only the root will be copied.
+", @"not all items moved");
                     }
 
 
                 }
             }
-            // Element in browser selected
-            if (rep.GetTreeSelectedItemType() == EA.ObjectType.otElement)
+            // Element in browser selected, or element to copy beneath exists
+            if (rep.GetTreeSelectedItemType() == EA.ObjectType.otElement || elTarget != null)
             {
 
-                EA.Element elTarget = (EA.Element)rep.GetTreeSelectedObject();
+                if (elTarget == null) elTarget = (EA.Element)rep.GetTreeSelectedObject();
 
                 // get selected DiagramObjects
                 EaDiagram eaDia = new EaDiagram(rep, getAllDiagramObject: false);

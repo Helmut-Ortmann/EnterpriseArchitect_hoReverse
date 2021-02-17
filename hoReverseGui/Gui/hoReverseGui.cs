@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.12.4"; 
+        private readonly string _version = "3.12.6"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -701,7 +701,6 @@ namespace hoReverse.Reverse
             this._btnAddNoteAndLink = new System.Windows.Forms.Button();
             this._btnCopy = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this._txtUserText = new hoReverse.Reverse.EnterTextBox();
             this._menuStrip1 = new System.Windows.Forms.MenuStrip();
             this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -827,6 +826,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn5 = new System.Windows.Forms.ToolStripButton();
             this._toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this._txtUserText = new hoReverse.Reverse.EnterTextBox();
             this._contextMenuStripTextField.SuspendLayout();
             this._menuStrip1.SuspendLayout();
             this._toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1549,26 +1549,6 @@ namespace hoReverse.Reverse
             this._toolTip.SetToolTip(this.progressBar1, "Show progress of initializing C-Macros");
             this.progressBar1.Visible = false;
             // 
-            // _txtUserText
-            // 
-            this._txtUserText.AcceptsReturn = true;
-            this._txtUserText.AcceptsTab = true;
-            this._txtUserText.AllowDrop = true;
-            this._txtUserText.ContextMenuStrip = this._contextMenuStripTextField;
-            this._txtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._txtUserText.Location = new System.Drawing.Point(160, 50);
-            this._txtUserText.Multiline = true;
-            this._txtUserText.Name = "_txtUserText";
-            this._txtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this._txtUserText.Size = new System.Drawing.Size(695, 112);
-            this._txtUserText.TabIndex = 14;
-            this._toolTip.SetToolTip(this._txtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
-        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
-        "lon as in C.");
-            this._txtUserText.WordWrap = false;
-            this._txtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
-            this._txtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
-            // 
             // _menuStrip1
             // 
             this._menuStrip1.AllowDrop = true;
@@ -1760,8 +1740,7 @@ namespace hoReverse.Reverse
             this.moveToPackageToolStripMenuItem.Name = "moveToPackageToolStripMenuItem";
             this.moveToPackageToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.moveToPackageToolStripMenuItem.Text = "Move to Browser (Package, Element)";
-            this.moveToPackageToolStripMenuItem.ToolTipText = "Move the selected diagram Elements to the selected Browser item:\r\n\r\nPackage or El" +
-    "ement.\r\n\r\nIf nested elements:\r\n- Only the root is moved";
+            this.moveToPackageToolStripMenuItem.ToolTipText = resources.GetString("moveToPackageToolStripMenuItem.ToolTipText");
             this.moveToPackageToolStripMenuItem.Click += new System.EventHandler(this.moveDiagramElementToToolStripMenuItem_Click);
             // 
             // _createSharedMemoryToolStripMenuItem
@@ -2659,6 +2638,26 @@ namespace hoReverse.Reverse
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            // 
+            // _txtUserText
+            // 
+            this._txtUserText.AcceptsReturn = true;
+            this._txtUserText.AcceptsTab = true;
+            this._txtUserText.AllowDrop = true;
+            this._txtUserText.ContextMenuStrip = this._contextMenuStripTextField;
+            this._txtUserText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._txtUserText.Location = new System.Drawing.Point(160, 50);
+            this._txtUserText.Multiline = true;
+            this._txtUserText.Name = "_txtUserText";
+            this._txtUserText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this._txtUserText.Size = new System.Drawing.Size(695, 112);
+            this._txtUserText.TabIndex = 14;
+            this._toolTip.SetToolTip(this._txtUserText, "Code:\r\n1. Enter Code\r\n2. Double click to insert text/code\r\n3. Ctrl+Enter for new " +
+        "line\r\n4. Shft+Enter run Query\r\n\r\nMake sure a code line is terminated by a semico" +
+        "lon as in C.");
+            this._txtUserText.WordWrap = false;
+            this._txtUserText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUserText_KeyDown);
+            this._txtUserText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TxtUserText_MouseDoubleClick);
             // 
             // HoReverseGui
             // 

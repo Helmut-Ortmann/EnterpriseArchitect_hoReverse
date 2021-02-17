@@ -270,6 +270,14 @@ Because the Activity is possible visualized in more than one diagram you have to
 
 </value>
   </data>
+  <data name="moveToPackageToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Move the selected diagram Elements to the selected Browser item:
+
+Package or Element. You may select a diagram. Then the items are copied to the owner of the diagram.
+
+If nested elements:
+- Only the root is moved</value>
+  </data>
   <data name="moveUsageToElementToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Move all usages from source to target element
 - Source: Fist selected Element in Diagram
