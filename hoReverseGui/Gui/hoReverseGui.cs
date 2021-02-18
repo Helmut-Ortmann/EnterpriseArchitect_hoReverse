@@ -1686,7 +1686,7 @@ namespace hoReverse.Reverse
             // _createActivityForOperationToolStripMenuItem
             // 
             this._createActivityForOperationToolStripMenuItem.Name = "_createActivityForOperationToolStripMenuItem";
-            this._createActivityForOperationToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._createActivityForOperationToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this._createActivityForOperationToolStripMenuItem.Text = "&Create/Update Activity for Operation";
             this._createActivityForOperationToolStripMenuItem.ToolTipText = resources.GetString("_createActivityForOperationToolStripMenuItem.ToolTipText");
             this._createActivityForOperationToolStripMenuItem.Click += new System.EventHandler(this.CreateActivityForOperationToolStripMenuItem_Click);
@@ -1694,7 +1694,7 @@ namespace hoReverse.Reverse
             // _updateMethodParametersToolStripMenuItem
             // 
             this._updateMethodParametersToolStripMenuItem.Name = "_updateMethodParametersToolStripMenuItem";
-            this._updateMethodParametersToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._updateMethodParametersToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this._updateMethodParametersToolStripMenuItem.Text = "&Update Activity from Method";
             this._updateMethodParametersToolStripMenuItem.ToolTipText = "Updates the Activities according to selected contexts by:\r\n- Activity Name\r\n- Act" +
     "ivity Parameter\r\n";
@@ -1704,12 +1704,12 @@ namespace hoReverse.Reverse
             // _toolStripSeparator3
             // 
             this._toolStripSeparator3.Name = "_toolStripSeparator3";
-            this._toolStripSeparator3.Size = new System.Drawing.Size(265, 6);
+            this._toolStripSeparator3.Size = new System.Drawing.Size(209, 6);
             // 
             // _showFolderToolStripMenuItem
             // 
             this._showFolderToolStripMenuItem.Name = "_showFolderToolStripMenuItem";
-            this._showFolderToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._showFolderToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this._showFolderToolStripMenuItem.Text = "&Show folder";
             this._showFolderToolStripMenuItem.ToolTipText = "Show folder (sourse file, controled package)";
             this._showFolderToolStripMenuItem.Click += new System.EventHandler(this.ShowFolderToolStripMenuItem_Click);
@@ -1717,7 +1717,7 @@ namespace hoReverse.Reverse
             // setFolderToolStripMenuItem
             // 
             this.setFolderToolStripMenuItem.Name = "setFolderToolStripMenuItem";
-            this.setFolderToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.setFolderToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this.setFolderToolStripMenuItem.Text = "Set Folder";
             this.setFolderToolStripMenuItem.ToolTipText = "Set the Folder of a package  to easily access code.\r\n\r\nThe folder is used for imp" +
     "lementations. \r\nSo make sure you have assigned a Package language like \r\nC,C++.";
@@ -1726,27 +1726,27 @@ namespace hoReverse.Reverse
             // _toolStripSeparator4
             // 
             this._toolStripSeparator4.Name = "_toolStripSeparator4";
-            this._toolStripSeparator4.Size = new System.Drawing.Size(265, 6);
+            this._toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
             // 
             // _copyGuidSqlToClipboardToolStripMenuItem
             // 
             this._copyGuidSqlToClipboardToolStripMenuItem.Name = "_copyGuidSqlToClipboardToolStripMenuItem";
-            this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._copyGuidSqlToClipboardToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this._copyGuidSqlToClipboardToolStripMenuItem.Text = "&Copy GUID + SQL to clipboard";
             this._copyGuidSqlToClipboardToolStripMenuItem.Click += new System.EventHandler(this.CopyGuidSqlToClipboardToolStripMenuItem_Click);
             // 
             // moveToPackageToolStripMenuItem
             // 
             this.moveToPackageToolStripMenuItem.Name = "moveToPackageToolStripMenuItem";
-            this.moveToPackageToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.moveToPackageToolStripMenuItem.Text = "Move to Browser (Package, Element)";
+            this.moveToPackageToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
+            this.moveToPackageToolStripMenuItem.Text = "Move elements to Browser (Package, Element)";
             this.moveToPackageToolStripMenuItem.ToolTipText = resources.GetString("moveToPackageToolStripMenuItem.ToolTipText");
             this.moveToPackageToolStripMenuItem.Click += new System.EventHandler(this.moveDiagramElementToToolStripMenuItem_Click);
             // 
             // _createSharedMemoryToolStripMenuItem
             // 
             this._createSharedMemoryToolStripMenuItem.Name = "_createSharedMemoryToolStripMenuItem";
-            this._createSharedMemoryToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this._createSharedMemoryToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this._createSharedMemoryToolStripMenuItem.Text = "&Create Shared Memory for Package";
             this._createSharedMemoryToolStripMenuItem.ToolTipText = "Create shared memory from:\r\n#define SP_SHM_HW_MIC_START     0x40008000u\r\n#define " +
     "SP_SHM_HW_MIC_END       0x400083FFu\r\nas class+interface shared memory and:\r\nthe " +
@@ -1756,12 +1756,12 @@ namespace hoReverse.Reverse
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
             // 
             // standardDiagramToolStripMenuItem
             // 
             this.standardDiagramToolStripMenuItem.Name = "standardDiagramToolStripMenuItem";
-            this.standardDiagramToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.standardDiagramToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this.standardDiagramToolStripMenuItem.Text = "StandardDiagram (recursive)";
             this.standardDiagramToolStripMenuItem.ToolTipText = "Sets the diagram standards for selected:\r\n- Diagram\r\n- Element, recursive\r\n- Pack" +
     "age, recursive,\r\n\r\nParameters:\r\n- Diagram fit to one page\r\n- No qualifiers\r\n- Ou" +
@@ -1771,25 +1771,25 @@ namespace hoReverse.Reverse
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(209, 6);
             // 
             // moveUsageToElementToolStripMenuItem
             // 
             this.moveUsageToElementToolStripMenuItem.Name = "moveUsageToElementToolStripMenuItem";
-            this.moveUsageToElementToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.moveUsageToElementToolStripMenuItem.Text = "Move usage to element";
+            this.moveUsageToElementToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
+            this.moveUsageToElementToolStripMenuItem.Text = "Move element usage to element";
             this.moveUsageToElementToolStripMenuItem.ToolTipText = resources.GetString("moveUsageToElementToolStripMenuItem.ToolTipText");
             this.moveUsageToElementToolStripMenuItem.Click += new System.EventHandler(this.MoveUsageToElementToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(209, 6);
             // 
             // sortAlphabeticToolStripMenuItem
             // 
             this.sortAlphabeticToolStripMenuItem.Name = "sortAlphabeticToolStripMenuItem";
-            this.sortAlphabeticToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.sortAlphabeticToolStripMenuItem.Size = new System.Drawing.Size(318, 22);
             this.sortAlphabeticToolStripMenuItem.Text = "Sort alphabetic";
             this.sortAlphabeticToolStripMenuItem.ToolTipText = "Sort the selected diagram elements in alphabetic order:\r\n- Ports, Pins, Parameter" +
     "s\r\n- Elements, Packages\r\n\r\nIt ignores:\r\n- ProvidedInterface\r\n- RequiredInterface" +
@@ -1799,7 +1799,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(265, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(209, 6);
             // 
             // _codeToolStripMenuItem
             // 
@@ -2510,7 +2510,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn13,
             this._toolStripBtn14,
             this._toolStripBtn15});
-            this._toolStrip6.Location = new System.Drawing.Point(3, 0);
+            this._toolStrip6.Location = new System.Drawing.Point(2, 0);
             this._toolStrip6.Name = "_toolStrip6";
             this._toolStrip6.Size = new System.Drawing.Size(127, 25);
             this._toolStrip6.TabIndex = 4;

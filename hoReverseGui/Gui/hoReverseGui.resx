@@ -283,6 +283,8 @@ If nested elements:
 - Source: Fist selected Element in Diagram
 - Target: Second selected Element in Diagram
 
+Use it to remove duplicates. At the end it asks to delete the sojurce element.
+
 It updates:
 - Links
 - Attribute type
