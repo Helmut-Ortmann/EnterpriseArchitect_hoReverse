@@ -84,11 +84,11 @@ namespace hoReverse.Services
             // get the search vom setting
             try
             {
-                rep.RunModelSearch(searchName, searchString, "", "");
+                rep.RunModelSearch(searchName.Trim(), searchString.Trim(), "", "");
             }
             catch (Exception e1)
             {
-                MessageBox.Show(e1.ToString(), $@"Search name:'{searchName}'");
+                MessageBox.Show(e1.ToString(), $@"Search name:'{searchName.Trim()}'");
             }
         }
 

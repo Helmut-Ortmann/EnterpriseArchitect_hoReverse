@@ -63,6 +63,9 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+3.13 Fix white spaces in search text
+
+
 3.12 Improvements generating Activity nodes
 - F Final can also create an Init on the Activity Diagram
   - DiagramObject selected: Create Final node
