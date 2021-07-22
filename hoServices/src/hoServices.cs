@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
 using DocumentFormat.OpenXml.Packaging;
 using EaServices.MOVE;
@@ -525,11 +526,13 @@ Second Element: Target of move connections and appearances", @"Select two elemen
         }
 
         #region addDiagramNote
+
         /// <summary>
         /// Add Diagram Note
         /// </summary>
         /// <param name="rep"></param>
-        public static void AddDiagramNote(Repository rep)
+        /// <param name="text"></param>
+        public static void AddDiagramNote(Repository rep, string text="")
         {
             ObjectType oType = rep.GetContextItemType();
             if (oType.Equals(ObjectType.otDiagram))
@@ -545,6 +548,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 try
                 {
                     elNote = (Element) pkg.Elements.AddNew("", "Note");
+                    elNote.Notes = text;
                     elNote.Update();
                     pkg.Update();
                 }
@@ -6711,8 +6715,9 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
         /// <param name="elementType"></param>
         /// <param name="connectorLinkType"></param>
         /// <param name="bound"></param>
+        /// <param name="text">The text to insert</param>
         public static void AddElementsToDiagram(Repository rep,
-            string elementType = "Note", string connectorLinkType = "Element Note", bool bound = true)
+            string elementType = "Note", string connectorLinkType = "Element Note", bool bound = true, string text = "")
 
         {
             // handle multiple selected elements
@@ -6725,11 +6730,11 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
             switch (objectType)
             {
                 case ObjectType.otDiagram:
-                    AddDiagramNote(rep);
+                    AddDiagramNote(rep,text);
                     break;
                 case ObjectType.otConnector:
                     if (!String.IsNullOrWhiteSpace(connectorLinkType)) connectorLinkType = "Link Notes";
-                    AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, bound);
+                    AddElementWithLinkToConnector(rep, diaCurrent.SelectedConnector, elementType, bound, text);
                     break;
                 case ObjectType.otPackage:
                 case ObjectType.otElement:
@@ -6739,7 +6744,7 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
                     {
                         foreach (DiagramObject diaObj in diaCurrentSelectedObjects)
                         {
-                            AddElementWithLink(rep, diaObj, elementType, connectorLinkType);
+                            AddElementWithLink(rep, diaObj, elementType, connectorLinkType, text);
                         }
                     }
                     break;
@@ -6763,8 +6768,10 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
         /// <param name="diaObj"></param>
         /// <param name="elementType">Default Note</param>
         /// <param name="connectorType">Default: null</param>
+        /// <param name="text"></param>
         private static void AddElementWithLink(Repository rep, DiagramObject diaObj,
-            string elementType = @"Note", string connectorType = "Element Link")
+            string elementType = @"Note", string connectorType = "Element Link", 
+            string text="")
         {
             Element el = rep.GetElementByID(diaObj.ElementID);
             if (el != null)
@@ -6777,6 +6784,7 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
                 try
                 {
                     elNewElement = (Element)pkg.Elements.AddNew("", elementType);
+                    elNewElement.Notes = text;
                     elNewElement.Update();
                     pkg.Update();
                 }
@@ -6939,7 +6947,8 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
         private static void AddElementWithLinkToConnector(Repository rep, 
             EA.Connector con,
             string elementType = @"Note", 
-            bool bound = true)
+            bool bound = true,
+            string text = "")
         {
             Diagram dia = rep.GetCurrentDiagram();
             Package pkg = rep.GetPackageByID(dia.PackageID);
@@ -6949,6 +6958,7 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
             try
             {
                 elNewElement = (Element)pkg.Elements.AddNew("", elementType);
+                if (bound == false) elNewElement.Notes = text;
                 elNewElement.Update();
                 pkg.Update();
             }

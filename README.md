@@ -63,6 +63,8 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+3.14 Use text in textfield for constraint and notes
+
 3.13 Fix white spaces in search text
 
 

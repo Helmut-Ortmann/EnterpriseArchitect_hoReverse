@@ -26,7 +26,7 @@ using EaServices.Doors.ReqIfs.Inventory;
 
 using hoUtils.BulkChange;
 
-using MoreLinq;
+//using MoreLinq;
 
 
 // ReSharper disable RedundantDelegateCreation
@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.13.0"; 
+        private readonly string _version = "3.14.0"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -1704,7 +1704,7 @@ namespace hoReverse.Reverse
             // _toolStripSeparator3
             // 
             this._toolStripSeparator3.Name = "_toolStripSeparator3";
-            this._toolStripSeparator3.Size = new System.Drawing.Size(209, 6);
+            this._toolStripSeparator3.Size = new System.Drawing.Size(315, 6);
             // 
             // _showFolderToolStripMenuItem
             // 
@@ -1726,7 +1726,7 @@ namespace hoReverse.Reverse
             // _toolStripSeparator4
             // 
             this._toolStripSeparator4.Name = "_toolStripSeparator4";
-            this._toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
+            this._toolStripSeparator4.Size = new System.Drawing.Size(315, 6);
             // 
             // _copyGuidSqlToClipboardToolStripMenuItem
             // 
@@ -1756,7 +1756,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(315, 6);
             // 
             // standardDiagramToolStripMenuItem
             // 
@@ -1771,7 +1771,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(315, 6);
             // 
             // moveUsageToElementToolStripMenuItem
             // 
@@ -1784,7 +1784,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(315, 6);
             // 
             // sortAlphabeticToolStripMenuItem
             // 
@@ -1799,7 +1799,7 @@ namespace hoReverse.Reverse
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(315, 6);
             // 
             // _codeToolStripMenuItem
             // 
@@ -2510,7 +2510,7 @@ namespace hoReverse.Reverse
             this._toolStripBtn13,
             this._toolStripBtn14,
             this._toolStripBtn15});
-            this._toolStrip6.Location = new System.Drawing.Point(2, 0);
+            this._toolStrip6.Location = new System.Drawing.Point(3, 0);
             this._toolStrip6.Name = "_toolStrip6";
             this._toolStrip6.Size = new System.Drawing.Size(127, 25);
             this._toolStrip6.TabIndex = 4;
@@ -2661,6 +2661,8 @@ namespace hoReverse.Reverse
             // 
             // HoReverseGui
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this._btnWriteText);
             this.Controls.Add(this._toolStrip1);
@@ -3979,7 +3981,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
         /// <param name="e"></param>
         private void _btnAddElementNote_Click(object sender, EventArgs e)
         {
-            HoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "", bound:false);
+            HoService.AddElementsToDiagram(_repository, "Note", connectorLinkType: "", bound:false, _txtUserText.Text);
         }
         /// <summary>
         /// Show constraint
@@ -3991,7 +3993,7 @@ If you don't need to import/export ReqIF & Co, you can ignore this message!!
         /// <param name="e"></param>
         private void _btnAddConstraint_Click(object sender, EventArgs e)
         {
-            HoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "", bound:false);
+            HoService.AddElementsToDiagram(_repository, "Constraint", connectorLinkType: "", bound:false, _txtUserText.Text);
         }
 
         /// <summary>

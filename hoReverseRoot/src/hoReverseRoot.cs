@@ -26,11 +26,11 @@ namespace hoReverse
         //    STANDARD,
         //    ADMIN
         //}
-        public static string Release = "3.9.0"; // not overwritten by EA_OnPostInitialized
+        public static string Release = "3.14.0"; // not overwritten by EA_OnPostInitialized
         // EA Addin specification in registry:
         // Key:   hoReverse
         // Value: hoReverse.ReverseRoot
-        private string _prog_id = "hoReverse.ReverseRoot";
+        private string _progId = "hoReverse.ReverseRoot";
 
 
         EaHistory _history;// diagram history

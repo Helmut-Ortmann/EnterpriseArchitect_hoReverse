@@ -44,6 +44,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AdoNetCore.AseClient">
+      <Version>0.19.2</Version>
+    </PackageReference>
     <PackageReference Include="ClosedXML">
       <Version>0.93.1</Version>
     </PackageReference>
@@ -54,37 +57,40 @@
       <Version>1.5.0</Version>
     </PackageReference>
     <PackageReference Include="Google.Protobuf">
-      <Version>3.14.0</Version>
+      <Version>3.17.3</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.17</Version>
     </PackageReference>
     <PackageReference Include="JetBrains.Annotations">
-      <Version>2020.3.0</Version>
+      <Version>2021.2.0</Version>
     </PackageReference>
     <PackageReference Include="jQuery">
-      <Version>3.5.1</Version>
+      <Version>3.6.0</Version>
     </PackageReference>
     <PackageReference Include="KBCsv.Extensions.Data">
       <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="linq2db">
-      <Version>2.9.3</Version>
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="linq2db.Access">
-      <Version>3.2.3</Version>
+      <Version>2.9.8</Version>
+    </PackageReference>
+    <PackageReference Include="linq2db.MySql">
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="linq2db.Oracle.Managed">
-      <Version>3.2.3</Version>
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="linq2db.PostgreSQL">
-      <Version>3.2.3</Version>
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="linq2db.Sybase">
-      <Version>3.2.3</Version>
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="linq2db.Sybase.DataAction">
-      <Version>3.2.3</Version>
+      <Version>2.9.8</Version>
     </PackageReference>
     <PackageReference Include="MariGold.HtmlParser">
       <Version>1.1.1</Version>
@@ -93,7 +99,7 @@
       <Version>2.7.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>5.0.3</Version>
+      <Version>5.0.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.Types">
       <Version>14.0.1016.290</Version>
@@ -102,13 +108,13 @@
       <Version>3.3.2</Version>
     </PackageReference>
     <PackageReference Include="MySql.Data">
-      <Version>8.0.23</Version>
+      <Version>8.0.26</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Npgsql">
-      <Version>5.0.3</Version>
+      <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="OpenMcdf-2">
       <Version>2.1.2</Version>
@@ -141,7 +147,7 @@
       <Version>4.5.1</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite.Core">
-      <Version>1.0.113.7</Version>
+      <Version>1.0.114.3</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>

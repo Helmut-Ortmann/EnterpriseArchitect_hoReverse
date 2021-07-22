@@ -182,6 +182,11 @@
       <Name>hoUtil</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AdoNetCore.AseClient">
+      <Version>0.19.2</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(SolutionDir)\hoReverse_Setup\Scripts\RegisterHoReverse.reg /f</PostBuildEvent>
