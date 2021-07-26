@@ -531,8 +531,10 @@ Second Element: Target of move connections and appearances", @"Select two elemen
         /// Add Diagram Note
         /// </summary>
         /// <param name="rep"></param>
-        /// <param name="text"></param>
-        public static void AddDiagramNote(Repository rep, string text="")
+        /// <param name="type"></param>
+        /// <param name="bound"></param>
+        /// <param name="text">A text to insert into the notes</param>
+        public static void AddDiagramNote(Repository rep, string type="Note", bool bound=true, string text="")
         {
             ObjectType oType = rep.GetContextItemType();
             if (oType.Equals(ObjectType.otDiagram))
@@ -547,7 +549,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 Element elNote;
                 try
                 {
-                    elNote = (Element) pkg.Elements.AddNew("", "Note");
+                    elNote = (Element) pkg.Elements.AddNew("", type);
                     elNote.Notes = text;
                     elNote.Update();
                     pkg.Update();
@@ -594,9 +596,12 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 diaObject.ElementID = elNote.ElementID;
                 diaObject.Update();
                 pkg.Elements.Refresh();
-
-                HoUtil.SetDiagramHasAttachedLink(rep, elNote);
-                rep.ReloadDiagram(dia.DiagramID);
+                // Bound to diagram property
+                if (bound && type == "Note")
+                {
+                    HoUtil.SetDiagramHasAttachedLink(rep, elNote);
+                    rep.ReloadDiagram(dia.DiagramID);
+                }
 
             }
         }
@@ -1928,7 +1933,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 {
                     var pkg = (EA.Package)rep.GetContextObject();
                     elSource = rep.GetElementByGuid(pkg.PackageGUID);
-                    DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+                    CreateCompositeDiagramObjectBeneath(rep, name, extension, elSource, basicType, ref elParent);
                     return null;
                 }
                 // Diagram selected, Context Element
@@ -1945,7 +1950,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                         elSource = rep.GetElementByGuid(pkg.PackageGUID);
                     }
 
-                    DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+                    CreateCompositeDiagramObjectBeneath(rep, name, extension, elSource, basicType, ref elParent);
                     return null;
                 }
                 return null;
@@ -1963,7 +1968,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 dia.GetDiagramObjectByID(elSource.ParentID, "");
             }
            
-            var elTarget = DiagramObjectFromContext(rep, name, extension, elSource, basicType, ref elParent);
+            var elTarget = CreateCompositeDiagramObjectBeneath(rep, name, extension, elSource, basicType, ref elParent);
             if (elTarget == null) return null; // not created target element
             if (diaObjSource == null) return null; // not created diagram object
 
@@ -2041,7 +2046,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 }
             }
 
-
+            // Create Diagramobject
             HoUtil.AddSequenceNumber(rep, dia);
             var diaObjTarget = (DiagramObject)dia.DiagramObjects.AddNew(position, "");
             diaObjTarget.ElementID = elTarget.ElementID;
@@ -2153,8 +2158,9 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             rep.SaveDiagram(dia.DiagramID);
             rep.ReloadDiagram(dia.DiagramID);
             Element elT = rep.GetElementByID(diaObjTarget.ElementID);
-            dia.SelectedObjects.AddNew(diaObjTarget.ElementID.ToString(),elT.ObjectType.ToString());
+           dia.SelectedObjects.AddNew(diaObjTarget.ElementID.ToString(), diaObjTarget.ObjectType.ToString());
             dia.SelectedObjects.Refresh();
+            //dia.Update();
             return diaObjTarget;
                 
             
@@ -2169,7 +2175,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
         /// <param name="basicType"></param>
         /// <param name="elParent"></param>
         /// <returns></returns>
-        private static EA.Element DiagramObjectFromContext(Repository rep, string name, string extension, Element elSource,
+        private static EA.Element CreateCompositeDiagramObjectBeneath(Repository rep, string name, string extension, Element elSource,
             string basicType, ref Element elParent)
         {
             Element elTarget;
@@ -2773,7 +2779,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             {
                 if (! (match.Value.Contains("#")))
                 {
-                //if (Regex.IsMatch(old, @"#[\s]*(if|elseif|else)", RegexOptions.Singleline)) continue;
+                    //if (Regex.IsMatch(old, @"#[\s]*(if|elseif|else)", RegexOptions.Singleline)) continue;
                     //s0 = s0.Replace(match.Groups[1].Value, Regex.Replace(old, "\r\n", ""));
                     // check if this is no if(..)
                     if (match.Value.StartsWith("if", StringComparison.Ordinal))
@@ -2805,7 +2811,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                         offsetHorizontal = 0;
                         //lines[0] = lines[0].Replace(matchElseIf.Value, "");
                     } else {
-                    skipFirstLine = true;
+                        skipFirstLine = true;
                     }
                 }
             }
@@ -5466,6 +5472,9 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
             dia.Update();
            
             rep.ReloadDiagram(dia.DiagramID);
+            // select the newly created diagram object
+            dia.SelectedObjects.AddNew(dObj.ElementID.ToString(), dObj.ObjectType.ToString());
+            dia.SelectedObjects.Refresh();
         }
 #endregion
 
@@ -5508,7 +5517,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
             DiagramObject trgObj = CreateDiagramObjectFromContext(rep, "", type, subType,0,0,guardString, originalSrcEl);
             Element trgtEl = rep.GetElementByID(trgObj.ElementID);
 
-            // if connection to more than one element make sure the new elemenet is on the deepest position
+            // if connection to more than one element make sure the new element is on the deepest position
             int offset = 50;
             if (guardString == "yes") offset = 0;
             int bottom = 1000;
@@ -5516,29 +5525,29 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
 
 
             foreach (DiagramObject diaObj in oldCollection)
+            {
+                Element srcEl = rep.GetElementByID(diaObj.ElementID);
+                // don't connect two times
+                if (originalSrcId != diaObj.ElementID)
                 {
-                    Element srcEl = rep.GetElementByID(diaObj.ElementID);
-                    // don't connect two times
-                    if (originalSrcId != diaObj.ElementID)
-                    {
-                        EA.Connector con = (EA.Connector)srcEl.Connectors.AddNew("", "ControlFlow");
-                        con.SupplierID = trgObj.ElementID;
-                        if (type == "MergeNode" && guardString == "no" && srcEl.Type == "Decision") con.TransitionGuard = "no";
-                        con.Update();
-                        srcEl.Connectors.Refresh();
-                        dia.DiagramLinks.Refresh();
-                        //trgtEl.Connectors.Refresh();
+                    EA.Connector con = (EA.Connector)srcEl.Connectors.AddNew("", "ControlFlow");
+                    con.SupplierID = trgObj.ElementID;
+                    if (type == "MergeNode" && guardString == "no" && srcEl.Type == "Decision") con.TransitionGuard = "no";
+                    con.Update();
+                    srcEl.Connectors.Refresh();
+                    dia.DiagramLinks.Refresh();
+                    //trgtEl.Connectors.Refresh();
 
-                        // set line style
-                        string style = "LV";
-                        if ((srcEl.Type == "Action" | srcEl.Type == "Activity") & guardString == "no") style = "LH";
-                        var link = GetDiagramLinkForConnector(dia, con.ConnectorID);
-                        if (link != null) HoUtil.SetLineStyleForDiagramLink(style, link);
+                    // set line style
+                    string style = "LV";
+                    if ((srcEl.Type == "Action" | srcEl.Type == "Activity") & guardString == "no") style = "LH";
+                    var link = GetDiagramLinkForConnector(dia, con.ConnectorID);
+                    if (link != null) HoUtil.SetLineStyleForDiagramLink(style, link);
 
-                    }
-                    // set new high/bottom_Position
-                    var srcObj = dia.GetDiagramObjectByID(srcEl.ElementID, "");
-                    if (srcObj.bottom < bottom) bottom = srcObj.bottom;
+                }
+                // set new high/bottom_Position
+                var srcObj = dia.GetDiagramObjectByID(srcEl.ElementID, "");
+                if (srcObj.bottom < bottom) bottom = srcObj.bottom;
 
             }
             if (oldCollection.Count > 1)
@@ -5567,6 +5576,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
 
             rep.ReloadDiagram(dia.DiagramID);
             dia.SelectedObjects.AddNew(trgtEl.ElementID.ToString(), trgtEl.ObjectType.ToString());
+            dia.SelectedObjects.Refresh();
         }
         #endregion
         #region noGuard
@@ -5659,6 +5669,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
     
             rep.ReloadDiagram(dia.DiagramID);
             dia.SelectedObjects.AddNew(trgEl.ElementID.ToString(), trgEl.ObjectType.ToString());
+            dia.SelectedObjects.Refresh();
         }
                     #endregion
 
@@ -5693,6 +5704,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
 
             rep.ReloadDiagram(dia.DiagramID);
             dia.SelectedObjects.AddNew(trgEl.ElementID.ToString(), trgEl.ObjectType.ToString());
+            dia.SelectedObjects.Refresh();
         }
                     #endregion
                     #region splitAllDiagramObjectsToLastSelected
@@ -5719,6 +5731,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
 
             rep.ReloadDiagram(dia.DiagramID);
             dia.SelectedObjects.AddNew(trgEl.ElementID.ToString(), trgEl.ObjectType.ToString());
+            dia.SelectedObjects.Refresh();
         }
                     #endregion
                     #region splitElementsByConnectorType
@@ -6730,7 +6743,7 @@ Flags={pkg.Flags}", @"Update package state?", MessageBoxButtons.YesNo);
             switch (objectType)
             {
                 case ObjectType.otDiagram:
-                    AddDiagramNote(rep,text);
+                    AddDiagramNote(rep,elementType, bound, text);
                     break;
                 case ObjectType.otConnector:
                     if (!String.IsNullOrWhiteSpace(connectorLinkType)) connectorLinkType = "Link Notes";

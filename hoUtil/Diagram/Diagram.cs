@@ -104,10 +104,12 @@ namespace hoReverse.hoUtils.Diagrams
             // If an context element exists than this is the last selected element
             if (_dia.SelectedObjects.Count > 0)
             {
-                // only package and object makes sense, or no context element (than go for selected elements)
+                // The context item isn't always set, try to estimate it
                 if (contextObjectType == EA.ObjectType.otElement ||
                     contextObjectType == EA.ObjectType.otPackage ||
-                    contextObjectType == EA.ObjectType.otNone)
+                    contextObjectType == EA.ObjectType.otNone   ||
+                    contextObjectType == EA.ObjectType.otDiagram
+                    )
                 {
                     // 1. store context element/ last selected element
                     // Context Element may be a Package. EA also stores the package as Element 
@@ -182,7 +184,8 @@ namespace hoReverse.hoUtils.Diagrams
             if (_selectedConnector != null) _dia.SelectedConnector = _selectedConnector;
             foreach (EA.DiagramObject dObj in _selectedObjects)
             {
-                _dia.SelectedObjects.AddNew(dObj.ElementID.ToString(), dObj.ObjectType.ToString());
+                if (dObj != null)
+                    _dia.SelectedObjects.AddNew(dObj.ElementID.ToString(), dObj.ObjectType.ToString());
             }
             _dia.SelectedObjects.Refresh();
 
@@ -211,6 +214,7 @@ namespace hoReverse.hoUtils.Diagrams
 
             EA.DiagramObject diaObj = _dia.GetDiagramObjectByID(con.SupplierID, "");
             _dia.SelectedObjects.AddNew(diaObj.ElementID.ToString(), diaObj.ObjectType.ToString());
+            _dia.SelectedObjects.Refresh();
         }
         /// <summary>
         /// Unselect all elements, connector.

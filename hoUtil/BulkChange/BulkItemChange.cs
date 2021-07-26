@@ -63,7 +63,7 @@ namespace hoUtils.BulkChange
         /// <param name="elRecursive"></param>
         public static void BulkChange(EA.Repository rep, BulkElementItem bulkElement, bool elRecursive=false )
         {
-            var eaDia = new EaDiagram(rep);
+            var eaDia = new EaDiagram(rep,true);
             // all selected elements in diagram
             foreach (EA.DiagramObject diaObj in eaDia.SelObjects)
             {

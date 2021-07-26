@@ -63,7 +63,10 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
-3.14 Use text in textfield for constraint and notes
+ 
+3.14.3 Use text in textfield for constraint and notes
+     Fix error: Create Note/Constraint for Diagram
+     Fix error: Correct not set context item by EA (Diagram.cs)
 
 3.13 Fix white spaces in search text
 

@@ -556,7 +556,7 @@ ObjectId/Multiplicity: '{objectId}
             {
                if ( TaggedValue.Exists(el, tvName)) 
                    // only get value of existing one
-                    tv = TaggedValue.CreateTaggedValue(el,tvName);
+                   tv = TaggedValue.CreateTaggedValue(el,tvName);
                else
                {
                    if (_exportFields.GetMacroName(name) != "") tvValue = _exportFields.GetMacroValue(el, name);
