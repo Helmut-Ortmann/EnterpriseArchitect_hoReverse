@@ -129,6 +129,7 @@
     <Compile Include="src\Appl.cs" />
     <Compile Include="src\Connector.cs" />
     <Compile Include="src\CustomProperty.cs" />
+    <Compile Include="src\Decision.cs" />
     <Compile Include="src\EaElement.cs" />
     <Compile Include="src\Favorite.cs" />
     <Compile Include="src\GlobalHotkeyException.cs" />

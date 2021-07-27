@@ -64,7 +64,8 @@ Let's discuss it, but it works.
 
 ## News
  
-3.14.3 Use text in textfield for constraint and notes
+3.14.5 Use text in textfield for constraint and notes
+     Optimize ControlFlow from Decision with "yes"/"no"
      Fix error: Create Note/Constraint for Diagram
      Fix error: Correct not set context item by EA (Diagram.cs)
 

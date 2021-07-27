@@ -33,6 +33,7 @@ using CustomProperty = EA.CustomProperty;
 using DiagramObject = EA.DiagramObject;
 using EaServices.AddInSearch;
 
+
 // ReSharper disable once CheckNamespace
 namespace hoReverse.Services
 {
@@ -2070,21 +2071,22 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             }
 
             if (extension == "Comp=no")
-                { /* Activity in diagram */
-                    // place an init
-                    int initLeft = left + ((right - left) / 2) - 10;
-                    int initRight = initLeft + 20;
-                    int initTop = top - 25;
-                    int initBottom = initTop - 20;
-                    string initPosition = "l=" + initLeft + ";r=" + initRight + ";t=" + initTop + ";b=" + initBottom + ";";
-                    // set target
-                    elTarget.Name = name;
-                    diaObjTarget = ActivityPar.CreateInitFinalNode(rep, dia,
-                        elTarget, 100, initPosition);
+            { /* Activity in diagram */
+                // place an init
+                int initLeft = left + ((right - left) / 2) - 10;
+                int initRight = initLeft + 20;
+                int initTop = top - 25;
+                int initBottom = initTop - 20;
+                string initPosition = "l=" + initLeft + ";r=" + initRight + ";t=" + initTop + ";b=" + initBottom + ";";
+                // set target
+                elTarget.Name = name;
+                diaObjTarget = ActivityPar.CreateInitFinalNode(rep, dia,
+                    elTarget, 100, initPosition);
                     
-                }
-
-                var con = DrawConnectorBetweenElements(elSource, elTarget,"ControlFlow","");
+            }
+            //--------------------------
+            // make connector
+            var con = DrawConnectorBetweenElements(elSource, elTarget,"ControlFlow","");
 
             // set line style LV
                 foreach (DiagramLink link in dia.DiagramLinks)
@@ -2106,7 +2108,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                     }
                 }
              
-
+                //-----------------------------
                 // set Guard
                 if (guardString != "") {
                     if (guardString == "no" && elSource.Type != "Decision")
@@ -2121,7 +2123,14 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 }
                 else if (elSource.Type.Equals("Decision") & !elSource.Name.Trim().Equals(""))
                 {
-                    HoUtil.SetConnectorGuard(rep, con.ConnectorID, guardString == "no" ? "no" : "yes");
+                    string decisionGuards = Decision.GetDecisionOutgoingGuards(rep, elSource);
+                    if (guardString == "")
+                    {
+                        if (decisionGuards.Contains("yes")) guardString = "no";
+                        if (decisionGuards.Contains("no")) guardString = "yes";
+                    }
+
+                    HoUtil.SetConnectorGuard(rep, con.ConnectorID, guardString);
                 }
 
                 // handle subtypes of action
@@ -5532,7 +5541,15 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
                 {
                     EA.Connector con = (EA.Connector)srcEl.Connectors.AddNew("", "ControlFlow");
                     con.SupplierID = trgObj.ElementID;
-                    if (type == "MergeNode" && guardString == "no" && srcEl.Type == "Decision") con.TransitionGuard = "no";
+                    // Handle Merge node
+                    string outgoingGuards = Decision.GetDecisionOutgoingGuards(rep, srcEl);
+                    if (type == "MergeNode" && srcEl.Type == "Decision")
+                    {
+                        con.TransitionGuard = "";
+                        if (outgoingGuards == "yes") con.TransitionGuard = "no";
+                        if (outgoingGuards == "no") con.TransitionGuard = "yes";
+
+                    }
                     con.Update();
                     srcEl.Connectors.Refresh();
                     dia.DiagramLinks.Refresh();
