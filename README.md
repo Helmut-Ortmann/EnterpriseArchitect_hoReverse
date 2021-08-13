@@ -63,6 +63,9 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+
+3.15 GUI formatting fixed
+     linq2db drivers updated to 3....
  
 3.14.5 Use text in textfield for constraint and notes
      Optimize ControlFlow from Decision with "yes"/"no"
