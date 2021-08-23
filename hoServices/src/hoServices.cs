@@ -2124,8 +2124,10 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 else if (elSource.Type.Equals("Decision") & !elSource.Name.Trim().Equals(""))
                 {
                     string decisionGuards = Decision.GetDecisionOutgoingGuards(rep, elSource);
-                    if (guardString == "")
+                    // set guard
+                    if (String.IsNullOrWhiteSpace(guardString))
                     {
+                        guardString = "yes"; // default
                         if (decisionGuards.Contains("yes")) guardString = "no";
                         if (decisionGuards.Contains("no")) guardString = "yes";
                     }
@@ -5541,15 +5543,23 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
                 {
                     EA.Connector con = (EA.Connector)srcEl.Connectors.AddNew("", "ControlFlow");
                     con.SupplierID = trgObj.ElementID;
-                    // Handle Merge node
-                    string outgoingGuards = Decision.GetDecisionOutgoingGuards(rep, srcEl);
+                    // estimate guard if not defined
                     if (type == "MergeNode" && srcEl.Type == "Decision")
                     {
-                        con.TransitionGuard = "";
-                        if (outgoingGuards == "yes") con.TransitionGuard = "no";
-                        if (outgoingGuards == "no") con.TransitionGuard = "yes";
+                        if (String.IsNullOrWhiteSpace(guardString))
+                        {
+                            // Handle Merge node
+                            string outgoingGuards = Decision.GetDecisionOutgoingGuards(rep, srcEl);
+                            {
+                                con.TransitionGuard = "yes"; // default
+                                if (outgoingGuards == "yes") con.TransitionGuard = "no";
+                                if (outgoingGuards == "no") con.TransitionGuard = "yes";
 
+                            }
+                        }
+                        else con.TransitionGuard = guardString;
                     }
+
                     con.Update();
                     srcEl.Connectors.Refresh();
                     dia.DiagramLinks.Refresh();

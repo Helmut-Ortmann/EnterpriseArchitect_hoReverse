@@ -49,7 +49,7 @@ namespace hoReverse.Reverse
     {
         readonly string Tab = @"\t";
 
-        private readonly string _version = "3.14.0"; 
+        private readonly string _version = "3.16.0"; 
         // The last MenuItem the mouse hovered upon.
         private ToolStripMenuItem _lastMenuItem;
 
@@ -2875,7 +2875,7 @@ namespace hoReverse.Reverse
         
 
         /// <summary>
-        /// Insert for selected diagram node:
+        /// 'I' Insert for selected diagram node:
         /// - Behavior if Activity
         /// - Used/Realized interfaces if Class, Component
         /// </summary>

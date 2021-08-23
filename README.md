@@ -64,6 +64,8 @@ Let's discuss it, but it works.
 
 ## News
 
+3.16 Handle Decision Guard string, fix version
+
 3.15 GUI formatting fixed
      linq2db drivers updated to 3....
  
