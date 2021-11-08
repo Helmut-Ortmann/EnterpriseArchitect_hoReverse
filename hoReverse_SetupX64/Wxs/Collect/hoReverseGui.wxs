@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id="dirA622272A3642906C114F843D2FDC5552" Name="release" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirA622272A3642906C114F843D2FDC5552">
+            <Component Id="cmp6E89203D8DEA993CEDC068308F037BAE" Guid="*">
+                <Class Id="{17FBF51F-769F-313D-9236-054048F3FD40}" Context="InprocServer32" Description="hoReverse.Reverse.EnterTextBox" ThreadingModel="both" ForeignServer="mscoree.dll">
+                    <ProgId Id="hoReverse.Reverse.EnterTextBox" Description="hoReverse.Reverse.EnterTextBox" />
+                </Class>
+                <Class Id="{226B3DEA-E240-3CD8-90B4-0381EB438682}" Context="InprocServer32" Description="hoReverse.DataBinding.ImagePathConverter" ThreadingModel="both" ForeignServer="mscoree.dll">
+                    <ProgId Id="hoReverse.DataBinding.ImagePathConverter" Description="hoReverse.DataBinding.ImagePathConverter" />
+                </Class>
+                <Class Id="{A6542A36-6923-3A07-B75F-00B3574FBBAF}" Context="InprocServer32" Description="hoReverse.Settings.AddinSettings" ThreadingModel="both" ForeignServer="mscoree.dll">
+                    <ProgId Id="hoReverse.Settings.AddinSettings" Description="hoReverse.Settings.AddinSettings" />
+                </Class>
+                <Class Id="{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}" Context="InprocServer32" Description="hoReverse.Reverse.HoReverseGui" ThreadingModel="both" ForeignServer="mscoree.dll">
+                    <ProgId Id="hoReverse.ReverseGui" Description="hoReverse.Reverse.HoReverseGui" />
+                </Class>
+                <File Id="filE39C4D0BAC748AB2B48DAFEC2017F25E" KeyPath="yes" Source="SourceDir\release\hoReverseGui.dll" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32\3.0.0.0" Name="Class" Value="hoReverse.Reverse.EnterTextBox" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32\3.0.0.0" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32\3.0.0.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32\3.0.0.0" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32" Name="Class" Value="hoReverse.Reverse.EnterTextBox" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{17FBF51F-769F-313D-9236-054048F3FD40}\InprocServer32" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32\3.0.0.0" Name="Class" Value="hoReverse.DataBinding.ImagePathConverter" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32\3.0.0.0" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32\3.0.0.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32\3.0.0.0" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32" Name="Class" Value="hoReverse.DataBinding.ImagePathConverter" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{226B3DEA-E240-3CD8-90B4-0381EB438682}\InprocServer32" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32\3.0.0.0" Name="Class" Value="hoReverse.Settings.AddinSettings" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32\3.0.0.0" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32\3.0.0.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32\3.0.0.0" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32" Name="Class" Value="hoReverse.Settings.AddinSettings" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{A6542A36-6923-3A07-B75F-00B3574FBBAF}\InprocServer32" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32\3.0.0.0" Name="Class" Value="hoReverse.Reverse.HoReverseGui" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32\3.0.0.0" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32\3.0.0.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32\3.0.0.0" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32" Name="Class" Value="hoReverse.Reverse.HoReverseGui" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32" Name="Assembly" Value="hoReverseGui, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+                <RegistryValue Root="HKCR" Key="CLSID\{C845E70C-EDC5-4D80-8F78-5F4DBF96C8ED}\InprocServer32" Name="CodeBase" Value="file:///[#filE39C4D0BAC748AB2B48DAFEC2017F25E]" Type="string" Action="write" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>

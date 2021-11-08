@@ -1765,6 +1765,7 @@ namespace hoReverse.hoUtils
         {
             string pathRoot = Assembly.GetExecutingAssembly().Location;
             pathRoot = Path.GetDirectoryName(pathRoot);
+            var runTimeEnvironment = Environment.Is64BitProcess == true ? "x64" : "x86";
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -1779,8 +1780,9 @@ Helmut.Ortmann@hoModeler.de
 {"EA Library Version:",-32}:{rep.LibraryVersion}
 {"ConnectionString:", -32}:{rep.ConnectionString}
 {"InstallationPath:",-32}:{pathRoot}
+{"Environment:",-32}:{runTimeEnvironment}
 
-{"SettingsPath:",-32}:{pathSettings}
+{ "SettingsPath:",-32}:{pathSettings}
 
 ";
             foreach (string dllName in lDllNames)

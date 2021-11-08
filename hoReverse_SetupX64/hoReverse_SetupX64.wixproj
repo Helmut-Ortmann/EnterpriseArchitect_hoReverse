@@ -2,11 +2,11 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>3.6</ProductVersion>
-    <ProjectGuid>{b868d760-f8e6-4edd-ade0-b10f1964b0ba}</ProjectGuid>
+    <ProjectGuid>{C20A2A50-68CD-4DA4-9F45-6156C7580E6C}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>hoReverse</OutputName>
+    <OutputName>hoReverseX64</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -14,14 +14,14 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <Name>hoReverse_Setup</Name>
+    <Name>hoReverse_SetupX64</Name>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressValidation>False</SuppressValidation>
@@ -47,7 +47,7 @@
     <Content Include="license.rtf" />
     <Content Include="Scripts\getmsiversion.vbs" />
     <Content Include="Scripts\Readme.md" />
-    <Content Include="Scripts\RegisterHoReverse.reg" />
+    <Content Include="Scripts\RegisterHoReverseX64.reg" />
     <Content Include="Scripts\RenameMsi.bat" />
     <Content Include="settings.json" />
     <Content Include="Wxs\Collect\Collect.bat" />
@@ -123,9 +123,6 @@
     <EmbeddedResource Include="Wxs\Localization.wxl" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
-  <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\hoReverse_Setup\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_Setup\bin\release\en-us\hoReverse.msi"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DefineConstants>Debug</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
@@ -136,6 +133,9 @@
     <SuppressIces />
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)\hoReverse_SetupX64\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_SetupX64\bin\release\en-us\hoReverse.msi"</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
