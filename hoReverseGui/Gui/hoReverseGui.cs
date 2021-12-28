@@ -3157,7 +3157,7 @@ namespace hoReverse.Reverse
                         _repository.RunModelSearch(searchName, _txtUserText.Text, "", "");
                         return;
                     }
-                    catch (Exception e1)
+                    catch (Exception )
                     {
                         MessageBox.Show($@"Can't find search!{Environment.NewLine}{Environment.NewLine}- MDG hoTools.. enabled?{Environment.NewLine}- SQL path in Settings correct?{Environment.NewLine}- LINQPad support enabled (Settings General)? :{Environment.NewLine}'{searchName}' '{searchTerm}'{Environment.NewLine}'{Environment.NewLine}'{Environment.NewLine}- EA Search{Environment.NewLine}{Environment.NewLine}Note:{Environment.NewLine}- Define path in File, Settings{Environment.NewLine}- LINQPad needs a license and has to be installed!{Environment.NewLine}{Environment.NewLine}{e}",
                             $@"Error start search.");
@@ -4904,7 +4904,7 @@ Clipboard contains the imported Modules/Specifications as csv", $@"{reqIfLogList
                 Clipboard.SetText(String.Join(";", textCb));
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception e)
+            catch (Exception )
             {
                
             }

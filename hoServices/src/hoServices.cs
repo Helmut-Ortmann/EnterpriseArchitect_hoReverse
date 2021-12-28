@@ -2143,7 +2143,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                     if (method != null)
                     {
                         //CallOperationAction.CreateCallAction(rep, elTarget, method);
-                        Activity.CreateCallAction(rep, elTarget, method.MethodGUID, "CallOperation");
+                        hoUtils.Activity.CreateCallAction(rep, elTarget, method.MethodGUID, "CallOperation");
                     }
                     
                 }
@@ -2152,12 +2152,12 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                 if (type == "CallBehavior")
                 {
 
-                    EA.Element activity = Activity.GetActivityFromMethodName(rep, methodName, verbose:true);
+                    EA.Element activity = hoUtils.Activity.GetActivityFromMethodName(rep, methodName, verbose:true);
 
                     
                     if (activity != null)
                     {
-                        Activity.CreateCallAction(rep, elTarget, activity.ElementGUID, "CallBehavior");
+                        hoUtils.Activity.CreateCallAction(rep, elTarget, activity.ElementGUID, "CallBehavior");
 
                     }
                     
@@ -3032,7 +3032,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                     if (useCallBehaviorAction)
                     {
                         // use CallBehaviourAction
-                        var act = Activity.CreateInDiagramContext(rep, methodName);
+                        var act = hoUtils.Activity.CreateInDiagramContext(rep, methodName);
 
                         // use CallOperation Action
                         if (act == null)

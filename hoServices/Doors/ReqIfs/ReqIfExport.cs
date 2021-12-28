@@ -403,7 +403,7 @@ Req Guid: '{el?.ElementGUID}'
             {
                 specObject.Values.Add(attrValue);
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 MessageBox.Show($@"{errorText}
 

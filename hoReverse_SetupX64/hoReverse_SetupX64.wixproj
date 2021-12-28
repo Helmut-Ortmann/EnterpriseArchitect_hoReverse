@@ -17,16 +17,18 @@
     <Name>hoReverse_SetupX64</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressValidation>False</SuppressValidation>
     <SuppressIces>
     </SuppressIces>
+    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
+    <SuppressPdbOutput>True</SuppressPdbOutput>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Lib" />
@@ -135,7 +137,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\hoReverse_SetupX64\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_SetupX64\bin\release\en-us\hoReverse.msi"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\hoReverse_SetupX64\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_SetupX64\bin\release\en-us\hoReverseX64.msi"</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

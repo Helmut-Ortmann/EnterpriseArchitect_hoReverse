@@ -7,8 +7,10 @@ namespace hoReverse.hoUtils.RUN
 
     public class Run
     {
+        // ReSharper disable once NotAccessedField.Local
         private Repository _rep;
-        private DateTime _start;
+        // ReSharper disable once NotAccessedField.Local
+        private readonly DateTime _start;
 
         public Run(Repository rep)
         {
