@@ -340,8 +340,30 @@
         <File Id="text_x_java.png" Name="text-x-java.png" KeyPath="yes" Source="..\hoServices\MimeTypeImages\text-x-java.png" />
       </Component>
 
-      
+		<!-- Meta files for DEBUG
+	 	 -->
+		<Component Id="hoReverse_WIXPBD" Guid="{B1E56205-D08F-4B25-9B8D-4124E2929518}">
+			<File Id="hoReverse_WIXPBD" KeyPath="yes" Name="hoReverse.wixpdb" Source="..\hoReverse_Setup\bin\Release\en-us\hoReverse.wixpdb" />
+		</Component>
+		<Component Id="hoReverseGUI_PDB" Guid="{D775A35F-9A06-4031-A83C-CF4F223EC218}">
+			<File Id="hoReverseGUI_PDB" KeyPath="yes" Name="hoReverseGUI.pdb" Source="$(var.hoReverseGui.TargetDir)$(var.hoReverseGui.TargetName).pdb" />
+		</Component>
 
-    </ComponentGroup>
+		<Component Id="hoReverseRoot_PDB" Guid="{7AE08F7E-7D1C-4179-98EC-9C49520C8DC5}">
+			<File Id="hoReverseRoot_PDB" KeyPath="yes" Name="hoReverseRoot.pdb" Source="$(var.hoReverseRoot.TargetDir)$(var.hoReverseRoot.TargetName).pdb" />
+		</Component>
+		<Component Id="hoHistoryGui_PDB" Guid="{E5EA45BE-09B1-4AC8-A69E-900BF237F7CF}">
+			<File Id="hoHistoryGui" KeyPath="yes" Name="hoHistoryGui.pdb" Source="$(var.hoHistoryGui.TargetDir)$(var.hoHistoryGui.TargetName).pdb" />
+		</Component>
+
+
+		<Component Id="hoUtils_PDB" Guid="{52415220-07E8-4224-8363-DB0E76266868}">
+			<File Id="hoUtils_PDB" KeyPath="yes" Name="hoUtils.pdb" Source="$(var.hoUtil.TargetDir)$(var.hoUtil.TargetName).pdb" />
+		</Component>
+
+		<Component Id="hoLinqToSql_PDB" Guid="{6CAB7D38-E3A4-468C-8D19-189FEC931C38}">
+			<File Id="hoLinqToSql_PDB" KeyPath="yes" Name="HoLinqToSql.pdb" Source="$(var.hoLinqToSql.TargetDir)$(var.hoLinqToSql.TargetName).pdb" />
+		</Component>
+		</ComponentGroup>
   </Fragment>
 </Wix>
