@@ -219,7 +219,7 @@
       <Version>14.0.1016.290</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.2</Version>
     </PackageReference>
     <PackageReference Include="ReqIFSharp">
       <Version>1.4.1</Version>
