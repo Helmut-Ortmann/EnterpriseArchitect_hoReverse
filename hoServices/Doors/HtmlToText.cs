@@ -15,7 +15,7 @@ namespace EaServices.Doors
 		    return ConvertDoc(doc);
 	    }
         /// <summary>
-        /// Convert ReqIF XHTML to text. It removes images because they make no sense. 
+        /// ConvertRtfToXhtml ReqIF XHTML to text. It removes images because they make no sense. 
         /// </summary>
         /// <param name="reqIfHhtml"></param>
         /// <returns></returns>

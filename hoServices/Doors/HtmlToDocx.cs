@@ -9,7 +9,7 @@ namespace EaServices.Doors
     public class HtmlToDocx
     {
         /// <summary>
-        /// Convert XHTML to *.docx
+        /// ConvertRtfToXhtml XHTML to *.docx
         /// </summary>
         /// <param name="docXFile">The file to store the result *.docX document</param>
         /// <param name="xhtml"></param>
@@ -65,7 +65,7 @@ namespace EaServices.Doors
 
         }
         /// <summary>
-        /// Convert xhtml to rtf with Sautin converter
+        /// ConvertRtfToXhtml xhtml to rtf with Sautin converter
         /// </summary>
         /// <param name="xhtml"></param>
         /// <param name="rtfFile"></param>

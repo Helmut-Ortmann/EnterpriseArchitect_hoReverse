@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- Registry:
+  1. Generate mit Wix Tool heat the registry entry for Addin.dll (in bin\release folder of Addin
+     "c:\Program Files (x86)\WiX Toolset v3.6\bin\heat" file IFM_Addin.dll -ag -template fragment -out IFM_Addin.wxs
+  
+  2.   Copy the Component content of *.wxs into the Addin Component of this file
+  
+  3. Update file parameter with Name and source
+    Name="IFM_Addin.dll" Source="$(var.IFM_Addin.TargetPath)" />
+    Name="AddinControl.dll" Source="$(var.AddinControl.TargetPath)" />
+  4. A component for every file
+  
+  -->
+  
+  <Fragment>
+    <ComponentGroup Id="ProductComponents"
+                    Directory="APPLICATIONFOLDER">
+      <Component Id="LicenceRTF" Guid="{F4E02F44-EE08-4490-938B-4016C147F67C}">
+        <File Id="LicenseFile" Name="license.rtf" Source="license.rtf"  KeyPath="yes" />
+      </Component>
+      <Component Id="RegisterEA" Guid="E6361732-C7A1-4597-BBD2-9386AA68019E">
+        <RegistryKey Root="HKLM" Key="Software\Sparx Systems\EAAddins\IFM_Addin">
+          <RegistryValue Type="string" Value="IFM_Addin.IFM_AddinClass" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <!--
+      Name="IFM_Addin.dll" Source="$(var.IFM_Addin.TargetPath)" />
+      Update if Assembly, Visual Studio Version changed
+      -->
+      <Component Id="cmp55F55FE03D955008CD8DBD5878708B38" Guid="*">
+        <Class Id="{213E8EB8-9F6C-3880-93B1-6A3119C0167C}" Context="InprocServer32" Description="Utils.Util" ThreadingModel="both" ForeignServer="mscoree.dll">
+          <ProgId Id="Utils.Util" Description="Utils.Util" />
+        </Class>
+        <Class Id="{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}" Context="InprocServer32" Description="IFM_Addin.IFM_AddinClass" ThreadingModel="both" ForeignServer="mscoree.dll">
+          <ProgId Id="IFM_Addin.IFM_AddinClass" Description="IFM_Addin.IFM_AddinClass" />
+        </Class>
+        <Class Id="{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}" Context="InprocServer32" Description="IFM_Addin.About" ThreadingModel="both" ForeignServer="mscoree.dll">
+          <ProgId Id="IFM_Addin.About" Description="IFM_Addin.About" />
+        </Class>
+        <File Id="fil01A72B84082278C2EA5C91B0BD74E933" KeyPath="yes" Name="IFM_Addin.dll" Source="$(var.IFM_Addin.TargetPath)" />
+        <ProgId Id="Record" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32\1.0.1.0" Name="Class" Value="Utils.Util" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32\1.0.1.0" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32\1.0.1.0" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32" Name="Class" Value="Utils.Util" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{213E8EB8-9F6C-3880-93B1-6A3119C0167C}\InprocServer32" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32\1.0.1.0" Name="Class" Value="IFM_Addin.IFM_AddinClass" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32\1.0.1.0" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32\1.0.1.0" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32" Name="Class" Value="IFM_Addin.IFM_AddinClass" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{6883ED75-12D2-3A38-A890-9B0B95EAE7D5}\InprocServer32" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Value="" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32\1.0.1.0" Name="Class" Value="IFM_Addin.About" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32\1.0.1.0" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32\1.0.1.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32\1.0.1.0" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32" Name="Class" Value="IFM_Addin.About" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{DAB96C6A-C0F8-37DA-9AA2-47F81A8148AF}\InprocServer32" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{437C1B39-C3CF-3A00-B0A4-109C9C4B4C73}\1.0.1.0" Name="Class" Value="IFM_Addin.IFM_AddinClass+displayMode" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{437C1B39-C3CF-3A00-B0A4-109C9C4B4C73}\1.0.1.0" Name="Assembly" Value="IFM_Addin, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{437C1B39-C3CF-3A00-B0A4-109C9C4B4C73}\1.0.1.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{437C1B39-C3CF-3A00-B0A4-109C9C4B4C73}\1.0.1.0" Name="CodeBase" Value="file:///[#fil01A72B84082278C2EA5C91B0BD74E933]" Type="string" Action="write" />
+
+   </Component>
+      <Component Id="AddinControl" Guid="275DF492-08AF-454E-859C-CA2A65930176" >
+        <File Id="filCEE2C11A1C5A68D01A73F129EED5D337" KeyPath="yes" Name="AddinControl.dll" Source="$(var.AddinControl.TargetPath)" />
+        <RegistryValue Root="HKCR" Key="Record\{0D006A28-30FC-3772-B111-FB5323CA3210}\1.0.0.0" Name="Class" Value="ifm.AddinControl+ObjectSafetyOptions" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{0D006A28-30FC-3772-B111-FB5323CA3210}\1.0.0.0" Name="Assembly" Value="AddinControl, Version=1.0.0.0, Culture=neutral, PublicKeyToken=37ea3d95ffcb87e1" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{0D006A28-30FC-3772-B111-FB5323CA3210}\1.0.0.0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="Record\{0D006A28-30FC-3772-B111-FB5323CA3210}\1.0.0.0" Name="CodeBase" Value="file:///[#filCEE2C11A1C5A68D01A73F129EED5D337]" Type="string" Action="write" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

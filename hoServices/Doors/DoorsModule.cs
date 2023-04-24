@@ -14,6 +14,7 @@ using hoUtils.Json;
 using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using EaServices.Doors.ReqIfs;
+using hoLinqToSql.LinqUtils.Extensions;
 
 namespace EaServices.Doors
 {
@@ -76,7 +77,7 @@ namespace EaServices.Doors
         {
             _jsonFilePath = jsonFilePath;
             _rep = rep;
-            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
+            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider, out string providerName);
             _reqIfLogList = reqIfLogList;
             ReadImportSettings();
         }
@@ -127,7 +128,7 @@ namespace EaServices.Doors
             _reqIfLogList = reqIfLogList;
 
             // get connection string of repository
-            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider);
+            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider, out string providerName);
          
         }
         /// <summary>

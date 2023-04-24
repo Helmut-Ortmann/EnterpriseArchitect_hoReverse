@@ -335,7 +335,7 @@ Probable causes:
 - JSON import definition expects a non-existing ReqIF Attribute
   - e.g. RtfNameList, AttrNameList, AttrNotes, ..
   - See: File, Settings, ReqIF..
-  - Have you reload the settinge after change, File, Reload ...?
+  - Have you reload the settings after change, File, Reload ...?
 - Incorrect ReqIF file. Missing Attribute definitions
 
 Available Attributes:
@@ -475,10 +475,10 @@ ObjectId/Multiplicity: '{objectId}
                 // over all columns
                 foreach (var c in cols)
                 {
-                    // suppress column if already schown in notes
+                    // suppress column if already shown in notes
                     if (notesColumn != c.Name)
                     {
-                        // Enum with multivalue
+                        // Enum with multi value
                         if (c.AttrDef is AttributeDefinitionEnumeration attrDefinitionEnumeration &&
                             attrDefinitionEnumeration.IsMultiValued)
                         {

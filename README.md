@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.21  ReqIf import DOORS WMF header format  „\pict{\*\picprop}\wmetafile8\“ 
+- SautinSoft migrate to V8 and V7 controlled by macro
+- Nuget packages updated
+
 3.20  Add Setup for EA 16. 64 Bit, only to show how to run 64 Bit
 - See project: _SetupX64 (WIX installation)
   - Procedure to create an X64 environment

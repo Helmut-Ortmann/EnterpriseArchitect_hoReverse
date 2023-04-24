@@ -20,7 +20,7 @@ using hoReverse.Reverse.EaAddinShortcuts;
 using hoReverse.hoUtils.WiKiRefs;
 using hoLinqToSql.LinqUtils;
 
-using hoReverse.Services.AutoCpp;
+//using hoReverse.Services.AutoCpp;
 using File = System.IO.File;
 using EaServices.Doors.ReqIfs.Inventory;
 
@@ -58,7 +58,7 @@ namespace hoReverse.Reverse
         private EaHistoryList _bookmark;
         private AddinSettings _addinSettings;
 
-        private AutoCpp _autoCpp ;
+        //private AutoCpp _autoCpp ;
         private bool _autoCppIsRunning;
         private bool _autoCppIsRequested;
 
@@ -423,40 +423,9 @@ namespace hoReverse.Reverse
                 _repository = value;
                 _mGuid = _repository.ProjectGUID;
                 progressBar1.Value = 0;
-                //--------------------------------------------------------------------
-                // check for ZF, currently always false
-                _autoToolStripMenuItem.Visible = false;
-                progressBar1.Visible = false;
-                if (_repository.ConnectionString.Contains("WLE") && false)
-                {
-                    // Check if source folder exists
-                    if (!_addinSettings.IsFolderPathCSourceCode()) return;
-                    _autoToolStripMenuItem.Visible = true;
-                    progressBar1.Visible = true;
-
-                    // Create/Update autoCpp generator
-                    if (_autoCpp == null) _autoCpp = new AutoCpp(_repository);
-                    else _autoCpp.Rep = _repository;
-
-
-                    // initialize macros in background task
-                    if (_autoCppIsRunning)
-                    {
-                        _autoCppIsRequested = true;
-                        backgroundWorker.CancelAsync();
-                    }
-                    else
-                    {
-                        _autoCppIsRunning = true;
-                        backgroundWorker.RunWorkerAsync();
-                    }
-
-                }
-                else
-                {   // Not with ZF
+                
                     if (backgroundWorker.IsBusy) backgroundWorker.CancelAsync();
                     _autoCppIsRequested = false;
-                }
 
             }
         }
@@ -2123,7 +2092,6 @@ namespace hoReverse.Reverse
             this.modulesToolStripMenuItem.Size = new System.Drawing.Size(872, 54);
             this.modulesToolStripMenuItem.Text = "Generate";
             this.modulesToolStripMenuItem.Visible = false;
-            this.modulesToolStripMenuItem.Click += new System.EventHandler(this.GenerateModulesToolStripMenuItem_Click);
             // 
             // inventoryToolStripMenuItem
             // 
@@ -2131,7 +2099,6 @@ namespace hoReverse.Reverse
             this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(872, 54);
             this.inventoryToolStripMenuItem.Text = "Inventory";
             this.inventoryToolStripMenuItem.Visible = false;
-            this.inventoryToolStripMenuItem.Click += new System.EventHandler(this.InventoryToolStripMenuItem_Click);
             // 
             // _getToolStripMenuItem
             // 
@@ -2139,7 +2106,6 @@ namespace hoReverse.Reverse
             this._getToolStripMenuItem.Size = new System.Drawing.Size(872, 54);
             this._getToolStripMenuItem.Text = "GetExternalFunctions";
             this._getToolStripMenuItem.Visible = false;
-            this._getToolStripMenuItem.Click += new System.EventHandler(this.GetToolStripMenuItem_Click);
             // 
             // makeRunnableToolStripMenuItem
             // 
@@ -2177,7 +2143,6 @@ namespace hoReverse.Reverse
             this.showExternalComponentFunctionsToolStripMenuItem.Size = new System.Drawing.Size(872, 54);
             this.showExternalComponentFunctionsToolStripMenuItem.Text = "Show Provided / Required Functions for EA-Element";
             this.showExternalComponentFunctionsToolStripMenuItem.ToolTipText = resources.GetString("showExternalComponentFunctionsToolStripMenuItem.ToolTipText");
-            this.showExternalComponentFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowExternalComponentFunctionsToolStripMenuItem_Click);
             // 
             // showProvidedRequiredFunctionsForSourceToolStripMenuItem
             // 
@@ -2185,7 +2150,6 @@ namespace hoReverse.Reverse
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Size = new System.Drawing.Size(872, 54);
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Text = "Show Provided / Required Functions for File/Folder";
             this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText = resources.GetString("showProvidedRequiredFunctionsForSourceToolStripMenuItem.ToolTipText");
-            this.showProvidedRequiredFunctionsForSourceToolStripMenuItem.Click += new System.EventHandler(this.ShowProvidedRequiredFunctionsForSourceToolStripMenuItem_Click);
             // 
             // showFunctionsToolStripMenuItem
             // 
@@ -2194,7 +2158,6 @@ namespace hoReverse.Reverse
             this.showFunctionsToolStripMenuItem.Text = "Show all Functions";
             this.showFunctionsToolStripMenuItem.ToolTipText = "Shows all functions and macros\r\n\r\nIt requires:\r\n- VC Code symbol database\r\n- C/C+" +
     "+ Code with up to date VC Code symbol database";
-            this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowFunctionsToolStripMenuItem_Click);
             // 
             // toolStripSeparator13
             // 
@@ -2706,7 +2669,6 @@ namespace hoReverse.Reverse
             // 
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgressChanged);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
@@ -4371,91 +4333,9 @@ Please restart EA. During restart hoTools loads the default settings.",
 
         }
 
-        private void GenerateModulesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+      
 
-
-
-            DateTime startDate = DateTime.Now;
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Get selected package
-            // Only for new elements
-            EA.ObjectType objectType = _repository.GetContextItem(out var contextPackage);
-            if (!objectType.Equals(EA.ObjectType.otPackage))
-            {
-                MessageBox.Show(@"Select a package for the newly created stuff, break!!!");
-                return;
-            }
-            EA.Package pkg = (EA.Package)contextPackage;
-            if (pkg.IsModel)
-            {
-                MessageBox.Show(@"Don't select a Model (root package), break!!!");
-                return;
-            }
-            AutoCpp autoCpp = new AutoCpp(_repository, pkg );
-
-
-            autoCpp.InventoryInterfaces();
-            autoCpp.InventoryDesignInterfaces();
-            int newAttributes = autoCpp.GenerateInterfaces();
-
-
-            //autoCpp.InventoryFiles();
-            //autoCpp.Generate();
-            string duration = startDate.Subtract(DateTime.Now).Duration().ToString(@"mm\:ss");
-
-            MessageBox.Show($@"Function count_____:{Tab}{Tab}{autoCpp.Functions.FunctionList.Count,20:N0}
-File count/created/deleted:{Tab}{autoCpp.Files.FileList.Count,20:N0}/{autoCpp.CreatedInterfaces}/{autoCpp.DeletedInterfaces}
-Functions not found:{Tab}{Tab}{autoCpp.FunctionsNotFound.Count,20:N0}
-Functions added:{Tab}{Tab}{newAttributes,20:N0}
-
-Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
-            Cursor.Current = Cursors.Default;
-
-        }
-
-        private void InventoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DateTime startDate = DateTime.Now;
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Get selected package
-            // Only for new elements
-            EA.ObjectType objectType = _repository.GetContextItem(out var contextPackage);
-            if (!objectType.Equals(EA.ObjectType.otPackage))
-            {
-                MessageBox.Show(@"Select a package for the newly created stuff, break!!!");
-                return;
-            }
-            EA.Package pkg = (EA.Package)contextPackage;
-            if (pkg.IsModel)
-            {
-                MessageBox.Show(@"Don't select a Model (root package), break!!!");
-                return;
-            }
-            AutoCpp autoCpp = new AutoCpp(_repository, pkg);
-
-
-            autoCpp.InventoryInterfaces();
-            autoCpp.InventoryDesignInterfaces();
-            int newAttributes;
-            newAttributes = autoCpp.GenerateInterfaces();
-
-
-            //autoCpp.InventoryFiles();
-            //autoCpp.Generate();
-            string duration = startDate.Subtract(DateTime.Now).Duration().ToString(@"mm\:ss");
-
-            MessageBox.Show($"Function count_____:\t\t{autoCpp.Functions.FunctionList.Count,20:N0}\r\n" +
-                            $"File count/created/deleted:\t{autoCpp.Files.FileList.Count,20:N0}/{autoCpp.CreatedInterfaces}/{autoCpp.DeletedInterfaces}\r\n" +
-                            $"Functions not found:\t\t{autoCpp.FunctionsNotFound.Count,20:N0}\r\n" +
-                            $"Functions added:\t\t{newAttributes,20:N0}\r\n" +
-                            $"Duration:__________:\t\t\t{duration} mm:ss", 
-                @"Generation finished");
-            Cursor.Current = Cursors.Default;
-
-        }
+        
 
         private void _vCRemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4497,25 +4377,6 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
         private void LineStyleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WikiRef.WikiLineStyle();
-        }
-
-
-        /// <summary>
-        /// Get external function for selected Component, Class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_repository.GetContextItem(out var eaObject) == EA.ObjectType.otElement)
-            {
-                EA.Element component = (EA.Element) eaObject;
-                if (component.Type == "Component" || component.Type == "Class")
-                {
-                    var generator = new AutoCpp(_repository, component);
-                    generator.GenExternalFuntionsOfComponent();
-                }
-            }
         }
 
 
@@ -4568,72 +4429,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             }
         }
 
-        /// <summary>
-        /// Show external functions for selected Component / Class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowExternalComponentFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_autoCppIsRunning)
-            {
-                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
-
-            }
-            else
-            {
-                if (!_addinSettings.IsFolderPathCSourceCode()) return;
-                Cursor.Current = Cursors.WaitCursor;
-                EA.ObjectType type = _repository.GetContextItem(out var obj);
-                if (type == EA.ObjectType.otElement)
-                {
-                    EA.Element element = (EA.Element) obj;
-                    if (element.Type == "Component" || element.Type == "Class")
-                    {
-                        _autoCpp.ShowInterfacesOfElement(element,_addinSettings.FolderPathCSourceCode);
-                    }
-                }
-                Cursor.Current = Cursors.Default;
-            }
-
-        }
-        /// <summary>
-        /// Show Provided/Required Functions for Folder or File which you choose with File-Dialog
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowProvidedRequiredFunctionsForSourceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_autoCppIsRunning)
-            {
-                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
-
-            }
-            else
-            {
-                if (!_addinSettings.IsFolderPathCSourceCode()) return;
-                Cursor.Current = Cursors.WaitCursor;
-                string fileFolderName = GetFolderOrFile(_addinSettings.FolderPathCSourceCode);
-
-                if (fileFolderName != "")
-                    _autoCpp.ShowInterfacesOfElement(null, _addinSettings.FolderPathCSourceCode, fileFolderName);
-
-                Cursor.Current = Cursors.Default;
-            }
-
-        }
-        /// <summary>
-        /// Background worker to run capture macros task in background
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            // it updates the progress by sending the percentage:
-            // backgroundWorker.ReportProgress(percentage);
-            _autoCpp.InventoryMacros(backgroundWorker, _addinSettings.FolderPathCSourceCode);
-            backgroundWorker.ReportProgress(100);
-        }
+        
         /// <summary>
         /// Completed capture macro task. Check if another request is pending and process is
         /// </summary>
@@ -4674,29 +4470,7 @@ Duration:__________:{Tab}{Tab}{Tab}{duration} mm:ss",@"Generation finished");
             this.Text = e.ProgressPercentage.ToString();
         }
 
-        /// <summary>
-        /// Show functions of Source code
-        /// - Functions
-        /// - Macros which refer to functions
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowFunctionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!_addinSettings.IsFolderPathCSourceCode()) return;
-            if (_autoCppIsRunning)
-            {
-                MessageBox.Show($@"The Code inventory is {progressBar1.Value}% finished", @"Code inventory not finished, retry!");
-
-            }
-            else
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                _autoCpp.ShowFunctions(_addinSettings.FolderPathCSourceCode);
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
+        
         private void ShowSymbolDataBaseFoldersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             hoUtils.HoUtil.StartApp("explorer.exe", VcDbUtilities.GetVcPathSymbolDataBases());

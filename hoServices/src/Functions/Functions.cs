@@ -119,7 +119,7 @@ select distinct i.name, f.name, i.type, i1.name, i1.type, i1.param_number
             
         }
         /// <summary>
-        /// Convert Dictionary to simple list
+        /// ConvertRtfToXhtml Dictionary to simple list
         /// </summary>
         /// <param name="dictionary"></param>
         /// <returns></returns>

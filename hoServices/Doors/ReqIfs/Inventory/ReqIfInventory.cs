@@ -7,6 +7,7 @@ using hoLinqToSql.LinqUtils;
 using ReqIFSharp;
 using System.Data;
 using System.Globalization;
+using hoLinqToSql.LinqUtils.Extensions;
 
 namespace EaServices.Doors.ReqIfs.Inventory
 {

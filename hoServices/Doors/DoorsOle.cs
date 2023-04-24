@@ -49,12 +49,12 @@ namespace EaServices.Doors
         {
             if (text == null)
             {
-                MessageBox.Show("", @"No string to convert found for OLE convertion, break");
+                MessageBox.Show("", @"No string to convert found for OLE convert, break");
                 return "";
             }
 
             if (filePath == null) { 
-                MessageBox.Show("", @"No filepath to convert OLE file to convertion, break");
+                MessageBox.Show("", @"No filepath to convert OLE file to convert, break");
                 return "";
             }
 
@@ -66,10 +66,21 @@ namespace EaServices.Doors
             // no supported file found
             if (startCfb < 0 && startWmf < 0)
             {
-                if (! ignoreNotSupportedFiles)
+                if (!ignoreNotSupportedFiles)
+                {
+                    var header = text.Length > 0100 ? text.Substring(0, 100) : text.Substring(0, text.Length-1);
                     MessageBox.Show($@"File: '{filePath}'
 CFB CfbHeader should be: '{CfbHeader}'
-No CFB or WMF file found", @"File does not contain a CFB or WMF formatted file., break");
+WMF Header should be:    '{WmfFile1Header}' or '{WmfFile2Header}'
+No CFB or WMF file found.
+
+Header of file (doesn't met expectation):
+--------
+{header}
+-------
+", @"File does not contain a CFB or WMF formatted file., break");
+                }
+
                 string newFilePath = $@"{filePath}.error";
                 DirFiles.FileMove(filePath, newFilePath);
                 return newFilePath;
@@ -237,7 +248,7 @@ Copied to:
         private static int StartWmfFormat(string text)
         {
             text = text.Substring(0, 200);
-            if (!text.StartsWith(@"{\pict\wmetafile8")) return -1;
+            if (!text.StartsWith(@"{\pict\wmetafile8") && ! text.StartsWith(@"\pict{\*\picprop}\wmetafile8\")) return -1;
             int start = text.IndexOf(WmfFile1Header, StringComparison.Ordinal);
             if (start > -1) return start;
 

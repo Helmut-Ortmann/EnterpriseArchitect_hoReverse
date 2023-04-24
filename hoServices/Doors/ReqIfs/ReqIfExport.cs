@@ -19,7 +19,7 @@ namespace EaServices.Doors.ReqIfs
         SpecificationType _specificationTypeModule;
         SpecObjectType _specObjectType;
 
-        private bool _errorTvReported = false;
+        private bool _errorTvReported;
 
         // Module specification (hierarchy)
         Specification _moduleSpecification;
@@ -94,7 +94,7 @@ namespace EaServices.Doors.ReqIfs
 
         }
         /// <summary>
-        /// Create Specification with hierachy
+        /// Create Specification with hierarchy
         /// </summary>
         private bool CreateSpecHierarchy()
         {
@@ -285,7 +285,7 @@ namespace EaServices.Doors.ReqIfs
                             )
                             {
                                 string fileDir = Settings.EmbeddedFileStorageDictionary;
-                                string xhtml = RtfToXhtml.Convert(rtfText, fileDir, Settings.EmbeddedFilesPng);
+                                string xhtml = RtfToXhtml.ConvertRtfToXhtml(rtfText, fileDir, Settings.EmbeddedFilesPng);
 
                                 // Handle embedded files of the EA-Element
                                 xhtml = $@"{xhtml}
@@ -506,7 +506,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
                         }
                         
                     }
-                   _reqIfContent.DataTypes.Add(datatypeDefinitionEnumeration);
+                    _reqIfContent.DataTypes.Add(datatypeDefinitionEnumeration);
 
                 }
 
@@ -546,7 +546,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
 
            // Add Module Specification
             AddAttributesModuleSpecification(_moduleSpecification, pkg);
-            // Add datatypes for packages (enums)
+            // Add dataTypes for packages (enums)
             AddDatatypesForPackage(ReqIfDeserialized, pkg);
             // AddSpecObj type for package/module
             AddSpeObjectTypeForModule(ReqIfDeserialized, pkg);
