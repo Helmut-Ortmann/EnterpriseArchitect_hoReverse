@@ -98,7 +98,7 @@ namespace EaServices.Doors
         /// - True: MariGold.OpenXHTML (Open Source)
         /// - False: SautinSoft.HtmlToRtf (commercial, you need a license)
         /// </summary>
-        [JsonProperty("UseMariGold"), DefaultValue("false")]
+        [JsonProperty("UseMariGold"), DefaultValue("true")]
         public bool UseMariGold { get; set; }
 
 

@@ -649,7 +649,7 @@ Origin:{Tab}'{Path.GetFileName(f)}'";
             // Mari.Gold.OpenXHTML (open source)
             // SautinSoft.HtmlToRtf (commercial)
             bool isSuccess;
-            if (Settings.UseMariGold)
+            if (! Settings.UseMariGold)
                 isSuccess = HtmlToDocx.Convert(docFile, xhtmlValue);
             else isSuccess = HtmlToDocx.ConvertSautin(docFile, xhtmlValue);
             if (!isSuccess)

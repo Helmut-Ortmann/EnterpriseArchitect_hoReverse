@@ -210,7 +210,18 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)\hoReverse_SetupX64\Scripts\RegisterHoReverseX64.reg /f</PostBuildEvent>
+    <PostBuildEvent>if $(Platform) == x64 (
+     echo ==== Register x64 DEBUG   
+     if $(Configuration) == Debug (
+       $(SolutionDir)\hoReverse_SetupX64\Scripts\RegisterHoReverseX64.reg /f
+	 )
+)
+if $(Platform) == x86 (
+     echo ==== Register x32 DEBUG   
+     if $(Configuration) == Debug (
+       $(SolutionDir)\hoReverse_Setup\Scripts\RegisterHoReverse.reg /f
+	 )
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
