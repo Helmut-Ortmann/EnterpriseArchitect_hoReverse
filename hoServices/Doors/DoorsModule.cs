@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DataModels;
-using EA;
+//using EA;
 using hoLinqToSql.LinqUtils;
 using hoUtils.DirFile;
 using hoUtils.ExportImport;
@@ -15,6 +15,7 @@ using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using EaServices.Doors.ReqIfs;
 using hoLinqToSql.LinqUtils.Extensions;
+using LinqToDB.Configuration;
 
 namespace EaServices.Doors
 {
@@ -24,7 +25,7 @@ namespace EaServices.Doors
     /// - Object Number
     /// - ID
     /// - State
-    /// - Objecttype
+    /// - ObjectType
     /// DoorsModule converts additional columns into Tagged value.
     /// 
     /// Note: DoorsModule uses the EA column 'Multiplicity' to store the absolute/unique DOORS ID (without module prefix)
@@ -52,20 +53,19 @@ namespace EaServices.Doors
 
         private ReqIF _reqIfDeserialized;
 
-        private EA.Package _pkgDeletedObjects;
         EA.Repository _rep;
         DataTable _dtRequirements;
-        Dictionary<string, int> _dictPackageRequirements = new Dictionary<string,int>();
         private readonly string _jsonFilePath;
 
         private List<FileImportSettingsItem> _importSettings;
 
-        protected IDataProvider _provider;
+        //protected IDataProvider _provider;
         protected string _connectionString;
+        protected LinqToDBConnectionOptions _linqOptions;
 
         protected readonly string[] ColumnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
 
-        private readonly string packageNameDeletedObjects = "Trash";
+        private readonly string _packageNameDeletedObjects = "Trash";
 
         /// <summary>
         /// Initialize basic
@@ -77,7 +77,8 @@ namespace EaServices.Doors
         {
             _jsonFilePath = jsonFilePath;
             _rep = rep;
-            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider, out string providerName);
+            _connectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
+            _linqOptions = LinqUtil.GetConnectionOptions(rep);
             _reqIfLogList = reqIfLogList;
             ReadImportSettings();
         }
@@ -128,8 +129,9 @@ namespace EaServices.Doors
             _reqIfLogList = reqIfLogList;
 
             // get connection string of repository
-            _connectionString = LinqUtil.GetConnectionString(_rep, out _provider, out string providerName);
-         
+            _connectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
+            _linqOptions = LinqUtil.GetConnectionOptions(rep);
+
         }
         /// <summary>
         /// Read Import Settings
@@ -152,7 +154,7 @@ namespace EaServices.Doors
         {
             // Read all existing EA Requirements of package
             // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
-            using (var db = new EaDataModel(_provider, _connectionString))
+            using (var db = new EaDataModel(_linqOptions))
             {
                 try
                 {
@@ -398,7 +400,7 @@ namespace EaServices.Doors
         /// <returns></returns>
         public bool CheckRequirements()
         {
-            using (var db = new EaDataModel(_provider, _connectionString))
+            using (var db = new EaDataModel(_linqOptions))
             {
                 try
                 {
@@ -462,7 +464,7 @@ namespace EaServices.Doors
                 return PkgDeletedObjects;
             }
 
-            PkgDeletedObjects = (EA.Package)_pkg.Packages.AddNew(packageNameDeletedObjects, "");
+            PkgDeletedObjects = (EA.Package)_pkg.Packages.AddNew(_packageNameDeletedObjects, "");
             PkgDeletedObjects.Update();
             _pkg.Packages.Refresh();
             return PkgDeletedObjects;
@@ -532,7 +534,7 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIfRoundtrip = new ReqIfs.ReqIfRoundtrip(_rep, _pkg, _importModuleFile, item);
+                                var reqIfRoundtrip = new ReqIfRoundtrip(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIfRoundtrip.RoundtripForFile();
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
@@ -593,7 +595,7 @@ Attributes to write ('{nameof(item.WriteAttrNameList)}'):
 
                             case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                             case FileImportSettingsItem.ImportTypes.ReqIf:
-                                var reqIfExport = new ReqIfs.ReqIfExport(_rep, _pkg, _importModuleFile, item);
+                                var reqIfExport = new ReqIfExport(_rep, _pkg, _importModuleFile, item);
                                 result = result && reqIfExport.ExportRequirements(subPackageIndex);
                                 //await Task.Run(() =>
                                 //    doorsReqIf.ImportForFile(eaObjectType, eaStereotype, eaStatusNew, eaStatusChanged));
@@ -690,7 +692,7 @@ Check Import settings in Settings.Json.",
 
                     case FileImportSettingsItem.ImportTypes.DoorsReqIf:
                     case FileImportSettingsItem.ImportTypes.ReqIf:
-                    var doorsReqIf = new ReqIfs.ReqIfImport(_rep, _pkg, item.InputFile, item, _reqIfLogList);
+                    var doorsReqIf = new ReqIfImport(_rep, _pkg, item.InputFile, item, _reqIfLogList);
                         result = result && doorsReqIf.ImportForFile(eaObjectType, eaStereotype, 
                                      eaStatusNew);
                         _reqIfDeserialized = doorsReqIf.ReqIfDeserialized;
@@ -744,16 +746,8 @@ Check Import settings in Settings.Json.",
         /// <summary>
         /// Dictionary for 'Requirement ID' as string and its EA Object_ID as integer
         /// </summary>
-        protected Dictionary<string, int> DictPackageRequirements
-        {
-            get { return _dictPackageRequirements; }
-            set { _dictPackageRequirements = value; }
-        }
+        protected Dictionary<string, int> DictPackageRequirements { get; set; } = new Dictionary<string,int>();
 
-        protected Package PkgDeletedObjects
-        {
-            get { return _pkgDeletedObjects; }
-            set { _pkgDeletedObjects = value; }
-        }
+        protected EA.Package PkgDeletedObjects { get; set; }
     }
 }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EaServices.Doors.ReqIfs;
 using hoLinqToSql.LinqUtils;
+using LinqToDB.Configuration;
 using LinqToDB.DataProvider;
 
 namespace EaServices.AddInSearch
@@ -142,7 +144,9 @@ namespace EaServices.AddInSearch
         private static DataTable AddinSearchObjectsNestedInitTable(EA.Repository rep,  string searchText)
         {
             // get connection string of repository
-            string connectionString = LinqUtil.GetConnectionString(rep, out var provider, out string providerName);
+            //string connectionString = LinqUtil.GetConnectionString(rep, out var provider, out string providerName);
+
+            LinqToDBConnectionOptions linqOptions = LinqUtil.GetConnectionOptions(rep);
 
             _tv = new Dictionary<string, string>();
             DataTable dt = new DataTable();
@@ -161,23 +165,23 @@ namespace EaServices.AddInSearch
                     if (el == null) continue;
                     if (el.Type != "Package")
                     {
-                        NestedElementsRecursive(connectionString, provider, dt, rep.GetPackageByID(el.PackageID).PackageGUID, el.ElementID);
+                        NestedElementsRecursive(linqOptions, dt, rep.GetPackageByID(el.PackageID).PackageGUID, el.ElementID);
                     }
-                    if (el.Type == "Package") NestedPackageElementsRecursive(connectionString, provider, dt, guid);
+                    if (el.Type == "Package") NestedPackageElementsRecursive(linqOptions, dt, guid);
                 }
 
                 EA.Package pkg = rep.GetPackageByGuid(searchText);
                 if (pkg != null)
                 {
-                    NestedPackageElementsRecursive(connectionString, provider, dt, pkg.PackageGUID);
+                    NestedPackageElementsRecursive(linqOptions, dt, pkg.PackageGUID);
                 }
             }
             else
             {
                 // handle context element
                 rep.GetContextItem(out var item);
-                if (item is EA.Element element) NestedElementsRecursive(connectionString, provider,  dt, rep.GetPackageByID(element.PackageID).PackageGUID, element.ElementID);
-                if (item is EA.Package package) NestedPackageElementsRecursive(connectionString, provider, dt, package.PackageGUID);
+                if (item is EA.Element element) NestedElementsRecursive(linqOptions,  dt, rep.GetPackageByID(element.PackageID).PackageGUID, element.ElementID);
+                if (item is EA.Package package) NestedPackageElementsRecursive(linqOptions, dt, package.PackageGUID);
             }
             return dt;
         }
@@ -200,13 +204,12 @@ namespace EaServices.AddInSearch
         /// <summary>
         /// Make a Data Table from Package Elements recursive using EA API
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="linqOptions"></param>
         /// <param name="dt"></param>
         /// <param name="guid"></param>
-        /// <param name="connectionString"></param>
-        private static void NestedPackageElementsRecursive(string connectionString, IDataProvider provider, DataTable dt, string guid)
+        private static void NestedPackageElementsRecursive(LinqToDBConnectionOptions linqOptions, DataTable dt, string guid)
         {
-            Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(connectionString, provider, guid);
+            Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(linqOptions, guid);
             AddElementsToTable( nestedElements, dt, 0, 0);
 
         }
@@ -214,14 +217,12 @@ namespace EaServices.AddInSearch
         /// <summary>
         /// Get Dictionary of nested elements for a package GUID.
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="linqOptions"></param>
         /// <param name="guid"></param>
-        /// <param name="connectionString"></param>
         /// <returns></returns>
-        private static Dictionary<int, NestedObject> GetPackageNestedElements(string connectionString, IDataProvider provider, string guid)
+        private static Dictionary<int, NestedObject> GetPackageNestedElements(LinqToDBConnectionOptions linqOptions, string guid)
         {
-
-            using (var db = new DataModels.EaDataModel(provider, connectionString))
+            using (var db = new DataModels.EaDataModel(linqOptions))
             {
                 // optimize Access to database, without this the query takes > 30 seconds
                 // Split query and group into two queries. 
@@ -386,14 +387,13 @@ namespace EaServices.AddInSearch
         /// <summary>
         /// Make a Data Table from nested Elements recursive using EA API
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="linqOptions"></param>
         /// <param name="dt"></param>
-        /// <param name="connectionString"></param>
         /// <param name="pkgGuid"></param>
         /// <param name="elId"></param>
-        private static void NestedElementsRecursive(string connectionString, IDataProvider provider, DataTable dt, string pkgGuid, int elId)
+        private static void NestedElementsRecursive(LinqToDBConnectionOptions linqOptions, DataTable dt, string pkgGuid, int elId)
         {
-            Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(connectionString, provider, pkgGuid);
+            Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(linqOptions, pkgGuid);
             int level = 0;
             KeyValuePair<int, NestedObject> r = new KeyValuePair<int, NestedObject> (elId, nestedElements[elId]);
             // Output the top level

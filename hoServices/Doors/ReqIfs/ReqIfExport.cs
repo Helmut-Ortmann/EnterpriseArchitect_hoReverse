@@ -149,7 +149,7 @@ namespace EaServices.Doors.ReqIfs
         /// </summary>
         private bool CreateSpecObjects()
         {
-            using (var db = new EaDataModel(_provider, _connectionString))
+            using (var db = new EaDataModel(_linqOptions))
             {
                 // Read all Requirements for module/specification
                 var reqs = (from r in db.t_object
@@ -440,7 +440,7 @@ Value:    {attrValue}
         // ReSharper disable once UnusedParameter.Local
         private void AddDatatypesForPackage(ReqIF reqIf, EA.Package pkg)
         {
-            using (var db = new EaDataModel(_provider, _connectionString))
+            using (var db = new EaDataModel(_linqOptions))
             {
                 var tvProperties = (from tv in db.t_objectproperties
                     join o in db.t_object on tv.Object_ID equals o.Object_ID
@@ -662,7 +662,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
             _specObjectType.SpecAttributes.Add(attributeDefinitionString);
 
 
-            using (var db = new EaDataModel(_provider, _connectionString))
+            using (var db = new EaDataModel(_linqOptions))
             {
                 // get all TVs
                 var tvs = (from tv in db.t_objectproperties

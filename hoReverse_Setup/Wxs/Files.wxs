@@ -270,6 +270,7 @@
         <Component Id="MariGold.HtmlParser.dll" Guid="1D106D13-50B5-4032-A369-002FEDF13F01">
             <File Id="MariGold.HtmlParser.dll" KeyPath="yes" Name="MariGold.HtmlParser.dll"  Source="$(var.NugetCollectorProject.TargetDir)\MariGold.HtmlParser.dll" />
         </Component>
+      <!-- MariGold.OpenXHTML.dll 2.7 needs: DocumentFormat.OpenXml 2.11.30 -->
         <Component Id="MariGold.OpenXHTML.dll" Guid="9D3E3286-600E-4CA5-8270-9F20576BE18E">
             <File Id="MariGold.OpenXHTML.dll" KeyPath="yes" Name="MariGold.OpenXHTML.dll"  Source="$(var.NugetCollectorProject.TargetDir)\MariGold.OpenXHTML.dll" />
         </Component>
@@ -341,10 +342,11 @@
       </Component>
 
 		<!-- Meta files for DEBUG
-	 	 -->
+	 	
 		<Component Id="hoReverse_WIXPBD" Guid="{B1E56205-D08F-4B25-9B8D-4124E2929518}">
 			<File Id="hoReverse_WIXPBD" KeyPath="yes" Name="hoReverse.wixpdb" Source="..\hoReverse_Setup\bin\Release\en-us\hoReverse.wixpdb" />
 		</Component>
+         -->
 		<Component Id="hoReverseGUI_PDB" Guid="{D775A35F-9A06-4031-A83C-CF4F223EC218}">
 			<File Id="hoReverseGUI_PDB" KeyPath="yes" Name="hoReverseGUI.pdb" Source="$(var.hoReverseGui.TargetDir)$(var.hoReverseGui.TargetName).pdb" />
 		</Component>
