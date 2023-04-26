@@ -258,14 +258,6 @@ namespace hoReverse.Settings
             get
             {
                 return "Diagram Name";
-                if (this.CurrentConfig.AppSettings.Settings["DiagramNameSearchName"].Value == null)
-                {
-                    return "Simple Search";
-                }
-                else
-                {
-                    return (this.CurrentConfig.AppSettings.Settings["DiagramNameSearchName"].Value);
-                }
             }
             set
             {
@@ -275,21 +267,10 @@ namespace hoReverse.Settings
         }
         public string SimpleSearchName
         {
-            get
-            {
-                return "Simple";
-                if (this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value == null)
-                {
-                    return "Simple";
-                }
-                else
-                {
-                    return (this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value);
-                }
-            }
+            get => "Simple";
             set
             {
-                this.CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value = value;
+                CurrentConfig.AppSettings.Settings["SimpleSearchName"].Value = value;
 
             }
         }
@@ -298,18 +279,11 @@ namespace hoReverse.Settings
             get
             {
                 return "Recently Modified Diagrams";
-                if (this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value == null)
-                {
-                    return "Simple Search";
-                }
-                else
-                {
-                    return (this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value);
-                }
+                
             }
             set
             {
-                this.CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value = value;
+                CurrentConfig.AppSettings.Settings["RecentModifiedSearchName"].Value = value;
 
             }
         }
