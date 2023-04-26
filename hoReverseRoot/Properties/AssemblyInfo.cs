@@ -33,6 +33,6 @@ using System.Resources;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.20.1")]     // don't change, otherwise you have to update the component information in Files.wxs
-[assembly: AssemblyFileVersion("3.20.1")] // make same as ProductVersion in Product.wxs
+[assembly: AssemblyVersion("3.22.0")]     // don't change, otherwise you have to update the component information in Files.wxs
+[assembly: AssemblyFileVersion("3.22.0")] // make same as ProductVersion in Product.wxs
 [assembly: NeutralResourcesLanguage("en")]

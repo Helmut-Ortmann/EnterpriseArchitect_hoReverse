@@ -64,6 +64,10 @@ Let's discuss it, but it works.
 
 ## News
 
+3.22  Fix 3.21
+- Linq to 4.* (SQL, LinqPad, ReqIf)
+- correcting Nuget version DocumentFormat.OpenXml to 2.11.3 (error ReqIF formatting with MariGold.OpenXHTML 2.7.0)
+
 3.21  ReqIf import DOORS WMF header format  „\pict{\*\picprop}\wmetafile8\“ 
 - SautinSoft migrate to V8 and V7 controlled by macro
 - Nuget packages updated
