@@ -3125,9 +3125,6 @@ namespace hoReverse.Reverse
                             $@"Error start search.");
                         return ;
                     }
-                    break;
-
-
 
             }
 
