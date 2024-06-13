@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EaServices.Doors.ReqIfs;
+using hoLinqToSql.DataModels;
 using hoLinqToSql.LinqUtils;
-using LinqToDB.Configuration;
+using LinqToDB;
 using LinqToDB.DataProvider;
+using DataTable = System.Data.DataTable;
 
 namespace EaServices.AddInSearch
 {
@@ -146,7 +147,7 @@ namespace EaServices.AddInSearch
             // get connection string of repository
             //string connectionString = LinqUtil.GetConnectionString(rep, out var provider, out string providerName);
 
-            LinqToDBConnectionOptions linqOptions = LinqUtil.GetConnectionOptions(rep);
+            DataOptions linqOptions = LinqUtil.GetConnectionOptions(rep, "");
 
             _tv = new Dictionary<string, string>();
             DataTable dt = new DataTable();
@@ -207,7 +208,7 @@ namespace EaServices.AddInSearch
         /// <param name="linqOptions"></param>
         /// <param name="dt"></param>
         /// <param name="guid"></param>
-        private static void NestedPackageElementsRecursive(LinqToDBConnectionOptions linqOptions, DataTable dt, string guid)
+        private static void NestedPackageElementsRecursive(DataOptions linqOptions, DataTable dt, string guid)
         {
             Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(linqOptions, guid);
             AddElementsToTable( nestedElements, dt, 0, 0);
@@ -220,9 +221,9 @@ namespace EaServices.AddInSearch
         /// <param name="linqOptions"></param>
         /// <param name="guid"></param>
         /// <returns></returns>
-        private static Dictionary<int, NestedObject> GetPackageNestedElements(LinqToDBConnectionOptions linqOptions, string guid)
+        private static Dictionary<int, NestedObject> GetPackageNestedElements(DataOptions linqOptions, string guid)
         {
-            using (var db = new DataModels.EaDataModel(linqOptions))
+            using (var db = new EaDataModel(linqOptions))
             {
                 // optimize Access to database, without this the query takes > 30 seconds
                 // Split query and group into two queries. 
@@ -253,7 +254,7 @@ namespace EaServices.AddInSearch
                                 g?.tv?.Property??"",
                                 ((g?.tv?.Value ?? "") == "<memo>") ? g?.tv?.Notes??"" : g?.tv?.Value??"")
                             ).ToList())
-                    }).ToDictionary(ta => ta.Id, ta => ta.Property);
+                    }).ToDictionary(ta => Convert.ToInt32(ta.Id), ta => ta.Property);
             }
 
         }
@@ -267,7 +268,7 @@ namespace EaServices.AddInSearch
         private static Dictionary<int, NestedObject> GetElementNestedElements(string connectionString, IDataProvider provider, int pkgId, IndexOutOfRangeException elId)
         {
 
-            using (var db = new DataModels.EaDataModel(provider, connectionString))
+            using (var db = new EaDataModel(provider, connectionString))
             {
                 // optimize Access to database, without this the query takes > 30 seconds
                 // Split query and group into two queries. 
@@ -298,7 +299,7 @@ namespace EaServices.AddInSearch
                                     g.tv.Property,
                                     ((g.tv.Value ?? "") == "<memo>") ? g.tv.Notes : g.tv.Value)
                                 ).ToList())
-                        }).ToDictionary(ta => ta.Id, ta => ta.Property);
+                        }).ToDictionary(ta => Convert.ToInt32(ta.Id), ta => ta.Property);
             }
 
         }
@@ -391,7 +392,7 @@ namespace EaServices.AddInSearch
         /// <param name="dt"></param>
         /// <param name="pkgGuid"></param>
         /// <param name="elId"></param>
-        private static void NestedElementsRecursive(LinqToDBConnectionOptions linqOptions, DataTable dt, string pkgGuid, int elId)
+        private static void NestedElementsRecursive(DataOptions linqOptions, DataTable dt, string pkgGuid, int elId)
         {
             Dictionary<int, NestedObject> nestedElements = GetPackageNestedElements(linqOptions, pkgGuid);
             int level = 0;

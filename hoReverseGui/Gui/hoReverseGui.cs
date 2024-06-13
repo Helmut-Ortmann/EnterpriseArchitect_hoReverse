@@ -4470,7 +4470,7 @@ Please restart EA. During restart hoTools loads the default settings.",
         
         private void ShowSymbolDataBaseFoldersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HoUtil.StartApp("explorer.exe", VcDbUtilities.GetVcPathSymbolDataBases());
+            // HoUtil.StartApp("explorer.exe", VcDbUtilities.GetVcPathSymbolDataBases());
         }
 
         private void AnalyzeCCToolStripMenuItem_Click(object sender, EventArgs e)

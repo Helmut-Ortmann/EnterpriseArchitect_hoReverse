@@ -1,0 +1,17 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <!--
+      Guidelines Single Package Authoring (per user/per machine install)
+      https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
+      -->
+
+
+    <Directory Id="APPLICATIONFOLDER" >
+      <Directory Id="MIME_TYPE_IMAGES" Name="MimeTypeImages" >
+        <!-- Folder for mime type images -->
+      </Directory>
+    </Directory>
+  </Fragment>
+
+
+</Wix>

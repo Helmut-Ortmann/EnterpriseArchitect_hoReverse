@@ -490,7 +490,7 @@ namespace hoReverse
 
         }
         //-----------------------------------------------------------------------------
-        // a digram has been opened
+        // a diagram has been opened
         //-----------------------------------------------------------------------------
         public override void EA_OnPostOpenDiagram(EA.Repository repository, int diagramId)
         {

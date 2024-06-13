@@ -1,13 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Fragment>
-        <DirectoryRef Id="TARGETDIR">
             <Directory Id="dirA622272A3642906C114F843D2FDC5552" Name="release" />
-        </DirectoryRef>
-    </Fragment>
+        </Fragment>
     <Fragment>
         <DirectoryRef Id="dirA622272A3642906C114F843D2FDC5552">
-            <Component Id="cmp38FAB7B5498537C4CB85CA2CB86A50DC" Guid="*">
+            <Component Id="cmp38FAB7B5498537C4CB85CA2CB86A50DC">
                 <Class Id="{00D3BAF1-DFAC-3464-A46E-B013515745A6}" Context="InprocServer32" Description="hoReverse.History.HistoryActiveXWpf" ThreadingModel="both" ForeignServer="mscoree.dll">
                     <ProgId Id="hoReverse.History.HistoryActiveXWpf" Description="hoReverse.History.HistoryActiveXWpf" />
                 </Class>

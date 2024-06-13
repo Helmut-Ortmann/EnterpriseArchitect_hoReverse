@@ -672,7 +672,7 @@ Origin:{Tab}'{Path.GetFileName(f)}'";
                 ReportLoadLinkedDocument(el, importFile, docFile, xhtmlValue, e);
                 return false;
             }
-        return true;
+            return true;
 
         }
 

@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="WixToolset.Sdk/5.0.0">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+  </PropertyGroup>
+  <!-- <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="5.0.0" /> -->
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <PropertyGroup>
     <ProductVersion>3.6</ProductVersion>
-    <ProjectGuid>{b868d760-f8e6-4edd-ade0-b10f1964b0ba}</ProjectGuid>
-    <SchemaVersion>2.0</SchemaVersion>
     <OutputName>hoReverse</OutputName>
-    <OutputType>Package</OutputType>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <SccProjectName>SAK</SccProjectName>
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
@@ -18,30 +18,27 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
     <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressValidation>False</SuppressValidation>
-    <SuppressIces>
-    </SuppressIces>
+    <SuppressIces></SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Lib" />
     <Folder Include="Scripts\" />
-    <Folder Include="Wxs" />
     <Folder Include="Wxs\Collect" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Wxs\Collect\hoHistoryGui.wxs" />
-    <Compile Include="Wxs\Collect\hoReverseGui.wxs" />
-    <Compile Include="Wxs\Collect\hoReverseRoot.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoHistoryGui.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoReverseGui.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoReverseRoot.wxs" />
     <Compile Include="Wxs\Directories.wxs" />
     <Compile Include="Wxs\Files.wxs" />
     <Compile Include="Wxs\Product.wxs" />
+    <Compile Include="Wxs\Registry.wxs" />
     <Compile Include="Wxs\WixUI_Advanced.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +52,12 @@
     <Content Include="Wxs\hoReverse_Setup.wixproj" />
     <Content Include="Wxs\LocalizationDefauls.wxl.default" />
     <Content Include="Wxs\WixUI_Advanced.wxs.default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118.0" />
+    <PackageReference Include="WixToolset.Heat" Version="5.0.0" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.0" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
@@ -114,19 +117,6 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <WixExtension Include="WixUIExtension">
-      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name>
-    </WixExtension>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Wxs\Localization.wxl" />
-  </ItemGroup>
-  <Import Project="$(WixTargetsPath)" />
-  <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\hoReverse_Setup\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_Setup\bin\release\en-us\hoReverse.msi"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DefineConstants>Debug</DefineConstants>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -139,12 +129,16 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
     <SuppressPdbOutput>True</SuppressPdbOutput>
   </PropertyGroup>
-  <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
+  <PropertyGroup>
+    <PreBuildEvent>
+      echo ------- harvest x86 Root, Gui, History dlls ---------------
+
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x86\heat.exe" file "$(SolutionDir)hoReverseRoot\bin\x86\Release\hoReverseRoot.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllRoot  -sfrag -suid  -var var.hoReverseRoot.TargetDir -out   "$(SolutionDir)hoReverse_Setup\wxs\collect\Harvested_hoReverseRoot.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x86\heat.exe" file "$(SolutionDir)hoReverseGui\bin\x86\Release\hoReverseGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllGui  -sfrag -suid  -var var.hoReverseGui.TargetDir -out   "$(SolutionDir)hoReverse_Setup\wxs\collect\Harvested_hoReverseGui.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x86\heat.exe" file "$(SolutionDir)hoHistoryGui\bin\x86\Release\hoHistoryGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllHistoryGui  -sfrag -suid  -var var.hoHistoryGui.TargetDir -out   "$(SolutionDir)hoReverse_Setup\wxs\collect\Harvested_hoHistoryGui.wxs"
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)hoReverse_Setup\Scripts\renameMsi.bat" "$(SolutionDir)hoReverse_Setup\bin\release\hoReverse.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

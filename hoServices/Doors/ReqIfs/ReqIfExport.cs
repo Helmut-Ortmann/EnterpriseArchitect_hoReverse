@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using DataModels;
+using hoLinqToSql.DataModels;
 using hoUtils;
 using hoUtils.Compression;
 using hoUtils.DirFile;
@@ -149,7 +149,7 @@ namespace EaServices.Doors.ReqIfs
         /// </summary>
         private bool CreateSpecObjects()
         {
-            using (var db = new EaDataModel(_linqOptions))
+            using (var db = new EaDataModel(LinqOptions))
             {
                 // Read all Requirements for module/specification
                 var reqs = (from r in db.t_object
@@ -210,6 +210,7 @@ namespace EaServices.Doors.ReqIfs
                                 TheValue = r.Guid
                             };
                             specObject.Values.Add(attributeValueString);
+                            
                             // Created on
                             var attributeValueDate = new AttributeValueDate
                             {
@@ -217,9 +218,12 @@ namespace EaServices.Doors.ReqIfs
                                     (AttributeDefinitionDate) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionDate) &&
                                         x.LongName == "ReqIF.ForeignCreatedOn"),
-                                TheValue = r.CreatedOn ?? DateTime.Now
+                               
+                                TheValue = DateTime.TryParse(r.CreatedOn, out var createdOn) ? createdOn : DateTime.Now
+
                             };
                             specObject.Values.Add(attributeValueDate);
+
                             // Modified on
                             attributeValueDate = new AttributeValueDate
                             {
@@ -227,9 +231,10 @@ namespace EaServices.Doors.ReqIfs
                                     (AttributeDefinitionDate) _specObjectType.SpecAttributes.First(x =>
                                         x.GetType() == typeof(AttributeDefinitionDate) &&
                                         x.LongName == "ReqIF.ForeignModifiedOn"),
-                                TheValue = r.ModifiedOn ?? DateTime.Now
+                                TheValue = DateTime.TryParse(r.ModifiedOn, out var modifiedOn) ? modifiedOn : DateTime.Now
                             };
                             specObject.Values.Add(attributeValueDate);
+                            
                             // Created by
                             var attributeValueXhtml = new AttributeValueXHTML()
                             {
@@ -440,7 +445,7 @@ Value:    {attrValue}
         // ReSharper disable once UnusedParameter.Local
         private void AddDatatypesForPackage(ReqIF reqIf, EA.Package pkg)
         {
-            using (var db = new EaDataModel(_linqOptions))
+            using (var db = new EaDataModel(LinqOptions))
             {
                 var tvProperties = (from tv in db.t_objectproperties
                     join o in db.t_object on tv.Object_ID equals o.Object_ID
@@ -662,7 +667,7 @@ All EA Tagged Values starting with 'ReqIF.' are skipped!", @"Don't use ReqIF sta
             _specObjectType.SpecAttributes.Add(attributeDefinitionString);
 
 
-            using (var db = new EaDataModel(_linqOptions))
+            using (var db = new EaDataModel(LinqOptions))
             {
                 // get all TVs
                 var tvs = (from tv in db.t_objectproperties

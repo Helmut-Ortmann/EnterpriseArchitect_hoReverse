@@ -1,15 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="WixToolset.Sdk/5.0.0">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>3.6</ProductVersion>
-    <ProjectGuid>{C20A2A50-68CD-4DA4-9F45-6156C7580E6C}</ProjectGuid>
-    <SchemaVersion>2.0</SchemaVersion>
     <OutputName>hoReverseX64</OutputName>
-    <OutputType>Package</OutputType>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <SccProjectName>SAK</SccProjectName>
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
@@ -18,12 +14,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\Release\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <SuppressValidation>False</SuppressValidation>
     <SuppressIces>
     </SuppressIces>
@@ -32,25 +26,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Lib" />
-    <Folder Include="Scripts\" />
-    <Folder Include="Wxs" />
     <Folder Include="Wxs\Collect" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Wxs\Collect\hoHistoryGui.wxs" />
-    <Compile Include="Wxs\Collect\hoReverseGui.wxs" />
-    <Compile Include="Wxs\Collect\hoReverseRoot.wxs" />
-    <Compile Include="Wxs\Directories.wxs" />
-    <Compile Include="Wxs\Files.wxs" />
-    <Compile Include="Wxs\Product.wxs" />
-    <Compile Include="Wxs\WixUI_Advanced.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoHistoryGui.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoReverseGui.wxs" />
+    <Compile Include="Wxs\Collect\Harvested_hoReverseRoot.wxs" />
+    <Compile Include="Wxs\DirectoriesX64.wxs" />
+    <Compile Include="Wxs\FilesX64.wxs" />
+    <Compile Include="Wxs\ProductX64.wxs" />
+    <Compile Include="Wxs\RegistryX64.wxs" />
+    <Compile Include="Wxs\WixUI_AdvancedX64.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.rtf" />
     <Content Include="Scripts\getmsiversion.vbs" />
     <Content Include="Scripts\Readme.md" />
     <Content Include="Scripts\RegisterHoReverseX64.reg" />
-    <Content Include="Scripts\RenameMsi.bat" />
+    <Content Include="Scripts\RenameMsiX64.bat" />
     <Content Include="settings.json" />
     <Content Include="Wxs\Collect\Collect.bat" />
     <Content Include="Wxs\hoReverse_Setup.wixproj" />
@@ -116,15 +109,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="WixUIExtension">
-      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name>
-    </WixExtension>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118.0" />
+    <PackageReference Include="WixToolset.Heat" Version="5.0.0" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.0" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Wxs\Localization.wxl" />
-  </ItemGroup>
-  <Import Project="$(WixTargetsPath)" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DefineConstants>Debug</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
@@ -137,14 +126,16 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\hoReverse_SetupX64\Scripts\renamemsi.bat" "$(SolutionDir)\hoReverse_SetupX64\bin\release\en-us\hoReverseX64.msi"</PostBuildEvent>
+    <PreBuildEvent>
+      echo ------- harvest x64 Root, Gui, History dlls ---------------
+
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseRoot\bin\x64\Release\hoReverseRoot.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllRoot  -sfrag -suid  -var var.hoReverseRoot.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoReverseRoot.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseGui\bin\x64\Release\hoReverseGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllGui  -sfrag -suid  -var var.hoReverseGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoReverseGui.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoHistoryGui\bin\x64\Release\hoHistoryGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllHistoryGui  -sfrag -suid  -var var.hoHistoryGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoHistoryGui.wxs"
+    </PreBuildEvent>
   </PropertyGroup>
-  <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)hoReverse_SetupX64\Scripts\renameMsiX64.bat" "$(SolutionDir)hoReverse_SetupX64\bin\x64\release\en-us\hoReverseX64.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
+  </PropertyGroup>
+ 
 </Project>

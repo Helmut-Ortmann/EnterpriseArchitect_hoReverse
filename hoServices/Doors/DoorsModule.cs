@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using DataModels;
-//using EA;
 using hoLinqToSql.LinqUtils;
 using hoUtils.DirFile;
 using hoUtils.ExportImport;
@@ -14,8 +12,9 @@ using hoUtils.Json;
 using ReqIFSharp;
 using TaggedValue = hoReverse.hoUtils.TaggedValue;
 using EaServices.Doors.ReqIfs;
+using hoLinqToSql.DataModels;
 using hoLinqToSql.LinqUtils.Extensions;
-using LinqToDB.Configuration;
+using LinqToDB;
 
 namespace EaServices.Doors
 {
@@ -60,8 +59,8 @@ namespace EaServices.Doors
         private List<FileImportSettingsItem> _importSettings;
 
         //protected IDataProvider _provider;
-        protected string _connectionString;
-        protected LinqToDBConnectionOptions _linqOptions;
+        protected string ConnectionString;
+        protected DataOptions LinqOptions;
 
         protected readonly string[] ColumnNamesNoTaggedValues = {"Object Level", "Object Number", "ObjectType", "Object Heading", "Object Text", "Column1", "Column2"};
 
@@ -77,8 +76,8 @@ namespace EaServices.Doors
         {
             _jsonFilePath = jsonFilePath;
             _rep = rep;
-            _connectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
-            _linqOptions = LinqUtil.GetConnectionOptions(rep);
+            ConnectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
+            LinqOptions = LinqUtil.GetConnectionOptions(rep, rep.ConnectionString);
             _reqIfLogList = reqIfLogList;
             ReadImportSettings();
         }
@@ -129,8 +128,8 @@ namespace EaServices.Doors
             _reqIfLogList = reqIfLogList;
 
             // get connection string of repository
-            _connectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
-            _linqOptions = LinqUtil.GetConnectionOptions(rep);
+            ConnectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
+            LinqOptions = LinqUtil.GetConnectionOptions(rep, rep.ConnectionString);
 
         }
         /// <summary>
@@ -154,12 +153,12 @@ namespace EaServices.Doors
         {
             // Read all existing EA Requirements of package
             // Note: In DOORS it's impossible that are there more than an ID(stored in multiplicity)
-            using (var db = new EaDataModel(_linqOptions))
+            using (var db = new EaDataModel(LinqOptions))
             {
                 try
                 {
                     //var notUniqueRequirements = (from r in db.q_object
-                    DictPackageRequirements = (from r in db.q_object
+                    DictPackageRequirements  = (from r in db.t_object
                         where r.Object_Type == "Requirement" && r.Package_ID == _pkg.PackageID
                         group r by r.Multiplicity into grp
                         select new
@@ -167,7 +166,7 @@ namespace EaServices.Doors
                             Name = grp.Key??"", //Multiplicity,
                             Value = grp.Max(x => x.Object_ID)
 
-                        }).ToDictionary(x=>x.Name, x=>x.Value);
+                        }).ToDictionary(x=>x.Name, x=>(int)x.Value);
                 }
                 catch (Exception e)
                 {
@@ -400,7 +399,7 @@ namespace EaServices.Doors
         /// <returns></returns>
         public bool CheckRequirements()
         {
-            using (var db = new EaDataModel(_linqOptions))
+            using (var db = new EaDataModel(LinqOptions))
             {
                 try
                 {

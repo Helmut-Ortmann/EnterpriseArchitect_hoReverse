@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-     xmlns:complus="http://schemas.microsoft.com/wix/ComPlusExtension">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">>
   <!-- New release:
       1. Product.wxs:   Update ProductVersion (Major.Minor.Build.Revision not used )
          The last number is always 0 
@@ -33,87 +32,55 @@
   <?define Manufacturer="hoModeler.de" ?>
   <?define ProductName="hoReverse Workbench" ?>
 
-  <Product Id="*"
-           Name="$(var.ProductName)"
-           Language="1033"
-           Version="$(var.ProductVersion)"
-            Manufacturer="$(var.Manufacturer)"
-           UpgradeCode="$(var.UpgradeCode)" 
-           >
-    <Package
-             Description="Windows installer for hoReverse C-Code Workbench $(var.ProductVersion)"
-             Comments="Execute to install hoReverse C-Code Workbench $(var.ProductVersion)"
-             InstallerVersion="200"
-             SummaryCodepage="1252"
-             Compressed="yes"  
-             AdminImage="no"
-            ReadOnly="yes"
-            Keywords="Installer, MSI, Database"/>
+  <Package Name="$(var.ProductName)"  Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="500" >
+    <SummaryInformation Description="Windows installer for hoReverse $(var.ProductVersion)" Keywords="Installer, MSI, Database" />
+
+    <!--  installation rules -->
+    <MajorUpgrade
+      DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."
+      AllowSameVersionUpgrades="yes"   />
 
 
-    <!--InstallPrivileges="elevated"-->
-
-    <Media Id="1"
-           Cabinet="Contents.cab"
-           EmbedCab="yes"
-           CompressionLevel="medium"/>
+     <Media Id="1" Cabinet="Contents.cab" EmbedCab="yes" CompressionLevel="medium" />
 
 
 
-    <Upgrade Id="$(var.UpgradeCode)" >
-      <UpgradeVersion   Minimum="$(var.ProductVersion)"
-                        IncludeMinimum="yes"
-                        OnlyDetect="yes"
-                        Language="1033"
-                         Property="NEWPRODUCTFOUND" />
-      <UpgradeVersion Minimum="1.0.0.0"
-                      IncludeMinimum="yes"
-                      Maximum="$(var.ProductVersion)"
-                      IncludeMaximum="no"
-                      Language="1033"
-                      Property="UPGRADEFOUND" />
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="yes" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND" />
+      <UpgradeVersion Minimum="1.0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Language="1033" Property="UPGRADEFOUND" />
     </Upgrade>
 
 
-    <Feature Id="Complete"
-              Description="hoReverse Workbench"
-              Title="hoReverse"
-              Level="1"
-              Display="expand"
-              ConfigurableDirectory="APPLICATIONFOLDER" >
-      <ComponentGroupRef Id="ProductComponents"/>
-      <ComponentGroupRef Id="MimeTypeImages"/>
+    <Feature Id="Complete" Description="hoReverse Workbench" Title="hoReverse" Level="1" Display="expand" ConfigurableDirectory="APPLICATIONFOLDER">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="RegistryEntries" />
+      <ComponentGroupRef Id="MimeTypeImages" />
+      <ComponentGroupRef Id="COM_DllRoot" />
+      <ComponentGroupRef Id="COM_DllGui" />
+      <ComponentGroupRef Id="COM_DllHistoryGui" />
     </Feature>
     <!--
      UI: 
     
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     -->
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
-    <UIRef Id="WixUI_MySetup" /> <!--WixUI_Advanced WixUI_MySetup -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <Property Id="MSIINSTALLPERUSER" Secure="yes" Value="1" />
+    <Property Id="MY_ALLUSERS" Value="PerUser" />
+
+    <!-- <ui:WixUI Id="WixUI_MySetup" /> -->
+    <Property Id="WixAppFolder" Value="WixPerUserFolder" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <ui:WixUI
+      Id="WixUI_InstallDir"
+      />
     <!--
       Guidelines Single Package Authoring (per user/per machine install)
       https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
       http://uvinw.com/per-machine-and-per-user-without-UAC-in-WiX/
         -->
-    <Property Id="WixAppFolder" Value= "WixPerUserFolder" />
-
-
-
-
-
-    <UIRef Id="WixUI_ErrorProgressText" />
-    
-
-
-
-
-
-      <MajorUpgrade Schedule="afterInstallInitialize"
-                  DowngradeErrorMessage="A later version of hoReverse is already installed"
-                  AllowSameVersionUpgrades="yes" />
-
-
-  </Product>
+ 
+  </Package>
 
 </Wix>

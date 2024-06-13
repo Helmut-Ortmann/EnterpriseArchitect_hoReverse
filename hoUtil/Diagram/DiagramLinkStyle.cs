@@ -69,7 +69,7 @@ namespace hoReverse.hoUtils.Diagrams
                         int connectorLineWidth;
                         if (!ConvertInteger(name, value, out connectorLineWidth)) continue;
                         con = Rep.GetConnectorByID(_link.ConnectorID);
-                        con.width = connectorLineWidth;
+                        con.Width = connectorLineWidth;
                         con.Update();
                         break;
 
