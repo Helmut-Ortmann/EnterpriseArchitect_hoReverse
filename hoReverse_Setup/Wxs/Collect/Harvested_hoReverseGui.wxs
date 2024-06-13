@@ -1,7 +1,7 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Fragment>
         <DirectoryRef Id="APPLICATIONFOLDER">
-            <Component Id="hoReverseGui.dll" Guid="AD9F116D-CBD2-45F1-8086-9B024BE181EC">
+            <Component Id="hoReverseGui.dll" Guid="48537C3B-85BC-4351-80BF-44509E41310D">
                 <Class Id="{53FCBF4E-4D2C-3C1F-A470-1F2EB2FEBD6E}" Context="InprocServer32" Description="hoReverse.Settings.AddinSettings" ThreadingModel="both" ForeignServer="mscoree.dll">
                     <ProgId Id="hoReverse.Settings.AddinSettings" Description="hoReverse.Settings.AddinSettings" />
                 </Class>

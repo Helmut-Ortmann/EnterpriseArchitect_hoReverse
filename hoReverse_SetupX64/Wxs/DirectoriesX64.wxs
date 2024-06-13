@@ -7,9 +7,6 @@
 
 
     <Directory Id="APPLICATIONFOLDER" >
-      <Directory Id="MIME_TYPE_IMAGES" Name="MimeTypeImages" >
-        <!-- Folder for mime type images -->
-      </Directory>
     </Directory>
   </Fragment>
 

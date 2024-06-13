@@ -17,7 +17,6 @@
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>bin\Release\</OutputPath>
     <SuppressValidation>False</SuppressValidation>
     <SuppressIces>
     </SuppressIces>
@@ -49,6 +48,9 @@
     <Content Include="Wxs\hoReverse_Setup.wixproj" />
     <Content Include="Wxs\LocalizationDefauls.wxl.default" />
     <Content Include="Wxs\WixUI_Advanced.wxs.default" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\install.bat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj">
@@ -122,7 +124,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <SuppressValidation>False</SuppressValidation>
     <SuppressIces />
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
@@ -137,5 +139,4 @@
   <PropertyGroup>
     <PostBuildEvent>"$(SolutionDir)hoReverse_SetupX64\Scripts\renameMsiX64.bat" "$(SolutionDir)hoReverse_SetupX64\bin\x64\release\en-us\hoReverseX64.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
   </PropertyGroup>
- 
 </Project>

@@ -24,11 +24,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release\</OutputPath>
     <SuppressValidation>False</SuppressValidation>
-    <SuppressIces></SuppressIces>
+    <SuppressIces>
+    </SuppressIces>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Lib" />
-    <Folder Include="Scripts\" />
     <Folder Include="Wxs\Collect" />
   </ItemGroup>
   <ItemGroup>
@@ -49,9 +49,10 @@
     <Content Include="Scripts\RenameMsi.bat" />
     <Content Include="settings.json" />
     <Content Include="Wxs\Collect\Collect.bat" />
-    <Content Include="Wxs\hoReverse_Setup.wixproj" />
-    <Content Include="Wxs\LocalizationDefauls.wxl.default" />
-    <Content Include="Wxs\WixUI_Advanced.wxs.default" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\DeleteRegistryKeys.bat" />
+    <None Include="Scripts\install.bat" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.118.0" />

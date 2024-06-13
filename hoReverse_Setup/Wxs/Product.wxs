@@ -29,8 +29,8 @@
   -->
   <?define ProductVersion="3.22.0" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
   <?define UpgradeCode="F098804C-0151-46DC-9924-76688804EC45" ?>
-  <?define Manufacturer="hoModeler.de" ?>
-  <?define ProductName="hoReverse Workbench" ?>
+  <?define Manufacturer="ho" ?>
+  <?define ProductName="hoReverse" ?>
 
   <Package Name="$(var.ProductName)"  Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="500" >
     <SummaryInformation Description="Windows installer for hoReverse $(var.ProductVersion)" Keywords="Installer, MSI, Database" />
@@ -61,20 +61,21 @@
     </Feature>
     <!--
      UI: 
-    
+
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
-    -->
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+            -->
+    <ui:WixUI Id="WixUI_InstallDir" />
+
+
     <Property Id="MSIINSTALLPERUSER" Secure="yes" Value="1" />
     <Property Id="MY_ALLUSERS" Value="PerUser" />
-
-    <!-- <ui:WixUI Id="WixUI_MySetup" /> -->
     <Property Id="WixAppFolder" Value="WixPerUserFolder" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <ui:WixUI Id="WixUI_MySetup" />
     <UIRef Id="WixUI_ErrorProgressText" />
 
-    <ui:WixUI
-      Id="WixUI_InstallDir"
-      />
+    
     <!--
       Guidelines Single Package Authoring (per user/per machine install)
       https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx

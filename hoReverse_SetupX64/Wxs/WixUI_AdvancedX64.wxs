@@ -5,7 +5,7 @@
 
 
     <CustomAction Id="MyWixSetDefaultPerUserFolder" Property="WixPerUserFolder" Value="[LocalAppDataFolder]Programs\[Manufacturer]\[ProductName]\" Execute="immediate" />
-    <CustomAction Id="MyWixSetDefaultPerMachineFolder" Property="WixPerMachineFolder" Value="[ProgramFiles64Folder]\[Manufacturer]\[ProductName]\" Execute="immediate" />
+    <CustomAction Id="MyWixSetDefaultPerMachineFolder" Property="WixPerMachineFolder" Value="[ProgramFiles64Folder][Manufacturer]\[ProductName]\" Execute="immediate" />
     <CustomAction Id="MyWixSetPerUserFolder" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Execute="immediate" />
     <CustomAction Id="MyWixSetPerMachineFolder" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Execute="immediate" />
 
