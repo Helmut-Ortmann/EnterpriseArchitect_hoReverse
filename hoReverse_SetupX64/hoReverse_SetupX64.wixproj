@@ -28,9 +28,9 @@
     <Folder Include="Wxs\Collect" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Wxs\Collect\Harvested_hoHistoryGui.wxs" />
-    <Compile Include="Wxs\Collect\Harvested_hoReverseGui.wxs" />
-    <Compile Include="Wxs\Collect\Harvested_hoReverseRoot.wxs" />
+    <Compile Include="Wxs\Collect\HarvestedX64_hoHistoryGui.wxs" />
+    <Compile Include="Wxs\Collect\HarvestedX64_hoReverseGui.wxs" />
+    <Compile Include="Wxs\Collect\HarvestedX64_hoReverseRoot.wxs" />
     <Compile Include="Wxs\DirectoriesX64.wxs" />
     <Compile Include="Wxs\FilesX64.wxs" />
     <Compile Include="Wxs\ProductX64.wxs" />
@@ -131,12 +131,12 @@
     <PreBuildEvent>
       echo ------- harvest x64 Root, Gui, History dlls ---------------
 
-      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseRoot\bin\x64\Release\hoReverseRoot.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllRoot  -sfrag -suid  -var var.hoReverseRoot.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoReverseRoot.wxs"
-      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseGui\bin\x64\Release\hoReverseGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllGui  -sfrag -suid  -var var.hoReverseGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoReverseGui.wxs"
-      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoHistoryGui\bin\x64\Release\hoHistoryGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_DllHistoryGui  -sfrag -suid  -var var.hoHistoryGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\Harvested_hoHistoryGui.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseRoot\bin\x64\Release\hoReverseRoot.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_Dll64Root  -sfrag -suid  -var var.hoReverseRoot.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\HarvestedX64_hoReverseRoot.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoReverseGui\bin\x64\Release\hoReverseGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_Dll64Gui  -sfrag -suid  -var var.hoReverseGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\HarvestedX64_hoReverseGui.wxs"
+      "%25UserProfile%25\.nuget\packages\wixtoolset.heat\5.0.0\tools\net472\x64\heat.exe" file "$(SolutionDir)hoHistoryGui\bin\x64\Release\hoHistoryGui.dll" -v -dr APPLICATIONFOLDER -srd -gg -g1 -cg COM_Dll64HistoryGui  -sfrag -suid  -var var.hoHistoryGui.TargetDir -out   "$(SolutionDir)hoReverse_SetupX64\wxs\collect\HarvestedX64_hoHistoryGui.wxs"
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)hoReverse_SetupX64\Scripts\renameMsiX64.bat" "$(SolutionDir)hoReverse_SetupX64\bin\x64\release\en-us\hoReverseX64.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)hoReverse_SetupX64\Scripts\renameMsiX64.bat" "$(SolutionDir)hoReverse_SetupX64\bin\release\en-us\hoReverseX64.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
   </PropertyGroup>
 </Project>

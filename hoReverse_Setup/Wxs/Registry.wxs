@@ -5,7 +5,7 @@
       <Component Id="RegistryEntriesPerUser" Guid="{ACA4F5D6-78B1-47F8-8089-FDC43C992021}" Condition="NOT Privileged"> 
         
         <RegistryKey Root="HKCU" Key="SOFTWARE\Sparx Systems\EAAddins\hoReverse" ForceDeleteOnUninstall="yes">
-          <RegistryValue Type="string" Value="hoReverse.hoReverse" KeyPath="yes" />
+          <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
         </RegistryKey>
       </Component>
       <Component Id="RegistryEntriesPerMachine" Guid="{09B651CF-62EE-4FC6-850A-1F75C423DA01}" Condition="Privileged">

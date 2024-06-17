@@ -279,7 +279,7 @@ Clipboard first data line:
             }
 
             if (String.IsNullOrWhiteSpace(strFq)) Clipboard.Clear();
-            else Clipboard.SetText(strFq);
+            else Clipboard.SetText(strFq ?? "");
         }
         /// <summary>
         /// Move usage of source element to target element
@@ -360,7 +360,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             }
 
             if (String.IsNullOrWhiteSpace(strStereo)) Clipboard.Clear();
-            else Clipboard.SetText(strStereo);
+            else Clipboard.SetText(strStereo ?? "");
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             }
 
             if (String.IsNullOrWhiteSpace(strGuid)) Clipboard.Clear();
-            else Clipboard.SetText(strGuid);
+            else Clipboard.SetText(strGuid ?? "");
         }
         /// <summary>
         /// Copy ID to ClipBoard
@@ -459,7 +459,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
             }
 
             if (String.IsNullOrWhiteSpace(id)) Clipboard.Clear();
-            else Clipboard.SetText(id);
+            else Clipboard.SetText(id ?? "");
         }
         /// <summary>
         /// Copy Review info to ClipBoard
@@ -3570,7 +3570,7 @@ Second Element: Target of move connections and appearances", @"Select two elemen
                        "\r\n  Order by par.Pos ";
 
             }
-            Clipboard.SetText(str);
+            Clipboard.SetText(str??"");
         }
         #region createSharedMemoryFromText
         /// <summary>
@@ -5904,7 +5904,7 @@ Regex:'{regexName}'", @"Couldn't understand attribute syntax");
                  txt = txt + nl + AddReleaseInformation(rep, elTarget);
                  nl = "\r\n";
              }
-             Clipboard.SetText(txt);
+             Clipboard.SetText(txt??"");
          }
 
         private static string AddReleaseInformation(Repository rep, Element el) {

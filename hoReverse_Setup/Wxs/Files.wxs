@@ -46,12 +46,7 @@
       <Component Id="hoLinqToSql.dll" Guid="{F9B4E660-E56E-45D3-A7B7-E4903216EBCB}">
         <File Id="hoLinqToSql.dll" Name="hoLinqToSql.dll" Source="$(var.hoLinqToSql.TargetPath)" KeyPath="yes" />
       </Component>
-      <Component Id="RegisterEA" Guid="{048B4FD1-C227-4418-B188-3EFDD0674CB9}">
-        <RegistryKey Root="HKMU" Key="Software\Sparx Systems\EAAddins\hoReverse">
-          <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
-        </RegistryKey>
-      </Component>
-      
+            
       <!-- Settings.json                                            -->
       <Component Id="UserSearches.json" Guid="{1FD90E6F-33A0-4E68-8E9E-FA919554D3D6}">
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />
@@ -86,6 +81,11 @@
 
       <Component Id="FastMember.dll" Guid="{C5F1B203-7AA4-4ED6-9077-1E0E0FB8C9F1}">
         <File Id="FastMember.dll" KeyPath="yes" Name="FastMember.dll" Source="$(var.NugetCollectorProject.TargetDir)\FastMember.dll" />
+      </Component>
+      
+      <!-- Microsoft.Bcl.AsyncInterfaces.dll has to be 7.0.0.0 -->
+      <Component Id="Microsoft.Bcl.AsyncInterfaces.dll" Guid="{DAFF6789-F62D-4FC9-90ED-3F708C1A7270}">
+        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" KeyPath="yes" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.NugetCollectorProject.TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
       </Component>
 
       <!-- linq2db                   -->

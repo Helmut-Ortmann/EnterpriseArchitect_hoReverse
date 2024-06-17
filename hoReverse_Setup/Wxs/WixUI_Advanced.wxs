@@ -108,6 +108,10 @@
     </InstallUISequence>
 
     <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONFOLDER" />
+    <UIRef Id="WixUI_Common" />
+
+    <!-- 
     <ui:WixUI Id="WixUI_Common" />
+    -->
   </Fragment>
 </Wix>

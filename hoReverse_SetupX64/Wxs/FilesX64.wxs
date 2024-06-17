@@ -46,12 +46,7 @@
       <Component Id="hoLinqToSql.dll" Guid="{F9B4E660-E56E-45D3-A7B7-E4903216EBCB}">
         <File Id="hoLinqToSql.dll" Name="hoLinqToSql.dll" Source="$(var.hoLinqToSql.TargetPath)" KeyPath="yes" />
       </Component>
-      <Component Id="RegisterEA" Guid="{048B4FD1-C227-4418-B188-3EFDD0674CB9}">
-        <RegistryKey Root="HKMU" Key="Software\Sparx Systems\EAAddinsX64\hoReverse">
-          <RegistryValue Type="string" Value="hoReverse.hoReverseRoot" KeyPath="yes" />
-        </RegistryKey>
-      </Component>
-      
+           
       <!-- Settings.json                                            -->
       <Component Id="UserSearches.json" Guid="{1FD90E6F-33A0-4E68-8E9E-FA919554D3D6}">
         <File Id="UserSearches.json" Name="Settings.json" KeyPath="yes" Source="..\hoReverse_Setup\Settings.json" />
@@ -88,6 +83,11 @@
         <File Id="FastMember.dll" KeyPath="yes" Name="FastMember.dll" Source="$(var.NugetCollectorProject.TargetDir)\FastMember.dll" />
       </Component>
 
+      <!-- Microsoft.Bcl.AsyncInterfaces.dll has to be 7.0.0.0 -->
+      <Component Id="Microsoft.Bcl.AsyncInterfaces.dll" Guid="{DAFF6789-F62D-4FC9-90ED-3F708C1A7270}">
+        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" KeyPath="yes" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.NugetCollectorProject.TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
+      </Component>
+
       <!-- linq2db                   -->
       <!-- Supported databases Access, MySQL, SqlServer, Oracle, Sybase, Postgres (tested: Access, MySQL, SqlServer) -->
       <Component Id="linq2db.dll" Guid="{7F7E0442-6625-451E-841E-E4D304EFBCBA}">
@@ -114,7 +114,7 @@
       </Component>
       
       <Component Id="SQLite.Interop.dll" Guid="{3DFC900E-8BD6-4B50-ACFC-7DF08040ECC2}">
-        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="$(var.NugetCollectorProject.TargetDir)\x86\SQLite.Interop.dll" />
+        <File Id="SQLite.Interop.dll" KeyPath="yes" Name="SQLite.Interop.dll" Source="$(var.NugetCollectorProject.TargetDir)\x64\SQLite.Interop.dll" />
       </Component>
       <Component Id="System.Data.SQLite.dll" Guid="{B161BBE0-0A9C-4570-AE7A-91E10F380ACD}">
         <File Id="System.Data.SQLite.dll" KeyPath="yes" Name="System.Data.SQLite.dll" Source="$(var.NugetCollectorProject.TargetDir)\System.Data.SQLite.dll" />

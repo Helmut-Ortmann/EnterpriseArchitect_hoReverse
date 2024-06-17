@@ -1,7 +1,7 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Fragment>
         <DirectoryRef Id="APPLICATIONFOLDER">
-            <Component Id="hoReverseRoot.dll" Guid="16F4E8E1-5C93-42EA-9049-95EC0655CEA8">
+            <Component Id="hoReverseRoot.dll" Guid="7A6837AD-B95B-473A-8CD8-4E2C0B19130A">
                 <Class Id="{71768E12-498F-365B-8315-B5084D39227F}" Context="InprocServer32" Description="hoReverse.About" ThreadingModel="both" ForeignServer="mscoree.dll">
                     <ProgId Id="hoReverse.About" Description="hoReverse.About" />
                 </Class>
@@ -36,7 +36,7 @@
         </DirectoryRef>
     </Fragment>
     <Fragment>
-        <ComponentGroup Id="COM_DllRoot">
+        <ComponentGroup Id="COM_Dll64Root">
             <ComponentRef Id="hoReverseRoot.dll" />
         </ComponentGroup>
     </Fragment>

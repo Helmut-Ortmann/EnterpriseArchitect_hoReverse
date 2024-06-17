@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows.Forms;
-using System.Diagnostics;
 using System.Collections.Generic;
 using hoReverse.Reverse;
 using hoReverse.Settings;

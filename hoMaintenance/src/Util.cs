@@ -781,6 +781,11 @@ namespace hoUtil
             return true;
 
         }
+        /// <summary>
+        /// Get the EA connection string either from repository or from the file
+        /// </summary>
+        /// <param name="rep"></param>
+        /// <returns></returns>
         public static string GetConnectionString(EA.Repository rep) {
             string s = rep.ConnectionString;
             if (s.Contains("DBType="))

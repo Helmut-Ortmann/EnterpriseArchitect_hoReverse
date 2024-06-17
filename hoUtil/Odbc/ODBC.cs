@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using ADODB;
+using LinqToDB.DataProvider;
 
 // ReSharper disable once CheckNamespace
 namespace hoReverse.hoUtils.ODBC
@@ -12,9 +13,9 @@ namespace hoReverse.hoUtils.ODBC
     public class Odbc
     {
         EA.Repository _rep;
-        ADODB.Connection _cn;
-        ADODB.Command _cmd;
-        ADODB.Recordset _rs;
+        Connection _cn;
+        Command _cmd;
+        Recordset _rs;
 
         public Connection Cn { get => _cn; set => _cn = value; }
         public Command Cmd { get => _cmd; set => _cmd = value; }
@@ -27,12 +28,13 @@ namespace hoReverse.hoUtils.ODBC
         public Odbc(EA.Repository rep)
         {
             _rep = rep;
-            _rs = new ADODB.Recordset();
-            _cmd = new ADODB.Command();
+            _rs = new Recordset();
+            _cmd = new Command();
             _cmd.CommandTimeout = 180;
             int start;
+            
+            string connectionString = hoLinqToSql.LinqUtils.LinqUtil.GetConnectionString(rep, out IDataProvider provider, out string providerName);
 
-            string connectionString = _rep.ConnectionString;
             if (connectionString.Contains("Connect="))
             {
                 start = connectionString.IndexOf("Connect=", StringComparison.Ordinal) + 8;
@@ -45,7 +47,7 @@ namespace hoReverse.hoUtils.ODBC
 
             try
             {
-                _cn = new ADODB.Connection();
+                _cn = new Connection();
                 _cn.CommandTimeout = 60;
                 _cn.ConnectionTimeout = 60;
                 _cn.Open(connectionString, "", "", 0);
@@ -72,7 +74,7 @@ namespace hoReverse.hoUtils.ODBC
                         connectionString = shortcut.Substring(start);
                         try
                         {
-                            _cn = new ADODB.Connection();
+                            _cn = new Connection();
                             _cn.Open(connectionString, "", "", 0);
                             _cmd.ActiveConnection = _cn;
                             _rs.ActiveConnection = _cn;
@@ -88,7 +90,7 @@ namespace hoReverse.hoUtils.ODBC
                 MessageBox.Show(@"Error in ADODB connect: '" + connectionString + "'\n" + @"Don't start EA with a shortcut like SDTL.eap!\n\n" + ex.Message);
 
             }
-           _cmd.ActiveConnection = _cn;
+            _cmd.ActiveConnection = _cn;
             _rs.ActiveConnection = _cn;
 
         }
@@ -97,13 +99,13 @@ namespace hoReverse.hoUtils.ODBC
         {
             if (_cmd == null)
             {
-                _cmd = new ADODB.Command();
+                _cmd = new Command();
                 _cmd.ActiveConnection = _cn;
             }
-            ADODB.Recordset rs1 = new ADODB.Recordset();
+            Recordset rs1 = new Recordset();
             rs1.ActiveConnection = _cn;
             _cmd.CommandText = sql;
-            _cmd.CommandType = ADODB.CommandTypeEnum.adCmdText;
+            _cmd.CommandType = CommandTypeEnum.adCmdText;
             object dummy = Type.Missing;
             try
             {

@@ -1,13 +1,10 @@
 ﻿<Project Sdk="WixToolset.Sdk/5.0.0">
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
-  <!-- <Import Project="Sdk.props" Sdk="WixToolset.Sdk" Version="5.0.0" /> -->
+ 
   <PropertyGroup>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-  </PropertyGroup>
-  <PropertyGroup>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.6</ProductVersion>
     <OutputName>hoReverse</OutputName>
     <SccProjectName>SAK</SccProjectName>
@@ -16,16 +13,14 @@
     <SccLocalPath>SAK</SccLocalPath>
     <Name>hoReverse_Setup</Name>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>Debug</DefineConstants>
-    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release\</OutputPath>
     <SuppressValidation>False</SuppressValidation>
-    <SuppressIces>
-    </SuppressIces>
+     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+     <SuppressValidation>False</SuppressValidation>
+     <SuppressIces />
+     <SuppressPdbOutput>True</SuppressPdbOutput>
+     <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Lib" />
@@ -47,8 +42,8 @@
     <Content Include="Scripts\Readme.md" />
     <Content Include="Scripts\RegisterHoReverse.reg" />
     <Content Include="Scripts\RenameMsi.bat" />
-    <Content Include="settings.json" />
-    <Content Include="Wxs\Collect\Collect.bat" />
+    <Content Include="settings.json" />   
+    <Content Include="Wxs\WixUI_Advanced.wxs.default" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\DeleteRegistryKeys.bat" />
@@ -118,18 +113,7 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug</DefineConstants>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <SuppressValidation>False</SuppressValidation>
-    <SuppressIces />
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
-    <SuppressPdbOutput>True</SuppressPdbOutput>
-  </PropertyGroup>
+ 
   <PropertyGroup>
     <PreBuildEvent>
       echo ------- harvest x86 Root, Gui, History dlls ---------------
@@ -140,6 +124,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)hoReverse_Setup\Scripts\renameMsi.bat" "$(SolutionDir)hoReverse_Setup\bin\release\hoReverse.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)hoReverse_Setup\Scripts\renameMsi.bat" "$(SolutionDir)hoReverse_Setup\bin\release\en-us\hoReverse.msi" "$(SolutionDir)readme.md"</PostBuildEvent>
   </PropertyGroup>
 </Project>

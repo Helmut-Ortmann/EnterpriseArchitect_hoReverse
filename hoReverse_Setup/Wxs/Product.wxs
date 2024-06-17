@@ -33,7 +33,7 @@
   <?define ProductName="hoReverse" ?>
 
   <Package Name="$(var.ProductName)"  Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="500" >
-    <SummaryInformation Description="Windows installer for hoReverse $(var.ProductVersion)" Keywords="Installer, MSI, Database" />
+    <SummaryInformation Description="Windows installer for hoReverseX86 (ReqIF,..) $(var.ProductVersion)" Keywords="Installer, MSI, Database" />
 
     <!--  installation rules -->
     <MajorUpgrade
@@ -41,7 +41,7 @@
       AllowSameVersionUpgrades="yes"   />
 
 
-     <Media Id="1" Cabinet="Contents.cab" EmbedCab="yes" CompressionLevel="medium" />
+    <Media Id="1" Cabinet="Contents.cab" EmbedCab="yes" CompressionLevel="medium" />
 
 
 
@@ -61,27 +61,23 @@
     </Feature>
     <!--
      UI: 
-
+    
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
-            -->
-    <ui:WixUI Id="WixUI_InstallDir" />
-
+    -->
 
     <Property Id="MSIINSTALLPERUSER" Secure="yes" Value="1" />
     <Property Id="MY_ALLUSERS" Value="PerUser" />
     <Property Id="WixAppFolder" Value="WixPerUserFolder" />
 
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-    <ui:WixUI Id="WixUI_MySetup" />
+    <UIRef Id="WixUI_MySetup" />
     <UIRef Id="WixUI_ErrorProgressText" />
-
-    
     <!--
       Guidelines Single Package Authoring (per user/per machine install)
       https://msdn.microsoft.com/en-us/library/windows/desktop/dd408068(v=vs.85).aspx
       http://uvinw.com/per-machine-and-per-user-without-UAC-in-WiX/
         -->
- 
+
   </Package>
 
 </Wix>

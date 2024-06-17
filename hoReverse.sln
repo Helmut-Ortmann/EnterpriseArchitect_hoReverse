@@ -12,9 +12,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoReverseRoot", "hoReverseR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoMaintenance", "hoMaintenance\hoMaintenance.csproj", "{930CBB5E-6394-4789-B87F-70091F19D1AD}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "hoMaintenance_Setup", "hoMaintenance_Setup\hoMaintenance_Setup.wixproj", "{32CED59C-B015-4BCD-9EA9-0427C6747F62}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "hoMaintenance_Setup", "hoMaintenance_Setup\hoMaintenance_Setup.wixproj", "{32CED59C-B015-4BCD-9EA9-0427C6747F62}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "hoReverse_Setup", "hoReverse_Setup\hoReverse_Setup.wixproj", "{B868D760-F8E6-4EDD-ADE0-B10F1964B0BA}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "hoReverse_Setup", "hoReverse_Setup\hoReverse_Setup.wixproj", "{B868D760-F8E6-4EDD-ADE0-B10F1964B0BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoReverseGui", "hoReverseGui\hoReverseGui.csproj", "{A479D38E-2D90-4B0D-9C0B-1F85DDDBBD92}"
 EndProject
@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetCollectorProject", "Nu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoLinqToSql", "..\EnterpriseArchitect_hoTools\hoLinqToSql\hoLinqToSql.csproj", "{8DF4F058-9E5E-42FF-B9F5-F6B826983E97}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "hoReverse_SetupX64", "hoReverse_SetupX64\hoReverse_SetupX64.wixproj", "{C20A2A50-68CD-4DA4-9F45-6156C7580E6C}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "hoReverse_SetupX64", "hoReverse_SetupX64\hoReverse_SetupX64.wixproj", "{C20A2A50-68CD-4DA4-9F45-6156C7580E6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

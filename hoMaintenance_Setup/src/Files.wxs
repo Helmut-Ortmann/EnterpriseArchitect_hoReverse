@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <!-- Registry:
   1. Generate mit Wix Tool heat the registry entry for Addin.dll (in bin\release folder of Addin
      "c:\Program Files (x86)\WiX Toolset v3.6\bin\heat" file hoAddin.dll -ag -template fragment -out hoAddin.wxs
@@ -15,10 +14,9 @@
   -->
   
   <Fragment>
-    <ComponentGroup Id="ProductComponents"
-                    Directory="APPLICATIONFOLDER">
+    <ComponentGroup Id="ProductComponents" Directory="APPLICATIONFOLDER">
       <Component Id="LicenceRTF" Guid="{479D0365-13C4-4C37-8421-45CC254E756E}">
-        <File Id="LicenseFile" Name="license.rtf" Source="src/License.rtf"  KeyPath="yes" />
+        <File Id="LicenseFile" Name="license.rtf" Source="src/License.rtf" KeyPath="yes" />
       </Component>
       <Component Id="RegisterEA" Guid="0BEB8867-95C3-47B4-A109-0AAE8DF9F009">
         <RegistryKey Root="HKLM" Key="Software\Sparx Systems\EAAddins\hoMaintenance">
@@ -28,7 +26,7 @@
       <!-- Register DLL:
            Update: Name="hoMaintenance.dll" Source="$(var.hoMaintenance.TargetPath)" />
       -->
-      <Component Id="hoMaintenance" Guid="{3D06445B-FBF3-4E4B-9271-83AEFE52B88A}" >
+      <Component Id="hoMaintenance" Guid="{3D06445B-FBF3-4E4B-9271-83AEFE52B88A}">
         <Class Id="{15CA5E93-F718-3A7C-A2DA-A52E805B5031}" Context="InprocServer32" Description="hoMaintenance.About" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="hoMaintenance.About" Description="hoMaintenance.About" />
         </Class>

@@ -77,7 +77,7 @@ namespace EaServices.Doors
             _jsonFilePath = jsonFilePath;
             _rep = rep;
             ConnectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
-            LinqOptions = LinqUtil.GetConnectionOptions(rep, rep.ConnectionString);
+            LinqOptions = LinqUtil.GetConnectionOptions(rep);
             _reqIfLogList = reqIfLogList;
             ReadImportSettings();
         }
@@ -129,7 +129,7 @@ namespace EaServices.Doors
 
             // get connection string of repository
             ConnectionString = LinqUtil.GetConnectionString(_rep, out IDataProvider _, out string _);
-            LinqOptions = LinqUtil.GetConnectionOptions(rep, rep.ConnectionString);
+            LinqOptions = LinqUtil.GetConnectionOptions(rep);
 
         }
         /// <summary>

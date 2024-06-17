@@ -41,15 +41,15 @@
             // tCreated
             // 
             this.tCreated.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tCreated.Location = new System.Drawing.Point(-2, 366);
+            this.tCreated.Location = new System.Drawing.Point(13, 626);
             this.tCreated.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tCreated.Multiline = true;
             this.tCreated.Name = "tCreated";
             this.tCreated.ReadOnly = true;
-            this.tCreated.Size = new System.Drawing.Size(296, 139);
+            this.tCreated.Size = new System.Drawing.Size(583, 338);
             this.tCreated.TabIndex = 3;
-            this.tCreated.Text = "Helmut Ortmann\r\n- Germany\r\n- Herrenstr. 29\r\n- 88353 Kißlegg\r\n\r\n(+49) 172" +
-    " / 51 79 167\r\n";
+            this.tCreated.Text = "Helmut Ortmann\r\n- Germany\r\n- Herrenstr. 29\r\n- 88353 Kißlegg\r\n\r\n(+49) 172 / 51 79 " +
+    "167\r\n";
             this.tCreated.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // textBox1
@@ -59,7 +59,7 @@
             this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(291, 34);
+            this.textBox1.Size = new System.Drawing.Size(291, 61);
             this.textBox1.TabIndex = 4;
             this.textBox1.Text = "hoReverse";
             // 
@@ -67,10 +67,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(302, 371);
+            this.label1.Location = new System.Drawing.Point(614, 628);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 25);
+            this.label1.Size = new System.Drawing.Size(177, 46);
             this.label1.TabIndex = 5;
             this.label1.Text = "Release:";
             // 
@@ -78,45 +78,45 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(160, 261);
+            this.label2.Location = new System.Drawing.Point(900, 835);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 25);
+            this.label2.Size = new System.Drawing.Size(0, 46);
             this.label2.TabIndex = 6;
             // 
             // lblRelease
             // 
             this.lblRelease.AutoSize = true;
-            this.lblRelease.Location = new System.Drawing.Point(113, 261);
+            this.lblRelease.Location = new System.Drawing.Point(224, 261);
             this.lblRelease.Name = "lblRelease";
-            this.lblRelease.Size = new System.Drawing.Size(0, 25);
+            this.lblRelease.Size = new System.Drawing.Size(0, 46);
             this.lblRelease.TabIndex = 7;
             // 
             // txtRelease
             // 
-            this.txtRelease.Location = new System.Drawing.Point(398, 366);
+            this.txtRelease.Location = new System.Drawing.Point(883, 625);
             this.txtRelease.Name = "txtRelease";
             this.txtRelease.ReadOnly = true;
-            this.txtRelease.Size = new System.Drawing.Size(100, 30);
+            this.txtRelease.Size = new System.Drawing.Size(568, 53);
             this.txtRelease.TabIndex = 8;
             // 
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(13, 48);
+            this.textBox2.Location = new System.Drawing.Point(18, 75);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(658, 194);
+            this.textBox2.Size = new System.Drawing.Size(1179, 462);
             this.textBox2.TabIndex = 9;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
             // About
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(23F, 46F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(795, 519);
+            this.ClientSize = new System.Drawing.Size(1529, 1088);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.txtRelease);
             this.Controls.Add(this.lblRelease);

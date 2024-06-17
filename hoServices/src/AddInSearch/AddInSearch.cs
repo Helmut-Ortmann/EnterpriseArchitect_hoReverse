@@ -147,7 +147,7 @@ namespace EaServices.AddInSearch
             // get connection string of repository
             //string connectionString = LinqUtil.GetConnectionString(rep, out var provider, out string providerName);
 
-            DataOptions linqOptions = LinqUtil.GetConnectionOptions(rep, "");
+            DataOptions linqOptions = LinqUtil.GetConnectionOptions(rep);
 
             _tv = new Dictionary<string, string>();
             DataTable dt = new DataTable();

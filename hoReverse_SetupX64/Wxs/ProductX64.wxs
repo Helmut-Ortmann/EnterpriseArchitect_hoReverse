@@ -29,7 +29,7 @@
   <?define ProductVersion="3.22.0" ?>     <!-- Make same in AssemblyInfo.cs (AssemblyFileVersion) -->
   <?define UpgradeCode="F098804C-0151-46DC-9924-76688804EC45" ?>
   <?define Manufacturer="ho" ?>
-  <?define ProductName="hoReverse" ?>
+  <?define ProductName="hoReverseX64" ?>
 
   <Package Name="$(var.ProductName)"  Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="500" >
     <SummaryInformation Description="Windows installer for hoReverseX64 (ReqIF,..) $(var.ProductVersion)" Keywords="Installer, MSI, Database" />
@@ -54,9 +54,9 @@
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="RegistryEntries" />
       <ComponentGroupRef Id="MimeTypeImages" />
-      <ComponentGroupRef Id="COM_DllRoot" />
-      <ComponentGroupRef Id="COM_DllGui" />
-      <ComponentGroupRef Id="COM_DllHistoryGui" />
+      <ComponentGroupRef Id="COM_Dll64Root" />
+      <ComponentGroupRef Id="COM_Dll64Gui" />
+      <ComponentGroupRef Id="COM_Dll64HistoryGui" />
     </Feature>
     <!--
      UI: 
