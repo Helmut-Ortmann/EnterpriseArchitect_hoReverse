@@ -63,6 +63,9 @@ Let's discuss it, but it works.
 - Extensible
 
 ## News
+3.22.2 ReqIF Attribut ReqIF.ChapterName
+       LINQ SQL Server
+
 3.22.1 Minor fix
 
 3.22  Fix 3.21, DB access SQLite

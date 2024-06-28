@@ -1,7 +1,7 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Fragment>
         <DirectoryRef Id="APPLICATIONFOLDER">
-            <Component Id="hoReverseGui.dll" Guid="ABC00142-4E1A-4D3F-9659-2536A6DD6EF2">
+            <Component Id="hoReverseGui.dll" Guid="D6234679-0DC4-4320-9B24-1AC23DBAEA1F">
                 <Class Id="{5BFA072E-BAA6-3761-871C-B41CCC95EDAA}" Context="InprocServer32" Description="hoReverse.Reverse.EnterTextBox" ThreadingModel="both" ForeignServer="mscoree.dll">
                     <ProgId Id="hoReverse.Reverse.EnterTextBox" Description="hoReverse.Reverse.EnterTextBox" />
                 </Class>

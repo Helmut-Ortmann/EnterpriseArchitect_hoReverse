@@ -728,7 +728,9 @@ Alias:             {Tab}{Tab}{Tab}: '{el.Alias}'
         {
             // Initialize table
             // Standard columns
-            var standardAttributes = new string[] { "Id", "Object Level" };
+            var standardAttributes = new string[] { "Id", "Object Level",
+                "ReqIF.ChapterName"   // ???
+            };
             DtRequirements = new DataTable();
             foreach (var attr in standardAttributes)
             {
@@ -874,7 +876,26 @@ Can't correctly identify objects. Identifier cut to 50 characters!", @"ReqIF Ide
 
                             row[column.Definition.LongName] = values;
                         }
-                        else row[column.Definition.LongName] = column.Value.ObjectValue.ToString();
+                        else
+                        {
+                            try
+                            {
+                                row[column.Definition.LongName] = column.Value.ObjectValue.ToString();
+                            }
+                            catch (Exception e)
+                            {
+
+                                MessageBox.Show(
+                                    $@"AttrLongName: '{column.Definition.LongName??""}'{Environment.NewLine}
+AttrIdentifier: '{column.Definition.Identifier ?? ""}
+Definition:
+{column.Value.ObjectValue??""}
+
+{Environment.NewLine}{e}",
+                                    @"Can't find ReqIF Attribute");
+                            }
+                            
+                        }
                     }
                     catch (Exception e)
                     {
