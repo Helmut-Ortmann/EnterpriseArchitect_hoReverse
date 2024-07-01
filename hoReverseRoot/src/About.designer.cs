@@ -59,7 +59,7 @@
             this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(291, 61);
+            this.textBox1.Size = new System.Drawing.Size(454, 61);
             this.textBox1.TabIndex = 4;
             this.textBox1.Text = "hoReverse";
             // 
@@ -108,7 +108,7 @@
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(1179, 462);
+            this.textBox2.Size = new System.Drawing.Size(1433, 462);
             this.textBox2.TabIndex = 9;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
@@ -116,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(23F, 46F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1529, 1088);
+            this.ClientSize = new System.Drawing.Size(1735, 1088);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.txtRelease);
             this.Controls.Add(this.lblRelease);

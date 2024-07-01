@@ -214,7 +214,7 @@
     <PostBuildEvent>if $(Platform) == x64 (
      echo ==== Register x64 DEBUG   
      if $(Configuration) == Debug (
-       $(SolutionDir)\hoReverse_SetupX64\Scripts\RegisterHoReverseX64.reg /f
+       regedit /Sf "$(SolutionDir)\hoReverse_SetupX64\Scripts\RegisterHoReverseX64.reg"
                echo ==== copy $(TargetDir)x64\sqlite.interop.dll $(TargetDir)===
           copy $(TargetDir)x64\sqlite.interop.dll $(TargetDir)	
      )
@@ -222,7 +222,7 @@
 if $(Platform) == x86 (
      echo ==== Register x32 DEBUG   
      if $(Configuration) == Debug (
-       $(SolutionDir)\hoReverse_Setup\Scripts\RegisterHoReverse.reg /f
+      regedit /Sf  "$(SolutionDir)\hoReverse_Setup\Scripts\RegisterHoReverse.reg"
 	 )
 )</PostBuildEvent>
   </PropertyGroup>

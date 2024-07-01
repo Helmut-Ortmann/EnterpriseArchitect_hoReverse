@@ -170,7 +170,13 @@ namespace EaServices.Doors
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($@"Package: '{_pkg.Name}{Environment.NewLine}{Environment.NewLine}'{e}", 
+                    MessageBox.Show($@"Package: '{_pkg.Name}'
+LinqOptions (ConnectionString): '{LinqOptions.ConnectionOptions.ConnectionString}'
+LinqOptions (ProviderName)    : '{LinqOptions.ConnectionOptions.ProviderName}'
+LinqOptions                   : '{LinqOptions.ConnectionOptions}'
+
+
+{e}", 
                         @"Can't determine EA Requirements of Doors Requirements.");
                 }
             }
