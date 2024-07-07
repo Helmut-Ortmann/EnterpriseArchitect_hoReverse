@@ -210,7 +210,7 @@ Consider:
                 catch (Exception e)
                 {
                     MessageBox.Show($@"GUID={pkgGuid}
-SpecificationID={reqIfSpecId}
+SpecificationID='{reqIfSpecId??""}'
 
 {e}", @"Exception import into package");
                     return false;
@@ -279,7 +279,7 @@ SpecificationID={reqIfSpecId}
             return true;
         }
         /// <summary>
-        /// Copy and convert embedded files files to target directory, only if the first module in a zipped reqif-file
+        /// Copy and convert embedded files to target directory, only if the first module in a zipped reqif-file
         /// </summary>
         /// <param name="file"></param>
         private void CopyEmbeddedFilesToTarget(string file)
@@ -423,7 +423,7 @@ Available Attributes:
                     CountChanged += 1;
                 }
 
-
+                // write the requirements
                 try
                 {
                     el.Alias = alias;
@@ -439,6 +439,9 @@ Available Attributes:
                     el.Update();
                     Pkg.Elements.Refresh();
                     lastElementId = el.ElementID;
+                    
+                    // show progress
+                    Rep.ShowInProjectView(el);
                 }
                 catch (Exception e)
                 {
