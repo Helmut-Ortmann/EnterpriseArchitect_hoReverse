@@ -3168,6 +3168,7 @@ namespace hoReverse.Reverse
                 "MariGold.HtmlParser.dll",
                 "MariGold.OpenXHTML.dll",
                 "MySql.Data.dll",
+                "Microsoft.Data.SqlClient.dll",
                 "Microsoft.SqlServer.Types.dll",
                 "Oracle.ManagedDataAccess.dll",
                 "Npgsql.dll",
@@ -3181,7 +3182,8 @@ namespace hoReverse.Reverse
                 "KBCsv.dll",
                 "KBCsv.Extensions.Data.dll",
                 "SautinSoft.RtfToHtml.dll",
-                "SautinSoft.HtmlToRtf.dll"
+                "SautinSoft.HtmlToRtf.dll",
+                    "System.Memory.dll"
 
             };
             HoUtil.AboutMessage($"V{_version}\r\n\r\nC - Reverse Engineering Workbench",

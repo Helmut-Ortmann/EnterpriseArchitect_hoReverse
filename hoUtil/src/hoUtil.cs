@@ -1769,8 +1769,6 @@ namespace hoReverse.hoUtils
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            
-
 
             description = $@"{description}
 
@@ -1791,8 +1789,8 @@ Helmut.Ortmann@hoModeler.de
                 {
                     string pathDll = Path.Combine(new[] { pathRoot, dllName });
                     description = dllName.Length > 20 
-                        ? $"{description}- {dllName,-26}\t: V{FileVersionInfo.GetVersionInfo(pathDll).FileVersion}{Environment.NewLine}" 
-                        : $"{description}- {dllName,-26}\t\t: V{FileVersionInfo.GetVersionInfo(pathDll).FileVersion}{Environment.NewLine}";
+                        ? $"{description}- {dllName,-26}\t: V{FileVersionInfo.GetVersionInfo(pathDll).ProductVersion}{Environment.NewLine}" 
+                        : $"{description}- {dllName,-26}\t\t: V{FileVersionInfo.GetVersionInfo(pathDll).ProductVersion}{Environment.NewLine}";
                 }
                 //
                 catch (Exception)
