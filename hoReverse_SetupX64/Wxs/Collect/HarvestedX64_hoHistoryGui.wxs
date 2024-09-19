@@ -1,7 +1,7 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Fragment>
         <DirectoryRef Id="APPLICATIONFOLDER">
-            <Component Id="hoHistoryGui.dll" Guid="053CD683-8E79-4FF3-BBB9-C10E97D69063">
+            <Component Id="hoHistoryGui.dll" Guid="B5333046-46E1-4F23-8861-0DA3176F30BD">
                 <Class Id="{00D3BAF1-DFAC-3464-A46E-B013515745A6}" Context="InprocServer32" Description="hoReverse.History.HistoryActiveXWpf" ThreadingModel="both" ForeignServer="mscoree.dll">
                     <ProgId Id="hoReverse.History.HistoryActiveXWpf" Description="hoReverse.History.HistoryActiveXWpf" />
                 </Class>
